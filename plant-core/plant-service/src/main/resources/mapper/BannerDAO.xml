@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.content.dao.BannerDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.content.dto.Banner">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="BIT" property="type" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl" />
+    <result column="jump_url" jdbcType="VARCHAR" property="jumpUrl" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="sort_order" jdbcType="TINYINT" property="sortOrder" />
+    <result column="show_time" jdbcType="TIMESTAMP" property="showTime" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `type`, `name`, pic_url, thumb_pic_url, jump_url, is_show, sort_order, show_time, 
+    add_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_banner
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_banner
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.content.dto.Banner">
+    insert into plant_banner (id, `type`, `name`, pic_url, 
+      thumb_pic_url, jump_url, is_show, 
+      sort_order, show_time, add_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, 
+      #{thumbPicUrl,jdbcType=VARCHAR}, #{jumpUrl,jdbcType=VARCHAR}, #{isShow,jdbcType=INTEGER},
+      #{sortOrder,jdbcType=TINYINT}, #{showTime,jdbcType=TIMESTAMP}, #{addTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.content.dto.Banner">
+    insert into plant_banner
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
+      </if>
+      <if test="thumbPicUrl != null">
+        thumb_pic_url,
+      </if>
+      <if test="jumpUrl != null">
+        jump_url,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="sortOrder != null">
+        sort_order,
+      </if>
+      <if test="showTime != null">
+        show_time,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=BIT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbPicUrl != null">
+        #{thumbPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="jumpUrl != null">
+        #{jumpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="sortOrder != null">
+        #{sortOrder,jdbcType=TINYINT},
+      </if>
+      <if test="showTime != null">
+        #{showTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.content.dto.Banner">
+    update plant_banner
+    <set>
+      <if test="type != null">
+        `type` = #{type,jdbcType=BIT},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbPicUrl != null">
+        thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="jumpUrl != null">
+        jump_url = #{jumpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="sortOrder != null">
+        sort_order = #{sortOrder,jdbcType=TINYINT},
+      </if>
+      <if test="showTime != null">
+        show_time = #{showTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.content.dto.Banner">
+    update plant_banner
+    set `type` = #{type,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      pic_url = #{picUrl,jdbcType=VARCHAR},
+      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
+      jump_url = #{jumpUrl,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=INTEGER},
+      sort_order = #{sortOrder,jdbcType=TINYINT},
+      show_time = #{showTime,jdbcType=TIMESTAMP},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List"/> from plant_banner
+    <where>
+        <if test="id != null">
+          id = #{id}
+        </if>
+        <if test="name != null">
+          AND name like #{name}
+        </if>
+        <if test="isShow != null">
+          AND is_show = #{isShow}
+        </if>
+    </where>
+    order by sort_order desc
+  </select>
+
+
+  <select id="bannerListForHome" parameterType="int" resultMap="BaseResultMap">
+    select  `name`, pic_url,jump_url from plant_banner
+    where is_show = 1
+    <![CDATA[
+    and UNIX_TIMESTAMP(show_time) < UNIX_TIMESTAMP(NOW())
+    ]]>
+    and type = #{type}
+    order  by sort_order desc
+  </select>
+
+
+
+</mapper>

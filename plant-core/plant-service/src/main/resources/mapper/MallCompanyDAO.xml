@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.mall.dao.MallCompanyDAO">
+
+    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.mall.dto.MallCompany">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="com_name" jdbcType="VARCHAR" property="companyName"/>
+        <result column="com_code" jdbcType="VARCHAR" property="companyCode"/>
+        <result column="com_phone" jdbcType="VARCHAR" property="companyPhone"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, com_name, com_code, com_phone
+  </sql>
+
+    <!-- 根据公司编码获取公司详情-->
+    <select id="findByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_express_com
+        where com_code = #{companyCode}
+    </select>
+
+    <!-- 获取所以公司名称 -->
+    <select id="getAllComName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_express_com
+    </select>
+
+</mapper>

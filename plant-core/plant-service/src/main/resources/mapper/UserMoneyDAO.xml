@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.account.dao.UserMoneyDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.account.dto.UserMoney">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="available_money" jdbcType="DECIMAL" property="availableMoney" />
+    <result column="freeze_money" jdbcType="DECIMAL" property="freezeMoney" />
+    <result column="collect_money" jdbcType="DECIMAL" property="collectMoney" />
+    <result column="collect_capital" jdbcType="DECIMAL" property="collectCapital" />
+    <result column="collect_interest" jdbcType="DECIMAL" property="collectInterest" />
+  </resultMap>
+  
+  <resultMap id="BaseInfoMap" type="com.moguying.plant.backend.account.dto.UserMoney" extends="BaseResultMap">
+    <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    user_id, available_money, freeze_money, collect_money, collect_capital, collect_interest
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_user_money
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_user_money
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.account.dto.UserMoney">
+    insert into plant_user_money (user_id, available_money, freeze_money, 
+      collect_money, collect_capital, collect_interest
+      )
+    values (#{userId,jdbcType=INTEGER}, #{availableMoney,jdbcType=DECIMAL}, #{freezeMoney,jdbcType=DECIMAL}, 
+      #{collectMoney,jdbcType=DECIMAL}, #{collectCapital,jdbcType=DECIMAL}, #{collectInterest,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.account.dto.UserMoney">
+    insert into plant_user_money
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="availableMoney != null">
+        available_money,
+      </if>
+      <if test="freezeMoney != null">
+        freeze_money,
+      </if>
+      <if test="collectMoney != null">
+        collect_money,
+      </if>
+      <if test="collectCapital != null">
+        collect_capital,
+      </if>
+      <if test="collectInterest != null">
+        collect_interest,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="availableMoney != null">
+        #{availableMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="freezeMoney != null">
+        #{freezeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="collectMoney != null">
+        #{collectMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="collectCapital != null">
+        #{collectCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="collectInterest != null">
+        #{collectInterest,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.account.dto.UserMoney">
+    update plant_user_money
+    <set>
+      <if test="availableMoney != null">
+        available_money = #{availableMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="freezeMoney != null">
+        freeze_money = #{freezeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="collectMoney != null">
+        collect_money = #{collectMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="collectCapital != null">
+        collect_capital = #{collectCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="collectInterest != null">
+        collect_interest = #{collectInterest,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.account.dto.UserMoney">
+    update plant_user_money
+    set available_money = #{availableMoney,jdbcType=DECIMAL},
+      freeze_money = #{freezeMoney,jdbcType=DECIMAL},
+      collect_money = #{collectMoney,jdbcType=DECIMAL},
+      collect_capital = #{collectCapital,jdbcType=DECIMAL},
+      collect_interest = #{collectInterest,jdbcType=DECIMAL}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <select id="selectSelective" resultMap="BaseInfoMap">
+    select <include refid="Base_Column_List"/>,t2.phone,t2.real_name,sum(t1.available_money + t1.freeze_money + t1.collect_money) as total_amount from plant_user_money t1
+    left join plant_user t2 on t1.user_id = t2.id
+    <where>
+      <if test="userId != null">
+        user_id = #{userId}
+      </if>
+      <if test="phone != null">
+        <bind value="'%' + phone + '%'" name="phoneLike"/>
+        AND t2.phone like #{phoneLike}
+      </if>
+      <if test="realName != null">
+        <bind value="'%' + realName + '%'" name="realNameLike"/>
+        AND t2.real_name like #{realNameLike}
+      </if>
+      <if test="availableMoney != null">
+        AND available_money = #{availableMoney}
+      </if>
+      <if test="freezeMoney != null">
+        AND freeze_money = #{freezeMoney}
+      </if>
+      <if test="collectMoney != null">
+        AND collect_money = #{collectMoney}
+      </if>
+      <if test="collectCapital != null">
+        AND collect_capital = #{collectCapital}
+      </if>
+      <if test="collectInterest != null">
+        AND collect_interest = #{collectInterest}
+      </if>
+    </where>
+    group by user_id
+    order by user_id desc
+  </select>
+
+
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_user_money
+    where user_id = #{userId}
+  </select>
+
+</mapper>

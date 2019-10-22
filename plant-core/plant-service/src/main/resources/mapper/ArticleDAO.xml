@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.content.dao.ArticleDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.content.dto.Article">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="seo_key" jdbcType="VARCHAR" property="seoKey" />
+    <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime" />
+    <result column="is_show" jdbcType="BIT" property="isShow" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl" />
+    <result column="read_count" jdbcType="INTEGER" property="readCount" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_recommend" jdbcType="INTEGER" property="isRecommend" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
+  </resultMap>
+
+  <resultMap id="ArticleWithContent" type="com.moguying.plant.backend.content.dto.Article" extends="BaseResultMap">
+    <result column="content" jdbcType="VARCHAR" property="content"/>
+  </resultMap>
+
+
+  <resultMap id="BaseArticleInfo" type="com.moguying.plant.backend.content.dto.Article" extends="BaseResultMap">
+    <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+    <result column="type_url_name" jdbcType="VARCHAR" property="typeUrlName"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, title, type_id, seo_key, publish_time, is_show, pic_url,thumb_pic_url, read_count, add_time,is_recommend,summary
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.content.dto.Article" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_article (id, title, type_id, 
+      seo_key, publish_time, is_show, 
+      pic_url,thumb_pic_url, read_count, add_time,is_recommend,summary
+      )
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, 
+      #{seoKey,jdbcType=VARCHAR}, #{publishTime,jdbcType=TIMESTAMP}, #{isShow,jdbcType=BIT},
+      #{picUrl,jdbcType=VARCHAR}, #{thumbPicUrl,jdbcType=VARCHAR}, #{readCount,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP},
+      #{isRecommend,jdbcType=INTEGER},#{summary,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.content.dto.Article" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="seoKey != null">
+        seo_key,
+      </if>
+      <if test="publishTime != null">
+        publish_time,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
+      </if>
+      <if test="thumbPicUrl != null">
+        thumb_pic_url,
+      </if>
+      <if test="readCount != null">
+        read_count,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="isRecommend != null">
+        is_recommend,
+      </if>
+      <if test="summary != null">
+        summary,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="seoKey != null">
+        #{seoKey,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null">
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbPicUrl != null">
+        #{thumbPicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="readCount != null">
+        #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isRecommend != null">
+        #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="summary != null">
+        #{summary,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.content.dto.Article">
+    update plant_article
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="seoKey != null">
+        seo_key = #{seoKey,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null">
+        publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=BIT},
+      </if>
+      <if test="picUrl != null">
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+      </if>
+
+      <if test="thumbPicUrl != null">
+        thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
+      </if>
+
+      <if test="readCount != null">
+        read_count = #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isRecommend != null">
+        is_recommend = #{isRecommend,jdbcType=TIMESTAMP},
+      </if>
+      <if test="summary != null">
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.content.dto.Article">
+    update plant_article
+    set title = #{title,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=INTEGER},
+      seo_key = #{seoKey,jdbcType=VARCHAR},
+      publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      is_show = #{isShow,jdbcType=BIT},
+      pic_url = #{picUrl,jdbcType=VARCHAR},
+      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
+      read_count = #{readCount,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      is_recommend = #{isRecommend,jdbcType=TIMESTAMP},
+      summary = #{summary,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectSelective" resultMap="BaseArticleInfo">
+    select t1.id, title, type_id, seo_key, publish_time, is_show, pic_url,thumb_pic_url, read_count, add_time,is_recommend,summary,
+    t2.name as type_name,t2.url_name as type_url_name
+     from plant_article t1
+     left join plant_article_type t2 on t1.type_id = t2.id
+    <where>
+      <if test="title != null">
+        <bind name="titleLike" value="'%' + title + '%'"/>
+        title = #{titleLike}
+      </if>
+      <if test="typeId != null">
+        AND type_id = #{typeId}
+      </if>
+      <if test="isShow != null">
+        AND is_show = #{isShow}
+      </if>
+      <if test="isRecommend != null">
+        AND is_recommend = #{isRecommend}
+      </if>
+    </where>
+    order by add_time desc ,publish_time desc
+  </select>
+
+  <delete id="deleteByTypeId" parameterType="java.lang.Integer">
+    delete from plant_article where type_id = #{typeId}
+  </delete>
+
+
+  <select id="selectByPrimaryKeyWithContent" parameterType="java.lang.Integer" resultMap="ArticleWithContent">
+    select <include refid="Base_Column_List"/>,content from plant_article t1
+    left join plant_article_content t2 on t1.id = t2.article_id
+    where id = #{id}
+  </select>
+
+
+</mapper>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.user.dao.UserAddressDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.user.dto.UserAddress">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="town_name" jdbcType="VARCHAR" property="townName" />
+    <result column="receive_user_name" jdbcType="VARCHAR" property="receiveUserName" />
+    <result column="receive_phone" jdbcType="VARCHAR" property="receivePhone" />
+    <result column="detail_address" jdbcType="VARCHAR" property="detailAddress" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_default" jdbcType="BIT" property="isDefault" />
+    <result column="is_delete" jdbcType="BIT" property="isDefault" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, province_name, city_name, town_name, receive_user_name, receive_phone, 
+    detail_address,add_time,is_default
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_user_address
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update plant_user_address set is_delete = 1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.moguying.plant.backend.user.dto.UserAddress" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_user_address (id, user_id, province_name, 
+      city_name, town_name, receive_user_name, 
+      receive_phone, detail_address,add_time,is_default)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{provinceName,jdbcType=VARCHAR}, 
+      #{cityName,jdbcType=VARCHAR}, #{townName,jdbcType=VARCHAR}, #{receiveUserName,jdbcType=VARCHAR}, 
+      #{receivePhone,jdbcType=VARCHAR}, #{detailAddress,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP},#{isDefault})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.user.dto.UserAddress" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_user_address
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="provinceName != null">
+        province_name,
+      </if>
+      <if test="cityName != null">
+        city_name,
+      </if>
+      <if test="townName != null">
+        town_name,
+      </if>
+      <if test="receiveUserName != null">
+        receive_user_name,
+      </if>
+      <if test="receivePhone != null">
+        receive_phone,
+      </if>
+      <if test="detailAddress != null">
+        detail_address,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="isDefault != null">
+        is_default,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="provinceName != null">
+        #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null">
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="townName != null">
+        #{townName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveUserName != null">
+        #{receiveUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="receivePhone != null">
+        #{receivePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="detailAddress != null">
+        #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.user.dto.UserAddress">
+    update plant_user_address
+    <set>
+      <if test="provinceName != null">
+        province_name = #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null">
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="townName != null">
+        town_name = #{townName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveUserName != null">
+        receive_user_name = #{receiveUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="receivePhone != null">
+        receive_phone = #{receivePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="detailAddress != null">
+        detail_address = #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <where>
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null">
+        AND user_id = #{userId,jdbcType=INTEGER}
+      </if>
+    </where>
+
+
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.user.dto.UserAddress">
+    update plant_user_address
+    set user_id = #{userId,jdbcType=INTEGER},
+      province_name = #{provinceName,jdbcType=VARCHAR},
+      city_name = #{cityName,jdbcType=VARCHAR},
+      town_name = #{townName,jdbcType=VARCHAR},
+      receive_user_name = #{receiveUserName,jdbcType=VARCHAR},
+      receive_phone = #{receivePhone,jdbcType=VARCHAR},
+      detail_address = #{detailAddress,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},is_default = #{isDefault}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>  from plant_user_address
+    <where>
+      <if test="userId != null">
+        user_id = #{userId}
+      </if>
+      AND is_delete = 0
+    </where>
+    order by add_time desc
+  </select>
+
+  <update id="setNoDefault" parameterType="int">
+    update plant_user_address
+    set is_default = 0
+    where user_id = #{userId}
+    <![CDATA[
+        and id <> #{id}
+    ]]>
+  </update>
+
+  <update id="setDefault" parameterType="int">
+    update plant_user_address
+    set is_default = 1
+    where user_id = #{userId} and id = #{id}
+  </update>
+
+  <update id="setDefaultByTime" parameterType="int">
+    update plant_user_address
+    set is_default = 1
+    where user_id = #{userId}
+    order by add_time desc
+    limit 1
+  </update>
+  
+  <select id="selectByIdAndUserId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_user_address
+    where id = #{id} and user_id = #{userId}
+    <if test="isDelete != null">
+      and is_delete = #{isDelete}
+    </if>
+
+  </select>
+  
+  <select id="userDefaultAddress" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_user_address
+    where user_id = #{userId} and is_default = 1 and is_delete = 0
+  </select>
+
+    <select id="getDefaultNum" resultType="java.lang.Integer">
+    select count(id) from plant_user_address
+    where user_id = #{userId} and is_default = 1
+  </select>
+
+</mapper>

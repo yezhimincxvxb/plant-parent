@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.payment.dao.PaymentInfoDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.payment.dto.PaymentInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="request_action" jdbcType="VARCHAR" property="requestAction" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+    <result column="payment_request" jdbcType="VARCHAR" property="paymentRequest" />
+    <result column="payment_response" jdbcType="VARCHAR" property="paymentResponse" />
+    <result column="notify_response" jdbcType="VARCHAR" property="notifyResponse" />
+    <result column="sign_data" jdbcType="VARCHAR" property="signData" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, request_action, payment_request, payment_response, notify_response,sign_data, `state`,order_number,add_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_payment_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_payment_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.payment.dto.PaymentInfo">
+    insert into plant_payment_info (id, request_action, payment_request, 
+      payment_response, notify_response, sign_data, `state`,order_number,add_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{requestAction,jdbcType=VARCHAR}, #{paymentRequest,jdbcType=VARCHAR}, 
+      #{paymentResponse,jdbcType=VARCHAR},#{notifyResponse,jdbcType=VARCHAR}, #{signData,jdbcType=VARCHAR}, #{state,jdbcType=BIT},
+      #{orderNumber,jdbcType=VARCHAR},
+      #{addTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.payment.dto.PaymentInfo">
+    insert into plant_payment_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="requestAction != null">
+        request_action,
+      </if>
+      <if test="paymentRequest != null">
+        payment_request,
+      </if>
+      <if test="paymentResponse != null">
+        payment_response,
+      </if>
+      <if test="notifyResponse != null">
+        notify_response,
+      </if>
+      <if test="signData != null">
+        sign_data,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="orderNumber != null">
+        order_number,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="requestAction != null">
+        #{requestAction,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentRequest != null">
+        #{paymentRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentResponse != null">
+        #{paymentResponse,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyResponse != null">
+        #{notifyResponse,jdbcType=VARCHAR},
+      </if>
+      <if test="signData != null">
+        #{signData,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=BIT},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.payment.dto.PaymentInfo">
+    update plant_payment_info
+    <set>
+      <if test="requestAction != null">
+        request_action = #{requestAction,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentRequest != null">
+        payment_request = #{paymentRequest,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentResponse != null">
+        payment_response = #{paymentResponse,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyResponse != null">
+        notify_response = #{notifyResponse,jdbcType=VARCHAR},
+      </if>
+      <if test="signData != null">
+        sign_data = #{signData,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=BIT},
+      </if>
+      <if test="orderNumber != null">
+        `order_number` = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        `add_time` = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.payment.dto.PaymentInfo">
+    update plant_payment_info
+    set request_action = #{requestAction,jdbcType=VARCHAR},
+      payment_request = #{paymentRequest,jdbcType=VARCHAR},
+      payment_response = #{paymentResponse,jdbcType=VARCHAR},
+      notify_response = #{notifyResponse,jdbcType=VARCHAR},
+      sign_data = #{signData,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=BIT},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateNotifyResponseByOrderNumber" parameterType="com.moguying.plant.payment.dto.PaymentInfo">
+    update plant_payment_info
+    set notify_response = #{notifyResponse,jdbcType=VARCHAR}
+    where order_number = #{orderNumber,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

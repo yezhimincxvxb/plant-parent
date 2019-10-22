@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.device.dao.DeviceGatewayDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.device.dto.DeviceGateway">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="gateway_logo" jdbcType="VARCHAR" property="gatewayLogo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, gateway_logo
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_device_gateway
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_device_gateway
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.device.dto.DeviceGateway">
+    insert into plant_device_gateway (id, gateway_logo)
+    values (#{id,jdbcType=INTEGER}, #{gatewayLogo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.device.dto.DeviceGateway">
+    insert into plant_device_gateway
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="gatewayLogo != null">
+        gateway_logo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="gatewayLogo != null">
+        #{gatewayLogo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.device.dto.DeviceGateway">
+    update plant_device_gateway
+    <set>
+      <if test="gatewayLogo != null">
+        gateway_logo = #{gatewayLogo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.device.dto.DeviceGateway">
+    update plant_device_gateway
+    set gateway_logo = #{gatewayLogo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByGatewayLogo" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_device_gateway
+    where gateway_logo = #{gatewayLogo}
+  </select>
+  
+  
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_device_gateway
+    <where>
+      <if test="gatewayLogo != null">
+        gateway_logo = #{gatewayLogo,jdbcType=VARCHAR}
+      </if>
+    </where>
+    order by id desc
+  </select>
+</mapper>

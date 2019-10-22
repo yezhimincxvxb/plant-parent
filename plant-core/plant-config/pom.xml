@@ -16,13 +16,4 @@
     <packaging>jar</packaging>
     <description>Demo project for Spring Boot</description>
 
-
-    <dependencies>
-        <dependency>
-            <groupId>com.moguying</groupId>
-            <artifactId>plant-service</artifactId>
-            <version>${moguying.version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

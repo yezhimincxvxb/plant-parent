@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.mall.dao.MallProductDAO">
+
+    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.mall.dto.MallProduct">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="old_price" jdbcType="DECIMAL" property="oldPrice"/>
+        <result column="fee" jdbcType="DECIMAL" property="fee"/>
+        <result column="total_count" jdbcType="INTEGER" property="totalCount"/>
+        <result column="left_count" jdbcType="INTEGER" property="leftCount"/>
+        <result column="has_count" jdbcType="INTEGER" property="hasCount"/>
+        <result column="summary_desc" jdbcType="VARCHAR" property="summaryDesc"/>
+        <result column="is_show" jdbcType="BIT" property="isShow"/>
+        <result column="delivery_info" jdbcType="VARCHAR" property="deliveryInfo"/>
+        <result column="consume_coins" jdbcType="INTEGER" property="consumeCoins"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+    </resultMap>
+
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.backend.mall.dto.MallProduct">
+        <result column="product_desc" jdbcType="LONGVARCHAR" property="productDesc"/>
+    </resultMap>
+
+    <resultMap id="AppHomeMallProduct" type="com.moguying.plant.api.home.dto.HomeProduct">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="old_price" jdbcType="DECIMAL" property="oldPrice"/>
+        <result column="has_count" jdbcType="INTEGER" property="hasCount"/>
+        <result column="consume_coins" jdbcType="INTEGER" property="consumeCoins"/>
+    </resultMap>
+
+    <resultMap id="AppHomeMallProductDetail" extends="AppHomeMallProduct"
+               type="com.moguying.plant.api.home.dto.HomeProductDetail">
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="summary_desc" jdbcType="VARCHAR" property="summaryDesc"/>
+        <result column="product_desc" jdbcType="LONGVARCHAR" property="productDesc"/>
+        <result column="left_count" jdbcType="INTEGER" property="leftCount"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
+    summary_desc, is_show, delivery_info, consume_coins, add_time
+  </sql>
+
+    <sql id="Blob_Column_List">
+    product_desc
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from plant_mall_product
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_mall_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.moguying.plant.backend.mall.dto.MallProduct" useGeneratedKeys="true"
+            keyProperty="id">
+    insert into plant_mall_product (id, pic_url, thumb_pic_url, 
+      `name`, price,old_price, fee, total_count,
+      left_count, has_count, summary_desc, 
+      is_show, delivery_info,consume_coins, add_time, product_desc
+      )
+    values (#{id,jdbcType=INTEGER}, #{picUrl,jdbcType=VARCHAR}, #{thumbPicUrl,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},#{oldPrice,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, #{totalCount,jdbcType=INTEGER},
+      #{leftCount,jdbcType=INTEGER}, #{hasCount,jdbcType=INTEGER}, #{summaryDesc,jdbcType=VARCHAR}, 
+      #{isShow,jdbcType=BIT}, #{deliveryInfo,jdbcType=VARCHAR},
+     #{consumeCoins,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP},
+    <![CDATA[
+        CONCAT("<style>img{max-width:100%!important;}</style>", #{productDesc,jdbcType=LONGVARCHAR})
+    ]]>
+      )
+  </insert>
+
+    <insert id="insertSelective" parameterType="com.moguying.plant.backend.mall.dto.MallProduct" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into plant_mall_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="picUrl != null">
+                pic_url,
+            </if>
+            <if test="thumbPicUrl != null">
+                thumb_pic_url,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="oldPrice != null">
+                old_price,
+            </if>
+            <if test="fee != null">
+                fee,
+            </if>
+            <if test="totalCount != null">
+                total_count,
+            </if>
+            <if test="leftCount != null">
+                left_count,
+            </if>
+            <if test="hasCount != null">
+                has_count,
+            </if>
+            <if test="summaryDesc != null">
+                summary_desc,
+            </if>
+            <if test="isShow != null">
+                is_show,
+            </if>
+            <if test="deliveryInfo != null">
+                delivery_info,
+            </if>
+            <if test="consumeCoins != null">
+                consume_coins,
+            </if>
+            <if test="addTime != null">
+                add_time,
+            </if>
+            <if test="productDesc != null">
+                product_desc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="picUrl != null">
+                #{picUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="thumbPicUrl != null">
+                #{thumbPicUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="oldPrice != null">
+                #{oldPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="fee != null">
+                #{fee,jdbcType=DECIMAL},
+            </if>
+            <if test="totalCount != null">
+                #{totalCount,jdbcType=INTEGER},
+            </if>
+            <if test="leftCount != null">
+                #{leftCount,jdbcType=INTEGER},
+            </if>
+            <if test="hasCount != null">
+                #{hasCount,jdbcType=INTEGER},
+            </if>
+            <if test="summaryDesc != null">
+                #{summaryDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="isShow != null">
+                #{isShow,jdbcType=BIT},
+            </if>
+            <if test="deliveryInfo != null">
+                #{deliveryInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="consumeCoins != null">
+                #{consumeCoins},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="productDesc != null">
+                <![CDATA[
+            CONCAT("<style>img{max-width:100%!important;}</style>", #{productDesc,jdbcType=LONGVARCHAR})
+        ]]>
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.mall.dto.MallProduct">
+        update plant_mall_product
+        <set>
+            <if test="picUrl != null">
+                pic_url = #{picUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="thumbPicUrl != null">
+                thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="oldPrice != null">
+                old_price = #{oldPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="fee != null">
+                fee = #{fee,jdbcType=DECIMAL},
+            </if>
+            <if test="totalCount != null">
+                total_count = #{totalCount,jdbcType=INTEGER},
+            </if>
+            <if test="leftCount != null">
+                left_count = #{leftCount,jdbcType=INTEGER},
+            </if>
+            <if test="hasCount != null">
+                has_count = #{hasCount,jdbcType=INTEGER},
+            </if>
+            <if test="summaryDesc != null">
+                summary_desc = #{summaryDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="isShow != null">
+                is_show = #{isShow,jdbcType=BIT},
+            </if>
+            <if test="deliveryInfo != null">
+                delivery_info = #{deliveryInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="productDesc != null">
+                product_desc =
+                <![CDATA[
+            CONCAT("<style>img{max-width:100%!important;}</style>", #{productDesc,jdbcType=LONGVARCHAR}),
+        ]]>
+            </if>
+            <if test="consumeCoins != null">
+                consume_coins = #{consumeCoins},
+            </if>
+            <if test="addTime != null">
+                add_time = #{addTime,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.moguying.plant.backend.mall.dto.MallProduct">
+    update plant_mall_product
+    set pic_url = #{picUrl,jdbcType=VARCHAR},
+      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      old_price = #{oldPrice,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      total_count = #{totalCount,jdbcType=INTEGER},
+      left_count = #{leftCount,jdbcType=INTEGER},
+      has_count = #{hasCount,jdbcType=INTEGER},
+      summary_desc = #{summaryDesc,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=BIT},
+      delivery_info = #{deliveryInfo,jdbcType=VARCHAR},
+      product_desc =
+      <![CDATA[
+            CONCAT("<style>img{max-width:100%!important;}</style>", #{productDesc,jdbcType=LONGVARCHAR}),
+        ]]>
+      consume_coins = #{consumeCoins},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.mall.dto.MallProduct">
+    update plant_mall_product
+    set pic_url = #{picUrl,jdbcType=VARCHAR},
+      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      old_price = #{oldPrice,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      total_count = #{totalCount,jdbcType=INTEGER},
+      left_count = #{leftCount,jdbcType=INTEGER},
+      has_count = #{hasCount,jdbcType=INTEGER},
+      summary_desc = #{summaryDesc,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=BIT},
+      delivery_info = #{deliveryInfo,jdbcType=VARCHAR},
+      consume_coins = #{consumeCoins},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectSelective" parameterType="com.moguying.plant.backend.mall.dto.MallProduct"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_mall_product
+        <where>
+            <if test="name != null and name != ''">
+                <bind name="nameLike" value="'%'+ name +'%'"/>
+                name like #{nameLike}
+            </if>
+            <if test="isShow != null">
+                AND is_show = #{isShow}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateProductHasCountById" parameterType="int">
+    update plant_mall_product set
+    has_count = has_count + #{count}
+    where id = #{productId}
+  </update>
+
+  <select id="selectProductForApp" resultMap="AppHomeMallProduct">
+    select id,thumb_pic_url,name,price,old_price,has_count from plant_mall_product
+    where is_show = 1 and left_count > 0
+    <if test="name != null and name != ''">
+      <bind name="nameLike" value="'%'+ name +'%'"/>
+      AND name like #{nameLike}
+    </if>
+    order by add_time desc
+  </select>
+
+  <select id="selectProductDetailForApp" resultMap="AppHomeMallProductDetail">
+    select id,pic_url,thumb_pic_url,name,price,old_price,has_count,summary_desc,product_desc,left_count from plant_mall_product
+    where id = #{id} and is_show = 1
+  </select>
+
+    <select id="productCountEnough" resultType="int">
+    select id from plant_mall_product where
+    left_count >= #{count} and id = #{productId}
+  </select>
+
+    <!-- 兑换实物列表 -->
+    <select id="showProducts" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+        select id, `name`, consume_coins `count`, `price`, pic_url `picUrl`
+        from plant_mall_product
+        <where>
+            is_show = 1
+            and consume_coins &gt; 0
+            and left_count &gt; 0
+        </where>
+    </select>
+
+    <!-- 兑换实物日志列表 -->
+    <select id="showProductLog" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+        select t3.`name` `name`, t2.buy_count `number`, t2.buy_coins `count`, t1.add_time `time`
+        from plant_mall_order t1
+        left join plant_mall_order_detail t2 on t1.id = t2.order_id
+        left join plant_mall_product t3 on t2.product_id = t3.id
+        <where>
+            t1.user_id = #{userId}
+            and t2.buy_coins &gt; 0
+        </where>
+        group by t2.id
+        order by t1.add_time desc
+    </select>
+
+</mapper>

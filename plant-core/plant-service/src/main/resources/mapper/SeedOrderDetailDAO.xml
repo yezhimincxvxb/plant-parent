@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.seed.dao.SeedOrderDetailDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.SeedOrderDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+    <result column="seed_id" jdbcType="INTEGER" property="seedId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
+    <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="seq_no" jdbcType="VARCHAR" property="seqNo" />
+    <result column="account_pay_amount" jdbcType="DECIMAL" property="accountPayAmount" />
+    <result column="car_pay_amount" jdbcType="DECIMAL" property="carPayAmount" />
+    <result column="reduce_pay_amount" jdbcType="DECIMAL" property="reducePayAmount" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, order_number, seed_id, user_id, buy_count, buy_amount, add_time,pay_time,seq_no,account_pay_amount,car_pay_amount,reduce_pay_amount,
+    close_time,state
+  </sql>
+  
+  <resultMap id="seedOrderInfoMap" type="com.moguying.plant.backend.seed.dto.SeedOrderDetail" extends="BaseResultMap">
+    <result column="seed_name" jdbcType="VARCHAR" property="seedName" />
+    <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
+    <result column="seed_grow_days" jdbcType="INTEGER" property="seedGrowDays" />
+    <result column="seed_price" jdbcType="DECIMAL" property="seedPrice" />
+    <result column="pic_url" jdbcType="DECIMAL" property="picUrl" />
+    <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+    <result column="seed_type_id" jdbcType="INTEGER" property="seedTypeId"/>
+  </resultMap>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_seed_order_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_seed_order_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.SeedOrderDetail" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_seed_order_detail (id, order_number, seed_id, 
+      user_id, buy_count, buy_amount, 
+      add_time,pay_time,seq_no,account_pay_amount,car_pay_amount,reduce_pay_amount,close_time,state)
+    values (#{id,jdbcType=INTEGER}, #{orderNumber,jdbcType=VARCHAR}, #{seedId,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{buyCount,jdbcType=INTEGER}, #{buyAmount,jdbcType=DECIMAL}, 
+      #{addTime,jdbcType=TIMESTAMP},#{payTime,jdbcType=TIMESTAMP},
+      #{seqNo,jdbcType=VARCHAR},#{accountPayAmount,jdbcType=DECIMAL},#{carPayAmount,jdbcType=DECIMAL},#{reducePayAmount,jdbcType=DECIMAL},
+      #{closeTime,jdbcType=DECIMAL},#{state,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.SeedOrderDetail" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_seed_order_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderNumber != null">
+        order_number,
+      </if>
+      <if test="seedId != null">
+        seed_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="buyCount != null">
+        buy_count,
+      </if>
+      <if test="buyAmount != null">
+        buy_amount,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="payTime != null">
+        pay_time,
+      </if>
+      <if test="seqNo != null">
+        seq_no,
+      </if>
+      <if test="accountPayAmount != null">
+        account_pay_amount,
+      </if>
+      <if test="carPayAmount != null">
+        car_pay_amount,
+      </if>
+      <if test="reducePayAmount != null">
+        reduce_pay_amount,
+      </if>
+      <if test="closeTime != null">
+        close_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="seedId != null">
+        #{seedId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="buyCount != null">
+        #{buyCount,jdbcType=INTEGER},
+      </if>
+      <if test="buyAmount != null">
+        #{buyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null">
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="seqNo != null">
+        #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountPayAmount != null">
+        #{accountPayAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="carPayAmount != null">
+        #{carPayAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="reducePayAmount != null">
+        #{reducePayAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="closeTime != null">
+        #{closeTime,jdbcType=DECIMAL},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=DECIMAL},
+      </if>
+
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.SeedOrderDetail">
+    update plant_seed_order_detail
+    <set>
+      <if test="orderNumber != null">
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="seedId != null">
+        seed_id = #{seedId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="buyCount != null">
+        buy_count = #{buyCount,jdbcType=INTEGER},
+      </if>
+      <if test="buyAmount != null">
+        buy_amount = #{buyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null">
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="seqNo != null">
+        seq_no = #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountPayAmount != null">
+        account_pay_amount = #{accountPayAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="carPayAmount != null">
+        car_pay_amount = #{carPayAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="reducePayAmount != null">
+        reduce_pay_amount = #{reducePayAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="closeTime != null">
+        close_time = #{closeTime,jdbcType=DECIMAL},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.seed.dto.SeedOrderDetail">
+    update plant_seed_order_detail
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      seed_id = #{seedId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      buy_count = #{buyCount,jdbcType=INTEGER},
+      buy_amount = #{buyAmount,jdbcType=DECIMAL},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      seq_no = #{seqNo,jdbcType=VARCHAR},
+       account_pay_amount = #{accountPayAmount,jdbcType=DECIMAL},
+       car_pay_amount = #{carPayAmount,jdbcType=DECIMAL},
+       reduce_pay_amount = #{reducePayAmount,jdbcType=DECIMAL},
+       close_time = #{closeTime,jdbcType=DECIMAL},
+       state = #{state,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectListByUserIdAndState" resultMap="seedOrderInfoMap">
+    select t1.* , t2.name as seed_name,t3.class_name as seed_type_name,t2.grow_days as seed_grow_days ,t2.per_price as seed_price
+    from plant_seed_order_detail t1
+    left join plant_seed t2 on t1.seed_id = t2.id
+    left join plant_seed_type t3 on t2.seed_type = t3.id
+    <where>
+      <if test="userId != null">
+        t1.user_id = #{userId}
+      </if>
+      <if test="state != null">
+        AND t1.state = #{state}
+      </if>
+    </where>
+    order by t1.pay_time desc,t1.add_time desc
+  </select>
+  
+  <select id="sumOrderCountBySeedId" resultType="int">
+    select sum(buy_count) from plant_seed_order_detail
+    where seed_id = #{seedId}
+    <if test="state != null">
+      AND state = #{state}
+    </if>
+  </select>
+  
+  <select id="findPlantBlockIdById" resultType="int">
+    select t2.id as blockId from plant_seed_order_detail t1
+    left join plant_seed t2 on t1.seed_id = t2.id
+    left join plant_block t3 on t2.seed_type = t3.seed_type
+    where
+    t1.state = 1
+    <![CDATA[
+        and t3.left_count >= 0
+    ]]>
+    and t3.is_show = 1
+    and t3.state = 1
+    and t3.is_delete = 0
+    and t1.id = #{id}
+  </select>
+
+  <select id="selectUserPayListByUserId" resultMap="seedOrderInfoMap">
+    select t1.*, t2.name as seed_name,t3.class_name as seed_type_name,t2.grow_days as seed_grow_days, t1.pay_time ,
+    t2.per_price as seed_price,t4.pic_url_thumb as pic_url
+    from plant_seed_order_detail t1
+    left join plant_seed t2 on t1.seed_id = t2.id
+    left join plant_seed_type t3 on t2.seed_type = t3.id
+    left join plant_seed_pic t4 on t2.pic_ids = t4.id
+    where t1.user_id = #{userId}
+    <![CDATA[
+    AND t1.state < 2
+    ]]>
+    order by t1.add_time desc
+  </select>
+  
+  <select id="selectByIdAndUserIdWithSeedTypeInfo" resultMap="seedOrderInfoMap">
+    select t1.*, t2.seed_type as seed_type_id,t2.name as seed_name,t3.class_name as seed_type_name,t2.grow_days as seed_grow_days, t1.pay_time ,t1.add_time,
+    t2.per_price as seed_price,t4.pic_url_thumb as pic_url
+    from plant_seed_order_detail t1
+    left join plant_seed t2 on t1.seed_id = t2.id
+    left join plant_seed_type t3 on t2.seed_type = t3.id
+    left join plant_seed_pic t4 on t2.pic_ids = t4.id
+    where t1.id = #{id}
+    <if test="userId != null">
+      and t1.user_id = #{userId}
+    </if>
+  </select>
+  
+  
+  <select id="selectSelective" resultMap="seedOrderInfoMap">
+    select t1.*, t2.name as seed_name,t3.class_name as seed_type_name,t2.grow_days as seed_grow_days, t1.pay_time ,t1.add_time,
+    t2.per_price as seed_price,t4.phone,t4.real_name
+    from plant_seed_order_detail t1
+    left join plant_seed t2 on t1.seed_id = t2.id
+    left join plant_seed_type t3 on t2.seed_type = t3.id
+    left join plant_user t4 on t1.user_id = t4.id
+    <where>
+      <if test="phone != null and phone != ''">
+        <bind name="phoneLike" value="'%'+ phone + '%'"/>
+        t4.phone like #{phoneLike}
+      </if>
+      <if test="seedTypeName != null and seedTypeName != ''">
+        AND t3.class_name = #{seedTypeName}
+      </if>
+      <if test="realName != null and realName != ''">
+        <bind name="realNameLike" value="'%'+ realName + '%'"/>
+        AND t4.real_name like #{realNameLike}
+      </if>
+      <if test="state != null">
+        AND t1.state = #{state}
+      </if>
+      <if test="orderNumber != null and orderNumber != ''">
+        AND t1.order_number = #{orderNumber}
+      </if>
+      <if test="startTime != null and endTime != null">
+        <![CDATA[
+            AND UNIX_TIMESTAMP(#{startTime}) <= UNIX_TIMESTAMP(t1.add_time)
+            AND UNIX_TIMESTAMP(#{endTime}) >= UNIX_TIMESTAMP(t1.add_time)
+        ]]>
+      </if>
+    </where>
+    order by t1.add_time desc
+  </select>
+
+  <select id="selectByOrderNumber" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_seed_order_detail
+    where order_number = #{orderNumber}
+  </select>
+
+  
+</mapper>

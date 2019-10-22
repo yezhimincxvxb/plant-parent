@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.seed.dao.SeedOrderDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.SeedOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="seed_type" jdbcType="INTEGER" property="seedType" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
+    <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount" />
+    <result column="plant_count" jdbcType="INTEGER" property="plantCount" />
+  </resultMap>
+  <resultMap id="SeedOrderInfo" type="com.moguying.plant.backend.seed.dto.SeedOrder" extends="BaseResultMap">
+    <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+  </resultMap>
+  
+  <resultMap id="UserSeedOrderStatistic" type="com.moguying.plant.api.user.dto.UserSeedOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="pic_url" jdbcType="INTEGER" property="picUrl" />
+    <result column="seed_type_id" jdbcType="INTEGER" property="seedTypeId" />
+  </resultMap>
+  
+  
+  
+  <sql id="Base_Column_List">
+    `id` ,`seed_type` ,`user_id` ,`buy_count`,`buy_amount` ,`plant_count`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_seed_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_seed_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.SeedOrder">
+    insert into plant_seed_order (`id` ,`seed_type` ,`user_id` ,`buy_count`,`buy_amount` ,`plant_count`)
+    values (#{id,jdbcType=INTEGER}, #{seedType,jdbcType=INTEGER},
+      #{userId,jdbcType=INTEGER}, #{buyCount,jdbcType=INTEGER}, #{buyAmount,jdbcType=DECIMAL}, 
+      #{plantCount,jdbcType=INTEGER},
+     )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.SeedOrder">
+    insert into plant_seed_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="seedType != null">
+        seed_type,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="buyCount != null">
+        buy_count,
+      </if>
+      <if test="buyAmount != null">
+        buy_amount,
+      </if>
+      <if test="plantCount != null">
+        plant_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="seedType != null">
+        #{seedType,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="buyCount != null">
+        #{buyCount,jdbcType=INTEGER},
+      </if>
+      <if test="buyAmount != null">
+        #{buyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="plantCount != null">
+        #{plantCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.SeedOrder">
+    update plant_seed_order
+    <set>
+      <if test="seedType != null">
+        seed_type = #{seedId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="buyCount != null">
+        buy_count = #{buyCount,jdbcType=INTEGER},
+      </if>
+      <if test="buyAmount != null">
+        buy_amount = #{buyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="plantCount != null">
+        plant_count = #{plantCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.seed.dto.SeedOrder">
+    update plant_seed_order
+    set seed_type = #{seedType,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      buy_count = #{buyCount,jdbcType=INTEGER},
+      buy_amount = #{buyAmount,jdbcType=DECIMAL},
+      plant_count = #{plantCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectSelective" resultMap="SeedOrderInfo">
+    select t1.id,  t1.seed_type, t1.user_id, buy_count, buy_amount, plant_count,
+    t2.class_name as seed_type_name,t3.phone,t3.real_name  from plant_seed_order t1
+    left join plant_seed_type t2 on t1.seed_type = t2.id
+    left join plant_user t3 on t1.user_id = t3.id
+    <where>
+      <if test="phone != null">
+        <bind name="phoneLike" value="'%'+ phone +'%'"/>
+        t3.phone like #{phoneLike}
+      </if>
+      <if test="seedTypeName != null">
+        AND t2.class_name = #{seedTypeName}
+      </if>
+      <if test="userId != null">
+        AND t1.user_id = #{userId}
+      </if>
+      <if test="seedType != null">
+        AND t1.seed_type = #{seedType}
+      </if>
+    </where>
+    order by (t1.buy_count-t1.plant_count) desc
+  </select>
+
+  <update id="incrSeedOrder" parameterType="com.moguying.plant.backend.seed.dto.SeedOrder">
+    update plant_seed_order
+    <set>
+      <if test="buyCount != null">
+        buy_count = buy_count + #{buyCount},
+      </if>
+      <if test="buyAmount != null">
+        buy_amount = buy_amount + #{buyAmount},
+      </if>
+    </set>
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="seedType != null">
+        AND seed_type = #{seedType}
+      </if>
+      <if test="userId != null">
+        AND user_id = #{userId}
+      </if>
+    </where>
+
+  </update>
+
+  <select id="sumSeedCountByUserId" resultType="int">
+    select sum(buy_count - plant_count) from plant_seed_order
+    where user_id = #{userId}
+  </select>
+
+
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_seed_order
+    where user_id = #{userId}
+  </select>
+
+
+  <select id="selectByIdAndUserId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_seed_order
+    where id = #{id} and user_id = #{userId}
+  </select>
+  
+  <select id="sumSeedCountBySeedType" resultType="com.moguying.plant.api.user.dto.CanPlantOrder">
+    select id as orderId,sum(buy_count - plant_count) as count from plant_seed_order
+    where seed_type = #{seedType}
+    and user_id = #{userId}
+  </select>
+  
+  <select id="userSeedOrderStatistics" resultMap="UserSeedOrderStatistic">
+    select t1.id,(t1.buy_count - t1.plant_count) as count,t2.class_name as seed_type_name ,t2.pic_url,t1.seed_type as seed_type_id
+    from plant_seed_order t1
+    left join plant_seed_type t2 on t1.seed_type = t2.id
+    where t1.user_id = #{userId}
+  </select>
+
+</mapper>

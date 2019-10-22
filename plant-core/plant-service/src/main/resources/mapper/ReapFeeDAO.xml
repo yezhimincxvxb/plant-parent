@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.reap.dao.ReapFeeDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.reap.dto.ReapFee">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="invite_uid" jdbcType="INTEGER" property="inviteUid" />
+    <result column="reap_id" jdbcType="INTEGER" property="reapId" />
+    <result column="fee_amount" jdbcType="DECIMAL" property="feeAmount" />
+    <result column="is_first" jdbcType="BIT" property="isFirst" />
+  </resultMap>
+
+  <resultMap id="BaseResultInfo" type="com.moguying.plant.backend.reap.dto.ReapFee" extends="BaseResultMap">
+    <collection property="user" ofType="User">
+      <result column="phone" property="phone"/>
+      <result column="real_name" property="realName"/>
+      <result column="reg_time" property="regTime"/>
+    </collection>
+    <collection property="inviteUser" ofType="User">
+      <result column="invite_phone" property="phone"/>
+      <result column="invite_real_name" property="realName"/>
+    </collection>
+    <collection property="reap" ofType="Reap">
+      <result column="seed_grow_days" property="seedGrowDays"/>
+      <result column="add_time" property="addTime"/>
+      <result column="plant_count" property="plantCount"/>
+      <result column="plant_amount" property="preAmount"/>
+    </collection>
+  </resultMap>
+
+
+
+  <sql id="Base_Column_List">
+    id, user_id, invite_uid, reap_id, fee_amount, is_first
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_reap_fee
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_reap_fee
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.reap.dto.ReapFee">
+    insert into plant_reap_fee (id, user_id, invite_uid, 
+      reap_id, fee_amount, is_first
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{inviteUid,jdbcType=INTEGER}, 
+      #{reapId,jdbcType=INTEGER}, #{feeAmount,jdbcType=DECIMAL}, #{isFirst,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.reap.dto.ReapFee">
+    insert into plant_reap_fee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="inviteUid != null">
+        invite_uid,
+      </if>
+      <if test="reapId != null">
+        reap_id,
+      </if>
+      <if test="feeAmount != null">
+        fee_amount,
+      </if>
+      <if test="isFirst != null">
+        is_first,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUid != null">
+        #{inviteUid,jdbcType=INTEGER},
+      </if>
+      <if test="reapId != null">
+        #{reapId,jdbcType=INTEGER},
+      </if>
+      <if test="feeAmount != null">
+        #{feeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isFirst != null">
+        #{isFirst,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.reap.dto.ReapFee">
+    update plant_reap_fee
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUid != null">
+        invite_uid = #{inviteUid,jdbcType=INTEGER},
+      </if>
+      <if test="reapId != null">
+        reap_id = #{reapId,jdbcType=INTEGER},
+      </if>
+      <if test="feeAmount != null">
+        fee_amount = #{feeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isFirst != null">
+        is_first = #{isFirst,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.reap.dto.ReapFee">
+    update plant_reap_fee
+    set user_id = #{userId,jdbcType=INTEGER},
+      invite_uid = #{inviteUid,jdbcType=INTEGER},
+      reap_id = #{reapId,jdbcType=INTEGER},
+      fee_amount = #{feeAmount,jdbcType=DECIMAL},
+      is_first = #{isFirst,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectSelective" resultMap="BaseResultInfo">
+    select t1.*,t2.add_time,t2.plant_count,t2.pre_amount as plant_amount,
+    t3.phone,t3.real_name,t3.reg_time,t4.phone as invite_phone,t4.real_name as invite_real_name,
+    t5.grow_days as seed_grow_days
+    from plant_reap_fee t1
+    left join plant_reap t2 on t1.reap_id = t2.id
+    left join plant_user t3 on t1.user_id = t3.id
+    left join plant_user t4 on t1.invite_uid = t4.id
+    left join plant_seed_type t5 on t2.seed_type = t5.id
+    <where>
+      <if test="userPhone != null and userPhone != ''">
+        t3.phone = #{userPhone}
+      </if>
+      <if test="invitePhone != null and invitePhone != ''">
+        AND t3.phone = #{invitePhone}
+      </if>
+      <if test="inviteUid != null">
+        AND t1.invite_uid = #{inviteUid}
+      </if>
+      <if test="isFirst != null">
+        AND t1.is_first = #{isFirst}
+      </if>
+      <if test="regStartTime != null and regEndTime != null">
+        <![CDATA[
+            AND UNIX_TIMESTAMP(t3.reg_time) >= UNIX_TIMESTAMP(#{regStartTime})
+            AND UNIX_TIMESTAMP(t3.reg_time) <= UNIX_TIMESTAMP(#{regEndTime})
+        ]]>
+      </if>
+      <if test="startTime != null and endTime != null">
+        <![CDATA[
+            AND UNIX_TIMESTAMP(t2.add_time) >= UNIX_TIMESTAMP(#{startTime})
+            AND UNIX_TIMESTAMP(t2.add_time) <= UNIX_TIMESTAMP(#{endTime})
+        ]]>
+      </if>
+      <if test="userRealName != null and userRealName != ''">
+        AND t3.real_name = #{userRealName}
+      </if>
+    </where>
+  </select>
+  
+  
+  
+</mapper>

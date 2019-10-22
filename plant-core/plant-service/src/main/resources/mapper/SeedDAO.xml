@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.seed.dao.SeedDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.Seed">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="small_name" jdbcType="VARCHAR" property="smallName" />
+    <result column="per_price" jdbcType="DECIMAL" property="perPrice" />
+    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+    <result column="grow_days" jdbcType="INTEGER" property="growDays" />
+    <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" />
+    <result column="interest_rates" jdbcType="DECIMAL" property="interestRates" />
+    <result column="seed_type" jdbcType="INTEGER" property="seedType" />
+    <result column="total_count" jdbcType="INTEGER" property="totalCount" />
+    <result column="left_count" jdbcType="INTEGER" property="leftCount" />
+    <result column="open_time" jdbcType="TIMESTAMP" property="openTime" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="pic_ids" jdbcType="VARCHAR" property="picIds" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="is_show" jdbcType="BIT" property="isShow" />
+    <result column="plant_level" jdbcType="TINYINT" property="plantLevel" />
+    <result column="reap_type" jdbcType="TINYINT" property="reapType" />
+    <result column="plant_type" jdbcType="TINYINT" property="plantType" />
+    <result column="review_mark" jdbcType="VARCHAR" property="reviewMark" />
+    <result column="add_uid" jdbcType="INTEGER" property="addUid" />
+    <result column="review_uid" jdbcType="INTEGER" property="reviewUid" />
+    <result column="review_time" jdbcType="TIMESTAMP" property="reviewTime" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="total_interest" jdbcType="DECIMAL" property="totalInterest" />
+    <result column="reap_amount" jdbcType="DECIMAL" property="reapAmount" />
+    <result column="reap_interest" jdbcType="DECIMAL" property="reapInterest" />
+    <result column="inner_count" jdbcType="INTEGER" property="innerCount"/>
+    <result column="real_amount" jdbcType="INTEGER" property="realAmount"/>
+    <result column="real_interest" jdbcType="INTEGER" property="realInterest"/>
+    <result column="order_number" jdbcType="INTEGER" property="orderNumber"/>
+    <result column="full_time" jdbcType="INTEGER" property="fullTime"/>
+  </resultMap>
+
+
+  <resultMap id="ContentSeedMap" type="Seed" extends="BaseResultMap">
+    <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
+    <collection property="content" ofType="SeedContent">
+      <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
+      <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
+    </collection>
+  </resultMap>
+  
+  
+  <resultMap id="ResultSeedListForHome" type="com.moguying.plant.api.home.dto.HomeSeed">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="left_count" jdbcType="INTEGER" property="leftCount" />
+    <result column="per_price" jdbcType="DECIMAL" property="perPrice" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="interest_rates" jdbcType="DECIMAL" property="interestRates" />
+    <result column="grow_days" jdbcType="INTEGER" property="growDays" />
+    <result column="total_interest" jdbcType="DECIMAL" property="totalInterest" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  
+  
+  <resultMap id="AppSeedDetailMap" type="com.moguying.plant.api.seed.dto.SeedDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="seed_name" jdbcType="VARCHAR" property="seedName" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="left_count" jdbcType="VARCHAR" property="leftCount" />
+    <result column="per_price" jdbcType="VARCHAR" property="perPrice" />
+    <result column="grow_days" jdbcType="INTEGER" property="growDays" />
+    <collection property="content" ofType="SeedContent">
+      <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
+      <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
+    </collection>
+  </resultMap>
+  
+  
+  
+  <sql id="Base_Column_List">
+    id, `name`, small_name, per_price, total_amount, grow_days, serial_number, interest_rates, 
+    seed_type, total_count, left_count, open_time,
+    close_time, pic_ids, `state`, is_show, plant_level, reap_type, plant_type,
+    review_mark, add_uid, review_uid, review_time, add_time, total_interest, reap_amount, 
+    reap_interest,inner_count,real_amount,real_interest,order_number,full_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_seed
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_seed
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.Seed">
+    insert into plant_seed (id, `name`, small_name, 
+      per_price, total_amount, grow_days, 
+      serial_number, interest_rates,
+      seed_type,
+      total_count, left_count, open_time, 
+      close_time, pic_ids, `state`, 
+      is_show, plant_level, reap_type, 
+      plant_type, review_mark,
+      add_uid, review_uid, review_time, 
+      add_time, total_interest, reap_amount, 
+      reap_interest,order_number)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{smallName,jdbcType=VARCHAR}, 
+      #{perPrice,jdbcType=DECIMAL}, #{totalAmount,jdbcType=DECIMAL}, #{growDays,jdbcType=INTEGER}, 
+      #{serialNumber,jdbcType=VARCHAR}, #{interestRates,jdbcType=DECIMAL}, #{seedType,jdbcType=INTEGER},
+      #{totalCount,jdbcType=INTEGER}, #{leftCount,jdbcType=INTEGER}, #{openTime,jdbcType=TIMESTAMP}, 
+      #{closeTime,jdbcType=TIMESTAMP}, #{picIds,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT},
+      #{isShow,jdbcType=BIT}, #{plantLevel,jdbcType=TINYINT}, #{reapType,jdbcType=TINYINT},
+      #{plantType,jdbcType=TINYINT},  #{reviewMark,jdbcType=VARCHAR},
+      #{addUid,jdbcType=INTEGER}, #{reviewUid,jdbcType=INTEGER}, #{reviewTime,jdbcType=TIMESTAMP}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{totalInterest,jdbcType=DECIMAL}, #{reapAmount,jdbcType=DECIMAL}, 
+      #{reapInterest,jdbcType=DECIMAL},#{orderNubmer,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.Seed" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_seed
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="smallName != null">
+        small_name,
+      </if>
+      <if test="perPrice != null">
+        per_price,
+      </if>
+      <if test="totalAmount != null">
+        total_amount,
+      </if>
+      <if test="growDays != null">
+        grow_days,
+      </if>
+      <if test="serialNumber != null">
+        serial_number,
+      </if>
+      <if test="interestRates != null">
+        interest_rates,
+      </if>
+
+      <if test="seedType != null">
+        seed_type,
+      </if>
+      <if test="totalCount != null">
+        total_count,
+      </if>
+      <if test="leftCount != null">
+        left_count,
+      </if>
+      <if test="openTime != null">
+        open_time,
+      </if>
+      <if test="closeTime != null">
+        close_time,
+      </if>
+      <if test="picIds != null">
+        pic_ids,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="isShow != null">
+        is_show,
+      </if>
+      <if test="plantLevel != null">
+        plant_level,
+      </if>
+      <if test="reapType != null">
+        reap_type,
+      </if>
+      <if test="plantType != null">
+        plant_type,
+      </if>
+      <if test="reviewMark != null">
+        review_mark,
+      </if>
+      <if test="addUid != null">
+        add_uid,
+      </if>
+      <if test="reviewUid != null">
+        review_uid,
+      </if>
+      <if test="reviewTime != null">
+        review_time,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="totalInterest != null">
+        total_interest,
+      </if>
+      <if test="reapAmount != null">
+        reap_amount,
+      </if>
+      <if test="reapInterest != null">
+        reap_interest,
+      </if>
+      <if test="orderNumber != null">
+        order_number
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="smallName != null">
+        #{smallName,jdbcType=VARCHAR},
+      </if>
+      <if test="perPrice != null">
+        #{perPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null">
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="growDays != null">
+        #{growDays,jdbcType=INTEGER},
+      </if>
+      <if test="serialNumber != null">
+        #{serialNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRates != null">
+        #{interestRates,jdbcType=DECIMAL},
+      </if>
+      <if test="seedType != null">
+        #{seedType,jdbcType=INTEGER},
+      </if>
+      <if test="totalCount != null">
+        #{totalCount,jdbcType=INTEGER},
+      </if>
+      <if test="leftCount != null">
+        #{leftCount,jdbcType=INTEGER},
+      </if>
+      <if test="openTime != null">
+        #{openTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeTime != null">
+        #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="picIds != null">
+        #{picIds,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="isShow != null">
+        #{isShow,jdbcType=BIT},
+      </if>
+      <if test="plantLevel != null">
+        #{plantLevel,jdbcType=TINYINT},
+      </if>
+      <if test="reapType != null">
+        #{reapType,jdbcType=TINYINT},
+      </if>
+      <if test="plantType != null">
+        #{plantType,jdbcType=TINYINT},
+      </if>
+      <if test="reviewMark != null">
+        #{reviewMark,jdbcType=VARCHAR},
+      </if>
+      <if test="addUid != null">
+        #{addUid,jdbcType=INTEGER},
+      </if>
+      <if test="reviewUid != null">
+        #{reviewUid,jdbcType=INTEGER},
+      </if>
+      <if test="reviewTime != null">
+        #{reviewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalInterest != null">
+        #{totalInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="reapAmount != null">
+        #{reapAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="reapInterest != null">
+        #{reapInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.Seed">
+    update plant_seed
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="smallName != null">
+        small_name = #{smallName,jdbcType=VARCHAR},
+      </if>
+      <if test="perPrice != null">
+        per_price = #{perPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null">
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="growDays != null">
+        grow_days = #{growDays,jdbcType=INTEGER},
+      </if>
+      <if test="serialNumber != null">
+        serial_number = #{serialNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRates != null">
+        interest_rates = #{interestRates,jdbcType=DECIMAL},
+      </if>
+      <if test="seedType != null">
+        seed_type = #{seedType,jdbcType=INTEGER},
+      </if>
+      <if test="totalCount != null">
+        total_count = #{totalCount,jdbcType=INTEGER},
+      </if>
+      <if test="leftCount != null">
+        left_count = #{leftCount,jdbcType=INTEGER},
+      </if>
+      <if test="openTime != null">
+        open_time = #{openTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeTime != null">
+        close_time = #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="picIds != null">
+        pic_ids = #{picIds,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="isShow != null">
+        is_show = #{isShow,jdbcType=BIT},
+      </if>
+      <if test="plantLevel != null">
+        plant_level = #{plantLevel,jdbcType=TINYINT},
+      </if>
+      <if test="reapType != null">
+        reap_type = #{reapType,jdbcType=TINYINT},
+      </if>
+      <if test="plantType != null">
+        plant_type = #{plantType,jdbcType=TINYINT},
+      </if>
+      <if test="reviewMark != null">
+        review_mark = #{reviewMark,jdbcType=VARCHAR},
+      </if>
+      <if test="addUid != null">
+        add_uid = #{addUid,jdbcType=INTEGER},
+      </if>
+      <if test="reviewUid != null">
+        review_uid = #{reviewUid,jdbcType=INTEGER},
+      </if>
+      <if test="reviewTime != null">
+        review_time = #{reviewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalInterest != null">
+        total_interest = #{totalInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="reapAmount != null">
+        reap_amount = #{reapAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="reapInterest != null">
+        reap_interest = #{reapInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="innerCount != null">
+        inner_count = #{innerCount},
+      </if>
+      <if test="realAmount != null">
+        real_amount = #{realAmount},
+      </if>
+      <if test="realInterest != null">
+        real_interest = #{realInterest},
+      </if>
+      <if test="orderNumber != null">
+        order_number = #{orderNumber},
+      </if>
+      <if test="fullTime != null">
+        full_time = #{fullTime},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.seed.dto.Seed">
+    update plant_seed
+    set `name` = #{name,jdbcType=VARCHAR},
+      small_name = #{smallName,jdbcType=VARCHAR},
+      per_price = #{perPrice,jdbcType=DECIMAL},
+      total_amount = #{totalAmount,jdbcType=DECIMAL},
+      grow_days = #{growDays,jdbcType=INTEGER},
+      serial_number = #{serialNumber,jdbcType=VARCHAR},
+      interest_rates = #{interestRates,jdbcType=DECIMAL},
+      seed_type = #{seedType,jdbcType=INTEGER},
+      total_count = #{totalCount,jdbcType=INTEGER},
+      left_count = #{leftCount,jdbcType=INTEGER},
+      open_time = #{openTime,jdbcType=TIMESTAMP},
+      close_time = #{closeTime,jdbcType=TIMESTAMP},
+      pic_ids = #{picIds,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=TINYINT},
+      is_show = #{isShow,jdbcType=BIT},
+      plant_level = #{plantLevel,jdbcType=TINYINT},
+      reap_type = #{reapType,jdbcType=TINYINT},
+      plant_type = #{plantType,jdbcType=TINYINT},
+      review_mark = #{reviewMark,jdbcType=VARCHAR},
+      add_uid = #{addUid,jdbcType=INTEGER},
+      review_uid = #{reviewUid,jdbcType=INTEGER},
+      review_time = #{reviewTime,jdbcType=TIMESTAMP},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      total_interest = #{totalInterest,jdbcType=DECIMAL},
+      reap_amount = #{reapAmount,jdbcType=DECIMAL},
+      reap_interest = #{reapInterest,jdbcType=DECIMAL}
+      inner_count = #{innerCount,jdbcType=INTEGER},
+      real_amount = #{realAmount,jdbcType=DECIMAL},
+      real_interest = #{realInterest,jdbcType=DECIMAL},
+      order_number = #{orderNumber,jdbcType=DECIMAL},
+      full_time = #{fullTime}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectSelective" parameterType="Seed" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from plant_seed
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="name != null and name != ''">
+      <bind value="'%' + name + '%'" name="nameLike"/>
+        AND name like #{nameLike}
+      </if>
+      <if test="state != null">
+        AND state = #{state}
+      </if>
+      <if test="openTime != null">
+      <![CDATA[
+        AND UNIX_TIMESTAMP(open_time) <= UNIX_TIMESTAMP(#{openTime})
+      ]]>
+      </if>
+      <if test="closeTime != null">
+      <![CDATA[
+        AND UNIX_TIMESTAMP(close_time) >= UNIX_TIMESTAMP(#{closeTime})
+      ]]>
+      </if>
+    </where>
+    order by id desc
+  </select>
+  
+  <select id="selectByPrimaryKeyWithBLOB" resultMap="ContentSeedMap" parameterType="java.lang.Integer">
+    select t1.id, t1.`name`, t1.small_name, t1.per_price, t1.total_amount, t1.grow_days,
+    t1.serial_number, t1.interest_rates, t1.seed_type, t1.total_count, t1.left_count, t1.open_time,
+    t1.close_time, t1.pic_ids, t1.`state`, t1.is_show, t1.plant_level,t1.reap_type, t1.plant_type,
+    t2.*,
+    t3.class_name as seed_type_name from plant_seed t1
+    left join plant_seed_content t2 on t1.seed_type = t2.seed_type
+    left join plant_seed_type t3 on t1.seed_type = t3.id
+    where t1.id = #{id}
+  </select>
+
+  <update id="incrByPrimaryKey" >
+    update plant_seed
+    <set>
+      <if test="reapAmount != null">
+        reap_amount = reap_amount + #{reapAmount},
+      </if>
+      <if test="reapInterest != null">
+        reap_interest = reap_interest + #{reapInterest},
+      </if>
+      <if test="innerCount != null">
+        inner_count = inner_count + #{innerCount},
+      </if>
+      <if test="realAmount != null">
+        real_amount = real_amount + #{realAmount},
+      </if>
+      <if test="realInterest != null">
+        real_interest = real_interest + #{realInterest},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  
+  <select id="selectSeedListForHome" resultMap="ResultSeedListForHome">
+    select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state
+    from plant_seed t1
+    left join plant_seed_pic t2 on t1.pic_ids = t2.id
+    where t1.state = 1 and is_show = 1
+    <![CDATA[
+    AND UNIX_TIMESTAMP(t1.close_time) >= UNIX_TIMESTAMP(NOW())
+    ]]>
+    order by t1.order_number desc
+  </select>
+  
+  <select id="seedDetail" resultMap="AppSeedDetailMap">
+    select t1.id,t1.name as seed_name,t3.pic_url,t1.per_price,t1.left_count,t2.seed_introduce,t2.contract_content,t1.grow_days
+    from plant_seed t1
+    left join plant_seed_content t2 on t2.seed_type = t1.seed_type
+    left join plant_seed_pic t3 on t1.pic_ids = t3.id
+    where t1.id = #{id}
+  </select>
+
+
+  <update id="decrSeedLeftCount">
+    update plant_seed set
+    left_count = left_count - #{count}
+    where
+    <![CDATA[
+        left_count >= #{count}
+    ]]>
+     and id = #{id}
+  </update>
+  
+  <select id="recommendSeed" resultMap="ResultSeedListForHome">
+    select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state
+    from plant_seed t1
+    left join plant_seed_pic t2 on t1.pic_ids = t2.id
+    where t1.state = 1 and is_show = 1
+    <![CDATA[
+    AND UNIX_TIMESTAMP(t1.close_time) >= UNIX_TIMESTAMP(NOW())
+    ]]>
+    order by t1.left_count desc limit 3
+  </select>
+
+  <select id="selectOneFullSeed" resultMap="ResultSeedListForHome">
+    select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state
+    from plant_seed t1
+    left join plant_seed_pic t2 on t1.pic_ids = t2.id
+    where t1.state = 2 and is_show = 1
+    order by t1.full_time  desc limit 1
+  </select>
+
+
+</mapper>

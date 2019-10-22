@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.content.ActivityDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Activity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="sub_title" jdbcType="VARCHAR" property="subTitle" />
+    <result column="open_time" jdbcType="TIMESTAMP" property="openTime" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="link_url" jdbcType="VARCHAR" property="linkUrl" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.dto.Activity">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, sub_title, open_time, close_time, pic_url,link_url
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Activity" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_activity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="subTitle != null">
+        sub_title,
+      </if>
+      <if test="openTime != null">
+        open_time,
+      </if>
+      <if test="closeTime != null">
+        close_time,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
+      </if>
+      <if test="linkUrl != null">
+        link_url,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="subTitle != null">
+        #{subTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null">
+        #{openTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeTime != null">
+        #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl != null">
+        #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        <![CDATA[
+            CONCAT("<style>img{max-width:100%!important;}</style>",#{content,jdbcType=LONGVARCHAR})
+        ]]>
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Activity">
+    update plant_activity
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="subTitle != null">
+        sub_title = #{subTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null">
+        open_time = #{openTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeTime != null">
+        close_time = #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="picUrl != null">
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl != null">
+        link_url = #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        <![CDATA[
+            content = CONCAT("<style>img{max-width:100%!important;}</style>",#{content,jdbcType=LONGVARCHAR})
+        ]]>
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.moguying.plant.core.entity.dto.Activity">
+    update plant_activity
+    set title = #{title,jdbcType=VARCHAR},
+      sub_title = #{subTitle,jdbcType=VARCHAR},
+      open_time = #{openTime,jdbcType=TIMESTAMP},
+      close_time = #{closeTime,jdbcType=TIMESTAMP},
+      pic_url = #{picUrl,jdbcType=VARCHAR},
+      link_url = #{linkUrl,jdbcType=VARCHAR},
+      <![CDATA[
+            content = CONCAT("<style>img{max-width:100%!important;}</style>",#{content,jdbcType=LONGVARCHAR})
+        ]]>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="activityListForHome" resultMap="BaseResultMap">
+    select id,title,sub_title,open_time,close_time,pic_url,link_url from plant_activity
+    <where>
+        <if test="startTime != null">
+          <![CDATA[
+            unix_timestamp(#{startTime}) >= unix_timestamp(open_time)
+          ]]>
+        </if>
+        <if test="endTime != null">
+          <![CDATA[
+            AND unix_timestamp(#{endTime}) <= unix_timestamp(close_time)
+          ]]>
+        </if>
+
+    </where>
+    order by open_time desc
+  </select>
+
+  <select id="newestActivity" resultMap="BaseResultMap">
+    select id,title,sub_title,open_time,close_time,pic_url,link_url from plant_activity
+    where
+        <![CDATA[
+            unix_timestamp(NOW()) >= unix_timestamp(open_time) AND unix_timestamp(NOW()) <= unix_timestamp(close_time)
+          ]]>
+    order by open_time
+  </select>
+
+  <select id="selectSelective" parameterType="com.moguying.plant.core.entity.dto.Activity" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_activity
+    <where>
+      <if test="title != null">
+        <bind value="'%'+title+'%'" name="titleLike"/>
+        title like #{titleLike}
+      </if>
+    </where>
+    order by id desc
+  </select>
+  
+  <select id="activityList" resultMap="BaseResultMap">
+    select id,title,sub_title,open_time,close_time,pic_url,link_url
+    from plant_activity
+    order by id desc
+  </select>
+  
+  
+</mapper>

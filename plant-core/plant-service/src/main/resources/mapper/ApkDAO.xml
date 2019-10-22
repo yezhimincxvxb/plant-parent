@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.system.dao.ApkDAO">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.system.dto.Apk">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+        <result column="download_url" jdbcType="VARCHAR" property="downloadUrl"/>
+        <result column="is_show" jdbcType="BIT" property="isShow"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="version_name" jdbcType="VARCHAR" property="versionName"/>
+        <result column="update_desc" jdbcType="VARCHAR" property="updateDesc"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, version, download_url, is_show, add_time,version_name,update_desc
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_apk
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_apk
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.moguying.plant.backend.system.dto.Apk">
+    insert into plant_apk (id, version, download_url, 
+      is_show, add_time,version_name,update_desc)
+    values (#{id,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, #{downloadUrl,jdbcType=VARCHAR},
+      #{isShow,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP},#{versionName,jdbcType=VARCHAR},#{updateDesc,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.moguying.plant.backend.system.dto.Apk">
+        insert into plant_apk
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="downloadUrl != null">
+                download_url,
+            </if>
+            <if test="isShow != null">
+                is_show,
+            </if>
+            <if test="addTime != null">
+                add_time,
+            </if>
+            <if test="versionName != null">
+                version_name,
+            </if>
+            <if test="updateDesc != null">
+                update_desc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="downloadUrl != null">
+                #{downloadUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="isShow != null">
+                #{isShow,jdbcType=BIT},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="versionName != null">
+                #{versionName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDesc != null">
+                #{updateDesc,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.system.dto.Apk">
+        update plant_apk
+        <set>
+            <if test="version != null">
+                version = #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="downloadUrl != null">
+                download_url = #{downloadUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="isShow != null">
+                is_show = #{isShow,jdbcType=BIT},
+            </if>
+            <if test="addTime != null">
+                add_time = #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="versionName != null">
+                version_name = #{versionName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDesc != null">
+                update_desc = #{updateDesc,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.system.dto.Apk">
+    update plant_apk
+    set version = #{version,jdbcType=VARCHAR},
+      download_url = #{downloadUrl,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=BIT},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      version_name = #{versionName,jdbcType=VARCHAR},
+      update_desc = #{updateDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_apk
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="version != null">
+                AND version = #{version}
+            </if>
+        </where>
+        order by add_time desc
+    </select>
+    
+    <select id="newestApkInfo" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from plant_apk
+        where is_show = 1
+        order by add_time desc limit 1
+    </select>
+</mapper>

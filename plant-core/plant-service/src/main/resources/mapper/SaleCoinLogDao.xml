@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.reap.dao.SaleCoinLogDao">
+
+    <!-- 实体类属性与数据库字段一一映射 -->
+    <resultMap id="baseMap" type="com.moguying.plant.backend.reap.dto.SaleCoinLog">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="affect_coin" property="affectCoin"/>
+        <result column="affect_type" property="affectType"/>
+        <result column="affect_detail_id" property="affectDetailId"/>
+    </resultMap>
+
+    <!-- 添加蘑菇币日志信息 -->
+    <insert id="insertSaleCoinLog" parameterType="com.moguying.plant.backend.reap.dto.SaleCoinLog">
+        insert into plant_sale_coin_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="affectCoin != null">
+                affect_coin,
+            </if>
+            <if test="affectType != null">
+                affect_type,
+            </if>
+            <if test="affectDetailId != null">
+                affect_detail_id
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="affectCoin != null">
+                #{affectCoin},
+            </if>
+            <if test="affectType != null">
+                #{affectType},
+            </if>
+            <if test="affectDetailId != null">
+                #{affectDetailId}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 显示兑换券记录 -->
+    <select id="showFertilizerLog" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+          select t4.type_name `name`, count(t1.id) `number`, t3.coin_fertilizer `count`, t2.add_time `time`
+            from plant_sale_coin_log t1
+            left join plant_user_fertilizer t2 on t1.affect_detail_id = t2.id
+            left join plant_fertilizer t3 on t2.fertilizer_id = t3.id
+            left join plant_fertilizer_type t4 on t3.type_id = t4.id
+            where t1.user_id = #{userId} and t1.affect_type = 3
+            group by t1.id
+            order by t2.add_time desc
+    </select>
+
+</mapper>

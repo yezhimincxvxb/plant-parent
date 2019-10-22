@@ -1,15 +1,31 @@
+spring:
+  profiles:
+    active: dev
+
+---
 debug: false
 server:
   port: 9090
 spring:
+  profiles: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://192.168.1.131:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
     username: write
     password: 123456
     type: com.zaxxer.hikari.HikariDataSource
+  mvc:
+    view:
+      suffix: .html
+      prefix: /WEB-INF/views/
+  http:
+    encoding:
+      charset: UTF-8
+
 mybatis-plus:
   global-config:
     db-config:
       table-prefix: plant_
     banner: false
+  mapper-locations: classpath:mapper/*DAO.xml
+  type-aliases-package: com.moguying.plant.core.entity

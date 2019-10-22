@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.farmer.dao.FarmerEnergyTriggerDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="trigger_event" jdbcType="VARCHAR" property="triggerEvent" />
+    <result column="incr_grow_up_count" jdbcType="INTEGER" property="incrGrowUpCount" />
+    <result column="incr_grow_up_rate" jdbcType="DECIMAL" property="incrGrowUpRate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, trigger_event, incr_grow_up_count,incr_grow_up_rate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_farmer_energy_trigger
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_farmer_energy_trigger
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+    insert into plant_farmer_energy_trigger (id, trigger_event, incr_grow_up_count,incr_grow_up_rate
+      )
+    values (#{id,jdbcType=INTEGER}, #{triggerEvent,jdbcType=VARCHAR}, #{incrGrowUpCount,jdbcType=INTEGER}, #{incrGrowUpRate,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+    insert into plant_farmer_energy_trigger
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="triggerEvent != null">
+        trigger_event,
+      </if>
+      <if test="incrGrowUpCount != null">
+        incr_grow_up_count,
+      </if>
+      <if test="incrGrowUpRate != null">
+        incr_grow_up_rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="triggerEvent != null">
+        #{triggerEvent,jdbcType=VARCHAR},
+      </if>
+      <if test="incrGrowUpCount != null">
+        #{incrGrowUpCount,jdbcType=INTEGER},
+      </if>
+      <if test="incrGrowUpRate != null">
+        #{incrGrowUpRate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+    update plant_farmer_energy_trigger
+    <set>
+      <if test="triggerEvent != null">
+        trigger_event = #{triggerEvent,jdbcType=VARCHAR},
+      </if>
+      <if test="incrGrowUpCount != null">
+        incr_grow_up_count = #{incrGrowUpCount,jdbcType=INTEGER},
+      </if>
+      <if test="incrGrowUpRate != null">
+        incr_grow_up_rate = #{incrGrowUpRate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+    update plant_farmer_energy_trigger
+    set trigger_event = #{triggerEvent,jdbcType=VARCHAR},
+      incr_grow_up_count = #{incrGrowUpCount,jdbcType=INTEGER},
+      incr_grow_up_rate = #{incrGrowUpRate,jdbcType=DECIMAL},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_farmer_energy_trigger
+    <where>
+      <if test="triggerEvent != null and triggerEvent != ''">
+        trigger_event = #{triggerEvent}
+      </if>
+      <if test="id != null">
+        AND id = #{id}
+      </if>
+    </where>
+    order by id desc
+  </select>
+  
+  <select id="selectByTriggerEvent" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_farmer_energy_trigger
+    where trigger_event = #{triggerEvent};
+  </select>
+  
+  
+</mapper>

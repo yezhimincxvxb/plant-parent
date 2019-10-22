@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.reap.dao.ReapDAO">
+
+    <!-- 实体类属性与数据库字段一一映射 -->
+    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.reap.dto.Reap">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+        <result column="seed_type" jdbcType="INTEGER" property="seedType"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="block_id" jdbcType="INTEGER" property="blockId"/>
+        <result column="plant_count" jdbcType="INTEGER" property="plantCount"/>
+        <result column="plant_time" jdbcType="TIMESTAMP" property="plantTime"/>
+        <result column="pre_profit" jdbcType="DECIMAL" property="preProfit"/>
+        <result column="pre_amount" jdbcType="DECIMAL" property="preAmount"/>
+        <result column="pre_reap_time" jdbcType="TIMESTAMP" property="preReapTime"/>
+        <result column="rec_profit" jdbcType="DECIMAL" property="recProfit"/>
+        <result column="rec_amount" jdbcType="DECIMAL" property="recAmount"/>
+        <result column="rec_reap_time" jdbcType="TIMESTAMP" property="recReapTime"/>
+        <result column="reap_times" jdbcType="INTEGER" property="reapTimes"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="sale_time" jdbcType="TIMESTAMP" property="saleTime"/>
+        <result column="exchange_time" jdbcType="TIMESTAMP" property="exchangeTime"/>
+    </resultMap>
+
+    <resultMap id="BaseInfoMap" extends="BaseResultMap" type="com.moguying.plant.backend.reap.dto.Reap">
+        <result column="seed_name" property="seedName" jdbcType="VARCHAR"/>
+        <result column="seed_grow_days" property="seedGrowDays" jdbcType="INTEGER"/>
+        <result column="seed_price" property="seedPrice" jdbcType="DECIMAL"/>
+        <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="block_number" property="blockNumber" jdbcType="VARCHAR"/>
+        <result column="pic_url" property="picUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="MessageMap" type="com.moguying.plant.backend.user.dto.InnerMessage">
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 基本查询字段 -->
+    <sql id="Base_Column_List">
+    id, order_id, order_number,seed_type, user_id, block_id, plant_count,plant_time, pre_profit, pre_amount, pre_reap_time,
+    rec_profit, rec_amount, rec_reap_time, reap_times, `state`,add_time,sale_time, exchange_time
+  </sql>
+
+    <!-- 新增记录 -->
+    <insert id="insertSelective" parameterType="com.moguying.plant.backend.reap.dto.Reap" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into plant_reap
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="seedType != null">
+                seed_type,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="blockId != null">
+                block_id,
+            </if>
+            <if test="plantCount != null">
+                plant_count,
+            </if>
+            <if test="plantTime != null">
+                plant_time,
+            </if>
+            <if test="preProfit != null">
+                pre_profit,
+            </if>
+            <if test="preAmount != null">
+                pre_amount,
+            </if>
+            <if test="preReapTime != null">
+                pre_reap_time,
+            </if>
+            <if test="recProfit != null">
+                rec_profit,
+            </if>
+            <if test="recAmount != null">
+                rec_amount,
+            </if>
+            <if test="recReapTime != null">
+                rec_reap_time,
+            </if>
+            <if test="reapTimes != null">
+                reap_times,
+            </if>
+            <if test="state != null">
+                `state`,
+            </if>
+            <if test="addTime != null">
+                add_time,
+            </if>
+            <if test="saleTime != null">
+                sale_time,
+            </if>
+            <if test="exchangeTime != null">
+                exchange_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="orderNumber != null">
+                #{orderNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="orderId != null">
+                #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="seedType != null">
+                #{seedType,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="blockId != null">
+                #{blockId,jdbcType=INTEGER},
+            </if>
+            <if test="plantCount != null">
+                #{plantCount,jdbcType=INTEGER},
+            </if>
+            <if test="plantTime != null">
+                #{plantTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="preProfit != null">
+                #{preProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="preAmount != null">
+                #{preAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="preReapTime != null">
+                #{preReapTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="recProfit != null">
+                #{recProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="recAmount != null">
+                #{recAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="recReapTime != null">
+                #{recReapTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reapTimes != null">
+                #{reapTimes,jdbcType=INTEGER},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="saleTime != null">
+                #{saleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="exchangeTime != null">
+                #{exchangeTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 根据ID更新 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.reap.dto.Reap">
+        update plant_reap
+        <set>
+            <if test="orderNumber != null">
+                order_number = #{orderNumber,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="seedType != null">
+                seed_type = #{seedType,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="blockId != null">
+                block_id = #{blockId,jdbcType=INTEGER},
+            </if>
+            <if test="plantCount != null">
+                plant_count = #{plantCount,jdbcType=INTEGER},
+            </if>
+            <if test="plantTime != null">
+                plant_time = #{plantTime,jdbcType=INTEGER},
+            </if>
+            <if test="preProfit != null">
+                pre_profit = #{preProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="preAmount != null">
+                pre_amount = #{preAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="preReapTime != null">
+                pre_reap_time = #{preReapTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="recProfit != null">
+                rec_profit = #{recProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="recAmount != null">
+                rec_amount = #{recAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="recReapTime != null">
+                rec_reap_time = #{recReapTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reapTimes != null">
+                reap_times = #{reapTimes,jdbcType=INTEGER},
+            </if>
+            <if test="state != null">
+                `state` = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="addTime != null">
+                `add_time` = #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="saleTime != null">
+                `sale_time` = #{saleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="exchangeTime != null">
+                `exchange_time` = #{exchangeTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateStateByRange" parameterType="map">
+        update plant_reap
+        <set>
+            <if test="reap.state != null">
+                state = #{reap.state},
+            </if>
+            <if test="reap.recReapTime != null">
+                rec_reap_time = #{reap.recReapTime},
+            </if>
+            <if test="reap.saleTime != null">
+                sale_time = #{reap.saleTime}
+            </if>
+        </set>
+        <where>
+            id in
+            <foreach collection="idList" open="(" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+
+    <select id="selectSelective" resultMap="BaseInfoMap">
+        select t1.id, order_id,t1.order_number, t1.seed_type, t1.user_id, t1.pre_profit, t1.pre_amount,
+        t1.pre_reap_time, t1.rec_profit,
+        t1.block_id,t1.rec_amount, t1.rec_reap_time, t1.reap_times,t1.plant_count,t1.plant_time, t1.`state`,t1.add_time
+        ,t1.sale_time,
+        t2.phone,t4.number as block_number,t3.grow_days as seed_grow_days,t3.per_price as seed_price,t2.real_name,
+        t3.class_name as seed_type_name
+        from plant_reap t1
+        left join plant_user t2 on t1.user_id = t2.id
+        left join plant_seed_type t3 on t1.seed_type = t3.id
+        left join plant_block t4 on t1.block_id = t4.id
+        <where>
+            <if test="id != null">
+                t1.id = #{id}
+            </if>
+            <if test="orderId != null">
+                AND t1.order_id = #{orderId}
+            </if>
+            <if test="seedType != null">
+                AND t1.seed_type = #{seedType}
+            </if>
+            <if test="state != null">
+                AND t1.state = #{state}
+            </if>
+            <if test="userId != null">
+                AND t1.user_id = #{userId}
+            </if>
+            <if test="phone != null and phone != ''">
+                <bind name="phoneLike" value="'%' + phone + '%'"/>
+                AND t2.phone like #{phoneLike}
+            </if>
+            <if test="realName != null and phone != ''">
+                <bind name="realNameLike" value="'%' + realName + '%'"/>
+                AND t2.real_name like #{realNameLike}
+            </if>
+
+            <if test="seedTypeName != null and seedTypeName != ''">
+                <bind name="seedTypeNameLike" value="'%' + seedTypeName + '%'"/>
+                AND t3.class_name like #{seedTypeNameLike}
+            </if>
+            <if test="blockNumber != null and blockNumber != ''">
+                AND t4.number like #{blockNumber}
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_reap
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_reap
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <select id="selectCanReapByTime" resultType="int">
+    select  id from plant_reap
+    where <![CDATA[
+        UNIX_TIMESTAMP(pre_reap_time) = UNIX_TIMESTAMP(#{reapTime})
+    ]]>
+    AND state = 0
+    </select>
+
+    <select id="selectPhoneByRange" resultMap="MessageMap">
+        select phone,sum(t1.plant_count) count from plant_reap t1
+        left join plant_user t2 on t1.user_id = t2.id
+
+        <where>
+            t1.id in
+            <foreach collection="idList" open="(" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </where>
+        group by user_id
+    </select>
+
+    <select id="selectReapInRange" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_reap
+        <where>
+            <if test="reap.state != null">
+                state = #{reap.state}
+            </if>
+            <if test="idList != null">
+                AND id in
+                <foreach collection="idList" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="countBlockIdByUserId" resultType="int">
+        select count(*)  from (select block_id from plant_reap where
+        user_id = #{userId}
+        <![CDATA[
+        and state < 3
+    ]]>
+        group by block_id
+        ) t1
+    </select>
+
+    <select id="countByUserIdAndGrowUpDays" resultType="int">
+        select count(*) from plant_reap t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        where t1.user_id = #{userId} and t2.grow_days = #{days}
+    </select>
+
+    <select id="selectListCountByUserId" resultMap="BaseInfoMap">
+        select sum(plant_count) as plant_count ,seed_type,t2.class_name as seed_type_name,t2.pic_url from plant_reap t1
+        left join plant_seed_type t2 on t1.seed_type  = t2.id
+        where user_id = #{userId}
+        and t1.state = #{state}
+        group by t1.seed_type
+    </select>
+
+    <select id="reapProfitStatistics" resultType="java.math.BigDecimal">
+        select sum(pre_profit) from plant_reap
+        <where>
+            <if test="startTime != null and endTime != null">
+                <![CDATA[
+            UNIX_TIMESTAMP(pre_reap_time) >= UNIX_TIMESTAMP(#{startTime}) AND
+             UNIX_TIMESTAMP(pre_reap_time) <= UNIX_TIMESTAMP(#{endTime})
+        ]]>
+            </if>
+            <if test="states != null">
+                AND state in
+                <foreach collection="states" open="(" close=")" separator="," item="item">
+                    #{item.state}
+                </foreach>
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <select id="plantProfitStatistics" resultType="java.math.BigDecimal">
+        select sum(pre_profit) from plant_reap
+        <where>
+            <if test="startTime != null and endTime != null">
+                <![CDATA[
+            UNIX_TIMESTAMP(plant_time) >= UNIX_TIMESTAMP(#{startTime}) AND
+             UNIX_TIMESTAMP(plant_time) <= UNIX_TIMESTAMP(#{endTime})
+        ]]>
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <select id="reapStatistics" resultType="int">
+        select sum(plant_count) from plant_reap
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="state != null">
+                <if test="isEqual == true">
+                    AND state = #{state}
+                </if>
+                <if test="isEqual == false">
+                    <![CDATA[
+            AND state >= #{state}
+          ]]>
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="countPlantedByDateAndUserId" resultType="java.lang.Integer">
+        select count(*) from plant_reap where
+        user_id = #{userId}
+        <![CDATA[
+    and UNIX_TIMESTAMP(#{startTime}) <= UNIX_TIMESTAMP(add_time)
+    and UNIX_TIMESTAMP(#{endTime}) >= UNIX_TIMESTAMP(add_time)
+    ]]>
+        and state = 0
+    </select>
+
+    <select id="selectNewestByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_reap
+        where user_id = #{userId} and state = 0
+        order by add_time desc limit 1
+    </select>
+
+    <select id="selectByIdAndUserId" resultMap="BaseInfoMap">
+        select t1.id, order_id,t1.order_number, t1.seed_type, t1.user_id, t1.pre_profit, t1.pre_amount, t1.pre_reap_time, t1.rec_profit,
+        t1.block_id,t1.rec_amount, t1.rec_reap_time, t1.reap_times,t1.plant_count,t1.plant_time, t1.`state`,t1.add_time ,t1.sale_time,
+        t3.grow_days as seed_grow_days,t3.per_price as seed_price,t3.class_name as seed_type_name
+        from plant_reap t1
+        left join plant_user t2 on t1.user_id = t2.id
+        left join plant_seed_type t3 on t1.seed_type = t3.id
+        where t1.user_id = #{userId} and t1.id = #{id}
+    </select>
+
+    <!-- 查询已采摘 -->
+    <select id="showReap" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+        select t2.class_name `name`, sum(t1.plant_count) `number`, sum(t1.plant_count * t2.exchange_num) `count`
+        from plant_reap t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        <where>
+            t1.user_id = #{userId}
+            and t1.state = 1
+            and t1.plant_count &gt; 0
+            and t2.exchange_num &gt; 0
+        </where>
+        group by t2.class_name
+    </select>
+
+    <select id="findReapListByName" resultMap="BaseResultMap">
+        select t2.*
+        from plant_seed_type t1
+        left join plant_reap t2 on t1.id = t2.seed_type
+        <where>
+            t1.class_name = #{productName}
+            and t2.user_id = #{userId}
+            and t2.state = 1
+        </where>
+    </select>
+
+    <!-- 计算蘑菇币 -->
+    <select id="sumCoin" resultType="Integer">
+        select sum(t1.plant_count * t2.exchange_num)
+        from plant_reap t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        <where>
+            t1.user_id = #{userId}
+            and t1.state = 1
+            and t1.plant_count &gt; 0
+            and t2.exchange_num &gt; 0
+            <if test="idList != null and idList.size() > 0">
+                and t1.id in
+                <foreach collection="idList" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询资金 -->
+    <select id="findMoney" resultType="com.moguying.plant.api.seed.dto.TotalMoney">
+        select
+        IFNULL(sum(pre_profit), 0) totalPreProfit, IFNULL(sum(pre_amount), 0) totalPreAmount
+        from plant_reap
+        <where>
+            state = 1
+            <if test="idList != null and idList.size() > 0">
+                and id in
+                <foreach collection="idList" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量更新状态 [0待采摘，1已采摘，2售卖中，3已售卖，4已兑换] 及 兑换时间-->
+    <update id="updateState">
+        update plant_reap set state = 4, exchange_time = now()
+        <where>
+            state = 1
+            <if test="idList != null and idList.size() > 0">
+                and id in
+                <foreach collection="idList" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <!-- 查询兑换蘑菇币记录 -->
+    <select id="showReapLog" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+        select t2.class_name `name`, t1.plant_count `number`,
+         sum(t1.plant_count * t2.exchange_num) `count`, t1.exchange_time `time`
+         from plant_reap t1
+         left join plant_seed_type t2 on t1.seed_type = t2.id
+         where t1.user_id = #{userId} and t1.state = 4
+         group by t1.id
+         order by t1.exchange_time desc
+    </select>
+
+</mapper>

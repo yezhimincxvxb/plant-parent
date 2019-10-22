@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.user.dao.UserDAO">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.user.dto.User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="is_real_name" jdbcType="INTEGER" property="isRealName"/>
+        <result column="is_long_time" jdbcType="INTEGER" property="isLongTime"/>
+        <result column="id_expire_time" jdbcType="TIMESTAMP" property="idExpireTime"/>
+        <result column="is_bind_card" jdbcType="BIT" property="isBindCard"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="pay_password" jdbcType="VARCHAR" property="payPassword"/>
+        <result column="avatars_id" jdbcType="INTEGER" property="avatarsId"/>
+        <result column="id_card" jdbcType="VARCHAR" property="idCard"/>
+        <result column="reg_time" jdbcType="TIMESTAMP" property="regTime"/>
+        <result column="reg_ip" jdbcType="VARCHAR" property="regIp"/>
+        <result column="reg_source" jdbcType="VARCHAR" property="regSource"/>
+        <result column="invite_code" jdbcType="VARCHAR" property="inviteCode"/>
+        <result column="invite_uid" jdbcType="INTEGER" property="inviteUid"/>
+        <result column="invite_name" jdbcType="VARCHAR" property="inviteName"/>
+        <result column="user_state" jdbcType="BIT" property="userState"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
+        <result column="payment_account" jdbcType="VARCHAR" property="paymentAccount"/>
+        <result column="payment_state" jdbcType="INTEGER" property="paymentState"/>
+        <result column="is_channel" jdbcType="INTEGER" property="isChannel"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, phone, real_name, is_real_name, is_bind_card, `password`, pay_password, avatars_id, 
+    id_card, reg_time, reg_ip, reg_source, invite_code, invite_uid, user_state, last_login_time,is_long_time,id_expire_time,
+    payment_account,payment_state,is_channel
+  </sql>
+
+    <sql id="List_User">
+        id, phone, real_name, is_real_name, is_bind_card,  avatars_id,`password`, pay_password,
+    id_card, reg_time, reg_ip, reg_source, invite_code, invite_uid, user_state,is_long_time,id_expire_time,
+    payment_account,payment_state,is_channel
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.moguying.plant.backend.user.dto.User" useGeneratedKeys="true"
+            keyProperty="id">
+    insert into plant_user (id, phone, real_name, 
+      is_real_name, is_bind_card, `password`, 
+      pay_password, avatars_id, id_card, 
+      reg_time, reg_ip, reg_source, 
+      invite_code, invite_uid, user_state, 
+      last_login_time)
+    values (#{id,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
+      #{isRealName,jdbcType=INTEGER}, #{isBindCard,jdbcType=BIT}, #{password,jdbcType=VARCHAR},
+      #{payPassword,jdbcType=VARCHAR}, #{avatarsId,jdbcType=INTEGER}, #{idCard,jdbcType=VARCHAR}, 
+      #{regTime,jdbcType=TIMESTAMP}, #{regIp,jdbcType=VARCHAR}, #{regSource,jdbcType=VARCHAR}, 
+      #{inviteCode,jdbcType=VARCHAR}, #{inviteUid,jdbcType=INTEGER}, #{userState,jdbcType=BIT}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.moguying.plant.backend.user.dto.User" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into plant_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="isRealName != null">
+                is_real_name,
+            </if>
+            <if test="isBindCard != null">
+                is_bind_card,
+            </if>
+            <if test="password != null">
+                `password`,
+            </if>
+            <if test="payPassword != null">
+                pay_password,
+            </if>
+            <if test="avatarsId != null">
+                avatars_id,
+            </if>
+            <if test="idCard != null">
+                id_card,
+            </if>
+            <if test="regTime != null">
+                reg_time,
+            </if>
+            <if test="regIp != null">
+                reg_ip,
+            </if>
+            <if test="regSource != null">
+                reg_source,
+            </if>
+            <if test="inviteCode != null">
+                invite_code,
+            </if>
+            <if test="inviteUid != null">
+                invite_uid,
+            </if>
+            <if test="userState != null">
+                user_state,
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="isRealName != null">
+                #{isRealName,jdbcType=BIT},
+            </if>
+            <if test="isBindCard != null">
+                #{isBindCard,jdbcType=BIT},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="payPassword != null">
+                #{payPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="avatarsId != null">
+                #{avatarsId,jdbcType=INTEGER},
+            </if>
+            <if test="idCard != null">
+                #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="regTime != null">
+                #{regTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regIp != null">
+                #{regIp,jdbcType=VARCHAR},
+            </if>
+            <if test="regSource != null">
+                #{regSource,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteCode != null">
+                #{inviteCode,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteUid != null">
+                #{inviteUid,jdbcType=INTEGER},
+            </if>
+            <if test="userState != null">
+                #{userState,jdbcType=BIT},
+            </if>
+            <if test="lastLoginTime != null">
+                #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.user.dto.User">
+        update plant_user
+        <set>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="isRealName != null">
+                is_real_name = #{isRealName,jdbcType=INTEGER},
+            </if>
+            <if test="isBindCard != null">
+                is_bind_card = #{isBindCard,jdbcType=BIT},
+            </if>
+            <if test="password != null">
+                `password` = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="payPassword != null">
+                pay_password = #{payPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="avatarsId != null">
+                avatars_id = #{avatarsId,jdbcType=INTEGER},
+            </if>
+            <if test="idCard != null">
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="regTime != null">
+                reg_time = #{regTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regIp != null">
+                reg_ip = #{regIp,jdbcType=VARCHAR},
+            </if>
+            <if test="regSource != null">
+                reg_source = #{regSource,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteCode != null">
+                invite_code = #{inviteCode,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteUid != null">
+                invite_uid = #{inviteUid,jdbcType=INTEGER},
+            </if>
+            <if test="userState != null">
+                user_state = #{userState,jdbcType=BIT},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isLongTime != null">
+                is_long_time = #{isLongTime,jdbcType=BIT},
+            </if>
+            <if test="idExpireTime != null">
+                id_expire_time = #{idExpireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="paymentAccount != null">
+                payment_account = #{paymentAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentState != null">
+                payment_state = #{paymentState,jdbcType=INTEGER},
+            </if>
+            <if test="isChannel != null">
+                is_channel = #{isChannel,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.user.dto.User">
+    update plant_user
+    set phone = #{phone,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      is_real_name = #{isRealName,jdbcType=INTEGER},
+      is_bind_card = #{isBindCard,jdbcType=BIT},
+      `password` = #{password,jdbcType=VARCHAR},
+      pay_password = #{payPassword,jdbcType=VARCHAR},
+      avatars_id = #{avatarsId,jdbcType=INTEGER},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      reg_time = #{regTime,jdbcType=TIMESTAMP},
+      reg_ip = #{regIp,jdbcType=VARCHAR},
+      reg_source = #{regSource,jdbcType=VARCHAR},
+      invite_code = #{inviteCode,jdbcType=VARCHAR},
+      invite_uid = #{inviteUid,jdbcType=INTEGER},
+      user_state = #{userState,jdbcType=BIT},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      is_long_time = #{isLongTime,jdbcType=BIT},
+      id_expire_time = #{idExpireTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectSelective" parameterType="User" resultMap="BaseResultMap">
+        select t1.id, t1.phone, t1.real_name, t1.is_real_name, t1.is_bind_card, t1.`password`, t1.pay_password,
+        t1.id_card, t1.reg_time, t1.reg_ip, t1.reg_source, t1.invite_code, t1.invite_uid, t1.user_state,t1.is_channel,
+        t1.payment_account,t1.payment_state,t2.phone as invite_name from plant_user t1
+        left join plant_user t2 on t1.invite_uid = t2.id
+        <where>
+            <if test="id != null">
+                t1.id = #{id}
+            </if>
+            <if test="password != null">
+                AND t1.password = #{password}
+            </if>
+            <if test="phone != null and phone != ''">
+                <bind name="phoneLike" value="'%' + phone + '%'"/>
+                AND t1.phone like #{phoneLike}
+            </if>
+            <if test="realName != null and realName != ''">
+                <bind name="nameLike" value="'%' + realName + '%'"/>
+                AND t1.real_name like #{nameLike}
+            </if>
+            <if test="inviteName != null and inviteName != ''">
+                <bind name="inviteNameLike" value="'%' + inviteName + '%'"/>
+                AND t2.phone like #{inviteNameLike}
+            </if>
+            <if test="userState != null">
+                AND t1.user_state = #{userState}
+            </if>
+            <if test="startTime != null and endTime != null">
+              <![CDATA[
+                AND UNIX_TIMESTAMP(#{startTime}) >= UNIX_TIMESTAMP(t1.reg_time)
+                AND UNIX_TIMESTAMP(#{endTime}) <= UNXIX_TIMESTAMP(t1.reg_time)
+              ]]>
+            </if>
+            <if test="idCard != null and idCard != ''">
+                AND t1.id_card = #{idCard}
+            </if>
+            <if test="inviteCode != null">
+                AND t1.invite_code = #{inviteCode}
+            </if>
+
+        </where>
+        order by t1.id desc
+    </select>
+
+
+    <select id="userInfoById" parameterType="int" resultMap="BaseResultMap">
+     select t1.id,t1.phone,t1.real_name,t1.is_real_name,t1.is_bind_card,t1.avatars_id,t1.password,t1.pay_password,t1.payment_account,
+        t1.id_card,t1.reg_time,t1.reg_ip,t1.reg_source,t1.invite_code,t1.user_state,t2.phone as invite_name,t1.payment_state,t1.is_long_time,
+        t1.id_expire_time,t1.invite_uid,t1.is_channel
+        from plant_user t1
+        left join plant_user t2 on t1.invite_uid = t2.id
+        where t1.id = #{id} and t1.user_state = 1
+    </select>
+
+    <select id="userInfoByPhoneAndPassword" resultMap="BaseResultMap">
+        select
+        <include refid="List_User"/>
+        from plant_user
+        where phone = #{phone} and password = #{password}
+    </select>
+
+    <select id="userInfoByInviteCodeAndId" resultMap="BaseResultMap">
+        select
+        <include refid="List_User"/>
+        from plant_user
+        where id = #{userId} and invite_code = #{inviteCode}
+    </select>
+
+
+</mapper>

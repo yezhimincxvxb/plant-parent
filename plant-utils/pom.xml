@@ -6,6 +6,21 @@
     <artifactId>plant-utils</artifactId>
     <name>plant-utils</name>
     <description>Demo project for Spring Boot</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.moguying</groupId>
+            <artifactId>plant-config</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>SADK</groupId>
+            <artifactId>SADK</artifactId>
+            <version>3.2.5.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/SADK-3.2.5.2.jar</systemPath>
+        </dependency>
+    </dependencies>
 
     <parent>
         <groupId>com.moguying</groupId>

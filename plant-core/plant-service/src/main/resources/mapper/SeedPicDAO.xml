@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.seed.dao.SeedPicDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.SeedPic">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pic_name" jdbcType="VARCHAR" property="picName" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete"/>
+    <result column="pic_url_thumb" jdbcType="BIT" property="picUrlThumb"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pic_name, pic_url,is_delete,pic_url_thumb
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_seed_pic
+    where id = #{id,jdbcType=BIGINT} and is_delete = 0
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update plant_seed_pic
+    set is_delete = 1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.SeedPic">
+    insert into plant_seed_pic (id, pic_name, pic_url,pic_url_thumb
+      )
+    values (#{id,jdbcType=BIGINT}, #{picName,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR},#{picUrlThumb,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.SeedPic">
+    insert into plant_seed_pic
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="picName != null">
+        pic_name,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
+      </if>
+      <if test="picUrlThumb != null">
+        pic_url_thumb,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="picName != null">
+        #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrlThumb != null">
+        #{picUrlThumb,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.SeedPic">
+    update plant_seed_pic
+    <set>
+      <if test="picName != null">
+        pic_name = #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrlThumb != null">
+        pic_url_thumb = #{picUrlThumb,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.seed.dto.SeedPic">
+    update plant_seed_pic
+    set pic_name = #{picName,jdbcType=VARCHAR},
+      pic_url = #{picUrl,jdbcType=VARCHAR},
+      pic_url_thumb = #{picUrlThumb,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectSelective" parameterType="SeedPic" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_seed_pic
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="picName != null">
+        AND pic_name = #{picName}
+      </if>
+      <if test="picUrl != null">
+        AND pic_url = #{picUrl}
+      </if>
+      <if test="picUrlThumb != null">
+        AND pic_url_thumb = #{picUrlThumb}
+      </if>
+      <if test="isDelete != null">
+        AND is_delete = #{isDelete}
+      </if>
+    </where>
+    order by id desc
+  </select>
+
+
+  <select id="selectByRange"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_seed_pic
+    <where>
+    id in
+      <foreach collection="range" open="(" close=")" item="item" separator=",">
+        #{item}
+      </foreach>
+    </where>
+    and is_delete = 0
+  </select>
+
+
+</mapper>

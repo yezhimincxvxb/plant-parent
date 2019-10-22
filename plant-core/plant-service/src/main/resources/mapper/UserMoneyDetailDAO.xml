@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.user.dao.UserMoneyDetailDAO">
+
+    <resultMap id="baseResultMap" type="com.moguying.plant.backend.user.dto.UserMoneyDetail">
+        <id column="id" property="id"/>
+        <result column="affect_money" property="affectMoney"/>
+        <result column="affect_type" property="affectType"/>
+        <result column="affect_time" property="affectTime"/>
+        <result column="detail_id" property="detailId"/>
+    </resultMap>
+
+    <sql id="baseSQL">
+    id, affect_money, affect_type, affect_time, detail_id
+  </sql>
+
+    <!-- 获取用户资金明细 -->
+    <select id="findUserMoney" resultMap="baseResultMap">
+        select
+        <include refid="baseSQL"></include>, date_format(affect_time,'%Y-%m-%d') dateTime
+        from plant_user_money_log
+        <where>
+            user_id = #{userId}
+            and date_format(affect_time,'%Y-%m') = date_format(#{dateTime},'%Y-%m')
+            and affect_type in
+            <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+        group by affect_time
+        order by affect_time desc
+    </select>
+
+    <!-- 根据ID获取资金详情 -->
+    <select id="findUserMoneyById" parameterType="java.lang.Integer" resultMap="baseResultMap">
+        select
+        <include refid="baseSQL"></include>
+        from plant_user_money_log
+        where id = #{id}
+    </select>
+
+    <!-- 根据商品详情ID获取商品详情 -->
+    <select id="findProducts" parameterType="java.lang.String"
+            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+        select t4.name productName, t4.has_count productCount
+        from plant_user_money_log t1
+        left join plant_mall_order t2 on t1.detail_id = t2.order_number
+        left join plant_mall_order_detail t3 on t2.id = t3.id
+        left join plant_mall_product t4 on t3.product_id = t4.id
+        <where>
+            t1.detail_id = #{detailId}
+        </where>
+        group by `name`
+    </select>
+
+    <!-- 根据商品详情ID获取购买菌包 -->
+    <select id="findInSeeds" parameterType="java.lang.String"
+            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+        select t3.class_name productName, t2.buy_count productCount
+        from plant_user_money_log t1
+        left join plant_seed_order_detail t2 on t1.detail_id = t2.order_number
+        left join plant_seed_type t3 on t2.seed_id = t3.id
+        <where>
+            t1.detail_id = #{detailId}
+        </where>
+        group by t3.class_name
+    </select>
+
+    <!-- 根据商品详情ID获取出售菌包 -->
+    <select id="findOutSeeds" parameterType="java.lang.String"
+            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+        select t3.class_name productName, t2.plant_count productCount
+        from plant_user_money_log t1
+        left join plant_reap t2 on t1.detail_id = t2.order_number
+        left join plant_seed_type t3 on t2.seed_type = t3.id
+        <where>
+            t1.detail_id = #{detailId}
+        </where>
+        group by t3.class_name
+    </select>
+
+    <!-- 根据商品详情ID获取邀请人姓名 -->
+    <select id="findInvitation" parameterType="java.lang.String"
+            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+        select t3.real_name productName
+        from plant_user_money_log t1
+        left join plant_reap t2 on t1.detail_id = t2.order_number
+        left join plant_user t3 on t2.user_id = t3.id
+        <where>
+            t1.detail_id = #{detailId}
+        </where>
+        group by real_name
+    </select>
+
+    <!-- 收入/支出 -->
+    <select id="getTotal" resultType="java.math.BigDecimal">
+        select IFNULL(sum(ABS(affect_money)), 0)
+        from plant_user_money_log
+        <where>
+            user_id = #{userId}
+            and date_format(affect_time, '%Y-%m') = date_format(#{dateTime}, '%Y-%m')
+            and affect_type in
+            <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.user.dao.UserBankDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.user.dto.UserBank">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="bank_number" jdbcType="VARCHAR" property="bankNumber" />
+    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+    <result column="bank_id" jdbcType="VARCHAR" property="bankId" />
+    <result column="card_type" jdbcType="VARCHAR" property="cardType" />
+    <result column="bank_address" jdbcType="VARCHAR" property="bankAddress" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  
+  <resultMap id="BankInfoWithPaymentAccountMap" type="com.moguying.plant.backend.user.dto.UserBank" extends="BaseResultMap">
+    <result column="payment_account" jdbcType="INTEGER" property="paymentAccount" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    id,user_id, order_number,bank_number, bank_id, card_type, bank_address, add_time, `state`,bank_phone
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_user_bank
+    where id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_user_bank
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.user.dto.UserBank" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_user_bank (id,user_id, bank_number, bank_id, card_type,order_number,
+      bank_address, add_time, `state`,bank_phone
+      )
+    values (#{id,jdbcType=INTEGER},#{userId,jdbcType=INTEGER}, #{bankNumber,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR},#{cardType,jdbcType=VARCHAR},
+     #{orderNumber,jdbcType=VARCHAR},
+      #{bankAddress,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER},#{bankPhone,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.user.dto.UserBank" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_user_bank
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="bankNumber != null">
+        bank_number,
+      </if>
+      <if test="orderNumber != null">
+        order_number,
+      </if>
+      <if test="bankId != null">
+        bank_id,
+      </if>
+      <if test="cardType != null">
+        card_type,
+      </if>
+      <if test="bankAddress != null">
+        bank_address,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="bankPhone != null">
+        `bank_phone`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="bankNumber != null">
+        #{bankNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null">
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null">
+        #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAddress != null">
+        #{bankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="bankPhone != null">
+        #{bankPhone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.user.dto.UserBank">
+    update plant_user_bank
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNumber != null">
+        bank_number = #{bankNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null">
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null">
+        bank_id = #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardType != null">
+        card_type = #{cardType,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAddress != null">
+        bank_address = #{bankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="bankPhone != null">
+        `bank_phone` = #{bankPhone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.user.dto.UserBank">
+    update plant_user_bank
+    set bank_number = #{bankNumber,jdbcType=VARCHAR},
+      bank_id = #{bankId,jdbcType=VARCHAR},
+      card_type = #{cardType,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      bank_phone = #{bankPhone,jdbcType=VARCHAR},
+      bank_address = #{bankAddress,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      `state` = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_user_bank
+    <where>
+      <if test="userId != null">
+        user_id = #{userId}
+      </if>
+      <if test="state != null">
+        AND state = #{state}
+      </if>
+      <if test="bankNumber != null">
+        AND bank_number = #{bankNumber}
+      </if>
+      <if test="bankPhone != null">
+        AND bank_phone = #{bankPhone}
+      </if>
+      <if test="orderNumber != null">
+        AND order_number = #{orderNumber}
+      </if>
+    </where>
+    order by add_time desc
+  </select>
+
+<select id="bankInfoByUserIdAndId" resultMap="BankInfoWithPaymentAccountMap" parameterType="int">
+  select t1.*,t2.payment_account from plant_user_bank t1
+  left join plant_user t2 on t1.user_id = t2.id
+  where
+   <if test="userId != null">
+     t1.user_id = #{userId}
+   </if>
+   <if test="id != null">
+     AND t1.id = #{id}
+   </if>
+    and t2.user_state = 1
+</select>
+
+
+
+</mapper>

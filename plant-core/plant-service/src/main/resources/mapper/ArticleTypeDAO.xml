@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.content.dao.ArticleTypeDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.content.dto.ArticleType">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="url_name" jdbcType="VARCHAR" property="urlName" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`,url_name,order_number
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_article_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_article_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.content.dto.ArticleType" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_article_type (id, `name`,`url_name`,order_number)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},#{urlName,jdbcType=VARCHAR},#{orderNumber,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.content.dto.ArticleType" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_article_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="urlName != null">
+        `url_name`,
+      </if>
+      <if test="orderNumber != null">
+        `order_number`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="urlName != null">
+        #{urlName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.content.dto.ArticleType">
+    update plant_article_type
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="urlName != null">
+        `url_name` = #{urlName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null">
+        `order_number` = #{orderNumber,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.content.dto.ArticleType">
+    update plant_article_type
+    set `name` = #{name,jdbcType=VARCHAR},`url_name` = #{urlName,jdbcType=VARCHAR},
+     `order_number` = #{orderNumber,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_article_type
+    <where>
+      <if test="name != null">
+        <bind name="nameLike" value="'%' + name + '%'"/>
+        name like #{nameLike}
+      </if>
+    </where>
+    order by order_number desc
+  </select>
+  
+  <select id="selectByUrlName" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_article_type
+    where url_name = #{urlName}
+  </select>
+
+</mapper>

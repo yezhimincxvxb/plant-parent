@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.account.dao.MoneyWithdrawDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.account.dto.MoneyWithdraw">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="withdraw_money" jdbcType="DECIMAL" property="withdrawMoney" />
+    <result column="fee" jdbcType="DECIMAL" property="fee" />
+    <result column="to_account_money" jdbcType="DECIMAL" property="toAccountMoney" />
+    <result column="withdraw_time" jdbcType="TIMESTAMP" property="withdrawTime" />
+    <result column="verify_time" jdbcType="TIMESTAMP" property="verifyTime" />
+    <result column="verify_user" jdbcType="INTEGER" property="verifyUser" />
+    <result column="verify_mark" jdbcType="VARCHAR" property="verifyMark" />
+    <result column="bank_number" jdbcType="VARCHAR" property="bankNumber" />
+    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="seq_no" jdbcType="INTEGER" property="seqNo" />
+    <result column="success_time" jdbcType="INTEGER" property="seqNo" />
+  </resultMap>
+
+
+  <resultMap id="BaseInfoMap" type="com.moguying.plant.backend.account.dto.MoneyWithdraw" extends="BaseResultMap">
+    <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time, 
+    verify_time, verify_user, verify_mark, bank_number, `state`,seq_no,success_time,bank_phone
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_money_withdraw
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plant_money_withdraw
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.account.dto.MoneyWithdraw" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_money_withdraw (id, order_number, user_id, 
+      withdraw_money, fee, to_account_money, 
+      withdraw_time, verify_time, verify_user, 
+      verify_mark, bank_number, `state`,seq_no,bank_phone
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderNumber,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{withdrawMoney,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, #{toAccountMoney,jdbcType=DECIMAL}, 
+      #{withdrawTime,jdbcType=TIMESTAMP}, #{verifyTime,jdbcType=TIMESTAMP}, #{verifyUser,jdbcType=INTEGER}, 
+      #{verifyMark,jdbcType=VARCHAR}, #{bankNumber,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER},#{seqNo,jdbcType=VARCHAR},#{bankPhone,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.account.dto.MoneyWithdraw" useGeneratedKeys="true" keyProperty="id">
+    insert into plant_money_withdraw
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderNumber != null">
+        order_number,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="withdrawMoney != null">
+        withdraw_money,
+      </if>
+      <if test="fee != null">
+        fee,
+      </if>
+      <if test="toAccountMoney != null">
+        to_account_money,
+      </if>
+      <if test="withdrawTime != null">
+        withdraw_time,
+      </if>
+      <if test="verifyTime != null">
+        verify_time,
+      </if>
+      <if test="verifyUser != null">
+        verify_user,
+      </if>
+      <if test="verifyMark != null">
+        verify_mark,
+      </if>
+      <if test="bankNumber != null">
+        bank_number,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="seqNo != null">
+        `seq_no`,
+      </if>
+      <if test="bankPhone != null">
+        `bank_phone`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="withdrawMoney != null">
+        #{withdrawMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null">
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="toAccountMoney != null">
+        #{toAccountMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawTime != null">
+        #{withdrawTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="verifyTime != null">
+        #{verifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="verifyUser != null">
+        #{verifyUser,jdbcType=INTEGER},
+      </if>
+      <if test="verifyMark != null">
+        #{verifyMark,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNumber != null">
+        #{bankNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="seqNo != null">
+        #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bankPhone != null">
+        #{bankPhone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.account.dto.MoneyWithdraw">
+    update plant_money_withdraw
+    <set>
+      <if test="orderNumber != null">
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="withdrawMoney != null">
+        withdraw_money = #{withdrawMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null">
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="toAccountMoney != null">
+        to_account_money = #{toAccountMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawTime != null">
+        withdraw_time = #{withdrawTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="verifyTime != null">
+        verify_time = #{verifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="verifyUser != null">
+        verify_user = #{verifyUser,jdbcType=INTEGER},
+      </if>
+      <if test="verifyMark != null">
+        verify_mark = #{verifyMark,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNumber != null">
+        bank_number = #{bankNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="seqNo != null">
+        `seq_no` = #{seqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="successTime != null">
+        `success_time` = #{successTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="bankPhone != null">
+        `bank_phone` = #{bankPhone,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.account.dto.MoneyWithdraw">
+    update plant_money_withdraw
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      withdraw_money = #{withdrawMoney,jdbcType=DECIMAL},
+      fee = #{fee,jdbcType=DECIMAL},
+      to_account_money = #{toAccountMoney,jdbcType=DECIMAL},
+      withdraw_time = #{withdrawTime,jdbcType=TIMESTAMP},
+      verify_time = #{verifyTime,jdbcType=TIMESTAMP},
+      verify_user = #{verifyUser,jdbcType=INTEGER},
+      verify_mark = #{verifyMark,jdbcType=VARCHAR},
+      bank_number = #{bankNumber,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=INTEGER},
+      `seq_no` = #{seqNo,jdbcType=VARCHAR},
+      `bank_phone` = #{bankPhone,jdbcType=VARCHAR},
+      `success_time` = #{successTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectSelective" resultMap="BaseInfoMap">
+    select  t1.id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time,t1.seq_no,
+    verify_time, verify_user, verify_mark, bank_number, bank_phone,t1.`state`,t1.success_time,t2.real_name
+     from plant_money_withdraw t1
+     left join plant_user t2 on t1.user_id = t2.id
+    <where>
+      <if test="id != null ">
+        t1.id = #{id}
+      </if>
+
+      <if test="realName != null and realName != ''">
+        <bind name="realNameLike" value="'%'+ realName +'%'"/>
+            AND t2.real_name like #{realNameLike}
+      </if>
+
+      <if test="bankPhone != null and bankPhone != ''">
+        <bind name="phoneLike" value="'%'+ bankPhone +'%'"/>
+        AND t1.bank_phone like #{phoneLike}
+      </if>
+      <if test="orderNumber != null and orderNumber != ''">
+        AND t1.order_number = #{orderNumber}
+      </if>
+      <if test="state != null">
+        AND t1.state = #{state}
+      </if>
+      <if test="inState != null">
+        AND t1.state in
+        <foreach collection="inState" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+      </if>
+      <if test="bankNumber != null and bankNumber != ''">
+        AND t1.bank_number = #{bankNumber}
+      </if>
+      <if test="userId != null">
+        AND t1.user_id = #{userId}
+      </if>
+      <if test="startTime != null">
+        <![CDATA[
+            AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{startTime})
+        ]]>
+      </if>
+      <if test="endTime != null">
+        <![CDATA[
+            AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{endTime})
+        ]]>
+      </if>
+
+    </where>
+    order by t1.withdraw_time desc
+  </select>
+  
+  <select id="selectiveForApi" resultMap="BaseResultMap">
+    select id,withdraw_money,withdraw_time,success_time,state,order_number,bank_phone,bank_number
+    from plant_money_withdraw
+    <where>
+      <if test="id != null ">
+        id = #{id}
+      </if>
+      <if test="userId != null">
+        AND user_id = #{userId}
+      </if>
+      <if test="state != null">
+        AND state = #{state}
+      </if>
+      <if test="inState != null">
+        AND state in
+        <foreach collection="inState" open="(" close=")" separator="," item="item">
+          #{item}
+        </foreach>
+      </if>
+      <if test="bankNumber != null">
+        AND bank_number = #{bankNumber}
+      </if>
+      <if test="orderNumber != null">
+        AND order_number = #{orderNumber}
+      </if>
+    </where>
+    order by withdraw_time desc
+  </select>
+  
+  
+  <select id="selectByOrderNumber" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_money_withdraw
+    where order_number = #{orderNumber}
+  </select>
+  
+  
+  <select id="withdrawDailyCountByUserId" resultType="DECIMAL">
+    select sum(withdraw_money) from plant_money_withdraw
+    <where>
+      <if test="userId != null">
+        user_id = #{userId}
+      </if>
+      <if test="startTime != null and endTime != null">
+      <![CDATA[
+        AND UNIX_TIMESTAMP(withdraw_time) >= UNIX_TIMESTAMP(#{startTime})
+        AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{endTime})
+      ]]>
+      </if>
+    </where>
+    AND state != 2
+
+  </select>
+</mapper>

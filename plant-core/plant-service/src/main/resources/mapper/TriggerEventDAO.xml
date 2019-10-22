@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.backend.system.dao.TriggerEventDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.system.dto.TriggerEvent">
+    <id column="trigger_event" jdbcType="VARCHAR" property="triggerEvent" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    trigger_event, mark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plant_trigger_event
+    where trigger_event = #{triggerEvent,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from plant_trigger_event
+    where trigger_event = #{triggerEvent,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.moguying.plant.backend.system.dto.TriggerEvent">
+    insert into plant_trigger_event (trigger_event, mark)
+    values (#{triggerEvent,jdbcType=VARCHAR}, #{mark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.moguying.plant.backend.system.dto.TriggerEvent">
+    insert into plant_trigger_event
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="triggerEvent != null">
+        trigger_event,
+      </if>
+      <if test="mark != null">
+        mark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="triggerEvent != null">
+        #{triggerEvent,jdbcType=VARCHAR},
+      </if>
+      <if test="mark != null">
+        #{mark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.system.dto.TriggerEvent">
+    update plant_trigger_event
+    <set>
+      <if test="mark != null">
+        mark = #{mark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where trigger_event = #{triggerEvent,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.system.dto.TriggerEvent">
+    update plant_trigger_event
+    set mark = #{mark,jdbcType=VARCHAR}
+    where trigger_event = #{triggerEvent,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_trigger_event
+    <where>
+      <if test="triggerEvent != null">
+        trigger_event = #{triggerEvent}
+      </if>
+      <if test="mark != null">
+        AND mark = #{mark}
+      </if>
+    </where>
+  </select>
+</mapper>
