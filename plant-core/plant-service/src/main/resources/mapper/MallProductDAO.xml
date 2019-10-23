@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.mall.dao.MallProductDAO">
+<mapper namespace="com.moguying.plant.core.dao.mall.MallProductDAO">
 
-    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.mall.dto.MallProduct">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MallProduct">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
@@ -20,11 +20,11 @@
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
     </resultMap>
 
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.backend.mall.dto.MallProduct">
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.dto.MallProduct">
         <result column="product_desc" jdbcType="LONGVARCHAR" property="productDesc"/>
     </resultMap>
 
-    <resultMap id="AppHomeMallProduct" type="com.moguying.plant.api.home.dto.HomeProduct">
+    <resultMap id="AppHomeMallProduct" type="com.moguying.plant.core.entity.vo.HomeProduct">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
@@ -35,7 +35,7 @@
     </resultMap>
 
     <resultMap id="AppHomeMallProductDetail" extends="AppHomeMallProduct"
-               type="com.moguying.plant.api.home.dto.HomeProductDetail">
+               type="com.moguying.plant.core.entity.vo.HomeProductDetail">
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="summary_desc" jdbcType="VARCHAR" property="summaryDesc"/>
         <result column="product_desc" jdbcType="LONGVARCHAR" property="productDesc"/>
@@ -45,45 +45,13 @@
     <sql id="Base_Column_List">
     id, pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
     summary_desc, is_show, delivery_info, consume_coins, add_time
-  </sql>
+   </sql>
 
     <sql id="Blob_Column_List">
     product_desc
-  </sql>
+   </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
-        select
-        <include refid="Base_Column_List"/>
-        ,
-        <include refid="Blob_Column_List"/>
-        from plant_mall_product
-        where id = #{id,jdbcType=INTEGER}
-    </select>
-
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_mall_product
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
-    <insert id="insert" parameterType="com.moguying.plant.backend.mall.dto.MallProduct" useGeneratedKeys="true"
-            keyProperty="id">
-    insert into plant_mall_product (id, pic_url, thumb_pic_url, 
-      `name`, price,old_price, fee, total_count,
-      left_count, has_count, summary_desc, 
-      is_show, delivery_info,consume_coins, add_time, product_desc
-      )
-    values (#{id,jdbcType=INTEGER}, #{picUrl,jdbcType=VARCHAR}, #{thumbPicUrl,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},#{oldPrice,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, #{totalCount,jdbcType=INTEGER},
-      #{leftCount,jdbcType=INTEGER}, #{hasCount,jdbcType=INTEGER}, #{summaryDesc,jdbcType=VARCHAR}, 
-      #{isShow,jdbcType=BIT}, #{deliveryInfo,jdbcType=VARCHAR},
-     #{consumeCoins,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP},
-    <![CDATA[
-        CONCAT("<style>img{max-width:100%!important;}</style>", #{productDesc,jdbcType=LONGVARCHAR})
-    ]]>
-      )
-  </insert>
-
-    <insert id="insertSelective" parameterType="com.moguying.plant.backend.mall.dto.MallProduct" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.MallProduct" useGeneratedKeys="true"
             keyProperty="id">
         insert into plant_mall_product
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -190,7 +158,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.mall.dto.MallProduct">
+    <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.MallProduct">
         update plant_mall_product
         <set>
             <if test="picUrl != null">
@@ -245,49 +213,7 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.moguying.plant.backend.mall.dto.MallProduct">
-    update plant_mall_product
-    set pic_url = #{picUrl,jdbcType=VARCHAR},
-      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
-      `name` = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL},
-      old_price = #{oldPrice,jdbcType=DECIMAL},
-      fee = #{fee,jdbcType=DECIMAL},
-      total_count = #{totalCount,jdbcType=INTEGER},
-      left_count = #{leftCount,jdbcType=INTEGER},
-      has_count = #{hasCount,jdbcType=INTEGER},
-      summary_desc = #{summaryDesc,jdbcType=VARCHAR},
-      is_show = #{isShow,jdbcType=BIT},
-      delivery_info = #{deliveryInfo,jdbcType=VARCHAR},
-      product_desc =
-      <![CDATA[
-            CONCAT("<style>img{max-width:100%!important;}</style>", #{productDesc,jdbcType=LONGVARCHAR}),
-        ]]>
-      consume_coins = #{consumeCoins},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
-    <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.mall.dto.MallProduct">
-    update plant_mall_product
-    set pic_url = #{picUrl,jdbcType=VARCHAR},
-      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
-      `name` = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL},
-      old_price = #{oldPrice,jdbcType=DECIMAL},
-      fee = #{fee,jdbcType=DECIMAL},
-      total_count = #{totalCount,jdbcType=INTEGER},
-      left_count = #{leftCount,jdbcType=INTEGER},
-      has_count = #{hasCount,jdbcType=INTEGER},
-      summary_desc = #{summaryDesc,jdbcType=VARCHAR},
-      is_show = #{isShow,jdbcType=BIT},
-      delivery_info = #{deliveryInfo,jdbcType=VARCHAR},
-      consume_coins = #{consumeCoins},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
-    <select id="selectSelective" parameterType="com.moguying.plant.backend.mall.dto.MallProduct"
+    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.dto.MallProduct"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -330,7 +256,7 @@
   </select>
 
     <!-- 兑换实物列表 -->
-    <select id="showProducts" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+    <select id="showProducts" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
         select id, `name`, consume_coins `count`, `price`, pic_url `picUrl`
         from plant_mall_product
         <where>
@@ -341,7 +267,7 @@
     </select>
 
     <!-- 兑换实物日志列表 -->
-    <select id="showProductLog" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+    <select id="showProductLog" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
         select t3.`name` `name`, t2.buy_count `number`, t2.buy_coins `count`, t1.add_time `time`
         from plant_mall_order t1
         left join plant_mall_order_detail t2 on t1.id = t2.order_id

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.account.dao.MoneyRechargeDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.account.dto.MoneyRecharge">
+<mapper namespace="com.moguying.plant.core.dao.account.MoneyRechargeDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MoneyRecharge">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
@@ -15,7 +15,7 @@
     <result column="pay_sms_sq_no" jdbcType="VARCHAR" property="paySmsSqNo" />
   </resultMap>
   
-  <resultMap id="BaseInfoMap" type="com.moguying.plant.backend.account.dto.MoneyRecharge" extends="BaseResultMap">
+  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.dto.MoneyRecharge" extends="BaseResultMap">
     <result column="user_name" jdbcType="VARCHAR" property="userName"/>
   </resultMap>
   
@@ -29,21 +29,10 @@
     from plant_money_recharge
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_money_recharge
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.account.dto.MoneyRecharge" useGeneratedKeys="true" keyProperty="id">
-    insert into plant_money_recharge (id, user_id, order_number, 
-      money, `state`, recharge_time, 
-      to_account_time, to_account_money, fee, 
-      `source`,pay_sms_sq_no)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderNumber,jdbcType=VARCHAR}, 
-      #{money,jdbcType=DECIMAL}, #{state,jdbcType=INTEGER}, #{rechargeTime,jdbcType=TIMESTAMP},
-      #{toAccountTime,jdbcType=TIMESTAMP}, #{toAccountMoney,jdbcType=DECIMAL}, #{fee,jdbcType=DECIMAL}, 
-      #{source,jdbcType=VARCHAR},#{paySmsSqNo,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.account.dto.MoneyRecharge" useGeneratedKeys="true" keyProperty="id">
+
+
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.MoneyRecharge" useGeneratedKeys="true" keyProperty="id">
     insert into plant_money_recharge
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -116,7 +105,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.account.dto.MoneyRecharge">
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.MoneyRecharge">
     update plant_money_recharge
     <set>
       <if test="userId != null">
@@ -152,20 +142,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.account.dto.MoneyRecharge">
-    update plant_money_recharge
-    set user_id = #{userId,jdbcType=INTEGER},
-      order_number = #{orderNumber,jdbcType=VARCHAR},
-      money = #{money,jdbcType=DECIMAL},
-      `state` = #{state,jdbcType=INTEGER},
-      recharge_time = #{rechargeTime,jdbcType=TIMESTAMP},
-      to_account_time = #{toAccountTime,jdbcType=TIMESTAMP},
-      to_account_money = #{toAccountMoney,jdbcType=DECIMAL},
-      fee = #{fee,jdbcType=DECIMAL},
-      `source` = #{source,jdbcType=VARCHAR},
-       `pay_sms_sq_no` = #{paySmsSqNo,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
   <select id="selectSelective" resultMap="BaseInfoMap">
     select t1.id, user_id, order_number, money, `state`, recharge_time, to_account_time, to_account_money,
     fee, `source` ,t2.phone as user_name from plant_money_recharge t1

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.seed.dao.SeedInnerOrderDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.SeedInnerOrder">
+<mapper namespace="com.moguying.plant.core.dao.seed.SeedInnerOrderDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.SeedInnerOrder">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
     <result column="seed_id" jdbcType="INTEGER" property="seedId" />
@@ -16,7 +16,7 @@
   </resultMap>
   
   
-  <resultMap id="InnerCountMap" type="com.moguying.plant.backend.seed.dto.SeedInnerOrderCount">
+  <resultMap id="InnerCountMap" type="com.moguying.plant.core.entity.dto.SeedInnerOrderCount">
     <result column="seed_id" jdbcType="INTEGER" property="seedId"/>
     <result column="seed_name" jdbcType="VARCHAR" property="seedName"/>
     <result column="order_count" jdbcType="INTEGER" property="orderCount"/>
@@ -28,27 +28,8 @@
     id, order_number, seed_id, user_id, block_id, plant_count, plant_amount, plant_profit, 
     plant_state, plant_time, end_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_seed_inner_order
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_seed_inner_order
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.SeedInnerOrder">
-    insert into plant_seed_inner_order (id, order_number, seed_id, 
-      user_id, block_id, plant_count, 
-      plant_amount, plant_profit, plant_state, 
-      plant_time, end_time)
-    values (#{id,jdbcType=INTEGER}, #{orderNumber,jdbcType=VARCHAR}, #{seedId,jdbcType=INTEGER}, 
-      #{userId,jdbcType=INTEGER}, #{blockId,jdbcType=INTEGER}, #{plantCount,jdbcType=INTEGER}, 
-      #{plantAmount,jdbcType=DECIMAL}, #{plantProfit,jdbcType=DECIMAL}, #{plantState,jdbcType=BIT}, 
-      #{plantTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.SeedInnerOrder">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.SeedInnerOrder">
     insert into plant_seed_inner_order
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -121,7 +102,9 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.SeedInnerOrder">
+
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.SeedInnerOrder">
     update plant_seed_inner_order
     <set>
       <if test="orderNumber != null">
@@ -157,22 +140,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.seed.dto.SeedInnerOrder">
-    update plant_seed_inner_order
-    set order_number = #{orderNumber,jdbcType=VARCHAR},
-      seed_id = #{seedId,jdbcType=INTEGER},
-      user_id = #{userId,jdbcType=INTEGER},
-      block_id = #{blockId,jdbcType=INTEGER},
-      plant_count = #{plantCount,jdbcType=INTEGER},
-      plant_amount = #{plantAmount,jdbcType=DECIMAL},
-      plant_profit = #{plantProfit,jdbcType=DECIMAL},
-      plant_state = #{plantState,jdbcType=BIT},
-      plant_time = #{plantTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  
+
   <select id="innerOrderCountList" resultMap="InnerCountMap">
     select t1.seed_id,t2.name as seed_name,sum(t1.plant_count) as order_count,t1.plant_time as order_time from plant_seed_inner_order t1
     left join plant_seed t2 on t1.seed_id = t2.id

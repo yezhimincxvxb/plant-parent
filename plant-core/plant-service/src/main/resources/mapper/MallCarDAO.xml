@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.mall.dao.MallCarDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.api.mall.dto.MallCar">
+<mapper namespace="com.moguying.plant.core.dao.mall.MallCarDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.vo.MallCar">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
@@ -9,7 +9,7 @@
     <result column="is_check" jdbcType="TINYINT" property="isCheck" />
   </resultMap>
   
-  <resultMap id="CarItem" type="com.moguying.plant.api.mall.dto.OrderItem">
+  <resultMap id="CarItem" type="com.moguying.plant.core.entity.vo.OrderItem">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="product_name" jdbcType="INTEGER" property="productName" />
@@ -24,23 +24,9 @@
   <sql id="Base_Column_List">
     id, user_id, product_id, product_count, is_check
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_mall_car
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_mall_car
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.api.mall.dto.MallCar">
-    insert into plant_mall_car (id, user_id, product_id, 
-      product_count, is_check)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
-      #{productCount,jdbcType=VARCHAR}, #{isCheck,jdbcType=TINYINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.api.mall.dto.MallCar">
+
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.vo.MallCar">
     insert into plant_mall_car
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -77,7 +63,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.api.mall.dto.MallCar">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.vo.MallCar">
     update plant_mall_car
     <set>
       <if test="userId != null">
@@ -95,14 +81,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.api.mall.dto.MallCar">
-    update plant_mall_car
-    set user_id = #{userId,jdbcType=INTEGER},
-      product_id = #{productId,jdbcType=INTEGER},
-      product_count = #{productCount,jdbcType=VARCHAR},
-      is_check = #{isCheck,jdbcType=TINYINT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 
   <select id="userCarItemList" resultMap="CarItem">
     select t1.id,t1.product_id,t1.product_count as buy_count,t2.name as product_name,t2.left_count,

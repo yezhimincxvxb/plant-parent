@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.seed.dao.SeedDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.Seed">
+<mapper namespace="com.moguying.plant.core.dao.seed.SeedDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Seed">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="small_name" jdbcType="VARCHAR" property="smallName" />
@@ -46,7 +46,7 @@
   </resultMap>
   
   
-  <resultMap id="ResultSeedListForHome" type="com.moguying.plant.api.home.dto.HomeSeed">
+  <resultMap id="ResultSeedListForHome" type="com.moguying.plant.core.entity.vo.HomeSeed">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="left_count" jdbcType="INTEGER" property="leftCount" />
@@ -59,7 +59,7 @@
   </resultMap>
   
   
-  <resultMap id="AppSeedDetailMap" type="com.moguying.plant.api.seed.dto.SeedDetail">
+  <resultMap id="AppSeedDetailMap" type="com.moguying.plant.core.entity.vo.SeedDetail">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="seed_name" jdbcType="VARCHAR" property="seedName" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
@@ -81,40 +81,8 @@
     review_mark, add_uid, review_uid, review_time, add_time, total_interest, reap_amount, 
     reap_interest,inner_count,real_amount,real_interest,order_number,full_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_seed
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_seed
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.Seed">
-    insert into plant_seed (id, `name`, small_name, 
-      per_price, total_amount, grow_days, 
-      serial_number, interest_rates,
-      seed_type,
-      total_count, left_count, open_time, 
-      close_time, pic_ids, `state`, 
-      is_show, plant_level, reap_type, 
-      plant_type, review_mark,
-      add_uid, review_uid, review_time, 
-      add_time, total_interest, reap_amount, 
-      reap_interest,order_number)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{smallName,jdbcType=VARCHAR}, 
-      #{perPrice,jdbcType=DECIMAL}, #{totalAmount,jdbcType=DECIMAL}, #{growDays,jdbcType=INTEGER}, 
-      #{serialNumber,jdbcType=VARCHAR}, #{interestRates,jdbcType=DECIMAL}, #{seedType,jdbcType=INTEGER},
-      #{totalCount,jdbcType=INTEGER}, #{leftCount,jdbcType=INTEGER}, #{openTime,jdbcType=TIMESTAMP}, 
-      #{closeTime,jdbcType=TIMESTAMP}, #{picIds,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT},
-      #{isShow,jdbcType=BIT}, #{plantLevel,jdbcType=TINYINT}, #{reapType,jdbcType=TINYINT},
-      #{plantType,jdbcType=TINYINT},  #{reviewMark,jdbcType=VARCHAR},
-      #{addUid,jdbcType=INTEGER}, #{reviewUid,jdbcType=INTEGER}, #{reviewTime,jdbcType=TIMESTAMP}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{totalInterest,jdbcType=DECIMAL}, #{reapAmount,jdbcType=DECIMAL}, 
-      #{reapInterest,jdbcType=DECIMAL},#{orderNubmer,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.Seed" useGeneratedKeys="true" keyProperty="id">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Seed" useGeneratedKeys="true" keyProperty="id">
     insert into plant_seed
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -291,7 +259,9 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.Seed">
+
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Seed">
     update plant_seed
     <set>
       <if test="name != null">
@@ -388,41 +358,6 @@
         full_time = #{fullTime},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.seed.dto.Seed">
-    update plant_seed
-    set `name` = #{name,jdbcType=VARCHAR},
-      small_name = #{smallName,jdbcType=VARCHAR},
-      per_price = #{perPrice,jdbcType=DECIMAL},
-      total_amount = #{totalAmount,jdbcType=DECIMAL},
-      grow_days = #{growDays,jdbcType=INTEGER},
-      serial_number = #{serialNumber,jdbcType=VARCHAR},
-      interest_rates = #{interestRates,jdbcType=DECIMAL},
-      seed_type = #{seedType,jdbcType=INTEGER},
-      total_count = #{totalCount,jdbcType=INTEGER},
-      left_count = #{leftCount,jdbcType=INTEGER},
-      open_time = #{openTime,jdbcType=TIMESTAMP},
-      close_time = #{closeTime,jdbcType=TIMESTAMP},
-      pic_ids = #{picIds,jdbcType=VARCHAR},
-      `state` = #{state,jdbcType=TINYINT},
-      is_show = #{isShow,jdbcType=BIT},
-      plant_level = #{plantLevel,jdbcType=TINYINT},
-      reap_type = #{reapType,jdbcType=TINYINT},
-      plant_type = #{plantType,jdbcType=TINYINT},
-      review_mark = #{reviewMark,jdbcType=VARCHAR},
-      add_uid = #{addUid,jdbcType=INTEGER},
-      review_uid = #{reviewUid,jdbcType=INTEGER},
-      review_time = #{reviewTime,jdbcType=TIMESTAMP},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-      total_interest = #{totalInterest,jdbcType=DECIMAL},
-      reap_amount = #{reapAmount,jdbcType=DECIMAL},
-      reap_interest = #{reapInterest,jdbcType=DECIMAL}
-      inner_count = #{innerCount,jdbcType=INTEGER},
-      real_amount = #{realAmount,jdbcType=DECIMAL},
-      real_interest = #{realInterest,jdbcType=DECIMAL},
-      order_number = #{orderNumber,jdbcType=DECIMAL},
-      full_time = #{fullTime}
     where id = #{id,jdbcType=INTEGER}
   </update>
 

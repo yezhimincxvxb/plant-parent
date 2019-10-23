@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.block.dao.BlockDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.block.dto.Block">
+<mapper namespace="com.moguying.plant.core.dao.block.BlockDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Block">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="number" jdbcType="VARCHAR" property="number" />
     <result column="seed_type" jdbcType="INTEGER" property="seedType" />
@@ -24,11 +24,11 @@
 
   </resultMap>
   
-  <resultMap id="ResultMapWithTypeName" type="com.moguying.plant.backend.block.dto.Block" extends="BaseResultMap">
+  <resultMap id="ResultMapWithTypeName" type="com.moguying.plant.core.entity.dto.Block" extends="BaseResultMap">
     <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
   </resultMap>
 
-  <resultMap id="ResultMapForHomeList" type="com.moguying.plant.api.home.dto.HomeBlock">
+  <resultMap id="ResultMapForHomeList" type="com.moguying.plant.core.entity.vo.HomeBlock">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="number" jdbcType="VARCHAR" property="number" />
     <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
@@ -41,31 +41,12 @@
     has_count, is_show, `state`, add_time, is_delete,grow_days,max_plant,min_plant,pic_url,thumb_pic_url
   </sql>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_block
-    where id = #{id,jdbcType=INTEGER} and is_delete = 0
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <update id="deleteById" parameterType="java.lang.Integer">
     update plant_block set is_delete = 1
     where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.block.dto.Block" useGeneratedKeys="true" keyProperty="id">
-    insert into plant_block (id, `number`, seed_type, 
-      `level`, total_amount, per_price, 
-      total_count, left_count, has_count, 
-      is_show, `state`, add_time, is_delete,grow_days,max_plant,min_plant,interest_rates,
-      pic_url,thumb_pic_url
-      )
-    values (#{id,jdbcType=INTEGER}, #{number,jdbcType=VARCHAR}, #{seedType,jdbcType=INTEGER},
-      #{level,jdbcType=INTEGER}, #{totalAmount,jdbcType=DECIMAL}, #{perPrice,jdbcType=DECIMAL},
-      #{totalCount,jdbcType=INTEGER}, #{leftCount,jdbcType=INTEGER}, #{hasCount,jdbcType=INTEGER}, 
-      #{isShow,jdbcType=BIT}, #{state,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT},
-      #{growDays,jdbcType=INTEGER},#{interestRates,jdbcType=DECIMAL},#{picUrl,jdbcType=VARCHAR},#{thumbPicUrl,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.block.dto.Block" useGeneratedKeys="true" keyProperty="id">
+  </update>
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Block" useGeneratedKeys="true" keyProperty="id">
     insert into plant_block
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -186,7 +167,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.block.dto.Block">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Block">
     update plant_block
     <set>
       <if test="number != null">
@@ -246,29 +227,6 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.block.dto.Block">
-    update plant_block
-    set `number` = #{number,jdbcType=VARCHAR},
-      seed_type = #{seedType,jdbcType=INTEGER},
-      `level` = #{level,jdbcType=INTEGER},
-      total_amount = #{totalAmount,jdbcType=DECIMAL},
-      per_price = #{perPrice,jdbcType=DECIMAL},
-      total_count = #{totalCount,jdbcType=INTEGER},
-      left_count = #{leftCount,jdbcType=INTEGER},
-      has_count = #{hasCount,jdbcType=INTEGER},
-      is_show = #{isShow,jdbcType=BIT},
-      `state` = #{state,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-      is_delete = #{isDelete,jdbcType=BIT},
-      grow_days = #{growDays,jdbcType=BIT},
-      max_plant = #{maxPlant,jdbcType=BIT},
-      min_plant = #{minPlant,jdbcType=BIT},
-      interest_rates = #{interestRates,jdbcType=DECIMAL},
-      pic_url = #{picUrl,jdbcType=VARCHAR},
-      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
 
   <select id="selectSelective" resultMap="ResultMapWithTypeName">
     select t1.id, `number`, seed_type, `level`, total_amount, t1.per_price, total_count, left_count,t1.interest_rates,t1.pic_url,

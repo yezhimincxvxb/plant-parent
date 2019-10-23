@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.seed.dao.SeedTypeDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.SeedType">
+<mapper namespace="com.moguying.plant.core.dao.seed.SeedTypeDAO">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.SeedType">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="class_name" jdbcType="VARCHAR" property="className"/>
         <result column="grow_days" jdbcType="INTEGER" property="growDays"/>
@@ -17,8 +17,8 @@
     </resultMap>
 
 
-    <resultMap id="SeedTypeWithContent" type="com.moguying.plant.backend.seed.dto.SeedType" extends="BaseResultMap">
-        <collection property="content" ofType="com.moguying.plant.backend.seed.dto.SeedContent">
+    <resultMap id="SeedTypeWithContent" type="com.moguying.plant.core.entity.dto.SeedType" extends="BaseResultMap">
+        <collection property="content" ofType="com.moguying.plant.core.entity.dto.SeedContent">
             <result column="seed_type" property="seedType"/>
             <result column="contract_content" property="contractContent"/>
             <result column="seed_introduce" property="seedIntroduce"/>
@@ -39,31 +39,13 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_seed_type
-        where id = #{id,jdbcType=INTEGER}
-    </select>
-
-    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <update id="deleteById" parameterType="java.lang.Integer">
     update plant_seed_type
     set is_delete = 1
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.SeedType" useGeneratedKeys="true"
-            keyProperty="id">
-    insert into plant_seed_type (id, class_name, grow_days, 
-      per_price, interest_rates, order_number, 
-      is_delete, plant_type, reap_type,pic_url,thumb_pic_url,exchange_num)
-    values (#{id,jdbcType=INTEGER}, #{className,jdbcType=VARCHAR}, #{growDays,jdbcType=INTEGER}, 
-      #{perPrice,jdbcType=DECIMAL}, #{interestRates,jdbcType=DECIMAL}, #{orderNumber,jdbcType=INTEGER}, 
-      #{isDelete,jdbcType=BIT}, #{plantType,jdbcType=INTEGER}, #{reapType,jdbcType=INTEGER},
-      #{picUrl,jdbcType=VARCHAR},#{thumbPicUrl,jdbcType=VARCHAR},#{exchangeNum})
-  </insert>
-
-    <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.SeedType" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.SeedType" useGeneratedKeys="true"
             keyProperty="id">
         insert into plant_seed_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -144,7 +126,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.SeedType">
+    <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.SeedType">
         update plant_seed_type
         <set>
             <if test="className != null">
@@ -183,22 +165,6 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-
-    <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.seed.dto.SeedType">
-    update plant_seed_type
-    set class_name = #{className,jdbcType=VARCHAR},
-      grow_days = #{growDays,jdbcType=INTEGER},
-      per_price = #{perPrice,jdbcType=DECIMAL},
-      interest_rates = #{interestRates,jdbcType=DECIMAL},
-      order_number = #{orderNumber,jdbcType=INTEGER},
-      is_delete = #{isDelete,jdbcType=BIT},
-      plant_type = #{plantType,jdbcType=INTEGER},
-      reap_type = #{reapType,jdbcType=INTEGER},
-      pic_url = #{picUrl,jdbcType=VARCHAR},
-      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
-      exchange_num = #{exchangeNum}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
     <select id="selectSelective" parameterType="SeedClass" resultMap="BaseResultMap">
         select

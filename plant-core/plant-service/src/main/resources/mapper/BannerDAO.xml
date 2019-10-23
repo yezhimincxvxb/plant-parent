@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.content.dao.BannerDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.content.dto.Banner">
+<mapper namespace="com.moguying.plant.core.dao.content.BannerDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Banner">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="type" jdbcType="BIT" property="type" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -17,27 +17,8 @@
     id, `type`, `name`, pic_url, thumb_pic_url, jump_url, is_show, sort_order, show_time, 
     add_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_banner
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_banner
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.content.dto.Banner">
-    insert into plant_banner (id, `type`, `name`, pic_url, 
-      thumb_pic_url, jump_url, is_show, 
-      sort_order, show_time, add_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, 
-      #{thumbPicUrl,jdbcType=VARCHAR}, #{jumpUrl,jdbcType=VARCHAR}, #{isShow,jdbcType=INTEGER},
-      #{sortOrder,jdbcType=TINYINT}, #{showTime,jdbcType=TIMESTAMP}, #{addTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.content.dto.Banner">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Banner">
     insert into plant_banner
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -104,7 +85,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.content.dto.Banner">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Banner">
     update plant_banner
     <set>
       <if test="type != null">
@@ -137,19 +118,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.content.dto.Banner">
-    update plant_banner
-    set `type` = #{type,jdbcType=BIT},
-      `name` = #{name,jdbcType=VARCHAR},
-      pic_url = #{picUrl,jdbcType=VARCHAR},
-      thumb_pic_url = #{thumbPicUrl,jdbcType=VARCHAR},
-      jump_url = #{jumpUrl,jdbcType=VARCHAR},
-      is_show = #{isShow,jdbcType=INTEGER},
-      sort_order = #{sortOrder,jdbcType=TINYINT},
-      show_time = #{showTime,jdbcType=TIMESTAMP},
-      add_time = #{addTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 
   <select id="selectSelective" resultMap="BaseResultMap">
     select  <include refid="Base_Column_List"/> from plant_banner

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.reap.dao.SaleCoinDao">
+<mapper namespace="com.moguying.plant.core.dao.reap.SaleCoinDao">
 
     <!-- 实体类属性与数据库字段一一映射 -->
-    <resultMap id="baseMap" type="com.moguying.plant.backend.reap.dto.SaleCoin">
+    <resultMap id="baseMap" type="com.moguying.plant.core.entity.dto.SaleCoin">
         <id column="user_id" property="userId"/>
         <result column="coin_count" property="coinCount"/>
     </resultMap>
@@ -18,7 +18,7 @@
     </select>
 
     <!-- 添加用户-蘑菇币信息 -->
-    <insert id="insertSaleCoin" parameterType="com.moguying.plant.backend.reap.dto.SaleCoin">
+    <insert id="insertSaleCoin" parameterType="com.moguying.plant.core.entity.dto.SaleCoin">
         insert into plant_sale_coin
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">
@@ -40,7 +40,7 @@
     </insert>
 
     <!-- 更新蘑菇币 -->
-    <insert id="updateSaleCoin" parameterType="com.moguying.plant.backend.reap.dto.SaleCoin">
+    <insert id="updateSaleCoin" parameterType="com.moguying.plant.core.entity.dto.SaleCoin">
         update plant_sale_coin
         <set>
             <if test="coinCount != null">

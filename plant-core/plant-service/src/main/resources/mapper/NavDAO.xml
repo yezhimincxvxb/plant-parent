@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.content.dao.NavDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.content.dto.Nav">
+<mapper namespace="com.moguying.plant.core.dao.content.NavDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Nav">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="jump_url" jdbcType="VARCHAR" property="jumpUrl" />
@@ -13,25 +13,8 @@
   <sql id="Base_Column_List">
     id, `name`, jump_url, is_show, is_blank, order_number, `type`
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_nav
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_nav
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.content.dto.Nav" useGeneratedKeys="true" keyProperty="id">
-    insert into plant_nav (id, `name`, jump_url, 
-      is_show, is_blank, order_number, 
-      `type`)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{jumpUrl,jdbcType=VARCHAR}, 
-      #{isShow,jdbcType=BIT}, #{isBlank,jdbcType=BIT}, #{orderNumber,jdbcType=INTEGER}, 
-      #{type,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.content.dto.Nav" useGeneratedKeys="true" keyProperty="id">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Nav" useGeneratedKeys="true" keyProperty="id">
     insert into plant_nav
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -80,7 +63,9 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.content.dto.Nav">
+
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Nav">
     update plant_nav
     <set>
       <if test="name != null">
@@ -104,17 +89,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.content.dto.Nav">
-    update plant_nav
-    set `name` = #{name,jdbcType=VARCHAR},
-      jump_url = #{jumpUrl,jdbcType=VARCHAR},
-      is_show = #{isShow,jdbcType=BIT},
-      is_blank = #{isBlank,jdbcType=BIT},
-      order_number = #{orderNumber,jdbcType=INTEGER},
-      `type` = #{type,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
+
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_nav
     <where>

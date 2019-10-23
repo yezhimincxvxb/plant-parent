@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.farmer.dao.FarmerInfoDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.api.farmer.dto.FarmerInfo">
+<mapper namespace="com.moguying.plant.core.dao.farmer.FarmerInfoDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.vo.FarmerInfo">
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="farmer_level" jdbcType="INTEGER" property="farmerLevel" />
     <result column="grow_up_count" jdbcType="INTEGER" property="growUpCount" />
@@ -10,23 +10,9 @@
   <sql id="Base_Column_List">
     user_id, farmer_level, grow_up_count,level_gift
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_farmer_info
-    where user_id = #{userId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_farmer_info
-    where user_id = #{userId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.api.farmer.dto.FarmerInfo">
-    insert into plant_farmer_info (user_id, farmer_level, grow_up_count,level_gift
-      )
-    values (#{userId,jdbcType=INTEGER}, #{farmerLevel,jdbcType=INTEGER}, #{growUpCount,jdbcType=INTEGER}, #{levelGift,jdbcType=BIT}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerInfo">
+
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.vo.FarmerInfo">
     insert into plant_farmer_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -57,7 +43,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerInfo">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.vo.FarmerInfo">
     update plant_farmer_info
     <set>
       <if test="farmerLevel != null">
@@ -70,13 +56,6 @@
         level_gift = #{levelGift,jdbcType=BIT},
       </if>
     </set>
-    where user_id = #{userId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.api.farmer.dto.FarmerInfo">
-    update plant_farmer_info
-    set farmer_level = #{farmerLevel,jdbcType=INTEGER},
-      grow_up_count = #{growUpCount,jdbcType=INTEGER},
-      level_gift = #{levelGift,jdbcType=BIT}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
 </mapper>

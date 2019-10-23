@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.reap.dao.SaleCoinLogDao">
+<mapper namespace="com.moguying.plant.core.dao.reap.SaleCoinLogDao">
 
     <!-- 实体类属性与数据库字段一一映射 -->
-    <resultMap id="baseMap" type="com.moguying.plant.backend.reap.dto.SaleCoinLog">
+    <resultMap id="baseMap" type="com.moguying.plant.core.entity.dto.SaleCoinLog">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
         <result column="affect_coin" property="affectCoin"/>
@@ -12,7 +12,7 @@
     </resultMap>
 
     <!-- 添加蘑菇币日志信息 -->
-    <insert id="insertSaleCoinLog" parameterType="com.moguying.plant.backend.reap.dto.SaleCoinLog">
+    <insert id="insertSaleCoinLog" parameterType="com.moguying.plant.core.entity.dto.SaleCoinLog">
         insert into plant_sale_coin_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">
@@ -46,7 +46,7 @@
     </insert>
 
     <!-- 显示兑换券记录 -->
-    <select id="showFertilizerLog" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+    <select id="showFertilizerLog" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
           select t4.type_name `name`, count(t1.id) `number`, t3.coin_fertilizer `count`, t2.add_time `time`
             from plant_sale_coin_log t1
             left join plant_user_fertilizer t2 on t1.affect_detail_id = t2.id

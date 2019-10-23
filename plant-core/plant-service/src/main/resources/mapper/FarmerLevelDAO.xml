@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.farmer.dao.FarmerLevelDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.api.farmer.dto.FarmerLevel">
+<mapper namespace="com.moguying.plant.core.dao.farmer.FarmerLevelDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.vo.FarmerLevel">
     <id column="level" jdbcType="INTEGER" property="level" />
     <result column="grow_up_count_min" jdbcType="INTEGER" property="growUpCountMin" />
     <result column="grow_up_count_max" jdbcType="INTEGER" property="growUpCountMax" />
@@ -9,23 +9,8 @@
   <sql id="Base_Column_List">
     `level`, grow_up_count_min, grow_up_count_max
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_farmer_level
-    where `level` = #{level,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_farmer_level
-    where `level` = #{level,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.api.farmer.dto.FarmerLevel">
-    insert into plant_farmer_level (`level`, grow_up_count_min, grow_up_count_max
-      )
-    values (#{level,jdbcType=INTEGER}, #{growUpCountMin,jdbcType=INTEGER}, #{growUpCountMax,jdbcType=INTEGER}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerLevel">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.vo.FarmerLevel">
     insert into plant_farmer_level
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="level != null">
@@ -50,7 +35,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerLevel">
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.vo.FarmerLevel">
     update plant_farmer_level
     <set>
       <if test="growUpCountMin != null">
@@ -62,13 +48,7 @@
     </set>
     where `level` = #{level,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.api.farmer.dto.FarmerLevel">
-    update plant_farmer_level
-    set grow_up_count_min = #{growUpCountMin,jdbcType=INTEGER},
-      grow_up_count_max = #{growUpCountMax,jdbcType=INTEGER}
-    where `level` = #{level,jdbcType=INTEGER}
-  </update>
-  
+
   <select id="selectLevelByGrowUpCount" resultType="int">
     select level from plant_farmer_level where
     <![CDATA[

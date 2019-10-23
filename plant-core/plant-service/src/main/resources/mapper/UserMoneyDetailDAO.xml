@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.user.dao.UserMoneyDetailDAO">
+<mapper namespace="com.moguying.plant.core.dao.user.UserMoneyDetailDAO">
 
-    <resultMap id="baseResultMap" type="com.moguying.plant.backend.user.dto.UserMoneyDetail">
+    <resultMap id="baseResultMap" type="com.moguying.plant.core.entity.dto.UserMoneyDetail">
         <id column="id" property="id"/>
         <result column="affect_money" property="affectMoney"/>
         <result column="affect_type" property="affectType"/>
@@ -41,7 +41,7 @@
 
     <!-- 根据商品详情ID获取商品详情 -->
     <select id="findProducts" parameterType="java.lang.String"
-            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+            resultType="com.moguying.plant.core.entity.dto.ProductInfo">
         select t4.name productName, t4.has_count productCount
         from plant_user_money_log t1
         left join plant_mall_order t2 on t1.detail_id = t2.order_number
@@ -55,7 +55,7 @@
 
     <!-- 根据商品详情ID获取购买菌包 -->
     <select id="findInSeeds" parameterType="java.lang.String"
-            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+            resultType="com.moguying.plant.core.entity.dto.ProductInfo">
         select t3.class_name productName, t2.buy_count productCount
         from plant_user_money_log t1
         left join plant_seed_order_detail t2 on t1.detail_id = t2.order_number
@@ -68,7 +68,7 @@
 
     <!-- 根据商品详情ID获取出售菌包 -->
     <select id="findOutSeeds" parameterType="java.lang.String"
-            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+            resultType="com.moguying.plant.core.entity.dto.ProductInfo">
         select t3.class_name productName, t2.plant_count productCount
         from plant_user_money_log t1
         left join plant_reap t2 on t1.detail_id = t2.order_number
@@ -81,7 +81,7 @@
 
     <!-- 根据商品详情ID获取邀请人姓名 -->
     <select id="findInvitation" parameterType="java.lang.String"
-            resultType="com.moguying.plant.backend.user.dto.ProductInfo">
+            resultType="com.moguying.plant.core.entity.dto.ProductInfo">
         select t3.real_name productName
         from plant_user_money_log t1
         left join plant_reap t2 on t1.detail_id = t2.order_number

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.user.dao.UserAddressDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.user.dto.UserAddress">
+<mapper namespace="com.moguying.plant.core.dao.user.UserAddressDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.UserAddress">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
@@ -18,25 +18,14 @@
     id, user_id, province_name, city_name, town_name, receive_user_name, receive_phone, 
     detail_address,add_time,is_default
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_user_address
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+
+  <update id="deleteById" parameterType="java.lang.Integer">
     update plant_user_address set is_delete = 1
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <insert id="insert" parameterType="com.moguying.plant.backend.user.dto.UserAddress" useGeneratedKeys="true" keyProperty="id">
-    insert into plant_user_address (id, user_id, province_name, 
-      city_name, town_name, receive_user_name, 
-      receive_phone, detail_address,add_time,is_default)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{provinceName,jdbcType=VARCHAR}, 
-      #{cityName,jdbcType=VARCHAR}, #{townName,jdbcType=VARCHAR}, #{receiveUserName,jdbcType=VARCHAR}, 
-      #{receivePhone,jdbcType=VARCHAR}, #{detailAddress,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP},#{isDefault})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.user.dto.UserAddress" useGeneratedKeys="true" keyProperty="id">
+
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.UserAddress" useGeneratedKeys="true" keyProperty="id">
     insert into plant_user_address
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -103,7 +92,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.user.dto.UserAddress">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.UserAddress">
     update plant_user_address
     <set>
       <if test="provinceName != null">
@@ -139,21 +128,8 @@
         AND user_id = #{userId,jdbcType=INTEGER}
       </if>
     </where>
-
-
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.user.dto.UserAddress">
-    update plant_user_address
-    set user_id = #{userId,jdbcType=INTEGER},
-      province_name = #{provinceName,jdbcType=VARCHAR},
-      city_name = #{cityName,jdbcType=VARCHAR},
-      town_name = #{townName,jdbcType=VARCHAR},
-      receive_user_name = #{receiveUserName,jdbcType=VARCHAR},
-      receive_phone = #{receivePhone,jdbcType=VARCHAR},
-      detail_address = #{detailAddress,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=TIMESTAMP},is_default = #{isDefault}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/>  from plant_user_address

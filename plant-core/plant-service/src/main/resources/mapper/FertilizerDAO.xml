@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.fertilizer.dao.FertilizerDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.fertilizer.dto.Fertilizer">
+<mapper namespace="com.moguying.plant.core.dao.fertilizer.FertilizerDAO">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Fertilizer">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="type_id" jdbcType="INTEGER" property="typeId"/>
         <result column="amount_min" jdbcType="DECIMAL" property="amountMin"/>
@@ -26,7 +26,7 @@
     </resultMap>
 
     <resultMap extends="BaseResultMap" id="BaseResultMapInfo"
-               type="com.moguying.plant.backend.fertilizer.dto.Fertilizer">
+               type="com.moguying.plant.core.entity.dto.Fertilizer">
         <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
         <result column="number" jdbcType="VARCHAR" property="useInBlockNumber"/>
         <result column="class_name" jdbcType="VARCHAR" property="useInSeedTypeName"/>
@@ -40,39 +40,8 @@
     is_single_trigger, add_time, coin_fertilizer
   </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_fertilizer
-        where id = #{id,jdbcType=INTEGER}
-    </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_fertilizer
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
-    <insert id="insert" parameterType="com.moguying.plant.backend.fertilizer.dto.Fertilizer" keyProperty="id"
-            useGeneratedKeys="true">
-    insert into plant_fertilizer (id, type_id, amount_min, 
-      amount_max, trigger_use_event, trigger_get_event, 
-      `count`, per_count, user_level, 
-      fertilizer_amount, fertilizer_amount_is_rate, 
-      start_time, expire_time, use_no_limit, 
-      use_in_seed_type, use_in_block, use_in_product, 
-      expire_days, is_single_trigger, add_time, coin_fertilizer
-      )
-    values (#{id,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{amountMin,jdbcType=DECIMAL}, 
-      #{amountMax,jdbcType=DECIMAL}, #{triggerUseEvent,jdbcType=VARCHAR}, #{triggerGetEvent,jdbcType=VARCHAR}, 
-      #{count,jdbcType=INTEGER}, #{perCount,jdbcType=INTEGER}, #{userLevel,jdbcType=INTEGER}, 
-      #{fertilizerAmount,jdbcType=DECIMAL}, #{fertilizerAmountIsRate,jdbcType=INTEGER}, 
-      #{startTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP}, #{useNoLimit,jdbcType=INTEGER}, 
-      #{useInSeedType,jdbcType=INTEGER}, #{useInBlock,jdbcType=INTEGER}, #{useInProduct,jdbcType=INTEGER}, 
-      #{expireDays,jdbcType=INTEGER}, #{isSingleTrigger,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, #{coinFertilizer}
-      )
-  </insert>
-
-    <insert id="insertSelective" parameterType="com.moguying.plant.backend.fertilizer.dto.Fertilizer" keyProperty="id"
+    <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Fertilizer" keyProperty="id"
             useGeneratedKeys="true">
         insert into plant_fertilizer
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -207,7 +176,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.fertilizer.dto.Fertilizer">
+    <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Fertilizer">
         update plant_fertilizer
         <set>
             <if test="typeId != null">
@@ -274,31 +243,6 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.fertilizer.dto.Fertilizer">
-    update plant_fertilizer
-    set type_id = #{typeId,jdbcType=INTEGER},
-      amount_min = #{amountMin,jdbcType=DECIMAL},
-      amount_max = #{amountMax,jdbcType=DECIMAL},
-      trigger_use_event = #{triggerUseEvent,jdbcType=VARCHAR},
-      trigger_get_event = #{triggerGetEvent,jdbcType=VARCHAR},
-      `count` = #{count,jdbcType=INTEGER},
-      per_count = #{perCount,jdbcType=INTEGER},
-      user_level = #{userLevel,jdbcType=INTEGER},
-      fertilizer_amount = #{fertilizerAmount,jdbcType=DECIMAL},
-      fertilizer_amount_is_rate = #{fertilizerAmountIsRate,jdbcType=INTEGER},
-      start_time = #{startTime,jdbcType=TIMESTAMP},
-      expire_time = #{expireTime,jdbcType=TIMESTAMP},
-      use_no_limit = #{useNoLimit,jdbcType=INTEGER},
-      use_in_seed_type = #{useInSeedType,jdbcType=INTEGER},
-      use_in_block = #{useInBlock,jdbcType=INTEGER},
-      use_in_product = #{useInProduct,jdbcType=INTEGER},
-      expire_days = #{expireDays,jdbcType=INTEGER},
-      is_single_trigger = #{isSingleTrigger,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-      coin_fertilizer = #{coinFertilizer}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
     <select id="selectSelective" resultMap="BaseResultMapInfo">
         select t1.*, t2.number ,t3.name,t4.class_name,t5.type_name from plant_fertilizer t1
         left join plant_block t2 on t1.use_in_block = t2.id
@@ -326,7 +270,7 @@
     </select>
 
     <!-- 显示可兑换的券列表 -->
-    <select id="showFertilizer" resultType="com.moguying.plant.api.mall.dto.ExchangeInfo">
+    <select id="showFertilizer" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
         select t1.id `id`, t2.type_name `name`, t1.fertilizer_amount `amount`,
         t1.coin_fertilizer `count`, t2.id `type`, t1.amount_min `amountMin`, t3.class_name `seedName`
         from plant_fertilizer t1

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.user.dao.UserInviteDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.user.dto.UserInvite">
+<mapper namespace="com.moguying.plant.core.dao.user.UserInviteDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.UserInvite">
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="plant_amount" jdbcType="DECIMAL" property="plantAmount" />
@@ -9,26 +9,12 @@
     <result column="invite_user_id" jdbcType="INTEGER" property="inviteUserId" />
     <result column="reg_time" jdbcType="TIMESTAMP" property="regTime"/>
   </resultMap>
+
   <sql id="Base_Column_List">
     user_id, phone, plant_amount, invite_award, invite_user_id
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_user_invite
-    where user_id = #{userId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_user_invite
-    where user_id = #{userId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.user.dto.UserInvite">
-    insert into plant_user_invite (user_id, phone, plant_amount, 
-      invite_award, invite_user_id)
-    values (#{userId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{plantAmount,jdbcType=DECIMAL}, 
-      #{inviteAward,jdbcType=DECIMAL}, #{inviteUserId,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.user.dto.UserInvite">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.UserInvite">
     insert into plant_user_invite
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -65,7 +51,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.user.dto.UserInvite">
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.UserInvite">
     update plant_user_invite
     <set>
       <if test="phone != null">
@@ -83,16 +70,8 @@
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.user.dto.UserInvite">
-    update plant_user_invite
-    set phone = #{phone,jdbcType=VARCHAR},
-      plant_amount = #{plantAmount,jdbcType=DECIMAL},
-      invite_award = #{inviteAward,jdbcType=DECIMAL},
-      invite_user_id = #{inviteUserId,jdbcType=INTEGER}
-    where user_id = #{userId,jdbcType=INTEGER}
-  </update>
 
-  <update id="incUserInviteInfo" parameterType="com.moguying.plant.backend.user.dto.UserInvite">
+  <update id="incUserInviteInfo" parameterType="com.moguying.plant.core.entity.dto.UserInvite">
     update plant_user_invite
     <set>
       <if test="plantAmount != null">

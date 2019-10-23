@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.mall.dao.MallOrderDAO">
+<mapper namespace="com.moguying.plant.core.dao.mall.MallOrderDAO">
 
-    <resultMap id="BaseResultMap" type="com.moguying.plant.backend.mall.dto.MallOrder">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MallOrder">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
@@ -28,13 +28,13 @@
         <result column="reduce_pay_amount" jdbcType="DECIMAL" property="reducePayAmount"/>
     </resultMap>
 
-    <resultMap id="BaseResultMalWithUserPhone" type="com.moguying.plant.backend.mall.dto.MallOrder"
+    <resultMap id="BaseResultMalWithUserPhone" type="com.moguying.plant.core.entity.dto.MallOrder"
                extends="BaseResultMap">
         <result column="phone" jdbcType="INTEGER" property="phone"/>
         <result column="real_name" jdbcType="INTEGER" property="realName"/>
     </resultMap>
 
-    <resultMap id="OrderListMap" type="com.moguying.plant.api.mall.dto.UserMallOrder">
+    <resultMap id="OrderListMap" type="com.moguying.plant.core.entity.vo.UserMallOrder">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
         <result column="state" jdbcType="TINYINT" property="state"/>
@@ -52,36 +52,8 @@
     cancel_reason, seq_no,car_pay_amount,account_pay_amount,reduce_pay_amount,notice_time
   </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_mall_order
-        where id = #{id,jdbcType=INTEGER}
-    </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_mall_order
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
-    <insert id="insert" parameterType="com.moguying.plant.backend.mall.dto.MallOrder" useGeneratedKeys="true"
-            keyProperty="id">
-    insert into plant_mall_order (id, order_number, user_id, 
-      buy_amount, total_coins, buy_mark, fee_amount,
-      `state`, address_id, add_time, 
-      pay_time, close_time, send_time, 
-      is_notice, confirm_time, express_order_number, express_com_code,
-      cancel_reason, seq_no,car_pay_amount,account_pay_amount,reduce_pay_amount,notice_time)
-    values (#{id,jdbcType=INTEGER}, #{orderNumber,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
-      #{buyAmount,jdbcType=DECIMAL}, #{totalCoins}, #{buyMark,jdbcType=VARCHAR}, #{feeAmount,jdbcType=DECIMAL},
-      #{state,jdbcType=TINYINT}, #{addressId,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, 
-      #{payTime,jdbcType=TIMESTAMP}, #{closeTime,jdbcType=TIMESTAMP}, #{sendTime,jdbcType=TIMESTAMP}, 
-      #{isNotice,jdbcType=BIT}, #{confirmTime,jdbcType=TIMESTAMP}, #{expressOrderNumber,jdbcType=VARCHAR}, #{expressComCode,jdbcType=VARCHAR},
-      #{cancelReason,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR},#{carPayAmount,jdbcType=DECIMAL}, #{accountPayAmount,jdbcType=DECIMAL},
-      #{reducePayAmount,jdbcType=DECIMAL},#{noticeTime,jdbcType=TIMESTAMP})
-  </insert>
-
-    <insert id="insertSelective" parameterType="com.moguying.plant.backend.mall.dto.MallOrder" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.MallOrder" useGeneratedKeys="true"
             keyProperty="id">
         insert into plant_mall_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -228,7 +200,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.mall.dto.MallOrder">
+    <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.MallOrder">
         update plant_mall_order
         <set>
             <if test="orderNumber != null">
@@ -300,33 +272,6 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-
-    <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.mall.dto.MallOrder">
-    update plant_mall_order
-    set order_number = #{orderNumber,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER},
-      buy_amount = #{buyAmount,jdbcType=DECIMAL},
-      total_coins = #{totalCoins},
-      buy_mark = #{buyMark,jdbcType=VARCHAR},
-      fee_amount = #{feeAmount,jdbcType=DECIMAL},
-      `state` = #{state,jdbcType=TINYINT},
-      address_id = #{addressId,jdbcType=INTEGER},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
-      pay_time = #{payTime,jdbcType=TIMESTAMP},
-      close_time = #{closeTime,jdbcType=TIMESTAMP},
-      send_time = #{sendTime,jdbcType=TIMESTAMP},
-      is_notice = #{isNotice,jdbcType=BIT},
-      confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
-      express_order_number = #{expressOrderNumber,jdbcType=VARCHAR},
-      express_com_code = #{expressComCode,jdbcType=VARCHAR},
-      cancel_reason = #{cancelReason,jdbcType=VARCHAR},
-      seq_no = #{seqNo,jdbcType=VARCHAR},
-      car_pay_amount = #{carPayAmount,jdbcType=DECIMAL},
-      account_pay_amount = #{accountPayAmount,jdbcType=DECIMAL},
-      reduce_pay_amount = #{reducePayAmount,jdbcType=DECIMAL},
-      notice_time = #{noticeTime,jdbcType=TIMESTAMP},
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
     <select id="userOrderListByState" resultMap="OrderListMap">
         select id,add_time,fee_amount,buy_amount,state,sum(buy_amount + fee_amount) as total_amount,is_notice, total_coins

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.seed.dao.SeedContentDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.seed.dto.SeedContent">
+<mapper namespace="com.moguying.plant.core.dao.seed.SeedContentDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.SeedContent">
     <id column="seed_type" jdbcType="INTEGER" property="seedType" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.backend.seed.dto.SeedContent">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.dto.SeedContent">
     <result column="seed_introduce" jdbcType="LONGVARCHAR" property="seedIntroduce" />
     <result column="contract_content" jdbcType="LONGVARCHAR" property="contractContent" />
   </resultMap>
@@ -14,31 +14,9 @@
   <sql id="Blob_Column_List">
     seed_introduce, contract_content
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from plant_seed_content
-    where seed_type = #{seedType,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_seed_content
-    where seed_type = #{seedType,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.seed.dto.SeedContent">
-    insert into plant_seed_content (seed_type, seed_introduce, contract_content
-      )
-    values (#{seedType,jdbcType=INTEGER},
-    <![CDATA[
-        CONCAT("<style>img{max-width:100%!important;}</style>", #{seedIntroduce,jdbcType=LONGVARCHAR}),
-    ]]>
-    <![CDATA[
-        CONCAT("<style>img{max-width:100%!important;}</style>", #{contractContent,jdbcType=LONGVARCHAR})
-    ]]>
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.seed.dto.SeedContent">
+
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.SeedContent">
     insert into plant_seed_content
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="seedType != null">
@@ -67,7 +45,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.seed.dto.SeedContent">
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.SeedContent">
     update plant_seed_content
     <set>
       <if test="seedIntroduce != null">
@@ -85,10 +64,5 @@
     </set>
     where seed_type = #{seedType,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.moguying.plant.backend.seed.dto.SeedContent">
-    update plant_seed_content
-    set seed_introduce = #{seedIntroduce,jdbcType=LONGVARCHAR},
-      contract_content = #{contractContent,jdbcType=LONGVARCHAR}
-    where seed_type = #{seedType,jdbcType=INTEGER}
-  </update>
+
 </mapper>

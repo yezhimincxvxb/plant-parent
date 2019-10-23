@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.farmer.dao.FarmerEnergyTriggerDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+<mapper namespace="com.moguying.plant.core.dao.farmer.FarmerEnergyTriggerDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.vo.FarmerEnergyTrigger">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="trigger_event" jdbcType="VARCHAR" property="triggerEvent" />
     <result column="incr_grow_up_count" jdbcType="INTEGER" property="incrGrowUpCount" />
@@ -10,23 +10,8 @@
   <sql id="Base_Column_List">
     id, trigger_event, incr_grow_up_count,incr_grow_up_rate
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_farmer_energy_trigger
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_farmer_energy_trigger
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
-    insert into plant_farmer_energy_trigger (id, trigger_event, incr_grow_up_count,incr_grow_up_rate
-      )
-    values (#{id,jdbcType=INTEGER}, #{triggerEvent,jdbcType=VARCHAR}, #{incrGrowUpCount,jdbcType=INTEGER}, #{incrGrowUpRate,jdbcType=DECIMAL}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.vo.FarmerEnergyTrigger">
     insert into plant_farmer_energy_trigger
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -57,7 +42,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.vo.FarmerEnergyTrigger">
     update plant_farmer_energy_trigger
     <set>
       <if test="triggerEvent != null">
@@ -72,13 +57,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.api.farmer.dto.FarmerEnergyTrigger">
-    update plant_farmer_energy_trigger
-    set trigger_event = #{triggerEvent,jdbcType=VARCHAR},
-      incr_grow_up_count = #{incrGrowUpCount,jdbcType=INTEGER},
-      incr_grow_up_rate = #{incrGrowUpRate,jdbcType=DECIMAL},
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
   
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_farmer_energy_trigger

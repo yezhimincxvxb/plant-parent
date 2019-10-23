@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.user.dao.UserMessageTplDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.user.dto.UserMessageTpl">
+<mapper namespace="com.moguying.plant.core.dao.user.UserMessageTplDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.UserMessageTpl">
     <id column="action_code" jdbcType="VARCHAR" property="actionCode" />
     <result column="message_title" jdbcType="VARCHAR" property="messageTitle" />
     <result column="message_tpl" jdbcType="VARCHAR" property="messageTpl" />
@@ -10,23 +10,8 @@
   <sql id="Base_Column_List">
     action_code, message_title, message_tpl, is_open
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_user_message_tpl
-    where action_code = #{actionCode,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from plant_user_message_tpl
-    where action_code = #{actionCode,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.user.dto.UserMessageTpl">
-    insert into plant_user_message_tpl (action_code, message_title, message_tpl, 
-      is_open)
-    values (#{actionCode,jdbcType=VARCHAR}, #{messageTitle,jdbcType=VARCHAR}, #{messageTpl,jdbcType=VARCHAR}, 
-      #{isOpen,jdbcType=TINYINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.user.dto.UserMessageTpl">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.UserMessageTpl">
     insert into plant_user_message_tpl
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="actionCode != null">
@@ -57,7 +42,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.user.dto.UserMessageTpl">
+
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.UserMessageTpl">
     update plant_user_message_tpl
     <set>
       <if test="messageTitle != null">
@@ -72,11 +58,5 @@
     </set>
     where action_code = #{actionCode,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.user.dto.UserMessageTpl">
-    update plant_user_message_tpl
-    set message_title = #{messageTitle,jdbcType=VARCHAR},
-      message_tpl = #{messageTpl,jdbcType=VARCHAR},
-      is_open = #{isOpen,jdbcType=TINYINT}
-    where action_code = #{actionCode,jdbcType=VARCHAR}
-  </update>
+
 </mapper>

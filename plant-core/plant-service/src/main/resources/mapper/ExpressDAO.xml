@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.backend.order.dao.ExpressDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.backend.order.dto.Express">
+<mapper namespace="com.moguying.plant.core.dao.order.ExpressDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Express">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="address_id" jdbcType="INTEGER" property="addressId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
@@ -11,23 +11,8 @@
   <sql id="Base_Column_List">
     id, address_id, product_id, product_type, express_number
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plant_express
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from plant_express
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.moguying.plant.backend.order.dto.Express">
-    insert into plant_express (id, address_id, product_id, 
-      product_type, express_number)
-    values (#{id,jdbcType=INTEGER}, #{addressId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
-      #{productType,jdbcType=TINYINT}, #{expressNumber,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.moguying.plant.backend.order.dto.Express">
+
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Express">
     insert into plant_express
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -64,7 +49,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.backend.order.dto.Express">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Express">
     update plant_express
     <set>
       <if test="addressId != null">
@@ -80,14 +65,6 @@
         express_number = #{expressNumber,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.moguying.plant.backend.order.dto.Express">
-    update plant_express
-    set address_id = #{addressId,jdbcType=INTEGER},
-      product_id = #{productId,jdbcType=INTEGER},
-      product_type = #{productType,jdbcType=TINYINT},
-      express_number = #{expressNumber,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
