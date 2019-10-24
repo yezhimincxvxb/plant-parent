@@ -4,10 +4,10 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.MoneyWithdraw;
-import com.moguying.plant.core.entity.dto.payment.response.PaymentResponse;
-import com.moguying.plant.core.entity.dto.payment.response.SendWithdrawSmsCodeResponse;
-import com.moguying.plant.core.entity.dto.payment.response.WithdrawMoneyResponse;
+import com.moguying.plant.core.entity.account.MoneyWithdraw;
+import com.moguying.plant.core.entity.payment.response.PaymentResponse;
+import com.moguying.plant.core.entity.payment.response.SendWithdrawSmsCodeResponse;
+import com.moguying.plant.core.entity.payment.response.WithdrawMoneyResponse;
 
 import javax.servlet.http.HttpServletRequest;
 

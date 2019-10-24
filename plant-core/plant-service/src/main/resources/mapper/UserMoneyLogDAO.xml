@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.account.UserMoneyLogDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.UserMoneyLog">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.UserMoneyLog">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="affect_money" jdbcType="DECIMAL" property="affectMoney" />
@@ -17,7 +17,7 @@
     <result column="affect_info" jdbcType="VARCHAR" property="affectInfo" />
   </resultMap>
   
-  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.dto.UserMoneyLog" extends="BaseResultMap">
+  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.UserMoneyLog" extends="BaseResultMap">
     <result column="phone" property="phone" jdbcType="VARCHAR"/>
     <result column="real_name" property="realName" jdbcType="VARCHAR"/>
   </resultMap>
@@ -27,7 +27,7 @@
     collect_interest, affect_type, affect_time, affect_ip, detail_id, affect_info
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.UserMoneyLog">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.account.UserMoneyLog">
     insert into plant_user_money_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -112,7 +112,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.UserMoneyLog">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.account.UserMoneyLog">
     update plant_user_money_log
     <set>
       <if test="userId != null">

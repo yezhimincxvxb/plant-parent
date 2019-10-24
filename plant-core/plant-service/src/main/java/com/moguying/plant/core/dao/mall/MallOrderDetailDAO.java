@@ -1,8 +1,8 @@
 package com.moguying.plant.core.dao.mall;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.MallOrderDetail;
-import com.moguying.plant.core.entity.vo.OrderItem;
+import com.moguying.plant.core.entity.mall.MallOrderDetail;
+import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

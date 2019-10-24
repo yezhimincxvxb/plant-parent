@@ -7,7 +7,7 @@ import com.moguying.plant.core.dao.seed.SeedContentDAO;
 import com.moguying.plant.core.dao.seed.SeedTypeDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.SeedType;
+import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.service.seed.SeedTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,9 +1,9 @@
 package com.moguying.plant.core.dao.fertilizer;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.UserFertilizer;
-import com.moguying.plant.core.entity.vo.FertilizerUseCondition;
-import com.moguying.plant.core.entity.vo.UserFertilizerInfo;
+import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
+import com.moguying.plant.core.entity.user.vo.UserFertilizerInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

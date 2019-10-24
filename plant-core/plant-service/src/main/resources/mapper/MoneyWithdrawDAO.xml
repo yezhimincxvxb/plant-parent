@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.account.MoneyWithdrawDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MoneyWithdraw">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.MoneyWithdraw">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
@@ -20,7 +20,7 @@
   </resultMap>
 
 
-  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.dto.MoneyWithdraw" extends="BaseResultMap">
+  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.MoneyWithdraw" extends="BaseResultMap">
     <result column="real_name" jdbcType="VARCHAR" property="realName"/>
   </resultMap>
 
@@ -30,7 +30,7 @@
   </sql>
 
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.MoneyWithdraw" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.account.MoneyWithdraw" useGeneratedKeys="true" keyProperty="id">
     insert into plant_money_withdraw
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -122,7 +122,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.MoneyWithdraw">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.account.MoneyWithdraw">
     update plant_money_withdraw
     <set>
       <if test="orderNumber != null">

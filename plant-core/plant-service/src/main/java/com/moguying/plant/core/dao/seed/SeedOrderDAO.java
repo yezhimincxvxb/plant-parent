@@ -1,9 +1,9 @@
 package com.moguying.plant.core.dao.seed;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.SeedOrder;
-import com.moguying.plant.core.entity.vo.CanPlantOrder;
-import com.moguying.plant.core.entity.vo.UserSeedOrder;
+import com.moguying.plant.core.entity.seed.SeedOrder;
+import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
+import com.moguying.plant.core.entity.user.vo.UserSeedOrder;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

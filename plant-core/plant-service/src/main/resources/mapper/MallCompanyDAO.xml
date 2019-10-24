@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.mall.MallCompanyDAO">
 
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MallCompany">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.MallCompany">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="com_name" jdbcType="VARCHAR" property="companyName"/>
         <result column="com_code" jdbcType="VARCHAR" property="companyCode"/>

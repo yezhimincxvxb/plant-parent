@@ -6,7 +6,7 @@ import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.BannerDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.Banner;
+import com.moguying.plant.core.entity.content.Banner;
 import com.moguying.plant.core.service.content.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

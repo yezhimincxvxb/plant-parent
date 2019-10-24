@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.content.ArticleDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Article">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.Article">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="type_id" jdbcType="INTEGER" property="typeId" />
@@ -16,12 +16,12 @@
     <result column="summary" jdbcType="VARCHAR" property="summary" />
   </resultMap>
 
-  <resultMap id="ArticleWithContent" type="com.moguying.plant.core.entity.dto.Article" extends="BaseResultMap">
+  <resultMap id="ArticleWithContent" type="com.moguying.plant.core.entity.content.Article" extends="BaseResultMap">
     <result column="content" jdbcType="VARCHAR" property="content"/>
   </resultMap>
 
 
-  <resultMap id="BaseArticleInfo" type="com.moguying.plant.core.entity.dto.Article" extends="BaseResultMap">
+  <resultMap id="BaseArticleInfo" type="com.moguying.plant.core.entity.content.Article" extends="BaseResultMap">
     <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
     <result column="type_url_name" jdbcType="VARCHAR" property="typeUrlName"/>
   </resultMap>
@@ -30,7 +30,7 @@
     id, title, type_id, seo_key, publish_time, is_show, pic_url,thumb_pic_url, read_count, add_time,is_recommend,summary
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Article" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.content.Article" useGeneratedKeys="true" keyProperty="id">
     insert into plant_article
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -109,7 +109,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Article">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.content.Article">
     update plant_article
     <set>
       <if test="title != null">

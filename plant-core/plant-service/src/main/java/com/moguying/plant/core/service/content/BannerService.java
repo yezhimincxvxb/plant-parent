@@ -3,7 +3,7 @@ package com.moguying.plant.core.service.content;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.Banner;
+import com.moguying.plant.core.entity.content.Banner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

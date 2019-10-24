@@ -1,8 +1,8 @@
 package com.moguying.plant.core.service.reap;
 
 import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.entity.dto.SaleCoin;
-import com.moguying.plant.core.entity.dto.UserSaleCoin;
+import com.moguying.plant.core.entity.coin.SaleCoin;
+import com.moguying.plant.core.entity.coin.UserSaleCoin;
 
 /**
  * 用户-蘑菇币服务层

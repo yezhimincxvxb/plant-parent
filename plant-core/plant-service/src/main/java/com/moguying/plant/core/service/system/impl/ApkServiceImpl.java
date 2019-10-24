@@ -6,7 +6,7 @@ import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.system.ApkDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.Apk;
+import com.moguying.plant.core.entity.system.Apk;
 import com.moguying.plant.core.service.system.ApkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

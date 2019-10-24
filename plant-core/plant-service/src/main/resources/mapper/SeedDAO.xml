@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.seed.SeedDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Seed">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.Seed">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="small_name" jdbcType="VARCHAR" property="smallName" />
@@ -46,7 +46,7 @@
   </resultMap>
   
   
-  <resultMap id="ResultSeedListForHome" type="com.moguying.plant.core.entity.vo.HomeSeed">
+  <resultMap id="ResultSeedListForHome" type="com.moguying.plant.core.entity.common.vo.HomeSeed">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="left_count" jdbcType="INTEGER" property="leftCount" />
@@ -59,7 +59,7 @@
   </resultMap>
   
   
-  <resultMap id="AppSeedDetailMap" type="com.moguying.plant.core.entity.vo.SeedDetail">
+  <resultMap id="AppSeedDetailMap" type="com.moguying.plant.core.entity.seed.vo.SeedDetail">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="seed_name" jdbcType="VARCHAR" property="seedName" />
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
@@ -82,7 +82,7 @@
     reap_interest,inner_count,real_amount,real_interest,order_number,full_time
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Seed" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.seed.Seed" useGeneratedKeys="true" keyProperty="id">
     insert into plant_seed
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -261,7 +261,7 @@
   </insert>
 
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Seed">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.seed.Seed">
     update plant_seed
     <set>
       <if test="name != null">

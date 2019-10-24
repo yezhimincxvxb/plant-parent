@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.mall;
 
 import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.entity.dto.MallCompany;
+import com.moguying.plant.core.entity.mall.MallCompany;
 
 import java.util.List;
 

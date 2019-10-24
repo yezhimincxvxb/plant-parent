@@ -3,13 +3,13 @@ package com.moguying.plant.core.service.payment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.PayOrder;
-import com.moguying.plant.core.entity.dto.SeedOrderDetail;
-import com.moguying.plant.core.entity.dto.payment.PayRequestInfo;
-import com.moguying.plant.core.entity.dto.payment.request.*;
-import com.moguying.plant.core.entity.dto.payment.response.*;
-import com.moguying.plant.core.entity.vo.SendPayOrder;
-import com.moguying.plant.core.entity.vo.SendPayOrderResponse;
+import com.moguying.plant.core.entity.system.PayOrder;
+import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.entity.payment.PayRequestInfo;
+import com.moguying.plant.core.entity.payment.request.*;
+import com.moguying.plant.core.entity.payment.response.*;
+import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
+import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
 
 public interface PaymentService {
 

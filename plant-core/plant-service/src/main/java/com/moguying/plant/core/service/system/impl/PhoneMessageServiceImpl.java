@@ -6,8 +6,8 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.system.PhoneMessageDAO;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
-import com.moguying.plant.core.entity.dto.InnerMessage;
-import com.moguying.plant.core.entity.dto.PhoneMessage;
+import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.PhoneMessage;
 import com.moguying.plant.core.service.common.message.MessageSendService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.CommonUtil;
@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

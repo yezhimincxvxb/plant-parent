@@ -4,8 +4,8 @@ import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
-import com.moguying.plant.core.entity.dto.InnerMessage;
-import com.moguying.plant.core.entity.dto.PhoneMessage;
+import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.PhoneMessage;
 
 public interface PhoneMessageService {
 

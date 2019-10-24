@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.mall.MallProductDAO">
 
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MallProduct">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.MallProduct">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
@@ -20,11 +20,11 @@
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
     </resultMap>
 
-    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.dto.MallProduct">
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.mall.MallProduct">
         <result column="product_desc" jdbcType="LONGVARCHAR" property="productDesc"/>
     </resultMap>
 
-    <resultMap id="AppHomeMallProduct" type="com.moguying.plant.core.entity.vo.HomeProduct">
+    <resultMap id="AppHomeMallProduct" type="com.moguying.plant.core.entity.common.vo.HomeProduct">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
@@ -35,7 +35,7 @@
     </resultMap>
 
     <resultMap id="AppHomeMallProductDetail" extends="AppHomeMallProduct"
-               type="com.moguying.plant.core.entity.vo.HomeProductDetail">
+               type="com.moguying.plant.core.entity.common.vo.HomeProductDetail">
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="summary_desc" jdbcType="VARCHAR" property="summaryDesc"/>
         <result column="product_desc" jdbcType="LONGVARCHAR" property="productDesc"/>
@@ -51,7 +51,7 @@
     product_desc
    </sql>
 
-    <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.MallProduct" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.moguying.plant.core.entity.mall.MallProduct" useGeneratedKeys="true"
             keyProperty="id">
         insert into plant_mall_product
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -158,7 +158,7 @@
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.MallProduct">
+    <update id="updateById" parameterType="com.moguying.plant.core.entity.mall.MallProduct">
         update plant_mall_product
         <set>
             <if test="picUrl != null">
@@ -213,7 +213,7 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.dto.MallProduct"
+    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.mall.MallProduct"
             resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -256,7 +256,7 @@
   </select>
 
     <!-- 兑换实物列表 -->
-    <select id="showProducts" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
+    <select id="showProducts" resultType="com.moguying.plant.core.entity.coin.vo.ExchangeInfo">
         select id, `name`, consume_coins `count`, `price`, pic_url `picUrl`
         from plant_mall_product
         <where>
@@ -267,7 +267,7 @@
     </select>
 
     <!-- 兑换实物日志列表 -->
-    <select id="showProductLog" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
+    <select id="showProductLog" resultType="com.moguying.plant.core.entity.coin.vo.ExchangeInfo">
         select t3.`name` `name`, t2.buy_count `number`, t2.buy_coins `count`, t1.add_time `time`
         from plant_mall_order t1
         left join plant_mall_order_detail t2 on t1.id = t2.order_id

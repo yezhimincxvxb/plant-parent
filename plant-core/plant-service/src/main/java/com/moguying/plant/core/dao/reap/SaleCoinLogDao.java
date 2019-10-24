@@ -1,8 +1,8 @@
 package com.moguying.plant.core.dao.reap;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.SaleCoinLog;
-import com.moguying.plant.core.entity.vo.ExchangeInfo;
+import com.moguying.plant.core.entity.coin.SaleCoinLog;
+import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -5,8 +5,8 @@ import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
-import com.moguying.plant.core.entity.dto.UserMoneyLog;
-import com.moguying.plant.core.entity.vo.AccountMoneyLogInfo;
+import com.moguying.plant.core.entity.account.UserMoneyLog;
+import com.moguying.plant.core.entity.account.vo.AccountMoneyLogInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;

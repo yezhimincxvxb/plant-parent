@@ -11,10 +11,11 @@ import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.Fertilizer;
-import com.moguying.plant.core.entity.dto.Reap;
-import com.moguying.plant.core.entity.dto.User;
-import com.moguying.plant.core.entity.vo.*;
+import com.moguying.plant.core.entity.farmer.vo.EnergyItem;
+import com.moguying.plant.core.entity.fertilizer.Fertilizer;
+import com.moguying.plant.core.entity.reap.Reap;
+import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.entity.farmer.*;
 import com.moguying.plant.core.service.farmer.FarmerService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.utils.DateUtil;
@@ -408,7 +409,7 @@ public class FarmerServiceImpl implements FarmerService {
 
     @Override
     @DataSource("read")
-    public ResultData<FarmerLevelGift> userLevelGift(Integer userId,Integer level) {
+    public ResultData<FarmerLevelGift> userLevelGift(Integer userId, Integer level) {
         FarmerLevelGift levelGift = new FarmerLevelGift();
         ResultData<FarmerLevelGift> resultData = new ResultData<>(MessageEnum.ERROR,levelGift);
         String triggerEvent = "farmerLevel" + level;

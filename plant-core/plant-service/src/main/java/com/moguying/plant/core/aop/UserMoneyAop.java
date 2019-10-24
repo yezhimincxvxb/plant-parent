@@ -1,7 +1,7 @@
 package com.moguying.plant.core.aop;
 
-import com.moguying.plant.core.entity.dto.SaleCoinLog;
-import com.moguying.plant.core.entity.dto.UserSaleCoin;
+import com.moguying.plant.core.entity.coin.SaleCoinLog;
+import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.service.reap.SaleCoinLogService;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;

@@ -4,7 +4,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.FarmerTrigger;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
-import com.moguying.plant.core.entity.dto.User;
+import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.farmer.FarmerService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;

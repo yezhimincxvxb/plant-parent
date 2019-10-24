@@ -3,7 +3,7 @@ package com.moguying.plant.core.controller.back;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
-import com.moguying.plant.core.entity.dto.SeedDays;
+import com.moguying.plant.core.entity.seed.SeedDays;
 import com.moguying.plant.core.service.seed.SeedDaysService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.aop;
 
-import com.moguying.plant.core.entity.dto.UserMoneyLog;
-import com.moguying.plant.core.entity.dto.UserMoneyOperator;
+import com.moguying.plant.core.entity.account.UserMoneyLog;
+import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.service.account.UserMoneyLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;

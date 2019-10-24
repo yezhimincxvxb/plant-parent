@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.content;
 
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.Adv;
+import com.moguying.plant.core.entity.content.Adv;
 
 public interface AdvService {
     Integer addAdv(Adv adv);

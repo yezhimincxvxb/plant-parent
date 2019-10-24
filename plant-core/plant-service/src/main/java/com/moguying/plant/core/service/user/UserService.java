@@ -6,9 +6,13 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
-import com.moguying.plant.core.entity.dto.*;
-import com.moguying.plant.core.entity.vo.LoginResponse;
-import com.moguying.plant.core.entity.vo.UserSummaryInfo;
+import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.entity.user.UserAddress;
+import com.moguying.plant.core.entity.user.UserBank;
+import com.moguying.plant.core.entity.user.UserMessage;
+import com.moguying.plant.core.entity.user.vo.LoginResponse;
+import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

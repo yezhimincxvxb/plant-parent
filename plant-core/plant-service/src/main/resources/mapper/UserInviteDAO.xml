@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.user.UserInviteDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.UserInvite">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserInvite">
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="plant_amount" jdbcType="DECIMAL" property="plantAmount" />
@@ -14,7 +14,7 @@
     user_id, phone, plant_amount, invite_award, invite_user_id
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.UserInvite">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.user.UserInvite">
     insert into plant_user_invite
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -52,7 +52,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.UserInvite">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.user.UserInvite">
     update plant_user_invite
     <set>
       <if test="phone != null">
@@ -71,7 +71,7 @@
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
 
-  <update id="incUserInviteInfo" parameterType="com.moguying.plant.core.entity.dto.UserInvite">
+  <update id="incUserInviteInfo" parameterType="com.moguying.plant.core.entity.user.UserInvite">
     update plant_user_invite
     <set>
       <if test="plantAmount != null">

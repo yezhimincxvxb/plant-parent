@@ -3,8 +3,8 @@ package com.moguying.plant.core.service.mall;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.vo.MallCar;
-import com.moguying.plant.core.entity.vo.OrderItem;
+import com.moguying.plant.core.entity.mall.vo.MallCar;
+import com.moguying.plant.core.entity.mall.vo.OrderItem;
 
 import java.math.BigDecimal;
 import java.util.List;

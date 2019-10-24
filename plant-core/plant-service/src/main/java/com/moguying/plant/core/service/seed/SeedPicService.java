@@ -2,7 +2,7 @@ package com.moguying.plant.core.service.seed;
 
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.SeedPic;
+import com.moguying.plant.core.entity.seed.SeedPic;
 
 import java.util.List;
 

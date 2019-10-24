@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.content;
 
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.AdvType;
+import com.moguying.plant.core.entity.content.AdvType;
 
 public interface AdvTypeService {
     AdvType advType(Integer id);

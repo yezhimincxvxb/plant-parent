@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.block.BlockDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Block">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.block.Block">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="number" jdbcType="VARCHAR" property="number" />
     <result column="seed_type" jdbcType="INTEGER" property="seedType" />
@@ -24,11 +24,11 @@
 
   </resultMap>
   
-  <resultMap id="ResultMapWithTypeName" type="com.moguying.plant.core.entity.dto.Block" extends="BaseResultMap">
+  <resultMap id="ResultMapWithTypeName" type="com.moguying.plant.core.entity.block.Block" extends="BaseResultMap">
     <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
   </resultMap>
 
-  <resultMap id="ResultMapForHomeList" type="com.moguying.plant.core.entity.vo.HomeBlock">
+  <resultMap id="ResultMapForHomeList" type="com.moguying.plant.core.entity.common.vo.HomeBlock">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="number" jdbcType="VARCHAR" property="number" />
     <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
@@ -46,7 +46,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Block" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.block.Block" useGeneratedKeys="true" keyProperty="id">
     insert into plant_block
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -167,7 +167,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Block">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.block.Block">
     update plant_block
     <set>
       <if test="number != null">

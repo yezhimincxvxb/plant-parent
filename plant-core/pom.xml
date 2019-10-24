@@ -24,4 +24,19 @@
        <module>plant-service</module>
    </modules>
 
+    <!-- 编译版本 -->
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven-compiler.source}</source>
+                    <target>${maven-compiler.target}</target>
+                    <encoding>${maven.compiler.encoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+        <finalName>plant-core</finalName>
+    </build>
+
 </project>

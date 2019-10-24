@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.seed;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.SeedDays;
+import com.moguying.plant.core.entity.seed.SeedDays;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

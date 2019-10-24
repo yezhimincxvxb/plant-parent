@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moguying.plant.core.dao.order.ExpressDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Express">
+<mapper namespace="com.moguying.plant.core.dao.mall.ExpressDAO">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.Express">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="address_id" jdbcType="INTEGER" property="addressId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
@@ -12,7 +12,7 @@
     id, address_id, product_id, product_type, express_number
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Express">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.mall.Express">
     insert into plant_express
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -49,7 +49,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Express">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.mall.Express">
     update plant_express
     <set>
       <if test="addressId != null">

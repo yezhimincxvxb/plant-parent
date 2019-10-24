@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.admin.AdminMessageDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.AdminMessage">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.admin.AdminMessage">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="message" jdbcType="VARCHAR" property="message" />
@@ -13,7 +13,7 @@
     id, user_id, message, download_url, `state`, add_time
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.AdminMessage">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.admin.AdminMessage">
     insert into plant_admin_message
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -56,7 +56,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.AdminMessage">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.admin.AdminMessage">
     update plant_admin_message
     <set>
       <if test="userId != null">

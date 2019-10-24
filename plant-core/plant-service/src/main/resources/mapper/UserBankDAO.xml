@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.user.UserBankDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.UserBank">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserBank">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="bank_number" jdbcType="VARCHAR" property="bankNumber" />
@@ -14,7 +14,7 @@
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
   
-  <resultMap id="BankInfoWithPaymentAccountMap" type="com.moguying.plant.core.entity.dto.UserBank" extends="BaseResultMap">
+  <resultMap id="BankInfoWithPaymentAccountMap" type="com.moguying.plant.core.entity.user.UserBank" extends="BaseResultMap">
     <result column="payment_account" jdbcType="INTEGER" property="paymentAccount" />
   </resultMap>
   
@@ -23,7 +23,7 @@
     id,user_id, order_number,bank_number, bank_id, card_type, bank_address, add_time, `state`,bank_phone
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.UserBank" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.user.UserBank" useGeneratedKeys="true" keyProperty="id">
     insert into plant_user_bank
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -91,7 +91,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.UserBank">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.user.UserBank">
     update plant_user_bank
     <set>
       <if test="userId != null">

@@ -3,8 +3,8 @@ package com.moguying.plant.core.service.device;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.DeviceGateway;
-import com.moguying.plant.core.entity.dto.DeviceGatewayData;
+import com.moguying.plant.core.entity.device.DeviceGateway;
+import com.moguying.plant.core.entity.device.DeviceGatewayData;
 import org.apache.axis2.AxisFault;
 
 import java.util.List;

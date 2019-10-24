@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.mall.MallOrderDetailDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MallOrderDetail">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.MallOrderDetail">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="order_id" jdbcType="INTEGER" property="orderId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
@@ -11,7 +11,7 @@
     <result column="buy_coins" jdbcType="INTEGER" property="buyCoins" />
   </resultMap>
 
-  <resultMap id="OrderItemMap" type="com.moguying.plant.core.entity.vo.OrderItem">
+  <resultMap id="OrderItemMap" type="com.moguying.plant.core.entity.mall.vo.OrderItem">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="name" jdbcType="VARCHAR" property="productName" />
@@ -28,7 +28,7 @@
   </sql>
 
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.MallOrderDetail" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.mall.MallOrderDetail" keyProperty="id" useGeneratedKeys="true">
     insert into plant_mall_order_detail
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -78,7 +78,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.MallOrderDetail">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.mall.MallOrderDetail">
     update plant_mall_order_detail
     <set>
       <if test="orderId != null">

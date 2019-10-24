@@ -4,11 +4,11 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
-import com.moguying.plant.core.entity.dto.InnerMessage;
-import com.moguying.plant.core.entity.dto.Reap;
-import com.moguying.plant.core.entity.dto.User;
-import com.moguying.plant.core.entity.dto.UserInvite;
-import com.moguying.plant.core.entity.vo.InviteStatistics;
+import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.reap.Reap;
+import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.entity.user.UserInvite;
+import com.moguying.plant.core.entity.user.vo.InviteStatistics;
 
 public interface UserInviteService {
     @DataSource("write")

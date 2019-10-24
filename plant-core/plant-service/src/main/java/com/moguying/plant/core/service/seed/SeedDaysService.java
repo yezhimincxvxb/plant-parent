@@ -2,7 +2,7 @@ package com.moguying.plant.core.service.seed;
 
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.SeedDays;
+import com.moguying.plant.core.entity.seed.SeedDays;
 import org.springframework.dao.DuplicateKeyException;
 
 public interface SeedDaysService {

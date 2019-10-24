@@ -2,7 +2,7 @@ package com.moguying.plant.core.service.mall.impl;
 
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
-import com.moguying.plant.core.entity.vo.OrderItem;
+import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import com.moguying.plant.core.service.mall.MallOrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

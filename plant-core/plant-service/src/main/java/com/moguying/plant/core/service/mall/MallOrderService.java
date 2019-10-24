@@ -3,11 +3,15 @@ package com.moguying.plant.core.service.mall;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.MallOrder;
-import com.moguying.plant.core.entity.dto.MallOrderSearch;
-import com.moguying.plant.core.entity.dto.UserSaleCoin;
-import com.moguying.plant.core.entity.dto.payment.response.PaymentResponse;
-import com.moguying.plant.core.entity.vo.*;
+import com.moguying.plant.core.entity.mall.MallOrder;
+import com.moguying.plant.core.entity.mall.MallOrderSearch;
+import com.moguying.plant.core.entity.coin.UserSaleCoin;
+import com.moguying.plant.core.entity.mall.vo.CancelOrder;
+import com.moguying.plant.core.entity.mall.vo.TraceInfoParam;
+import com.moguying.plant.core.entity.payment.response.PaymentResponse;
+import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
+import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
+import com.moguying.plant.core.entity.user.vo.UserMallOrder;
 
 import java.util.List;
 

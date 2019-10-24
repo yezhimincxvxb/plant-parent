@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.payment.PaymentInfoDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.payment.PaymentInfo">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.payment.PaymentInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="request_action" jdbcType="VARCHAR" property="requestAction" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
@@ -16,7 +16,7 @@
     id, request_action, payment_request, payment_response, notify_response,sign_data, `state`,order_number,add_time
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.payment.PaymentInfo">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.payment.PaymentInfo">
     insert into plant_payment_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -77,7 +77,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.payment.PaymentInfo">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.payment.PaymentInfo">
     update plant_payment_info
     <set>
       <if test="requestAction != null">
@@ -108,7 +108,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <update id="updateNotifyResponseByOrderNumber" parameterType="com.moguying.plant.core.entity.dto.payment.PaymentInfo">
+  <update id="updateNotifyResponseByOrderNumber" parameterType="com.moguying.plant.core.entity.payment.PaymentInfo">
     update plant_payment_info
     set notify_response = #{notifyResponse,jdbcType=VARCHAR}
     where order_number = #{orderNumber,jdbcType=VARCHAR}

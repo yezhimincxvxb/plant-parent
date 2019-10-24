@@ -2,9 +2,9 @@ package com.moguying.plant.core.controller.payment;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.ResponseData;
-import com.moguying.plant.core.entity.dto.payment.request.ImageUploadRequest;
-import com.moguying.plant.core.entity.dto.payment.response.ImageUploadResponse;
-import com.moguying.plant.core.entity.dto.payment.response.PaymentResponse;
+import com.moguying.plant.core.entity.payment.request.ImageUploadRequest;
+import com.moguying.plant.core.entity.payment.response.ImageUploadResponse;
+import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.service.payment.PaymentService;
 import org.apache.commons.net.util.Base64;
 import org.slf4j.Logger;

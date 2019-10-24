@@ -1,10 +1,10 @@
 package com.moguying.plant.core.dao.mall;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.MallProduct;
-import com.moguying.plant.core.entity.vo.ExchangeInfo;
-import com.moguying.plant.core.entity.vo.HomeProduct;
-import com.moguying.plant.core.entity.vo.HomeProductDetail;
+import com.moguying.plant.core.entity.mall.MallProduct;
+import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
+import com.moguying.plant.core.entity.common.vo.HomeProduct;
+import com.moguying.plant.core.entity.common.vo.HomeProductDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

@@ -3,7 +3,7 @@ package com.moguying.plant.core.service.content.impl;
 import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.AdvDAO;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.Adv;
+import com.moguying.plant.core.entity.content.Adv;
 import com.moguying.plant.core.service.content.AdvService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

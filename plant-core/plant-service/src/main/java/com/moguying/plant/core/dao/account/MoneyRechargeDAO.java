@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.account;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.MoneyRecharge;
+import com.moguying.plant.core.entity.account.MoneyRecharge;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

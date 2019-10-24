@@ -5,7 +5,8 @@ import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.vo.*;
+import com.moguying.plant.core.entity.common.vo.ModifyItemResponse;
+import com.moguying.plant.core.entity.mall.vo.*;
 import com.moguying.plant.core.service.mall.MallCarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +45,7 @@ public class AShippingCarController {
     @GetMapping
     @ResponseBody
     public ResponseData<CarItemList> carItems(@LoginUserId Integer userId, @RequestParam(value = "page",defaultValue = "1") Integer page,
-                                @RequestParam(value = "size",defaultValue = "10") Integer size
+                                              @RequestParam(value = "size",defaultValue = "10") Integer size
                                          ){
 
         CarItemList carItemList = new CarItemList();

@@ -3,7 +3,7 @@ package com.moguying.plant.core.controller.back;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
-import com.moguying.plant.core.entity.dto.SeedPic;
+import com.moguying.plant.core.entity.seed.SeedPic;
 import com.moguying.plant.core.service.seed.SeedPicService;
 import com.moguying.plant.utils.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;

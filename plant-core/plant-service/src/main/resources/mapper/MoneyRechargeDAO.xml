@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.account.MoneyRechargeDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.MoneyRecharge">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.MoneyRecharge">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
@@ -15,7 +15,7 @@
     <result column="pay_sms_sq_no" jdbcType="VARCHAR" property="paySmsSqNo" />
   </resultMap>
   
-  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.dto.MoneyRecharge" extends="BaseResultMap">
+  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.MoneyRecharge" extends="BaseResultMap">
     <result column="user_name" jdbcType="VARCHAR" property="userName"/>
   </resultMap>
   
@@ -32,7 +32,7 @@
 
 
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.MoneyRecharge" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.account.MoneyRecharge" useGeneratedKeys="true" keyProperty="id">
     insert into plant_money_recharge
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -106,7 +106,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.MoneyRecharge">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.account.MoneyRecharge">
     update plant_money_recharge
     <set>
       <if test="userId != null">

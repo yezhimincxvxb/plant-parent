@@ -1,9 +1,9 @@
 package com.moguying.plant.core.scheduled;
 
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.entity.dto.MallOrder;
-import com.moguying.plant.core.entity.dto.SeedOrderDetail;
-import com.moguying.plant.core.entity.vo.CancelOrder;
+import com.moguying.plant.core.entity.mall.MallOrder;
+import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.scheduled.task.CloseMallPayOrder;
 import com.moguying.plant.core.scheduled.task.CloseOrderItem;
 import com.moguying.plant.core.scheduled.task.CloseSeedPayOrder;

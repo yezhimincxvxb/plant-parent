@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.system;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.TriggerEvent;
+import com.moguying.plant.core.entity.fertilizer.TriggerEvent;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

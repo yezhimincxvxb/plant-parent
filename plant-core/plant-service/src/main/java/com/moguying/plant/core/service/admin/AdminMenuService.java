@@ -3,7 +3,7 @@ package com.moguying.plant.core.service.admin;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.AdminMenu;
+import com.moguying.plant.core.entity.admin.AdminMenu;
 
 import java.util.List;
 

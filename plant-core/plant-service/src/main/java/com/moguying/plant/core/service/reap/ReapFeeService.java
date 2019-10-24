@@ -4,7 +4,7 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.ReapFee;
+import com.moguying.plant.core.entity.reap.ReapFee;
 
 import javax.servlet.http.HttpServletRequest;
 

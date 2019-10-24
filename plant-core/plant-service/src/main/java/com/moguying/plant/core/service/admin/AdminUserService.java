@@ -2,8 +2,8 @@ package com.moguying.plant.core.service.admin;
 
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.AdminMessage;
-import com.moguying.plant.core.entity.dto.AdminUser;
+import com.moguying.plant.core.entity.admin.AdminMessage;
+import com.moguying.plant.core.entity.admin.AdminUser;
 
 public interface AdminUserService {
 

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.system;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.PhoneMessage;
+import com.moguying.plant.core.entity.system.PhoneMessage;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

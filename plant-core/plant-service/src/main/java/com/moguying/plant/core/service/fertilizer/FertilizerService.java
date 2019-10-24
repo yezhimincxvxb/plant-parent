@@ -4,10 +4,10 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
-import com.moguying.plant.core.entity.dto.Fertilizer;
-import com.moguying.plant.core.entity.dto.FertilizerType;
-import com.moguying.plant.core.entity.vo.ExchangeInfo;
-import com.moguying.plant.core.entity.vo.FertilizerUseCondition;
+import com.moguying.plant.core.entity.fertilizer.Fertilizer;
+import com.moguying.plant.core.entity.fertilizer.FertilizerType;
+import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 
 import java.math.BigDecimal;
 import java.util.List;

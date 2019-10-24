@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.content;
 
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.Nav;
+import com.moguying.plant.core.entity.content.Nav;
 
 public interface NavService {
     PageResult<Nav> navList(Integer page, Integer size, Nav where);

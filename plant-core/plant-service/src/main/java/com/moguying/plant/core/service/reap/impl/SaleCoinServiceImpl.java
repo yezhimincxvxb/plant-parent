@@ -2,8 +2,8 @@ package com.moguying.plant.core.service.reap.impl;
 
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.reap.SaleCoinDao;
-import com.moguying.plant.core.entity.dto.SaleCoin;
-import com.moguying.plant.core.entity.dto.UserSaleCoin;
+import com.moguying.plant.core.entity.coin.SaleCoin;
+import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.farmer;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.vo.FarmerEnergyTrigger;
+import com.moguying.plant.core.entity.farmer.FarmerEnergyTrigger;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

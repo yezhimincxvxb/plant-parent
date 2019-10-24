@@ -3,7 +3,7 @@
 <mapper namespace="com.moguying.plant.core.dao.reap.ReapDAO">
 
     <!-- 实体类属性与数据库字段一一映射 -->
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.Reap">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.reap.Reap">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
         <result column="order_id" jdbcType="INTEGER" property="orderId"/>
@@ -25,7 +25,7 @@
         <result column="exchange_time" jdbcType="TIMESTAMP" property="exchangeTime"/>
     </resultMap>
 
-    <resultMap id="BaseInfoMap" extends="BaseResultMap" type="com.moguying.plant.core.entity.dto.Reap">
+    <resultMap id="BaseInfoMap" extends="BaseResultMap" type="com.moguying.plant.core.entity.reap.Reap">
         <result column="seed_name" property="seedName" jdbcType="VARCHAR"/>
         <result column="seed_grow_days" property="seedGrowDays" jdbcType="INTEGER"/>
         <result column="seed_price" property="seedPrice" jdbcType="DECIMAL"/>
@@ -36,7 +36,7 @@
         <result column="pic_url" property="picUrl" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <resultMap id="MessageMap" type="com.moguying.plant.core.entity.dto.InnerMessage">
+    <resultMap id="MessageMap" type="com.moguying.plant.core.entity.system.InnerMessage">
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="count" property="count" jdbcType="INTEGER"/>
     </resultMap>
@@ -48,7 +48,7 @@
   </sql>
 
     <!-- 新增记录 -->
-    <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.Reap" keyProperty="id"
+    <insert id="insert" parameterType="com.moguying.plant.core.entity.reap.Reap" keyProperty="id"
             useGeneratedKeys="true">
         insert into plant_reap
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -172,7 +172,7 @@
     </insert>
 
     <!-- 根据ID更新 -->
-    <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.Reap">
+    <update id="updateById" parameterType="com.moguying.plant.core.entity.reap.Reap">
         update plant_reap
         <set>
             <if test="orderNumber != null">
@@ -451,7 +451,7 @@
     </select>
 
     <!-- 查询已采摘 -->
-    <select id="showReap" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
+    <select id="showReap" resultType="com.moguying.plant.core.entity.coin.vo.ExchangeInfo">
         select t2.class_name `name`, sum(t1.plant_count) `number`, sum(t1.plant_count * t2.exchange_num) `count`
         from plant_reap t1
         left join plant_seed_type t2 on t1.seed_type = t2.id
@@ -495,7 +495,7 @@
     </select>
 
     <!-- 查询资金 -->
-    <select id="findMoney" resultType="com.moguying.plant.core.entity.vo.TotalMoney">
+    <select id="findMoney" resultType="com.moguying.plant.core.entity.user.vo.TotalMoney">
         select
         IFNULL(sum(pre_profit), 0) totalPreProfit, IFNULL(sum(pre_amount), 0) totalPreAmount
         from plant_reap
@@ -525,7 +525,7 @@
     </update>
 
     <!-- 查询兑换蘑菇币记录 -->
-    <select id="showReapLog" resultType="com.moguying.plant.core.entity.vo.ExchangeInfo">
+    <select id="showReapLog" resultType="com.moguying.plant.core.entity.coin.vo.ExchangeInfo">
         select t2.class_name `name`, t1.plant_count `number`,
          sum(t1.plant_count * t2.exchange_num) `count`, t1.exchange_time `time`
          from plant_reap t1

@@ -4,7 +4,7 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.seed.SeedDaysDAO;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.SeedDays;
+import com.moguying.plant.core.entity.seed.SeedDays;
 import com.moguying.plant.core.service.seed.SeedDaysService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;

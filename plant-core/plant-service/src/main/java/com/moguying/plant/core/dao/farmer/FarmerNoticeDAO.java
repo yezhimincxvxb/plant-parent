@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.farmer;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.vo.FarmerNotice;
+import com.moguying.plant.core.entity.farmer.FarmerNotice;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

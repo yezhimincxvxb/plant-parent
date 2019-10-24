@@ -4,7 +4,7 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.ActivityDAO;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.Activity;
+import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.service.content.ActivityService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;

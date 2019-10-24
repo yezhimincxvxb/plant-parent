@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.fertilizer.FertilizerTypeDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.FertilizerType">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.fertilizer.FertilizerType">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="type_name" jdbcType="VARCHAR" property="typeName" />
   </resultMap>
@@ -10,7 +10,7 @@
   </sql>
 
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.FertilizerType">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.fertilizer.FertilizerType">
     insert into plant_fertilizer_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -30,7 +30,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.FertilizerType">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.fertilizer.FertilizerType">
     update plant_fertilizer_type
     <set>
       <if test="typeName != null">

@@ -32,12 +32,13 @@
 
         <dependency>
             <groupId>com.github.whvcse</groupId>
-            <artifactId>EasyCaptcha</artifactId>
-            <version>1.5.0</version>
+            <artifactId>easy-captcha</artifactId>
+            <version>1.6.2</version>
         </dependency>
 
     </dependencies>
 
+    <!-- 编译版本 -->
     <build>
         <plugins>
             <plugin>
@@ -51,5 +52,4 @@
         </plugins>
         <finalName>plant-controller</finalName>
     </build>
-
 </project>

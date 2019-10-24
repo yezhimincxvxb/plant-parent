@@ -2,7 +2,7 @@ package com.moguying.plant.core.service.content;
 
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.Activity;
+import com.moguying.plant.core.entity.content.Activity;
 
 import java.util.Date;
 import java.util.List;

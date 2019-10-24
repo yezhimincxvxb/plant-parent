@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.content.ArticleTypeDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.ArticleType">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.ArticleType">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="url_name" jdbcType="VARCHAR" property="urlName" />
@@ -11,7 +11,7 @@
     id, `name`,url_name,order_number
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.ArticleType" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.content.ArticleType" useGeneratedKeys="true" keyProperty="id">
     insert into plant_article_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -43,7 +43,7 @@
     </trim>
   </insert>
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.ArticleType">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.content.ArticleType">
     update plant_article_type
     <set>
       <if test="name != null">

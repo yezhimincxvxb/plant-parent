@@ -1,8 +1,8 @@
 package com.moguying.plant.core.dao.block;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.Block;
-import com.moguying.plant.core.entity.vo.HomeBlock;
+import com.moguying.plant.core.entity.block.Block;
+import com.moguying.plant.core.entity.common.vo.HomeBlock;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

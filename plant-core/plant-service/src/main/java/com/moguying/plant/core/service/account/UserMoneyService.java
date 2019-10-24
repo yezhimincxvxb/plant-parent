@@ -3,10 +3,10 @@ package com.moguying.plant.core.service.account;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
-import com.moguying.plant.core.entity.dto.ProductInfo;
-import com.moguying.plant.core.entity.dto.UserMoney;
-import com.moguying.plant.core.entity.dto.UserMoneyDetail;
-import com.moguying.plant.core.entity.dto.UserMoneyOperator;
+import com.moguying.plant.core.entity.system.ProductInfo;
+import com.moguying.plant.core.entity.account.UserMoney;
+import com.moguying.plant.core.entity.user.UserMoneyDetail;
+import com.moguying.plant.core.entity.user.UserMoneyOperator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;

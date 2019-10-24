@@ -2,7 +2,7 @@ package com.moguying.plant.core.controller.api;
 
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
-import com.moguying.plant.core.entity.vo.ExchangeInfo;
+import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.mall.MallProductService;
 import org.springframework.beans.factory.annotation.Autowired;

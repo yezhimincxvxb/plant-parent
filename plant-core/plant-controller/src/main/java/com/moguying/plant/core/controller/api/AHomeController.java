@@ -6,8 +6,17 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.*;
-import com.moguying.plant.core.entity.vo.*;
+import com.moguying.plant.core.entity.block.Block;
+import com.moguying.plant.core.entity.block.vo.BlockDetail;
+import com.moguying.plant.core.entity.common.vo.*;
+import com.moguying.plant.core.entity.content.Activity;
+import com.moguying.plant.core.entity.content.Article;
+import com.moguying.plant.core.entity.content.Banner;
+import com.moguying.plant.core.entity.device.DeviceGateway;
+import com.moguying.plant.core.entity.device.DeviceGatewayData;
+import com.moguying.plant.core.entity.seed.vo.SeedDetail;
+import com.moguying.plant.core.entity.seed.vo.SeedTypeInBlock;
+import com.moguying.plant.core.entity.system.Apk;
 import com.moguying.plant.core.service.block.BlockService;
 import com.moguying.plant.core.service.content.ActivityService;
 import com.moguying.plant.core.service.content.ArticleService;
@@ -323,7 +332,7 @@ public class AHomeController {
      */
     @PostMapping("/device/data")
     @ResponseBody
-    public ResponseData<List<DeviceGatewayData>> deviceData( @RequestBody DeviceGatewayData where){
+    public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where){
         ResultData<List<DeviceGatewayData>> resultData = deviceService.gatewayData(where.getGatewayLogo());
 
         ResponseData<List<DeviceGatewayData>> responseData = new ResponseData<>();

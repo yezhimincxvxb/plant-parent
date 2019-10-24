@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.reap;
 
 import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.entity.dto.SaleCoinLog;
+import com.moguying.plant.core.entity.coin.SaleCoinLog;
 
 /**
  * 蘑菇币日志接口

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.system;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.Apk;
+import com.moguying.plant.core.entity.system.Apk;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

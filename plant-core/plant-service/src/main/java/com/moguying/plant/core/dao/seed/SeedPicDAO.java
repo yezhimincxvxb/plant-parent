@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.seed;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.SeedPic;
+import com.moguying.plant.core.entity.seed.SeedPic;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

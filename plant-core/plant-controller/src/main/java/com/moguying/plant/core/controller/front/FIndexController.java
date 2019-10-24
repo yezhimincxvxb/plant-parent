@@ -6,7 +6,7 @@ import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
-import com.moguying.plant.core.entity.dto.User;
+import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.CommonUtil;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.mall.MallCarDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.vo.MallCar">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.vo.MallCar">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
@@ -9,7 +9,7 @@
     <result column="is_check" jdbcType="TINYINT" property="isCheck" />
   </resultMap>
   
-  <resultMap id="CarItem" type="com.moguying.plant.core.entity.vo.OrderItem">
+  <resultMap id="CarItem" type="com.moguying.plant.core.entity.mall.vo.OrderItem">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="product_name" jdbcType="INTEGER" property="productName" />
@@ -26,7 +26,7 @@
   </sql>
 
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.vo.MallCar">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.mall.vo.MallCar">
     insert into plant_mall_car
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -63,7 +63,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.vo.MallCar">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.mall.vo.MallCar">
     update plant_mall_car
     <set>
       <if test="userId != null">

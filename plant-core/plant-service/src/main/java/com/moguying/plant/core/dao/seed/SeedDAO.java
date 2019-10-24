@@ -1,9 +1,9 @@
 package com.moguying.plant.core.dao.seed;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.Seed;
-import com.moguying.plant.core.entity.vo.HomeSeed;
-import com.moguying.plant.core.entity.vo.SeedDetail;
+import com.moguying.plant.core.entity.seed.Seed;
+import com.moguying.plant.core.entity.common.vo.HomeSeed;
+import com.moguying.plant.core.entity.seed.vo.SeedDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.UserMessageTpl;
+import com.moguying.plant.core.entity.user.UserMessageTpl;
 import org.springframework.stereotype.Repository;
 
 /**

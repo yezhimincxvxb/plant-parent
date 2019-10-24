@@ -5,7 +5,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.MallProduct;
+import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.service.mall.MallProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

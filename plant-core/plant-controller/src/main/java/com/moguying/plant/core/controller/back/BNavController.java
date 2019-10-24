@@ -3,7 +3,7 @@ package com.moguying.plant.core.controller.back;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
-import com.moguying.plant.core.entity.dto.Nav;
+import com.moguying.plant.core.entity.content.Nav;
 import com.moguying.plant.core.service.content.NavService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

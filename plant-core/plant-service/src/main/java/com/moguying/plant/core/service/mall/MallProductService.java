@@ -3,8 +3,15 @@ package com.moguying.plant.core.service.mall;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.MallProduct;
-import com.moguying.plant.core.entity.vo.*;
+import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
+import com.moguying.plant.core.entity.common.vo.BuyResponse;
+import com.moguying.plant.core.entity.common.vo.HomeProduct;
+import com.moguying.plant.core.entity.common.vo.HomeProductDetail;
+import com.moguying.plant.core.entity.mall.MallProduct;
+import com.moguying.plant.core.entity.mall.vo.OrderBuy;
+import com.moguying.plant.core.entity.mall.vo.OrderBuyResponse;
+import com.moguying.plant.core.entity.mall.vo.OrderSum;
+import com.moguying.plant.core.entity.seed.vo.SubmitOrder;
 
 public interface MallProductService {
 

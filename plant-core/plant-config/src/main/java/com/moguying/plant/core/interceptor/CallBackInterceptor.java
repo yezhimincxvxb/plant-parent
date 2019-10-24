@@ -1,7 +1,7 @@
 package com.moguying.plant.core.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.moguying.plant.core.entity.dto.payment.callback.CallBackResponseToPayment;
+import com.moguying.plant.core.entity.payment.callback.CallBackResponseToPayment;
 import com.moguying.plant.utils.CFCARAUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

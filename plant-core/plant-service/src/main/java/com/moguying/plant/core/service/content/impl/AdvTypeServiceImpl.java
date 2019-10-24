@@ -3,7 +3,7 @@ package com.moguying.plant.core.service.content.impl;
 import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.AdvTypeDAO;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.dto.AdvType;
+import com.moguying.plant.core.entity.content.AdvType;
 import com.moguying.plant.core.service.content.AdvTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

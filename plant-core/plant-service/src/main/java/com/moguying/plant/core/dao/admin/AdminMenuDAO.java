@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.admin;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.dto.AdminMenu;
+import com.moguying.plant.core.entity.admin.AdminMenu;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

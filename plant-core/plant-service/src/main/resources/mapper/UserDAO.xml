@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.user.UserDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.User">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.User">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
         <result column="real_name" jdbcType="VARCHAR" property="realName"/>
@@ -38,7 +38,7 @@
     </sql>
 
 
-    <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.User" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.moguying.plant.core.entity.user.User" useGeneratedKeys="true"
             keyProperty="id">
         insert into plant_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -142,7 +142,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.User">
+    <update id="updateById" parameterType="com.moguying.plant.core.entity.user.User">
         update plant_user
         <set>
             <if test="phone != null">

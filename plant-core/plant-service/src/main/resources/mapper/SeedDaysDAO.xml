@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.seed.SeedDaysDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.dto.SeedDays">
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.SeedDays">
     <id column="grow_days" jdbcType="INTEGER" property="growDays" />
     <result column="grow_days_name" jdbcType="VARCHAR" property="growDaysName" />
     <result column="mark" jdbcType="VARCHAR" property="mark" />
@@ -12,7 +12,7 @@
     grow_days, grow_days_name, mark,plant_rate,first_plant_rate
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.SeedDays">
+  <insert id="insert" parameterType="com.moguying.plant.core.entity.seed.SeedDays">
     insert into plant_seed_days
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="growDays != null">
@@ -51,7 +51,7 @@
   </insert>
 
 
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.dto.SeedDays">
+  <update id="updateById" parameterType="com.moguying.plant.core.entity.seed.SeedDays">
     update plant_seed_days
     <set>
       <if test="growDaysName != null">

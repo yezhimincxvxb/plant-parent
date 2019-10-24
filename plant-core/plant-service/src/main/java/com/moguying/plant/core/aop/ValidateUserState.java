@@ -4,7 +4,7 @@ package com.moguying.plant.core.aop;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.entity.ResponseData;
-import com.moguying.plant.core.entity.dto.User;
+import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.user.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

@@ -3,11 +3,11 @@ package com.moguying.plant.core.service.farmer;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.User;
-import com.moguying.plant.core.entity.vo.FarmerData;
-import com.moguying.plant.core.entity.vo.FarmerEnergy;
-import com.moguying.plant.core.entity.vo.FarmerLevelGift;
-import com.moguying.plant.core.entity.vo.FarmerNotice;
+import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.entity.farmer.FarmerData;
+import com.moguying.plant.core.entity.farmer.FarmerEnergy;
+import com.moguying.plant.core.entity.farmer.FarmerLevelGift;
+import com.moguying.plant.core.entity.farmer.FarmerNotice;
 
 public interface FarmerService {
 

@@ -3,8 +3,8 @@ package com.moguying.plant.core.service.block;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.Block;
-import com.moguying.plant.core.entity.vo.HomeBlock;
+import com.moguying.plant.core.entity.block.Block;
+import com.moguying.plant.core.entity.common.vo.HomeBlock;
 
 import java.util.List;
 

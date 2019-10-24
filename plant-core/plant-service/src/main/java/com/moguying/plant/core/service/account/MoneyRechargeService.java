@@ -3,7 +3,7 @@ package com.moguying.plant.core.service.account;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.dto.MoneyRecharge;
+import com.moguying.plant.core.entity.account.MoneyRecharge;
 
 public interface MoneyRechargeService {
 
