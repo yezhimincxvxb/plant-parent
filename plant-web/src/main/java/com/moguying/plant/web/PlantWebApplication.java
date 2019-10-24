@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(scanBasePackages = {"com.moguying"})
-@EnableAspectJAutoProxy(proxyTargetClass = true,exposeProxy = true)
 @EnableTransactionManagement
 @EnableScheduling
 public class PlantWebApplication {

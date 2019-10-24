@@ -13,7 +13,7 @@ import com.moguying.plant.core.entity.dto.UserMoney;
 import com.moguying.plant.core.entity.dto.UserMoneyDetail;
 import com.moguying.plant.core.entity.dto.UserMoneyOperator;
 import com.moguying.plant.core.service.account.UserMoneyService;
-import com.moguying.plant.utils.DownloadUtil;
+import com.moguying.plant.core.service.common.DownloadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +126,7 @@ public class UserMoneyServiceImpl implements UserMoneyService {
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<UserMoney> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("资金账户", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(userMoneyDAO, search, UserMoney.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(userMoneyDAO, search, UserMoney.class, downloadInfo)).start();
     }
 
     @Pagination

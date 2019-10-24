@@ -1,16 +1,16 @@
 package com.moguying.plant.core.service.system.impl;
 
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.SystemEnum;
 import com.moguying.plant.core.dao.system.PhoneMessageDAO;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
 import com.moguying.plant.core.entity.dto.InnerMessage;
 import com.moguying.plant.core.entity.dto.PhoneMessage;
+import com.moguying.plant.core.service.common.message.MessageSendService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.CommonUtil;
-import com.moguying.plant.utils.message.PhoneMessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-@PropertySource(value = "classpath:message.properties",encoding = "UTF-8")
 public class PhoneMessageServiceImpl implements PhoneMessageService {
     Logger logger = LoggerFactory.getLogger(PhoneMessageService.class);
 
@@ -98,7 +97,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
 
     private Integer send(String phone, String content, String code, String account){
         try {
-            ResultData<Integer> sendResult = PhoneMessageUtil.INSTANCE.send(sendUrl, account, password, phone, content);
+            ResultData<Integer> sendResult = MessageSendService.INSTANCE.send(sendUrl, account, password, phone, content);
             if (sendResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
                 PhoneMessage add = new PhoneMessage();
                 if (null != code) {

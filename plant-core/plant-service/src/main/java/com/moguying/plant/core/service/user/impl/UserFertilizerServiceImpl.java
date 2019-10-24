@@ -1,10 +1,10 @@
 package com.moguying.plant.core.service.user.impl;
 
+import com.moguying.plant.constant.FertilizerEnum;
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.FertilizerEnum;
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.MoneyOpEnum;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.fertilizer.FertilizerTypeDAO;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
@@ -15,9 +15,9 @@ import com.moguying.plant.core.entity.vo.FertilizerSearch;
 import com.moguying.plant.core.entity.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.vo.UserFertilizerInfo;
 import com.moguying.plant.core.service.account.UserMoneyService;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.user.UserFertilizerService;
-import com.moguying.plant.utils.DownloadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +109,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     @Override
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<UserFertilizer> search, HttpServletRequest request) {
-        new Thread(new DownloadUtil<>(userFertilizerDAO, search, UserFertilizer.class,
+        new Thread(new DownloadService<>(userFertilizerDAO, search, UserFertilizer.class,
                 new DownloadInfo("用户优惠券", request.getServletContext(), userId, downloadDir))).start();
     }
 

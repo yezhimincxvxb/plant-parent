@@ -24,10 +24,5 @@ public interface DeviceService {
     String sendService(String method) throws AxisFault;
     String sendService(String method, String gateway) throws AxisFault;
 
-    /**
-     * 海康威视实时流url
-     * @return
-     */
-    String monitorRtspUrl();
 
 }

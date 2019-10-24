@@ -1,8 +1,8 @@
 package com.moguying.plant.core.service.account.impl;
 
+import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.*;
 import com.moguying.plant.core.dao.account.MoneyWithdrawDAO;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.user.UserBankDAO;
@@ -21,10 +21,10 @@ import com.moguying.plant.core.entity.dto.payment.response.TransferResponse;
 import com.moguying.plant.core.entity.dto.payment.response.WithdrawMoneyResponse;
 import com.moguying.plant.core.service.account.MoneyWithdrawService;
 import com.moguying.plant.core.service.account.UserMoneyService;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.DateUtil;
-import com.moguying.plant.utils.DownloadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -338,6 +338,6 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @Override
     public void downloadExcel(Integer userId, PageSearch<MoneyWithdraw> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("提现列表", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(moneyWithdrawDAO, search, MoneyWithdraw.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(moneyWithdrawDAO, search, MoneyWithdraw.class, downloadInfo)).start();
     }
 }

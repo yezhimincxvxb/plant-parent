@@ -13,7 +13,6 @@
     id, phone, code, message, add_time,state
   </sql>
 
-  insertSelective
   <insert id="insert" parameterType="com.moguying.plant.core.entity.dto.PhoneMessage" useGeneratedKeys="true" keyProperty="id">
     insert into plant_phone_message
     <trim prefix="(" suffix=")" suffixOverrides=",">

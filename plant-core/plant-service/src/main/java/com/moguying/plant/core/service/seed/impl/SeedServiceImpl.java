@@ -1,9 +1,9 @@
 package com.moguying.plant.core.service.seed.impl;
 
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.SeedEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.SeedEnum;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
@@ -13,8 +13,8 @@ import com.moguying.plant.core.entity.dto.Seed;
 import com.moguying.plant.core.entity.dto.SeedReview;
 import com.moguying.plant.core.entity.vo.HomeSeed;
 import com.moguying.plant.core.entity.vo.SeedDetail;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.seed.SeedService;
-import com.moguying.plant.utils.DownloadUtil;
 import com.moguying.plant.utils.InterestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -218,7 +218,7 @@ public class SeedServiceImpl implements SeedService {
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<Seed> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包售罄列表", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(seedDAO, search, Seed.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(seedDAO, search, Seed.class, downloadInfo)).start();
     }
 }
 

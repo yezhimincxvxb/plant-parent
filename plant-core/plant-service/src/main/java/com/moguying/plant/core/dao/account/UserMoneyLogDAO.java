@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.account;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.constant.MoneyOpEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.entity.dto.UserMoneyLog;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

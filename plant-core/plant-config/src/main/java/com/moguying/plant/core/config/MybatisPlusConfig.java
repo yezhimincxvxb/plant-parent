@@ -8,4 +8,5 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @MapperScan("com.moguying.plant.core.dao")
 public class MybatisPlusConfig {
+
 }

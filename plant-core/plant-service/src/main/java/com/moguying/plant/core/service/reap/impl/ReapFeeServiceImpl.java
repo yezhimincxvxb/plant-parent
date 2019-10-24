@@ -1,8 +1,8 @@
 package com.moguying.plant.core.service.reap.impl;
 
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.MessageEnum;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapFeeDAO;
 import com.moguying.plant.core.dao.seed.SeedDaysDAO;
@@ -13,8 +13,8 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.dto.Reap;
 import com.moguying.plant.core.entity.dto.ReapFee;
 import com.moguying.plant.core.entity.dto.SeedDays;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.reap.ReapFeeService;
-import com.moguying.plant.utils.DownloadUtil;
 import com.moguying.plant.utils.InterestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +76,7 @@ public class ReapFeeServiceImpl implements ReapFeeService {
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<ReapFee> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("渠道费用",request.getServletContext(),userId,downloadDir);
-        new Thread(new DownloadUtil<>(reapFeeDAO,search, ReapFee.class,downloadInfo)).start();
+        new Thread(new DownloadService<>(reapFeeDAO,search, ReapFee.class,downloadInfo)).start();
     }
 
 

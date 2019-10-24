@@ -1,6 +1,6 @@
 package com.moguying.plant.core.controller.back;
 
-import com.moguying.plant.core.constant.MessageEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.dto.*;
 import com.moguying.plant.core.service.user.UserService;

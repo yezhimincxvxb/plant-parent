@@ -1,10 +1,10 @@
 package com.moguying.plant.core.service.seed.impl;
 
+import com.moguying.plant.constant.FertilizerEnum;
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.SeedEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.FertilizerEnum;
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.SeedEnum;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
@@ -14,8 +14,8 @@ import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.dto.Seed;
 import com.moguying.plant.core.entity.dto.SeedOrderDetail;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
-import com.moguying.plant.utils.DownloadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -139,6 +139,6 @@ public class SeedOrderDetailServiceImpl implements SeedOrderDetailService {
     @Override
     public void downloadExcel(Integer userId, PageSearch<SeedOrderDetail> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包订单", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(seedOrderDetailDAO, search, search.getWhere().getClass(), downloadInfo)).start();
+        new Thread(new DownloadService<>(seedOrderDetailDAO, search, search.getWhere().getClass(), downloadInfo)).start();
     }
 }

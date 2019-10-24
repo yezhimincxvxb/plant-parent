@@ -1,7 +1,7 @@
 package com.moguying.plant.core.entity;
 
 
-import com.moguying.plant.core.constant.MessageEnum;
+import com.moguying.plant.constant.MessageEnum;
 
 public class ResultData<T> {
 

@@ -14,6 +14,7 @@
         <module>plant-core</module>
         <module>plant-utils</module>
         <module>plant-web</module>
+        <module>plant-constant</module>
     </modules>
 
     <parent>
@@ -159,12 +160,6 @@
             <groupId>com.hikvision.ga</groupId>
             <artifactId>artemis-http-client</artifactId>
             <version>1.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.whvcse</groupId>
-            <artifactId>EasyCaptcha</artifactId>
-            <version>1.5.0</version>
         </dependency>
 
         <dependency>

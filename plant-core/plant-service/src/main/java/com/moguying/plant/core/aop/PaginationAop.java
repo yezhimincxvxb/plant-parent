@@ -19,7 +19,7 @@ public class PaginationAop {
     Logger log = LoggerFactory.getLogger(PaginationAop.class);
 
 
-    @Pointcut("@annotation(com.moguying.plant.common.annotation.Pagination)")
+    @Pointcut("@annotation(com.moguying.plant.core.annotation.Pagination)")
     private void pagination(){
 
     }

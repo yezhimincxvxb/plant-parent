@@ -1,7 +1,7 @@
 package com.moguying.plant.core.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.core.constant.MessageEnum;
+import com.moguying.plant.constant.MessageEnum;
 
 import java.io.Serializable;
 import java.util.List;

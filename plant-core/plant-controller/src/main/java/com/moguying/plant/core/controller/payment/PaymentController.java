@@ -1,6 +1,6 @@
 package com.moguying.plant.core.controller.payment;
 
-import com.moguying.plant.core.constant.MessageEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.dto.payment.request.ImageUploadRequest;
 import com.moguying.plant.core.entity.dto.payment.response.ImageUploadResponse;

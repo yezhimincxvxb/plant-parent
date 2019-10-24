@@ -1,6 +1,6 @@
 package com.moguying.plant.core.scheduled.task;
 
-import com.moguying.plant.core.constant.MessageEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.vo.CancelOrder;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import org.slf4j.Logger;

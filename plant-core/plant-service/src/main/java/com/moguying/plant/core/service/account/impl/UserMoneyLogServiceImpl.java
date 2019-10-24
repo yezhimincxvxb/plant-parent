@@ -1,9 +1,9 @@
 package com.moguying.plant.core.service.account.impl;
 
+import com.moguying.plant.constant.FieldEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.FieldEnum;
-import com.moguying.plant.core.constant.MoneyOpEnum;
 import com.moguying.plant.core.dao.account.UserMoneyLogDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
@@ -11,7 +11,7 @@ import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.dto.UserMoneyLog;
 import com.moguying.plant.core.entity.vo.AccountMoneyLogInfo;
 import com.moguying.plant.core.service.account.UserMoneyLogService;
-import com.moguying.plant.utils.DownloadUtil;
+import com.moguying.plant.core.service.common.DownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -74,6 +74,6 @@ public class UserMoneyLogServiceImpl implements UserMoneyLogService {
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<UserMoneyLog> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("资金日志", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(userMoneyLogDAO, search, UserMoneyLog.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(userMoneyLogDAO, search, UserMoneyLog.class, downloadInfo)).start();
     }
 }

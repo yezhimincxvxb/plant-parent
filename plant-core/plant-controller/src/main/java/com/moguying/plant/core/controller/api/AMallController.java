@@ -1,10 +1,10 @@
 package com.moguying.plant.core.controller.api;
 
 import com.alibaba.fastjson.JSON;
+import com.moguying.plant.constant.MallEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.annotation.ValidateUser;
-import com.moguying.plant.core.constant.MallEnum;
-import com.moguying.plant.core.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;

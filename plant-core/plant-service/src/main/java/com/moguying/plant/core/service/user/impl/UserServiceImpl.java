@@ -1,11 +1,11 @@
 package com.moguying.plant.core.service.user.impl;
 
+import com.moguying.plant.constant.ApiEnum;
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.annotation.TriggerEvent;
-import com.moguying.plant.core.constant.ApiEnum;
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.UserEnum;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
@@ -17,8 +17,12 @@ import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.dto.*;
 import com.moguying.plant.core.entity.vo.LoginResponse;
 import com.moguying.plant.core.entity.vo.UserSummaryInfo;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.user.UserService;
-import com.moguying.plant.utils.*;
+import com.moguying.plant.utils.CommonUtil;
+import com.moguying.plant.utils.PasswordUtil;
+import com.moguying.plant.utils.RedisUtil;
+import com.moguying.plant.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -441,7 +445,7 @@ public class UserServiceImpl implements UserService {
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<User> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("用户列表", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(userDAO, search, User.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(userDAO, search, User.class, downloadInfo)).start();
     }
 
     @Override

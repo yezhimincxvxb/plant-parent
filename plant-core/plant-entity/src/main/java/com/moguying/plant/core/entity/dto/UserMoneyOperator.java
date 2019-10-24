@@ -1,6 +1,6 @@
 package com.moguying.plant.core.entity.dto;
 
-import com.moguying.plant.core.constant.MoneyOpEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 import lombok.Data;
 
 import java.math.BigDecimal;

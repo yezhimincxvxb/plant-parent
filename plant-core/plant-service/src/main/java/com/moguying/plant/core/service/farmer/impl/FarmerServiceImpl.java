@@ -1,10 +1,10 @@
 package com.moguying.plant.core.service.farmer.impl;
 
+import com.moguying.plant.constant.FarmerEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.FarmerTrigger;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.FarmerEnum;
-import com.moguying.plant.core.constant.MessageEnum;
 import com.moguying.plant.core.dao.farmer.*;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
@@ -71,7 +71,7 @@ public class FarmerServiceImpl implements FarmerService {
     @Autowired
     private UserFertilizerDAO userFertilizerDAO;
 
-    @Value("${farmer.energy.ok}")
+    @Value("${farmer.energy.ok.ok}")
     private long energyOk;
 
     @Value("${farmer.energy.ok.min}")

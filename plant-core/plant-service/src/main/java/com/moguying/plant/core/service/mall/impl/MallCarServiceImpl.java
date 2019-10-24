@@ -1,8 +1,8 @@
 package com.moguying.plant.core.service.mall.impl;
 
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.MessageEnum;
 import com.moguying.plant.core.dao.mall.MallCarDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.entity.PageResult;

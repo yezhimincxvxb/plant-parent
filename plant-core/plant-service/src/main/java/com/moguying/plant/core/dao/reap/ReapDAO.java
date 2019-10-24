@@ -1,7 +1,7 @@
 package com.moguying.plant.core.dao.reap;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.constant.ReapEnum;
+import com.moguying.plant.constant.ReapEnum;
 import com.moguying.plant.core.entity.dto.InnerMessage;
 import com.moguying.plant.core.entity.dto.Reap;
 import com.moguying.plant.core.entity.vo.ExchangeInfo;

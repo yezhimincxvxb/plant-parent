@@ -1,7 +1,7 @@
 package com.moguying.plant.core.entity.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.core.constant.MoneyOpEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 
 import java.math.BigDecimal;
 import java.util.Date;

@@ -15,8 +15,8 @@ import com.moguying.plant.core.entity.dto.SeedOrder;
 import com.moguying.plant.core.entity.dto.SeedOrderDetail;
 import com.moguying.plant.core.entity.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.vo.UserSeedOrder;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.seed.SeedOrderService;
-import com.moguying.plant.utils.DownloadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -102,6 +102,6 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<SeedOrder> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包统计", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(seedOrderDAO, search, SeedOrder.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(seedOrderDAO, search, SeedOrder.class, downloadInfo)).start();
     }
 }

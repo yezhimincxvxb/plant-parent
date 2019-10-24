@@ -6,8 +6,8 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.constant.*;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.payment.PaymentInfoDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
@@ -45,7 +45,6 @@ import java.util.Date;
 import java.util.List;
 
 
-@PropertySource(value = "classpath:payment.properties")
 @Service
 @SuppressWarnings("all")
 @Slf4j
@@ -71,7 +70,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${payment.cerfile}")
     private String cerfile;
 
-    @Value("${payment.passWord}")
+    @Value("${payment.password}")
     private String password;
 
     @Autowired

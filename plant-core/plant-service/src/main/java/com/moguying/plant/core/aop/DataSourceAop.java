@@ -22,7 +22,7 @@ public class DataSourceAop {
 
     Logger log = LoggerFactory.getLogger(DataSourceAop.class);
 
-    @Pointcut("@annotation(com.moguying.plant.common.annotation.DataSource)))")
+    @Pointcut("@annotation(com.moguying.plant.core.annotation.DataSource)))")
     private void dataSourceRoute(){
     }
 

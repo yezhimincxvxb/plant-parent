@@ -1,9 +1,9 @@
 package com.moguying.plant.core.controller.api;
 
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.SeedEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.annotation.ValidateUser;
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.SeedEnum;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.dto.*;

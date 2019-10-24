@@ -1,7 +1,7 @@
 package com.moguying.plant.core.entity.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.common.util.BankCarSerialize;
+import com.moguying.plant.utils.BankCarSerialize;
 
 import java.io.Serializable;
 import java.util.Date;

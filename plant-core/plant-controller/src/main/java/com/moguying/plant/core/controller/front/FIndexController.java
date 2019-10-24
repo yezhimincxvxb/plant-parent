@@ -1,8 +1,8 @@
 package com.moguying.plant.core.controller.front;
 
 
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.UserEnum;
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;

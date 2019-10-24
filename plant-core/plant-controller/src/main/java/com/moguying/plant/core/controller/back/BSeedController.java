@@ -1,7 +1,7 @@
 package com.moguying.plant.core.controller.back;
 
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.SeedEnum;
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.SeedEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -73,7 +73,7 @@ public class BSeedController {
     @ResponseBody
     public ResponseData<Seed> seedDetail(@PathVariable Integer id){
         if(id == 0 || id < 0){
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
         }
         Seed seed = seedService.seed(id);
         SeedPic seedPic = seedPicService.seedPicById(Long.parseLong(seed.getPicIds()));

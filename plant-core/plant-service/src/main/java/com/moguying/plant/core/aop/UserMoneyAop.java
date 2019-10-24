@@ -16,7 +16,7 @@ public class UserMoneyAop {
     @Autowired
     private SaleCoinLogService saleCoinLogService;
 
-    @Pointcut("execution(* com.moguying.plant.backend.reap.service.SaleCoinService.updateSaleCoin(..))")
+    @Pointcut("execution(* com.moguying.plant.core.service.reap.SaleCoinService.updateSaleCoin(..))")
     public void userMoneyLog(){}
 
     @AfterReturning( returning = "result",pointcut = "userMoneyLog()")

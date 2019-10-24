@@ -23,7 +23,7 @@ public class AccountLogAop {
 
     Logger log = LoggerFactory.getLogger(AccountLogAop.class);
 
-    @Pointcut("execution(* com.moguying.plant.backend.account.service.UserMoneyService.updateAccount(..))")
+    @Pointcut("execution(* com.moguying.plant.core.service.account.UserMoneyService.updateAccount(..))")
     public void accountLog(){
 
     }

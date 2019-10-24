@@ -1,12 +1,12 @@
 package com.moguying.plant.core.service.reap.impl;
 
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
+import com.moguying.plant.constant.ReapEnum;
+import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.annotation.TriggerEvent;
-import com.moguying.plant.core.constant.MessageEnum;
-import com.moguying.plant.core.constant.MoneyOpEnum;
-import com.moguying.plant.core.constant.ReapEnum;
-import com.moguying.plant.core.constant.SystemEnum;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.*;
@@ -14,13 +14,13 @@ import com.moguying.plant.core.entity.dto.*;
 import com.moguying.plant.core.entity.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.vo.TotalMoney;
 import com.moguying.plant.core.service.account.UserMoneyService;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserFertilizerService;
 import com.moguying.plant.utils.DateUtil;
-import com.moguying.plant.utils.DownloadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -234,7 +234,7 @@ public class ReapServiceImpl<T> implements ReapService {
     @DataSource("read")
     public void downloadExcel(Integer userId, PageSearch<Reap> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("采摘列表", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadUtil<>(reapDAO, search, Reap.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(reapDAO, search, Reap.class, downloadInfo)).start();
     }
 
     @Pagination

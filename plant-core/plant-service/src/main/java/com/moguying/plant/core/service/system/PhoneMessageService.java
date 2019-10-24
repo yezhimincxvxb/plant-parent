@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.system;
 
+import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.constant.SystemEnum;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
 import com.moguying.plant.core.entity.dto.InnerMessage;

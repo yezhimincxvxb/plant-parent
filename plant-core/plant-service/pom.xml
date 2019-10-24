@@ -19,10 +19,24 @@
     <dependencies>
         <dependency>
             <groupId>com.moguying</groupId>
-            <artifactId>plant-entity</artifactId>
+            <artifactId>plant-config</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.moguying</groupId>
+            <artifactId>plant-utils</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.moguying</groupId>
+            <artifactId>plant-entity</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

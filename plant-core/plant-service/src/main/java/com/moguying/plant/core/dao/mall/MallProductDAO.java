@@ -20,7 +20,6 @@ public interface MallProductDAO extends BaseMapper<MallProduct> {
     List<HomeProduct> selectProductForApp(HomeProduct search);
     HomeProductDetail selectProductDetailForApp(Integer id);
     Integer productCountEnough(@Param("productId") Integer productId, @Param("count") Integer count);
-    Integer updateByPrimaryKeyWithBLOBs(MallProduct product);
 
     /**
      * 兑换实物列表

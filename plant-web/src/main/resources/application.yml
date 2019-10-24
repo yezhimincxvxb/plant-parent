@@ -5,13 +5,17 @@ spring:
 ---
 debug: false
 server:
-  port: 9090
+  port: 9000
 spring:
+
+  aop:
+    auto: true
+    proxy-target-class: true
   profiles: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.131:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
-    username: write
+    url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+    username: root
     password: 123456
     type: com.zaxxer.hikari.HikariDataSource
   mvc:
@@ -21,6 +25,17 @@ spring:
   http:
     encoding:
       charset: UTF-8
+  redis:
+    host: 192.168.5.220
+    port: 6869
+    password: AEnz2DF\\Od,GWD#C*+
+  thymeleaf:
+    encoding: UTF-8
+    prefix: classpath:/views/
+    mode: HTML
+    servlet:
+      content-type: text/html
+    cache: false
 
 mybatis-plus:
   global-config:
@@ -29,3 +44,80 @@ mybatis-plus:
     banner: false
   mapper-locations: classpath:mapper/*DAO.xml
   type-aliases-package: com.moguying.plant.core.entity
+
+
+message:
+  send:
+    url: http://smssh1.253.com/msg/send/json
+  account: N1600574
+  sale:
+    account: M6652821
+  password: ABUt0xrFv3ad35
+  time: 60000
+  code: 【蘑菇营】您的验证码是code。如非本人操作，请致电客服：400-669-0808
+  seed:
+    reap: 【蘑菇营】亲爱的phone，您count份菌包已成长，已采摘完毕，可以去出售啦！
+  withdraw:
+    success: 【蘑菇营】您于time的提现申请审核通过，详情可登录app查看或咨询客服400-669-0808！
+    fail: 【蘑菇营】您于time的提现申请审核被驳回，详情可登录app查看或咨询客服400-669-0808！
+  mall:
+    send: 【蘑菇营】您在商城购买产品已发货，详情可登录app查看或咨询客服400-669-0808！
+  fertilizer:
+    send: 【蘑菇营】恭喜您注册成功！蘑菇营为答谢您的支持，特奉上16元满减券，券已发放至你的账户中，请登录查收，开启趣味种植之旅~
+
+payment:
+  merNo: 0009500
+  version: 1.1
+  signType: CFCA
+  callback: https://api.zymoguying.com/payment/notify
+  pfxfile: Hyswkj2019.pfx
+  cerfile: sq_formal_encrypt.cer
+  password: Hyswkj2019
+  return:
+    url:
+invite:
+  rate: 0.0005
+withdraw:
+  min: 100.00
+  max: 200000.00
+  fee: 0.00
+  daily:
+    max: 1000000.00
+order:
+  expire:
+    time: 300
+upload:
+  host: http://192.168.5.220:9000
+editor:
+  upload:
+    host: http://192.168.5.220:9000
+farmer:
+  energy:
+    ok:
+      ok: 86400
+      min: 84600
+      max: 127800
+    lose: 129600
+
+user:
+  invite:
+    bg:
+      image: /images/user_private_invite_bg.jpg
+    icon: /images/invite_icon.png
+    url: https://m.zymoguying.com/index/promote/invitecode/
+wx:
+  appid: wx6bc272547276f111
+  app:
+    secret: 5f79f46886133514916393f6e603954d
+excel:
+  download:
+    dir: /download/excel/
+express:
+  query:
+    url: http://poll.kuaidi100.com/poll/query.do
+
+device:
+  data:
+    url: http://iot.klha.net:8080/services/iotDataService?wsdl
+    user: tanv
+    password: tanv666

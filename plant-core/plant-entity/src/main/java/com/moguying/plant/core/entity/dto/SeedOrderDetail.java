@@ -2,7 +2,7 @@ package com.moguying.plant.core.entity.dto;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.core.constant.MoneyOpEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.utils.BigDecimalSerialize;
 
 import java.io.Serializable;

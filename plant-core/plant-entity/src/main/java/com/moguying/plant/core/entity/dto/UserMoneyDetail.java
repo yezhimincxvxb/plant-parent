@@ -1,7 +1,7 @@
 package com.moguying.plant.core.entity.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.backend.account.constant.MoneyOpEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 import lombok.Data;
 
 import java.io.Serializable;

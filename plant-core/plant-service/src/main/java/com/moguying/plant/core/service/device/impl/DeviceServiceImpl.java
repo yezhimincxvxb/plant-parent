@@ -1,10 +1,8 @@
 package com.moguying.plant.core.service.device.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hikvision.artemis.sdk.ArtemisHttpUtil;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.Pagination;
-import com.moguying.plant.core.constant.MessageEnum;
 import com.moguying.plant.core.dao.device.DeviceGatewayDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
@@ -32,7 +30,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -47,15 +47,6 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Value("${device.data.password}")
     private String password;
-
-    @Value("${device.monitor.host}")
-    private String monitorHost;
-
-    @Value("${device.monitor.app.key}")
-    private String monitorAppKey;
-
-    @Value("${device.monitor.app.secret}")
-    private String monitorAppSecret;
 
     @Autowired
     private DeviceGatewayDAO deviceGatewayDAO;
@@ -193,25 +184,4 @@ public class DeviceServiceImpl implements DeviceService {
         return null;
     }
 
-
-    @Override
-    public String monitorRtspUrl() {
-        final String ARTEMIS_PATH = "/artemis";
-        final String previewURLsApi = ARTEMIS_PATH + "/api/video/v1/cameras/previewURLs";
-
-        Map<String,String> path = Collections.singletonMap("https://",previewURLsApi);
-
-
-        String contentType = "application/json";
-
-        JSONObject jsonBody = new JSONObject();
-        jsonBody.put("cameraIndexCode", "748d84750e3a4a5bbad3cd4af9ed5101");
-        jsonBody.put("streamType", 0);
-        jsonBody.put("protocol", "rtsp");
-        jsonBody.put("transmode", 1);
-        jsonBody.put("expand", "streamform=ps");
-        String body = jsonBody.toJSONString();
-
-       return ArtemisHttpUtil.doPostStringArtemis(path, body, null, null, contentType , null);// post请求application/json类型参数
-    }
 }

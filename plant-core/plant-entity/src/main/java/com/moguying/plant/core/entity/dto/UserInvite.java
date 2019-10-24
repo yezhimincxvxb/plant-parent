@@ -1,8 +1,8 @@
 package com.moguying.plant.core.entity.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.common.util.BigDecimalSerialize;
-import com.moguying.plant.common.util.IdCardSerialize;
+import com.moguying.plant.utils.BigDecimalSerialize;
+import com.moguying.plant.utils.IdCardSerialize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

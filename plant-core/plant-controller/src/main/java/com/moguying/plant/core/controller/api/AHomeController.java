@@ -1,7 +1,7 @@
 package com.moguying.plant.core.controller.api;
 
-import com.moguying.plant.core.constant.BannerEnum;
-import com.moguying.plant.core.constant.MessageEnum;
+import com.moguying.plant.constant.BannerEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -334,19 +334,6 @@ public class AHomeController {
         }
         return responseData;
     }
-
-    /**
-     * 设备监控视频url
-     * @return
-     */
-    @GetMapping("/device/monitor")
-    @ResponseBody
-    public ResponseData<String> deviceMonitorRtspUrl(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),deviceService.monitorRtspUrl());
-    }
-
-
-
 
 
 

@@ -15,11 +15,27 @@
     <description>Demo project for Spring Boot</description>
 
     <dependencies>
+
         <dependency>
             <groupId>com.moguying</groupId>
-            <artifactId>plant-config</artifactId>
-            <version>${moguying.version}</version>
+            <artifactId>plant-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.moguying</groupId>
+            <artifactId>plant-constant</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>EasyCaptcha</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.entity.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.core.constant.MoneyOpEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.entity.vo.OrderItem;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;

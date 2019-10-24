@@ -166,7 +166,7 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="selectSelective" parameterType="SeedClass" resultMap="BaseResultMap">
+    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.dto.SeedType" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from plant_seed_type

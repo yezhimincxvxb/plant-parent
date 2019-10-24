@@ -1,7 +1,7 @@
 package com.moguying.plant.core.entity.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.moguying.plant.common.util.BigDecimalSerialize;
+import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
 import java.io.Serializable;
