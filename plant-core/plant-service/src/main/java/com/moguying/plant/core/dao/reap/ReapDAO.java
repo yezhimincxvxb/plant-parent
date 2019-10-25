@@ -2,7 +2,7 @@ package com.moguying.plant.core.dao.reap;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.moguying.plant.constant.ReapEnum;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.user.vo.TotalMoney;

@@ -23,7 +23,7 @@ import com.moguying.plant.core.entity.reap.vo.SaleRequest;
 import com.moguying.plant.core.entity.reap.vo.SaleResponse;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.*;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.block.BlockService;

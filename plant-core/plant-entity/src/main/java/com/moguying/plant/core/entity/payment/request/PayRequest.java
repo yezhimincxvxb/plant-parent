@@ -1,7 +1,9 @@
 package com.moguying.plant.core.entity.payment.request;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Data;
 
+@Data
 public class PayRequest  implements PaymentRequestInterface{
 
     @JSONField(ordinal = 1)
@@ -45,117 +47,4 @@ public class PayRequest  implements PaymentRequestInterface{
 
     @JSONField(ordinal = 14)
     private String seqNo;
-
-
-    public String getCardNo() {
-        return cardNo;
-    }
-
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo;
-    }
-
-    public String getCustName() {
-        return custName;
-    }
-
-    public void setCustName(String custName) {
-        this.custName = custName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getIdNo() {
-        return idNo;
-    }
-
-    public void setIdNo(String idNo) {
-        this.idNo = idNo;
-    }
-
-    public String getPayAmount() {
-        return payAmount;
-    }
-
-    public void setPayAmount(String payAmount) {
-        this.payAmount = payAmount;
-    }
-
-    public String getMerOrderNo() {
-        return merOrderNo;
-    }
-
-    public void setMerOrderNo(String merOrderNo) {
-        this.merOrderNo = merOrderNo;
-    }
-
-    public String getOrderSubject() {
-        return orderSubject;
-    }
-
-    public void setOrderSubject(String orderSubject) {
-        this.orderSubject = orderSubject;
-    }
-
-    public String getOrderBody() {
-        return orderBody;
-    }
-
-    public void setOrderBody(String orderBody) {
-        this.orderBody = orderBody;
-    }
-
-    public String getApiPayType() {
-        return apiPayType;
-    }
-
-    public void setApiPayType(String apiPayType) {
-        this.apiPayType = apiPayType;
-    }
-
-    public String getTempRoutingList() {
-        return tempRoutingList;
-    }
-
-    public void setTempRoutingList(String tempRoutingList) {
-        this.tempRoutingList = tempRoutingList;
-    }
-
-    public String getPtUndertakeRate() {
-        return ptUndertakeRate;
-    }
-
-    public void setPtUndertakeRate(String ptUndertakeRate) {
-        this.ptUndertakeRate = ptUndertakeRate;
-    }
-
-    public String getSellerNo() {
-        return sellerNo;
-    }
-
-    public void setSellerNo(String sellerNo) {
-        this.sellerNo = sellerNo;
-    }
-
-    public String getSmsCode() {
-        return smsCode;
-    }
-
-    public void setSmsCode(String smsCode) {
-        this.smsCode = smsCode;
-    }
-
-    public String getSeqNo() {
-        return seqNo;
-    }
-
-    public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo;
-    }
 }

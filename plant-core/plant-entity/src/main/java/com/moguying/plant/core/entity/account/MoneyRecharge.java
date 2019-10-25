@@ -16,6 +16,8 @@ import java.util.Date;
 @TableName("plant_money_recharge")
 public class MoneyRecharge implements Serializable {
 
+    private static final long serialVersionUID = 7600188971919377229L;
+
     @TableId(type = IdType.AUTO)
     private Integer id;
 

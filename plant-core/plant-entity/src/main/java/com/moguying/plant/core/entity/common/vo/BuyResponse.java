@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @Data
 public class BuyResponse implements Serializable {
 
+    private static final long serialVersionUID = 1445140176399345933L;
+
     @JSONField(ordinal = 1)
     private UserAddress address;
 
@@ -33,43 +35,4 @@ public class BuyResponse implements Serializable {
     @JSONField(ordinal = 6)
     private Integer totalCoins;
 
-    public UserAddress getAddress() {
-        return address;
-    }
-
-    public void setAddress(UserAddress address) {
-        this.address = address;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getLeftSecond() {
-        return leftSecond;
-    }
-
-    public void setLeftSecond(Integer leftSecond) {
-        this.leftSecond = leftSecond;
-    }
 }

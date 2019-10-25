@@ -3,9 +3,9 @@ package com.moguying.plant.core.service.account;
 import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
-import com.moguying.plant.core.entity.system.ProductInfo;
+import com.moguying.plant.core.entity.mall.vo.ProductInfo;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.user.UserMoneyDetail;
+import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
 
 import javax.servlet.http.HttpServletRequest;

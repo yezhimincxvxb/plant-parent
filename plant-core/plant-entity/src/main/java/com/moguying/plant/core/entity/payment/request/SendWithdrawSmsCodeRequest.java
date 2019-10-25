@@ -1,5 +1,8 @@
 package com.moguying.plant.core.entity.payment.request;
 
+import lombok.Data;
+
+@Data
 public class SendWithdrawSmsCodeRequest implements PaymentRequestInterface {
 
     /**
@@ -41,68 +44,4 @@ public class SendWithdrawSmsCodeRequest implements PaymentRequestInterface {
      * 银行卡预留手机号
      */
     protected String cardType = "";
-
-    public String getWdMerNo() {
-        return wdMerNo;
-    }
-
-    public void setWdMerNo(String wdMerNo) {
-        this.wdMerNo = wdMerNo;
-    }
-
-    public String getMerMerOrderNo() {
-        return merMerOrderNo;
-    }
-
-    public void setMerMerOrderNo(String merMerOrderNo) {
-        this.merMerOrderNo = merMerOrderNo;
-    }
-
-    public String getPtUndertakeRate() {
-        return ptUndertakeRate;
-    }
-
-    public void setPtUndertakeRate(String ptUndertakeRate) {
-        this.ptUndertakeRate = ptUndertakeRate;
-    }
-
-    public String getPtWithholdFeeRoutingList() {
-        return ptWithholdFeeRoutingList;
-    }
-
-    public void setPtWithholdFeeRoutingList(String ptWithholdFeeRoutingList) {
-        this.ptWithholdFeeRoutingList = ptWithholdFeeRoutingList;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getCardNo() {
-        return cardNo;
-    }
-
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getCardType() {
-        return cardType;
-    }
-
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
-    }
 }

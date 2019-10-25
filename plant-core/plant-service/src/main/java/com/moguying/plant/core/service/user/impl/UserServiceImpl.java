@@ -15,7 +15,7 @@ import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.dao.user.UserMessageDAO;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.entity.user.UserBank;
@@ -300,7 +300,7 @@ public class UserServiceImpl implements UserService {
                 addressDAO.setDefault(address.getId(), address.getUserId());
             } else {
                 // 是否设置为默认地址
-                if (address.getDefault()) {
+                if (address.getIsDeFault()) {
                     addressDAO.setNoDefault(address.getId(), address.getUserId());
                 }
             }
@@ -332,7 +332,7 @@ public class UserServiceImpl implements UserService {
             if (addressList.size() == 1 || addressDAO.getDefaultNum(address.getUserId()) == 0) {
                 addressDAO.setDefault(id, address.getUserId());
             } else {
-                if (null != address.getDefault() && address.getDefault()) {
+                if (null != address.getIsDeFault() && address.getIsDeFault()) {
                     addressDAO.setNoDefault(id, address.getUserId());
                 }
             }

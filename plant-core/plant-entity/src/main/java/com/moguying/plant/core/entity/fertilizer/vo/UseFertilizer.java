@@ -1,4 +1,4 @@
-package com.moguying.plant.core.entity.fertilizer;
+package com.moguying.plant.core.entity.fertilizer.vo;
 
 import java.util.List;
 

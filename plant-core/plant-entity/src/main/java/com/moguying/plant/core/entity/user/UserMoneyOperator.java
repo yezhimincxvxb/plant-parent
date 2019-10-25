@@ -24,46 +24,6 @@ public class UserMoneyOperator {
     private String mark;
 
 
-    public BigDecimal getAffectMoney() {
-        return affectMoney;
-    }
-
-    public void setAffectMoney(BigDecimal affectMoney) {
-        this.affectMoney = affectMoney;
-    }
-
-    public UserMoney getUserMoney() {
-        return userMoney;
-    }
-
-    public void setUserMoney(UserMoney userMoney) {
-        this.userMoney = userMoney;
-    }
-
-    public MoneyOpEnum getOpType() {
-        return opType;
-    }
-
-    public void setOpType(MoneyOpEnum opType) {
-        this.opType = opType;
-    }
-
-    public String getOperationId() {
-        return operationId;
-    }
-
-    public void setOperationId(String operationId) {
-        this.operationId = operationId;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
-    }
-
     @Override
     public String toString() {
         return "UserMoneyOperator{" +

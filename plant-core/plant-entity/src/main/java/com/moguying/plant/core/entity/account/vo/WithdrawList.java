@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 
 public class WithdrawList implements Serializable {
 
+    private static final long serialVersionUID = 796728222040901880L;
+
     @JSONField(serializeUsing = BigDecimalSerialize.class)
     private BigDecimal withdrawSum;
 

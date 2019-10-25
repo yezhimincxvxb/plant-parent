@@ -1,73 +1,40 @@
 package com.moguying.plant.core.entity.seed;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.io.Serializable;
 
-/**
- * plant_seed_pic
- * @author 
- */
+@TableName("plant_seed_pic")
+@Data
+@NoArgsConstructor
 public class SeedPic implements Serializable {
+
+    private static final long serialVersionUID = -8906441674900791421L;
+
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @JSONField(name = "name")
+    @TableField
+    @NonNull
     private String picName;
 
     @JSONField(name = "url")
+    @TableField
+    @NonNull
     private String picUrl;
 
+    @TableField
     private String picUrlThumb;
 
+    @TableField
     private Byte isDelete;
 
-    public SeedPic() {
-    }
-
-    public SeedPic( String picName, String picUrl) {
-        this.picName = picName;
-        this.picUrl = picUrl;
-    }
-
-    private static final long serialVersionUID = 1L;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPicName() {
-        return picName;
-    }
-
-    public void setPicName(String picName) {
-        this.picName = picName;
-    }
-
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
-    public Byte getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(Byte isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    public String getPicUrlThumb() {
-        return picUrlThumb;
-    }
-
-    public void setPicUrlThumb(String picUrlThumb) {
-        this.picUrlThumb = picUrlThumb;
-    }
 }

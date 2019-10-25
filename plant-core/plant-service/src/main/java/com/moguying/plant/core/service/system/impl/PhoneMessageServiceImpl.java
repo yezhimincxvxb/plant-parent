@@ -6,7 +6,7 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.system.PhoneMessageDAO;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.system.PhoneMessage;
 import com.moguying.plant.core.service.common.message.MessageSendService;
 import com.moguying.plant.core.service.system.PhoneMessageService;

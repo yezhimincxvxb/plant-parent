@@ -1,8 +1,14 @@
 package com.moguying.plant.core.entity.coin.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Data;
 
-public class ExcReap {
+import java.io.Serializable;
+
+@Data
+public class ExcReap implements Serializable {
+
+    private static final long serialVersionUID = 4392958773591886157L;
 
     @JSONField(name = "count")
     private Integer excCount;
@@ -10,28 +16,4 @@ public class ExcReap {
     private String extAddress;
     @JSONField(name = "fee")
     private String extFee;
-
-    public Integer getExcCount() {
-        return excCount;
-    }
-
-    public void setExcCount(Integer excCount) {
-        this.excCount = excCount;
-    }
-
-    public String getExtAddress() {
-        return extAddress;
-    }
-
-    public void setExtAddress(String extAddress) {
-        this.extAddress = extAddress;
-    }
-
-    public String getExtFee() {
-        return extFee;
-    }
-
-    public void setExtFee(String extFee) {
-        this.extFee = extFee;
-    }
 }

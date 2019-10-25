@@ -12,7 +12,7 @@ import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.account.UserMoneyLog;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
-import com.moguying.plant.core.entity.system.SessionAdminUser;
+import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.account.MoneyRechargeService;
 import com.moguying.plant.core.service.account.MoneyWithdrawService;
 import com.moguying.plant.core.service.account.UserMoneyLogService;

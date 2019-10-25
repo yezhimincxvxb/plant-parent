@@ -1,4 +1,4 @@
-package com.moguying.plant.core.entity.system;
+package com.moguying.plant.core.entity.system.vo;
 
 import lombok.Data;
 

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 public class WithdrawRequest implements Serializable {
 
+    private static final long serialVersionUID = -4306427271971509256L;
 
     private Integer bankId;
 

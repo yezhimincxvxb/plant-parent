@@ -1,4 +1,4 @@
-package com.moguying.plant.core.entity.seed;
+package com.moguying.plant.core.entity.seed.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.core.entity.user.UserInner;
@@ -10,16 +10,18 @@ import java.util.List;
 @Data
 public class SeedInnerBuy implements Serializable {
 
-    @JSONField(name = "seed_id")
+    private static final long serialVersionUID = -2138334079236392997L;
+
+    @JSONField(ordinal = 1)
     private Integer seedId;
 
-    @JSONField(name = "user_count")
+    @JSONField(ordinal = 2)
     private Integer userCount;
 
-    @JSONField(name = "order_count")
+    @JSONField(ordinal = 3)
     private Integer orderCount;
 
-    @JSONField(name = "users")
+    @JSONField(ordinal = 4)
     private List<UserInner> userInners;
 
 }

@@ -4,7 +4,7 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.dao.user.UserMessageDAO;
 import com.moguying.plant.core.dao.user.UserMessageTplDAO;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserMessage;
 import com.moguying.plant.core.entity.user.UserMessageTpl;

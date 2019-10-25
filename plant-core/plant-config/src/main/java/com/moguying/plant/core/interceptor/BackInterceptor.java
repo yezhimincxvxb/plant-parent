@@ -5,7 +5,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminUser;
-import com.moguying.plant.core.entity.system.SessionAdminUser;
+import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.seed;
 
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.seed.SeedInnerBuy;
+import com.moguying.plant.core.entity.seed.vo.SeedInnerBuy;
 import com.moguying.plant.core.entity.seed.SeedInnerOrderCount;
 import com.moguying.plant.core.entity.user.UserInner;
 

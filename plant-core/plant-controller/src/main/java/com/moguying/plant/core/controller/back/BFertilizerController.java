@@ -9,7 +9,7 @@ import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.FertilizerType;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
-import com.moguying.plant.core.entity.system.SessionAdminUser;
+import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.user.UserFertilizerService;
 import org.springframework.beans.factory.annotation.Autowired;

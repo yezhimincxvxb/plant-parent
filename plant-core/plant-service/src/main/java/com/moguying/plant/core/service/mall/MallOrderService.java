@@ -4,7 +4,7 @@ import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.mall.MallOrder;
-import com.moguying.plant.core.entity.mall.MallOrderSearch;
+import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.entity.mall.vo.TraceInfoParam;

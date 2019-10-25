@@ -1,6 +1,11 @@
 package com.moguying.plant.core.entity.account.vo;
 
-public class Recharge {
+import java.io.Serializable;
+
+public class Recharge implements Serializable {
+
+    private static final long serialVersionUID = -1913394494115529820L;
+
     private Integer id;
 
     private String code;

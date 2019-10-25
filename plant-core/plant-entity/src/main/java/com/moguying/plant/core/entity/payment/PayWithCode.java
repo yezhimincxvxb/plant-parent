@@ -1,23 +1,15 @@
 package com.moguying.plant.core.entity.payment;
 
-public class PayWithCode {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class PayWithCode implements Serializable {
+
+    private static final long serialVersionUID = -5125011548467528308L;
+
     private Integer id;
 
     private String code;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 }

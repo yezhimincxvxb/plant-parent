@@ -1,54 +1,25 @@
 package com.moguying.plant.core.entity.seed;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Data
 public class SeedInnerOrderCount  implements Serializable {
 
-    @JSONField(name = "seed_id")
+    private static final long serialVersionUID = -6529928976614946727L;
+
+    @JSONField(ordinal = 1)
     private Integer seedId;
 
-    @JSONField(name = "seed_name")
+    @JSONField(ordinal = 2)
     private String seedName;
 
-    @JSONField(name = "order_count")
+    @JSONField(ordinal = 3)
     private Integer orderCount;
 
-    @JSONField(name = "order_time",format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 4)
     private Date  orderTime;
-
-
-    public Integer getSeedId() {
-        return seedId;
-    }
-
-    public void setSeedId(Integer seedId) {
-        this.seedId = seedId;
-    }
-
-    public String getSeedName() {
-        return seedName;
-    }
-
-    public void setSeedName(String seedName) {
-        this.seedName = seedName;
-    }
-
-    public Integer getOrderCount() {
-        return orderCount;
-    }
-
-    public void setOrderCount(Integer orderCount) {
-        this.orderCount = orderCount;
-    }
-
-    public Date getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(Date orderTime) {
-        this.orderTime = orderTime;
-    }
 }

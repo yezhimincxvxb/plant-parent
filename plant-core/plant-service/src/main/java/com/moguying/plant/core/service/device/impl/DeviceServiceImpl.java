@@ -7,7 +7,7 @@ import com.moguying.plant.core.dao.device.DeviceGatewayDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.device.DeviceGateway;
-import com.moguying.plant.core.entity.device.DeviceGatewayData;
+import com.moguying.plant.core.entity.device.vo.DeviceGatewayData;
 import com.moguying.plant.core.service.device.DeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.axis2.AxisFault;

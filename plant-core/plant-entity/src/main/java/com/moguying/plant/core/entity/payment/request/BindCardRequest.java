@@ -1,7 +1,9 @@
 package com.moguying.plant.core.entity.payment.request;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Data;
 
+@Data
 public class BindCardRequest implements PaymentRequestInterface{
 
     @JSONField(ordinal = 1)
@@ -19,39 +21,4 @@ public class BindCardRequest implements PaymentRequestInterface{
     @JSONField(ordinal = 5)
     private String smsCode;
 
-    public String getAccount() {
-        return account;
-    }
-
-    public String getSeqNo() {
-        return seqNo;
-    }
-
-    public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo;
-    }
-
-    public String getBkMerNo() {
-        return bkMerNo;
-    }
-
-    public void setBkMerNo(String bkMerNo) {
-        this.bkMerNo = bkMerNo;
-    }
-
-    public String getCardNo() {
-        return cardNo;
-    }
-
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo;
-    }
-
-    public String getSmsCode() {
-        return smsCode;
-    }
-
-    public void setSmsCode(String smsCode) {
-        this.smsCode = smsCode;
-    }
 }

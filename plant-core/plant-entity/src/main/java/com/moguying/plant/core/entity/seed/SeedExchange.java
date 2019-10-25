@@ -1,105 +1,69 @@
 package com.moguying.plant.core.entity.seed;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * plant_seed_exchange
- * @author 
- */
+@TableName("plant_seed_exchange")
+@Data
 public class SeedExchange implements Serializable {
+
+    private static final long serialVersionUID = 6849549158201854212L;
+
+    @TableId
     private Integer id;
 
     /**
      * 种子id
      */
-    @JSONField(name = "seed_id")
+    @JSONField(ordinal = 1)
+    @TableField
     private Integer seedId;
 
     /**
      * 菌包名称
      */
-    @JSONField(name = "seed_name")
+    @JSONField(ordinal = 2)
+    @TableField(exist = false)
     private String seedName;
 
 
     /**
      * 种植用户id
      */
-    @JSONField(name = "user_id")
+    @JSONField(ordinal = 3)
+    @TableField
     private Integer userId;
 
     /**
      * 用户名
      */
-    @JSONField(name = "user_name")
+    @JSONField(ordinal = 4)
+    @TableField(exist = false)
     private String userName;
 
     /**
      * 兑换份数
      */
-    @JSONField(name = "exchange_count")
+    @JSONField(ordinal = 5)
+    @TableField
     private Integer exchangeCount;
 
     /**
      * 快递记录id
      */
-    @JSONField(name = "express_id")
+    @JSONField(ordinal = 6)
+    @TableField
     private Integer expressId;
 
     /**
      * [0未收货，1已收货]
      */
+    @TableField
     private Integer state;
 
-    private static final long serialVersionUID = 1L;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getSeedId() {
-        return seedId;
-    }
-
-    public void setSeedId(Integer seedId) {
-        this.seedId = seedId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getExchangeCount() {
-        return exchangeCount;
-    }
-
-    public void setExchangeCount(Integer exchangeCount) {
-        this.exchangeCount = exchangeCount;
-    }
-
-    public Integer getExpressId() {
-        return expressId;
-    }
-
-    public void setExpressId(Integer expressId) {
-        this.expressId = expressId;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
 }

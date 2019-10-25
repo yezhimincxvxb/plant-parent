@@ -1,4 +1,4 @@
-package com.moguying.plant.core.entity.farmer;
+package com.moguying.plant.core.entity.farmer.vo;
 
 import com.moguying.plant.core.entity.farmer.vo.EnergyItem;
 import lombok.Data;

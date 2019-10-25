@@ -5,7 +5,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.seed.Seed;
-import com.moguying.plant.core.entity.seed.SeedReview;
+import com.moguying.plant.core.entity.seed.vo.SeedReview;
 import com.moguying.plant.core.entity.common.vo.HomeSeed;
 import com.moguying.plant.core.entity.seed.vo.SeedDetail;
 

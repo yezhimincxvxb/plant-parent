@@ -20,7 +20,7 @@ import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.payment.response.SendWithdrawSmsCodeResponse;
 import com.moguying.plant.core.entity.payment.response.TransferResponse;
 import com.moguying.plant.core.entity.payment.response.WithdrawMoneyResponse;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserBank;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;

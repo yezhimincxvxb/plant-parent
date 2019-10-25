@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 public class MoneyWithdraw  implements Serializable  {
 
+    private static final long serialVersionUID = -1499769342080698737L;
+
     @Excel(name = "序号")
     @JSONField(ordinal = 1)
     private Integer id;

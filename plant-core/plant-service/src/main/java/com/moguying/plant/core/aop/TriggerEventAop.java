@@ -4,7 +4,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.user.UserMessageService;
 import org.aspectj.lang.annotation.AfterReturning;

@@ -6,6 +6,8 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.farmer.vo.FarmerData;
+import com.moguying.plant.core.entity.farmer.vo.FarmerLevelGift;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.farmer.*;
 import com.moguying.plant.core.service.farmer.FarmerService;

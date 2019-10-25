@@ -12,6 +12,8 @@ import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.farmer.vo.EnergyItem;
+import com.moguying.plant.core.entity.farmer.vo.FarmerData;
+import com.moguying.plant.core.entity.farmer.vo.FarmerLevelGift;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.user.User;

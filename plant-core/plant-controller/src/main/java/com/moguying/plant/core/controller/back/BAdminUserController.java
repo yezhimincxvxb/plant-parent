@@ -6,7 +6,7 @@ import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminMessage;
 import com.moguying.plant.core.entity.admin.AdminUser;
-import com.moguying.plant.core.entity.system.SessionAdminUser;
+import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.admin.AdminUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

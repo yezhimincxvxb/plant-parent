@@ -1,5 +1,8 @@
 package com.moguying.plant.core.entity.payment.response;
 
+import lombok.Data;
+
+@Data
 public class SendWithdrawSmsCodeResponse implements PaymentResponseInterface {
 
     /**
@@ -12,20 +15,4 @@ public class SendWithdrawSmsCodeResponse implements PaymentResponseInterface {
      */
     private String seqNo;
 
-
-    public String getMerMerOrderNo() {
-        return merMerOrderNo;
-    }
-
-    public void setMerMerOrderNo(String merMerOrderNo) {
-        this.merMerOrderNo = merMerOrderNo;
-    }
-
-    public String getSeqNo() {
-        return seqNo;
-    }
-
-    public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo;
-    }
 }

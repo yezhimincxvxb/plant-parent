@@ -1,5 +1,9 @@
 package com.moguying.plant.core.entity.payment.request;
 
+
+import lombok.Data;
+
+@Data
 public class WithdrawMoneyPageRequest implements PaymentRequestInterface {
 
     /**
@@ -24,36 +28,4 @@ public class WithdrawMoneyPageRequest implements PaymentRequestInterface {
      */
     private String ptWithholdFeeRoutingList;
 
-
-    public String getWdMerNo() {
-        return wdMerNo;
-    }
-
-    public void setWdMerNo(String wdMerNo) {
-        this.wdMerNo = wdMerNo;
-    }
-
-    public String getMerMerOrderNo() {
-        return merMerOrderNo;
-    }
-
-    public void setMerMerOrderNo(String merMerOrderNo) {
-        this.merMerOrderNo = merMerOrderNo;
-    }
-
-    public String getPtUndertakeRate() {
-        return ptUndertakeRate;
-    }
-
-    public void setPtUndertakeRate(String ptUndertakeRate) {
-        this.ptUndertakeRate = ptUndertakeRate;
-    }
-
-    public String getPtWithholdFeeRoutingList() {
-        return ptWithholdFeeRoutingList;
-    }
-
-    public void setPtWithholdFeeRoutingList(String ptWithholdFeeRoutingList) {
-        this.ptWithholdFeeRoutingList = ptWithholdFeeRoutingList;
-    }
 }

@@ -7,7 +7,7 @@ import com.moguying.plant.core.dao.seed.SeedInnerOrderDAO;
 import com.moguying.plant.core.dao.user.UserInnerDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.seed.Seed;
-import com.moguying.plant.core.entity.seed.SeedInnerBuy;
+import com.moguying.plant.core.entity.seed.vo.SeedInnerBuy;
 import com.moguying.plant.core.entity.seed.SeedInnerOrder;
 import com.moguying.plant.core.entity.seed.SeedInnerOrderCount;
 import com.moguying.plant.core.entity.user.UserInner;

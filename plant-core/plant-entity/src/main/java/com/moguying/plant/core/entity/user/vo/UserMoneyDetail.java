@@ -1,4 +1,4 @@
-package com.moguying.plant.core.entity.user;
+package com.moguying.plant.core.entity.user.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.constant.MoneyOpEnum;

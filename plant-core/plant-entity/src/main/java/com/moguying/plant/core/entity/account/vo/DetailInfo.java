@@ -1,6 +1,7 @@
-package com.moguying.plant.core.entity.system;
+package com.moguying.plant.core.entity.account.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.moguying.plant.core.entity.mall.vo.ProductInfo;
 import lombok.Data;
 
 import java.io.Serializable;

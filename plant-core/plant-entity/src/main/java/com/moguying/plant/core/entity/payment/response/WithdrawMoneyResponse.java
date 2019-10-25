@@ -1,5 +1,8 @@
 package com.moguying.plant.core.entity.payment.response;
 
+import lombok.Data;
+
+@Data
 public class WithdrawMoneyResponse implements PaymentResponseInterface {
 
     /**
@@ -16,29 +19,4 @@ public class WithdrawMoneyResponse implements PaymentResponseInterface {
      * 提现金额
      */
     private String amount;
-
-
-    public String getMerMerOrderNo() {
-        return merMerOrderNo;
-    }
-
-    public void setMerMerOrderNo(String merMerOrderNo) {
-        this.merMerOrderNo = merMerOrderNo;
-    }
-
-    public String getOrderNo() {
-        return orderNo;
-    }
-
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
 }

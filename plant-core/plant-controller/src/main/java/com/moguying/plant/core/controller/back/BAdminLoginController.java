@@ -4,7 +4,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminUser;
-import com.moguying.plant.core.entity.system.SessionAdminUser;
+import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.admin.AdminUserService;
 import com.moguying.plant.utils.PasswordUtil;
 import com.wf.captcha.utils.CaptchaUtil;

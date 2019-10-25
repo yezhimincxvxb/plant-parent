@@ -1,8 +1,8 @@
 package com.moguying.plant.core.dao.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.entity.system.ProductInfo;
-import com.moguying.plant.core.entity.user.UserMoneyDetail;
+import com.moguying.plant.core.entity.mall.vo.ProductInfo;
+import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

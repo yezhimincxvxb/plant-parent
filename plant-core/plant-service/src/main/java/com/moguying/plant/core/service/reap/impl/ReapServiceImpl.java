@@ -16,7 +16,7 @@ import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.reap.Reap;
-import com.moguying.plant.core.entity.system.InnerMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;

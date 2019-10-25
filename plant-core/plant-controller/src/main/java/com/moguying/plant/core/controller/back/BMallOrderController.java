@@ -6,7 +6,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.mall.MallCompany;
 import com.moguying.plant.core.entity.mall.MallOrder;
-import com.moguying.plant.core.entity.mall.MallOrderSearch;
+import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.service.mall.MallCompanyService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Data
 public class AccountInfo implements Serializable {
 
+    private static final long serialVersionUID = -1323608404313799736L;
     /**
      * 第三方支付商户号
      */

@@ -4,11 +4,14 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 
 @Data
-public class HomeSeed {
+public class HomeSeed implements Serializable {
+
+    private static final long serialVersionUID = -3611406979528479380L;
 
     @JSONField(ordinal = 1)
     private Integer id;

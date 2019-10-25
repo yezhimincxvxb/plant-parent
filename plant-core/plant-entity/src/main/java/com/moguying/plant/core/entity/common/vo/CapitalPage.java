@@ -2,9 +2,12 @@ package com.moguying.plant.core.entity.common.vo;
 
 import lombok.Data;
 
-@Data
-public class CapitalPage {
+import java.io.Serializable;
 
+@Data
+public class CapitalPage implements Serializable {
+
+    private static final long serialVersionUID = 8602294761168228663L;
     /**
      * 第几页
      */

@@ -4,11 +4,15 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class AccountMoneyLogInfo {
+public class AccountMoneyLogInfo implements Serializable {
+
+    private static final long serialVersionUID = -6301784383682246471L;
+
 
     @JSONField(ordinal = 1)
     private String year;

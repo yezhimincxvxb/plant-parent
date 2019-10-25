@@ -36,7 +36,7 @@
         <result column="pic_url" property="picUrl" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <resultMap id="MessageMap" type="com.moguying.plant.core.entity.system.InnerMessage">
+    <resultMap id="MessageMap" type="com.moguying.plant.core.entity.system.vo.InnerMessage">
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="count" property="count" jdbcType="INTEGER"/>
     </resultMap>

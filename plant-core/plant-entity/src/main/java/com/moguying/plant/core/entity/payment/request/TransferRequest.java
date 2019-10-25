@@ -1,7 +1,9 @@
 package com.moguying.plant.core.entity.payment.request;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Data;
 
+@Data
 public class TransferRequest implements PaymentRequestInterface {
 
     /**
@@ -34,41 +36,4 @@ public class TransferRequest implements PaymentRequestInterface {
      */
     @JSONField(ordinal = 5)
     private String remarks = "";
-
-
-    public String getPayeeNo() {
-        return payeeNo;
-    }
-
-    public void setPayeeNo(String payeeNo) {
-        this.payeeNo = payeeNo;
-    }
-
-    public String getPayeeName() {
-        return payeeName;
-    }
-
-    public void setPayeeName(String payeeName) {
-        this.payeeName = payeeName;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getCardNo() {
-        return cardNo;
-    }
-
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
 }

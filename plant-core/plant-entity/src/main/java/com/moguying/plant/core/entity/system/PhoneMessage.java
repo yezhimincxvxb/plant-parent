@@ -1,72 +1,35 @@
 package com.moguying.plant.core.entity.system;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * plant_phone_message
- * @author 
- */
+@TableName("plant_phone_message")
+@Data
 public class PhoneMessage implements Serializable {
+    private static final long serialVersionUID = 8269830185975289046L;
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
+    @TableField
     private String phone;
 
+    @TableField
     private String code;
 
+    @TableField
     private Integer state;
 
+    @TableField
     private String message;
 
+    @TableField
     private Date addTime;
 
-    private static final long serialVersionUID = 1L;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
 }

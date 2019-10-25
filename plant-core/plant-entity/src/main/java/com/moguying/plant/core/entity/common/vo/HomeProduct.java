@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 @Data
 public class HomeProduct implements Serializable {
 
+    private static final long serialVersionUID = 8877900538458503113L;
+
     @JSONField(ordinal = 1)
     private Integer id;
 
