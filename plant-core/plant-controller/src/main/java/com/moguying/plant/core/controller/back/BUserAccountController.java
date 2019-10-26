@@ -103,7 +103,7 @@ public class BUserAccountController {
     @GetMapping(value = "/recharge")
     @ResponseBody
     public PageResult<MoneyRecharge> rechargeList(@RequestParam("page") Integer page, @RequestParam("size") Integer size){
-        return moneyRechargeService.moneyRechargeList(page,size,null);
+        return moneyRechargeService.moneyRechargeList(null,null);
     }
 
 

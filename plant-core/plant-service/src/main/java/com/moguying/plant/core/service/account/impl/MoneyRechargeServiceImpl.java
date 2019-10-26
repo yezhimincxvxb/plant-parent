@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.account.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.MoneyStateEnum;
@@ -14,6 +16,7 @@ import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.service.account.MoneyRechargeService;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.utils.DateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +27,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Service
+@Slf4j
 @Transactional
 public class MoneyRechargeServiceImpl implements MoneyRechargeService {
-
-    Logger log = LoggerFactory.getLogger(MoneyRechargeService.class);
-
 
     @Autowired
     private MoneyRechargeDAO moneyRechargeDAO;
