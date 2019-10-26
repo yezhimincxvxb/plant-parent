@@ -1,6 +1,6 @@
 package com.moguying.plant.core.service.system.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.system.TriggerEventDAO;
 import com.moguying.plant.core.entity.fertilizer.TriggerEvent;
 import com.moguying.plant.core.service.system.TriggerEventService;
@@ -16,7 +16,7 @@ public class TriggerEventServiceImpl implements TriggerEventService {
     private TriggerEventDAO triggerEventDAO;
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<TriggerEvent> triggerEventList() {
         return triggerEventDAO.selectSelective(null);
     }

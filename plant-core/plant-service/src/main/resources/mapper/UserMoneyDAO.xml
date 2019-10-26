@@ -20,49 +20,7 @@
     user_id, available_money, freeze_money, collect_money, collect_capital, collect_interest
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.account.UserMoney">
-    insert into plant_user_money
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="availableMoney != null">
-        available_money,
-      </if>
-      <if test="freezeMoney != null">
-        freeze_money,
-      </if>
-      <if test="collectMoney != null">
-        collect_money,
-      </if>
-      <if test="collectCapital != null">
-        collect_capital,
-      </if>
-      <if test="collectInterest != null">
-        collect_interest,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="availableMoney != null">
-        #{availableMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="freezeMoney != null">
-        #{freezeMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="collectMoney != null">
-        #{collectMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="collectCapital != null">
-        #{collectCapital,jdbcType=DECIMAL},
-      </if>
-      <if test="collectInterest != null">
-        #{collectInterest,jdbcType=DECIMAL},
-      </if>
-    </trim>
-  </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.core.entity.account.UserMoney">
     update plant_user_money
     <set>

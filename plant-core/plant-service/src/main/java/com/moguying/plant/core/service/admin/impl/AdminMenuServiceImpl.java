@@ -1,8 +1,7 @@
 package com.moguying.plant.core.service.admin.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.admin.AdminMenuDAO;
 import com.moguying.plant.core.dao.admin.AdminMenuMetaDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -28,7 +27,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
 
     @Override
-    @DataSource
+    @DS("write")
     public ResultData<Integer> saveAdminMenu(AdminMenu menu) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         if(null != menu && null != menu.getId()){
@@ -55,22 +54,21 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<AdminMenu> parentMenu() {
         AdminMenu where = new AdminMenu();
         where.setParentId(0);
         return adminMenuDAO.selectSelective(where);
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<AdminMenu> menuList(Integer page, Integer size, AdminMenu where) {
         adminMenuDAO.selectSelective(where);
         return null;
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public AdminMenu adminMenu(Integer id) {
         AdminMenu where = new AdminMenu();
@@ -87,7 +85,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
      * @param id
      * @return
      */
-    @DataSource
+    @DS("write")
     @Override
     public ResultData<Integer> deleteMenu(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
@@ -114,12 +112,12 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<AdminMenu> menus(AdminMenu menu) {
         return adminMenuDAO.selectSelective(menu);
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public List<AdminMenu> generateMenuTree(List<AdminMenu> menus) {
         List<AdminMenu> parents = menus.stream().filter((menu) -> menu.getParentId() == 0).collect(Collectors.toList());

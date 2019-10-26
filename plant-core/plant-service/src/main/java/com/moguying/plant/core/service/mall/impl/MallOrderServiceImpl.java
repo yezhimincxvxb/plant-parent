@@ -1,12 +1,11 @@
 package com.moguying.plant.core.service.mall.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MallEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.SystemEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.mall.MallCarDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
@@ -19,8 +18,8 @@ import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.mall.MallOrder;
-import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
+import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import com.moguying.plant.core.entity.mall.vo.TraceInfoParam;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
@@ -112,16 +111,15 @@ public class MallOrderServiceImpl implements MallOrderService {
     private SaleCoinLogService saleCoinLogService;
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<MallOrder> mallOrderList(Integer page, Integer size, MallOrderSearch where) {
         mallOrderDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer saveOrder(MallOrder order) {
         if (null != order.getId()) {
             mallOrderDAO.updateById(order);
@@ -132,22 +130,21 @@ public class MallOrderServiceImpl implements MallOrderService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public MallOrder selectOrderById(Integer id) {
         return mallOrderDAO.selectById(id);
     }
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<UserMallOrder> userMallOrderListByState(Integer page, Integer size, Integer userId, Integer state) {
         mallOrderDAO.userOrderListByState(userId, state);
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void setUserMallOrderItemList(List<UserMallOrder> orderList, Integer userId) {
         for (UserMallOrder order : orderList) {
             List<OrderItem> orderItems = mallOrderDetailDAO.selectDetailListByOrderId(order.getId(), userId);
@@ -165,7 +162,7 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, Integer userId) {
         ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MallOrder mallOrder = mallOrderDAO.selectById(payOrder.getOrderId());
@@ -202,7 +199,7 @@ public class MallOrderServiceImpl implements MallOrderService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId) {
         return paymentService.checkPayOrder(payOrder, userId, mallOrderDAO, MallOrder.class);
     }
@@ -210,7 +207,7 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource(value = "write")
+    @DS(value = "write")
     public ResultData<Integer> cancelOrder(CancelOrder cancelOrder, Integer userId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         //更状态
@@ -240,7 +237,7 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> orderRefund(Integer orderId, Integer userId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MallOrder order = mallOrderDAO.selectById(orderId);
@@ -300,7 +297,7 @@ public class MallOrderServiceImpl implements MallOrderService {
 
 
     @Override
-    @DataSource(value = "read")
+    @DS(value = "read")
     public List<MallOrder> needPayOrders() {
         MallOrderSearch where = new MallOrderSearch();
         where.setState(MallEnum.ORDER_NEED_PAY.getState());
@@ -308,7 +305,7 @@ public class MallOrderServiceImpl implements MallOrderService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public MallOrder mallOrderDetail(Integer id) {
         MallOrder mallOrder = mallOrderDAO.selectById(id);
         if (null == mallOrder)
@@ -353,7 +350,7 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public Boolean orderSuccess(MallOrder order, UserSaleCoin userSaleCoin) {
         // 更新蘑菇币
         if (saleCoinService.updateSaleCoin(userSaleCoin) == null) return false;

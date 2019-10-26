@@ -17,5 +17,4 @@ public interface ActivityDAO extends BaseMapper<Activity> {
     List<Activity> newestActivity();
     List<Activity> activityList();
     List<Activity> selectSelective(Activity activity);
-    Integer updateByPrimaryKeyWithBLOBs(Activity activity);
 }

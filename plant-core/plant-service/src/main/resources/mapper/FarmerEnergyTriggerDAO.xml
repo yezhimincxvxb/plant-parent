@@ -11,54 +11,7 @@
     id, trigger_event, incr_grow_up_count,incr_grow_up_rate
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.farmer.FarmerEnergyTrigger">
-    insert into plant_farmer_energy_trigger
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="triggerEvent != null">
-        trigger_event,
-      </if>
-      <if test="incrGrowUpCount != null">
-        incr_grow_up_count,
-      </if>
-      <if test="incrGrowUpRate != null">
-        incr_grow_up_rate,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="triggerEvent != null">
-        #{triggerEvent,jdbcType=VARCHAR},
-      </if>
-      <if test="incrGrowUpCount != null">
-        #{incrGrowUpCount,jdbcType=INTEGER},
-      </if>
-      <if test="incrGrowUpRate != null">
-        #{incrGrowUpRate,jdbcType=DECIMAL},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.farmer.FarmerEnergyTrigger">
-    update plant_farmer_energy_trigger
-    <set>
-      <if test="triggerEvent != null">
-        trigger_event = #{triggerEvent,jdbcType=VARCHAR},
-      </if>
-      <if test="incrGrowUpCount != null">
-        incr_grow_up_count = #{incrGrowUpCount,jdbcType=INTEGER},
-      </if>
-      <if test="incrGrowUpRate != null">
-        incr_grow_up_rate = #{incrGrowUpRate,jdbcType=DECIMAL},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
-  
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_farmer_energy_trigger
     <where>

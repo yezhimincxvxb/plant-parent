@@ -1,36 +1,40 @@
 package com.moguying.plant.core.service.content.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.BannerDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.content.Banner;
 import com.moguying.plant.core.service.content.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "banner")
 public class BannerServiceImpl implements BannerService {
 
     @Autowired
     private BannerDAO bannerDAO;
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Banner> bannerList(Integer page, Integer size, Banner where) {
         bannerDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
+    @CachePut(key = "#banner.id")
     public ResultData<Integer> addBanner(Banner banner) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         Banner where = new Banner();
@@ -45,7 +49,8 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
+    @CachePut(key = "#update.id")
     public ResultData<Integer> updateBanner(Integer id, Banner update) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         if(bannerDAO.selectById(id) == null)
@@ -65,7 +70,8 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
+    @CacheEvict(key = "#id")
     public Integer deleteBanner(Integer id) {
         if(bannerDAO.deleteById(id) > 0)
             return id;
@@ -73,7 +79,8 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
+    @CachePut(key = "#id")
     public Boolean setBannerShowState(Integer id) {
         Banner banner = bannerDAO.selectById(id);
         if(banner == null)
@@ -85,7 +92,8 @@ public class BannerServiceImpl implements BannerService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
+    @Cacheable(key = "'type:'+ #type")
     public List<Banner> listForHome(Integer type) {
         return bannerDAO.bannerListForHome(type);
     }

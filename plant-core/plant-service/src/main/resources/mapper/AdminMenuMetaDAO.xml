@@ -11,53 +11,6 @@
     menu_id, title, icon, no_cache
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.admin.AdminMenuMeta">
-    insert into plant_admin_menu_meta
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="menuId != null">
-        menu_id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="icon != null">
-        icon,
-      </if>
-      <if test="noCache != null">
-        no_cache,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="menuId != null">
-        #{menuId,jdbcType=INTEGER},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="icon != null">
-        #{icon,jdbcType=VARCHAR},
-      </if>
-      <if test="noCache != null">
-        #{noCache,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.admin.AdminMenuMeta">
-    update plant_admin_menu_meta
-    <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="icon != null">
-        icon = #{icon,jdbcType=VARCHAR},
-      </if>
-      <if test="noCache != null">
-        no_cache = #{noCache,jdbcType=INTEGER},
-      </if>
-    </set>
-    where menu_id = #{menuId,jdbcType=INTEGER}
-  </update>
-
   <delete id="deleteByMenuIds">
     delete from plant_admin_menu_meta
     <where>

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequestMapping("/backEnd")
 @Slf4j
 public class BAdminLoginController {
@@ -34,7 +34,6 @@ public class BAdminLoginController {
     }
 
     @PostMapping(value = "/login")
-    @ResponseBody
     @NoLogin
     public ResponseData<String> login(@RequestBody AdminUser adminUser, HttpServletRequest request){
 
@@ -59,7 +58,6 @@ public class BAdminLoginController {
 
 
     @PostMapping(value = "/logout")
-    @ResponseBody
     public ResponseData<String> logout(HttpServletRequest request){
         request.setAttribute(SessionAdminUser.sessionKey,null);
 

@@ -1,6 +1,6 @@
 package com.moguying.plant.core.service.user.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.dao.user.UserMessageDAO;
 import com.moguying.plant.core.dao.user.UserMessageTplDAO;
@@ -27,7 +27,7 @@ public class UserMessageServiceImpl implements UserMessageService {
     private UserDAO userDao;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer addMessage(InnerMessage message, String actionCode) {
 
             Integer userId =  message.getUserId();
@@ -67,7 +67,7 @@ public class UserMessageServiceImpl implements UserMessageService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Boolean setMessageState(UserMessage userMessage) {
         return userMessageDAO.updateMessageByUserIdSelective(userMessage) > 0;
     }

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.order.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.*;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.FarmerTrigger;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
@@ -45,9 +45,8 @@ import com.moguying.plant.core.service.user.UserMessageService;
 import com.moguying.plant.utils.DateUtil;
 import com.moguying.plant.utils.InterestUtil;
 import com.moguying.plant.utils.PasswordUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -60,9 +59,9 @@ import java.util.Date;
 
 @Service
 @Transactional
+@Slf4j
 public class PlantOrderServiceImpl implements PlantOrderService {
 
-    Logger log = LoggerFactory.getLogger(PlantOrderServiceImpl.class);
 
     @Value("${order.expire.time}")
     private Long expireTime;
@@ -128,7 +127,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId) {
         User user = userDAO.selectById(userId);
         ResultData<BuyOrderResponse> result = new ResultData<>(MessageEnum.ERROR, null);
@@ -194,7 +193,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId) {
         return paymentService.checkPayOrder(payOrder, userId, seedOrderDetailDAO, SeedOrderDetail.class);
     }
@@ -208,7 +207,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, Integer userId) {
         SeedOrderDetail orderDetail = seedOrderDetailDAO.selectById(payOrder.getOrderId());
         ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
@@ -245,7 +244,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @FarmerTrigger(action = "plant")
     @TriggerEvent(action = "plant")
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder) {
         ResultData<TriggerEventResult<PlantOrderResponse>> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
@@ -413,7 +412,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> plantReapExchange(Integer reapId, ExcReap excReap) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -427,7 +426,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentRequest<WebHtmlPayRequest> webHtmlPayRequestData(SeedOrderDetail seedOrderDetail) {
         return paymentService.generateWebHtmlPayData(seedOrderDetail);
     }
@@ -435,7 +434,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> payOrderSuccess(SeedOrderDetail orderDetail, User userInfo) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         SeedOrderDetail update = new SeedOrderDetail();

@@ -7,41 +7,7 @@
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.content.ArticleContent">
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
-  <sql id="Base_Column_List">
-    article_id
-  </sql>
-  <sql id="Blob_Column_List">
-    content
-  </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.content.ArticleContent">
-    insert into plant_article_content
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="articleId != null">
-        article_id,
-      </if>
-      <if test="content != null">
-        content,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="articleId != null">
-        #{articleId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null">
-        #{content,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.content.ArticleContent">
-    update plant_article_content
-    <set>
-      <if test="content != null">
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where article_id = #{articleId,jdbcType=INTEGER}
-  </update>
 
   <delete id="deleteByArticleIds" parameterType="java.util.List">
     delete from plant_article_content where article_id 

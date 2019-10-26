@@ -1,6 +1,6 @@
 package com.moguying.plant.core.service.reap.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.reap.SaleCoinDao;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
@@ -23,13 +23,13 @@ public class SaleCoinServiceImpl implements SaleCoinService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public int insertSaleCoin(SaleCoin saleCoin) {
         return saleCoinDao.insertSaleCoin(saleCoin);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public UserSaleCoin updateSaleCoin(UserSaleCoin userSaleCoin) {
         SaleCoin saleCoin = userSaleCoin.getSaleCoin();
         if (saleCoinDao.updateSaleCoin(saleCoin) <= 0) return null;

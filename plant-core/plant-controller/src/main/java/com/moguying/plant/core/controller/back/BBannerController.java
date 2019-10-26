@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/backEnd/banner")
 public class BBannerController {
 
@@ -25,8 +25,7 @@ public class BBannerController {
      * @param size
      * @return
      */
-    @GetMapping(produces = "application/json", value = "/list")
-    @ResponseBody
+    @GetMapping("/list")
     public PageResult<Banner> bannerList(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
                                          @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
         return bannerService.bannerList(page,size,null);
@@ -39,8 +38,7 @@ public class BBannerController {
      * @return
      */
 
-    @PostMapping(produces = "application/json")
-    @ResponseBody
+    @PostMapping
     public ResponseData<Integer> addBanner(@RequestBody Banner banner){
         ResultData<Integer> resultData = bannerService.addBanner(banner);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -52,7 +50,6 @@ public class BBannerController {
      * @return
      */
     @PutMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateBanner(@RequestBody Banner banner, @PathVariable Integer id){
         ResultData<Integer> resultData = bannerService.updateBanner(id,banner);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -65,7 +62,6 @@ public class BBannerController {
      * @return
      */
     @PostMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<String> isShow(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),bannerService.setBannerShowState(id).toString());
     }
@@ -77,7 +73,6 @@ public class BBannerController {
      * @return
      */
     @DeleteMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteBanner(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),bannerService.deleteBanner(id));
     }

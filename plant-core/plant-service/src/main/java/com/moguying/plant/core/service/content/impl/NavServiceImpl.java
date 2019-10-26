@@ -1,6 +1,5 @@
 package com.moguying.plant.core.service.content.impl;
 
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.NavDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.content.Nav;
@@ -14,7 +13,6 @@ public class NavServiceImpl implements NavService {
     @Autowired
     NavDAO navDAO;
 
-    @Pagination
     @Override
     public PageResult<Nav> navList(Integer page, Integer size, Nav where) {
         navDAO.selectSelective(where);

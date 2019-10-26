@@ -9,37 +9,6 @@
     id, type_name
   </sql>
 
-
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.fertilizer.FertilizerType">
-    insert into plant_fertilizer_type
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="typeName != null">
-        type_name,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="typeName != null">
-        #{typeName,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.fertilizer.FertilizerType">
-    update plant_fertilizer_type
-    <set>
-      <if test="typeName != null">
-        type_name = #{typeName,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_fertilizer_type
     <where>

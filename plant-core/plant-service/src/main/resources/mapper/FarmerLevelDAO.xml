@@ -10,45 +10,6 @@
     `level`, grow_up_count_min, grow_up_count_max
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.farmer.FarmerLevel">
-    insert into plant_farmer_level
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="level != null">
-        `level`,
-      </if>
-      <if test="growUpCountMin != null">
-        grow_up_count_min,
-      </if>
-      <if test="growUpCountMax != null">
-        grow_up_count_max,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="level != null">
-        #{level,jdbcType=INTEGER},
-      </if>
-      <if test="growUpCountMin != null">
-        #{growUpCountMin,jdbcType=INTEGER},
-      </if>
-      <if test="growUpCountMax != null">
-        #{growUpCountMax,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.farmer.FarmerLevel">
-    update plant_farmer_level
-    <set>
-      <if test="growUpCountMin != null">
-        grow_up_count_min = #{growUpCountMin,jdbcType=INTEGER},
-      </if>
-      <if test="growUpCountMax != null">
-        grow_up_count_max = #{growUpCountMax,jdbcType=INTEGER},
-      </if>
-    </set>
-    where `level` = #{level,jdbcType=INTEGER}
-  </update>
-
   <select id="selectLevelByGrowUpCount" resultType="int">
     select level from plant_farmer_level where
     <![CDATA[

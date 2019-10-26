@@ -24,7 +24,7 @@ public class AdminUser implements Serializable {
     /**
      * 后台用户名
      */
-    @JSONField(name = "username")
+    @JSONField
     @TableField
     private String userName;
 

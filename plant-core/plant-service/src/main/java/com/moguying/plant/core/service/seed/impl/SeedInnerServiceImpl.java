@@ -1,15 +1,14 @@
 package com.moguying.plant.core.service.seed.impl;
 
 import com.moguying.plant.constant.SeedEnum;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedInnerOrderDAO;
 import com.moguying.plant.core.dao.user.UserInnerDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.seed.Seed;
-import com.moguying.plant.core.entity.seed.vo.SeedInnerBuy;
 import com.moguying.plant.core.entity.seed.SeedInnerOrder;
 import com.moguying.plant.core.entity.seed.SeedInnerOrderCount;
+import com.moguying.plant.core.entity.seed.vo.SeedInnerBuy;
 import com.moguying.plant.core.entity.user.UserInner;
 import com.moguying.plant.core.service.seed.SeedInnerService;
 import com.moguying.plant.core.service.seed.SeedService;
@@ -34,7 +33,6 @@ public class SeedInnerServiceImpl implements SeedInnerService {
     @Autowired
     SeedService seedService;
 
-    @Pagination
     @Override
     public PageResult<SeedInnerOrderCount> seedInnerList(Integer page , Integer size) {
         innerOrderDAO.innerOrderCountList();

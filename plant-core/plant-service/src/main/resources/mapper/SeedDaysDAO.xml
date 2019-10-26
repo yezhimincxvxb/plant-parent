@@ -12,63 +12,7 @@
     grow_days, grow_days_name, mark,plant_rate,first_plant_rate
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.seed.SeedDays">
-    insert into plant_seed_days
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="growDays != null">
-        grow_days,
-      </if>
-      <if test="growDaysName != null">
-        grow_days_name,
-      </if>
-      <if test="mark != null">
-        mark,
-      </if>
-      <if test="plantRate != null">
-        plant_rate,
-      </if>
-      <if test="firstPlantRate != null">
-        first_plant_rate,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="growDays != null">
-        #{growDays,jdbcType=INTEGER},
-      </if>
-      <if test="growDaysName != null">
-        #{growDaysName,jdbcType=VARCHAR},
-      </if>
-      <if test="mark != null">
-        #{mark,jdbcType=VARCHAR},
-      </if>
-      <if test="plantRate != null">
-        #{plant_rate,jdbcType=DECIMAL},
-      </if>
-      <if test="firstPlantRate != null">
-        #{first_plant_rate,jdbcType=DECIMAL},
-      </if>
-    </trim>
-  </insert>
 
-
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.seed.SeedDays">
-    update plant_seed_days
-    <set>
-      <if test="growDaysName != null">
-        grow_days_name = #{growDaysName,jdbcType=VARCHAR},
-      </if>
-      <if test="mark != null">
-        mark = #{mark,jdbcType=VARCHAR},
-      </if>
-      <if test="plantRate != null">
-        plant_rate = #{plantRate,jdbcType=DECIMAL},
-      </if>
-      <if test="firstPlantRate != null">
-        first_plant_rate = #{firstPlantRate,jdbcType=DECIMAL},
-      </if>
-    </set>
-    where grow_days = #{growDays,jdbcType=INTEGER}
-  </update>
 
   <select id="selectSelective" parameterType="SeedDays" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from plant_seed_days

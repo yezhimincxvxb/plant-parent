@@ -11,53 +11,6 @@
     id, `name`,url_name,order_number
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.content.ArticleType" useGeneratedKeys="true" keyProperty="id">
-    insert into plant_article_type
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="name != null">
-        `name`,
-      </if>
-      <if test="urlName != null">
-        `url_name`,
-      </if>
-      <if test="orderNumber != null">
-        `order_number`,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="urlName != null">
-        #{urlName,jdbcType=VARCHAR},
-      </if>
-      <if test="orderNumber != null">
-        #{orderNumber,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.content.ArticleType">
-    update plant_article_type
-    <set>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="urlName != null">
-        `url_name` = #{urlName,jdbcType=VARCHAR},
-      </if>
-      <if test="orderNumber != null">
-        `order_number` = #{orderNumber,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_article_type

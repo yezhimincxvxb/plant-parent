@@ -1,7 +1,6 @@
 package com.moguying.plant.core.service.seed.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.seed.SeedDaysDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.seed.SeedDays;
@@ -16,28 +15,27 @@ public class SeedDaysServiceImpl implements SeedDaysService {
     @Autowired
     private SeedDaysDAO seedDaysDAO;
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<SeedDays> seedDaysList(Integer page, Integer size) {
         seedDaysDAO.selectSelective(null);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer seedDaysAdd(SeedDays seedDays) throws DuplicateKeyException {
         return seedDaysDAO.insert(seedDays);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer seedDaysDelete(Integer days) {
         return seedDaysDAO.deleteById(days);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer seedDaysEdit(SeedDays seedDays) {
 
         return seedDaysDAO.updateById(seedDays);

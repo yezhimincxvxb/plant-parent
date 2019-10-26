@@ -1,10 +1,9 @@
 package com.moguying.plant.core.service.user.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.ApiEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.UserEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
@@ -72,8 +71,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     public PageResult<User> userList(Integer page, Integer limit, User where) {
         userDAO.selectSelective(where);
         return null;
@@ -81,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @TriggerEvent(action = "register")
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<TriggerEventResult<InnerMessage>> addUser(User user) {
         ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (user.getPhone() != null) {
@@ -114,13 +112,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public User userInfoById(Integer id) {
         return userDAO.userInfoById(id);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public User userInfoByPhone(String phone, UserEnum state) {
         if (!CommonUtil.INSTANCE.isPhone(phone))
             return null;
@@ -135,13 +133,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public User userInfoByInviteCodeAndId(Integer userId, String inviteCode) {
         return userDAO.userInfoByInviteCodeAndId(userId, inviteCode);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public User loginByPhoneAndPassword(String phone, String password) {
         User where = new User();
         where.setPhone(phone);
@@ -150,7 +148,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<User> saveUserInfo(Integer id, User user) {
         ResultData<User> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (userDAO.selectById(id) == null)
@@ -189,7 +187,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> saveBankCard(UserBank bank) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         if (userDAO.selectById(bank.getUserId()) == null)
@@ -224,7 +222,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> deleteCard(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         UserBank bankInfo = userBankDAO.selectById(id);
@@ -246,7 +244,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<UserBank> bankCardList(Integer userId) {
         UserBank where = new UserBank();
         where.setUserId(userId);
@@ -255,13 +253,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public UserBank bankCard(Integer userId, Integer id) {
         return userBankDAO.bankInfoByUserIdAndId(userId, id);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public UserBank bankCardByOrderNumber(String orderNumber) {
         UserBank where = new UserBank();
         where.setOrderNumber(orderNumber);
@@ -272,7 +270,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addAddress(UserAddress address) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -310,7 +308,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> updateAddress(Integer id, UserAddress address) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -342,7 +340,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> deleteAddress(UserAddress address) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -363,7 +361,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<UserAddress> addressList(Integer userId) {
         UserAddress where = new UserAddress();
         where.setUserId(userId);
@@ -372,7 +370,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public UserSummaryInfo userSummaryInfo(User user) {
         UserSummaryInfo summaryInfo = new UserSummaryInfo();
         Integer sumSeedCount = seedOrderDAO.sumSeedCountByUserId(user.getId());
@@ -410,29 +408,28 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<UserMessage> userMessageList(Integer page, Integer size, Integer userId) {
         userMessageDAO.messageListByUserId(userId, false);
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public UserAddress userDefaultAddress(Integer userId) {
         return addressDAO.userDefaultAddress(userId);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public UserAddress userAddressByIdAndUserId(Integer id, Integer userId, Boolean isDelete) {
         return addressDAO.selectByIdAndUserId(id, userId, isDelete);
     }
 
     @Override
     @TriggerEvent(action = "login")
-    @DataSource("write")
+    @DS("write")
     public ResultData<TriggerEventResult<LoginResponse>> loginSuccess(Integer id, String phone) {
         ResultData<TriggerEventResult<LoginResponse>> resultData = new ResultData<>(MessageEnum.ERROR, new TriggerEventResult<>());
         LoginResponse response = new LoginResponse();
@@ -447,14 +444,14 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<User> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("用户列表", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(userDAO, search, User.class, downloadInfo)).start();
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public User userInfo(User where) {
         return userDAO.selectSelective(where).stream().filter(Objects::nonNull).findFirst().orElse(null);
     }

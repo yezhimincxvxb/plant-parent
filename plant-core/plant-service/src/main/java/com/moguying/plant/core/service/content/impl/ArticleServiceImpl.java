@@ -1,8 +1,7 @@
 package com.moguying.plant.core.service.content.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.ArticleContentDAO;
 import com.moguying.plant.core.dao.content.ArticleDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -26,7 +25,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleContentDAO articleContentDAO;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer addArticle(Article article) {
         article.setAddTime(new Date());
         if(articleDAO.insert(article) > 0) {
@@ -39,16 +38,15 @@ public class ArticleServiceImpl implements ArticleService {
         return -1;
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Article> articleList(Integer page, Integer size, Article where) {
         articleDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer deleteArticle(Integer id) {
         if(articleDAO.deleteById(id) > 0 && articleContentDAO.deleteById(id) > 0){
             return 1;
@@ -57,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> updateArticle(Integer id, Article update) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
         Article article = articleDAO.selectById(id);
@@ -78,7 +76,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Article getArticle(Integer id) {
         return articleDAO.selectByPrimaryKeyWithContent(id);
     }
@@ -89,7 +87,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<Article> articleForHome() {
         Article where = new Article();
         //公告类型，TODO 上线需改动

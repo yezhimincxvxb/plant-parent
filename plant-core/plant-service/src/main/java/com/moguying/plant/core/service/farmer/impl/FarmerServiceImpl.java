@@ -1,23 +1,22 @@
 package com.moguying.plant.core.service.farmer.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.FarmerEnum;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.FarmerTrigger;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.farmer.*;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.farmer.*;
 import com.moguying.plant.core.entity.farmer.vo.EnergyItem;
 import com.moguying.plant.core.entity.farmer.vo.FarmerData;
 import com.moguying.plant.core.entity.farmer.vo.FarmerLevelGift;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.user.User;
-import com.moguying.plant.core.entity.farmer.*;
 import com.moguying.plant.core.service.farmer.FarmerService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.utils.DateUtil;
@@ -87,7 +86,7 @@ public class FarmerServiceImpl implements FarmerService {
     private long energyLose;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public FarmerData userFarmerData(Integer userId) {
         //用户成长值
         FarmerData farmerData = new FarmerData();
@@ -160,7 +159,7 @@ public class FarmerServiceImpl implements FarmerService {
 
     @FarmerTrigger(action = "sign")
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<User> userDailySignIn(Integer userId) {
         ResultData<User> resultData = new ResultData<>(MessageEnum.ERROR,null);
         FarmerInfo farmerInfo = farmerInfoDAO.selectById(userId);
@@ -185,9 +184,8 @@ public class FarmerServiceImpl implements FarmerService {
     }
 
 
-    @Pagination
     @Override
-    @DataSource("write")
+    @DS("write")
     public PageResult<FarmerNotice> farmerNoticeList(Integer page , Integer size, FarmerNotice where) {
         farmerNoticeDAO.selectSelective(where);
         //查看完已读
@@ -202,7 +200,7 @@ public class FarmerServiceImpl implements FarmerService {
      */
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> pickUpEnergy(FarmerEnergy energy) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         //更新能量信息
@@ -234,7 +232,7 @@ public class FarmerServiceImpl implements FarmerService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> pickUpLevelGift(Integer userId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         FarmerInfo farmerInfo = farmerInfoDAO.selectById(userId);
@@ -260,7 +258,7 @@ public class FarmerServiceImpl implements FarmerService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> energyLose(FarmerEnergy energy) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         FarmerEnergy farmerEnergy = farmerEnergyDAO.selectById(energy.getId());
@@ -286,7 +284,7 @@ public class FarmerServiceImpl implements FarmerService {
      */
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addEnergyToUserByTriggerEvent(String triggerEvent, Integer userId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         FarmerEnergyTrigger energyTriggers = farmerEnergyTriggerDAO.selectByTriggerEvent(triggerEvent);
@@ -340,7 +338,7 @@ public class FarmerServiceImpl implements FarmerService {
      */
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addNoticeToUserByTriggerEvent(String triggerEvent, FarmerEnergy energy) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         FarmerNoticeTpl tpl = farmerNoticeTplDAO.selectByTriggerEvent(triggerEvent);
@@ -369,7 +367,7 @@ public class FarmerServiceImpl implements FarmerService {
      */
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> updateFarmerInfo(FarmerEnergy energy) {
         FarmerInfo farmerInfo = farmerInfoDAO.selectById(energy.getUserId());
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
@@ -410,7 +408,7 @@ public class FarmerServiceImpl implements FarmerService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public ResultData<FarmerLevelGift> userLevelGift(Integer userId, Integer level) {
         FarmerLevelGift levelGift = new FarmerLevelGift();
         ResultData<FarmerLevelGift> resultData = new ResultData<>(MessageEnum.ERROR,levelGift);
@@ -425,7 +423,7 @@ public class FarmerServiceImpl implements FarmerService {
     }
 
 
-    @DataSource
+    @DS("write")
     @Override
     public ResultData<Integer> delNotice(FarmerNotice notice) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);

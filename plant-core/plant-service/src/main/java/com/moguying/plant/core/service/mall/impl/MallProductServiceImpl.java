@@ -1,9 +1,8 @@
 package com.moguying.plant.core.service.mall.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
@@ -68,8 +67,11 @@ public class MallProductServiceImpl implements MallProductService {
     @Value("${order.expire.time}")
     private Long expireTime;
 
+    @Value("${meta.content.img}")
+    private String appendStr;
+
     @Override
-    @DataSource("read")
+    @DS("read")
     public ResultData<OrderBuyResponse> orderBuy(Integer userId, OrderBuy orderBuy) {
         ResultData<OrderBuyResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
         OrderBuyResponse buyOrderResponse = new OrderBuyResponse();
@@ -129,9 +131,11 @@ public class MallProductServiceImpl implements MallProductService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> saveProduct(MallProduct product) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
+        if(null != product.getProductDesc())
+            product.setProductDesc(appendStr.concat(product.getProductDesc()));
         if (null != product.getId()) {
             if (null == mallProductDAO.selectById(product.getId())) {
                 return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
@@ -150,7 +154,7 @@ public class MallProductServiceImpl implements MallProductService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public boolean showProduct(Integer id) {
         MallProduct product = mallProductDAO.selectById(id);
         if (null == product)
@@ -161,9 +165,8 @@ public class MallProductServiceImpl implements MallProductService {
         return saveProduct(saveProduct).getMessageEnum().equals(MessageEnum.SUCCESS);
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<MallProduct> productList(Integer page, Integer size, MallProduct where) {
         mallProductDAO.selectSelective(where);
         return null;
@@ -179,7 +182,7 @@ public class MallProductServiceImpl implements MallProductService {
      */
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public ResultData<BuyResponse> submitOrder(SubmitOrder submitOrder, Integer userId) {
         ResultData<BuyResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
@@ -289,7 +292,7 @@ public class MallProductServiceImpl implements MallProductService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public ResultData<MallProduct> productDetail(Integer id) {
         ResultData<MallProduct> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MallProduct product = mallProductDAO.selectById(id);
@@ -299,7 +302,7 @@ public class MallProductServiceImpl implements MallProductService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public ResultData<OrderSum> sumOrder(SubmitOrder submitOrder) {
         ResultData<OrderSum> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
@@ -334,31 +337,28 @@ public class MallProductServiceImpl implements MallProductService {
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(orderSum);
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<HomeProduct> productListForHome(Integer page, Integer size, HomeProduct search) {
         mallProductDAO.selectProductForApp(search);
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public HomeProductDetail productDetailForAppMall(Integer id) {
         return mallProductDAO.selectProductDetailForApp(id);
     }
 
     @Override
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     public PageResult<ExchangeInfo> showProducts(Integer page, Integer size) {
         mallProductDAO.showProducts();
         return null;
     }
 
     @Override
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     public PageResult<ExchangeInfo> showProductLog(Integer page, Integer size, Integer userId) {
         mallProductDAO.showProductLog(userId);
         return null;

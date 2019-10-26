@@ -1,7 +1,6 @@
 package com.moguying.plant.core.service.seed.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
@@ -44,16 +43,15 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Value("${excel.download.dir}")
     private String downloadDir;
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<SeedOrder> seedOrderList(Integer page, Integer size, SeedOrder where) {
         seedOrderDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public synchronized Boolean incrSeedOrder(SeedOrderDetail seedOrderDetail) {
 
         //查找菌包
@@ -84,7 +82,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public CanPlantOrder sumUserSeedByBlockId(Integer blockId, Integer userId) {
         Block block = blockDAO.selectById(blockId);
         if(null == block)
@@ -93,13 +91,13 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<UserSeedOrder> userSeedOrder(Integer userId) {
         return seedOrderDAO.userSeedOrderStatistics(userId);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<SeedOrder> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包统计", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(seedOrderDAO, search, SeedOrder.class, downloadInfo)).start();

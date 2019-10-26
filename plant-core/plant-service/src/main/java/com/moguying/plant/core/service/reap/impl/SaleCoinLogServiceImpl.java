@@ -1,6 +1,6 @@
 package com.moguying.plant.core.service.reap.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.reap.SaleCoinLogDao;
 import com.moguying.plant.core.entity.coin.SaleCoinLog;
 import com.moguying.plant.core.service.reap.SaleCoinLogService;
@@ -17,7 +17,7 @@ public class SaleCoinLogServiceImpl implements SaleCoinLogService {
     private SaleCoinLogDao saleCoinLogDao;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public int insertSaleCoinLog(SaleCoinLog saleCoinLog) {
         return saleCoinLogDao.insertSaleCoinLog(saleCoinLog);
     }

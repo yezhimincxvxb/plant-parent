@@ -1,13 +1,13 @@
 package com.moguying.plant.core.service.content.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.content.ActivityDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.service.content.ActivityService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -21,48 +21,51 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private ActivityDAO activityDAO;
 
-    @Pagination
+    @Value("${meta.content.img}")
+    private String appendStr;
+
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Activity> activityList(Integer page, Integer size) {
         activityDAO.activityList();
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Activity activityDetail(Integer id) {
         return activityDAO.selectById(id);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer deleteActivityById(Integer id) {
         return activityDAO.deleteById(id);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer addActivity(Activity activity) {
+        if(null != activity.getContent())
+            activity.setContent(appendStr.concat(activity.getContent()));
         if(activityDAO.insert(activity) > 0)
             return activity.getId();
         return 0;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer updateActivity(Activity update) {
         Activity activity = activityDAO.selectById(update.getId());
         if(null == activity)
             return -1;
-        if(null == update.getContent())
-            return activityDAO.updateById(update);
-        return activityDAO.updateByPrimaryKeyWithBLOBs(update);
+        if(null != update.getContent())
+            update.setContent(appendStr.concat(update.getContent()));
+        return activityDAO.updateById(update);
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Activity> activityListForHome(Integer page,Integer size,Date startTime, Date endTime) {
         List<Activity> activities = activityDAO.activityListForHome(startTime,endTime);
         for(Activity activity : activities){
@@ -84,7 +87,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<Activity> newestActivity() {
         return activityDAO.newestActivity();
     }

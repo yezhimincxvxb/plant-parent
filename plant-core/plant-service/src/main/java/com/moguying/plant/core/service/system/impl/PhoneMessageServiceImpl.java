@@ -1,13 +1,13 @@
 package com.moguying.plant.core.service.system.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SystemEnum;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.system.PhoneMessageDAO;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
-import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.system.PhoneMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.service.common.message.MessageSendService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.CommonUtil;
@@ -62,7 +62,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     PhoneMessageDAO phoneMessageDAO;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> sendCodeMessage(SendMessage sendMessage) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         String code = CommonUtil.INSTANCE.messageCode();
@@ -86,7 +86,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> sendSaleMessage(String phone) {
         Integer result = send(phone,fertilizerSendContentTpl,null,saleAccount);
         if(result > 0)
@@ -120,7 +120,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> sendOtherMessage(InnerMessage message, Integer typeId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         String messageContent = "";
@@ -146,7 +146,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public PhoneMessage messageByPhone(String phone) {
         //1分钟内有效
         Long inTime = (System.currentTimeMillis() - Long.parseLong(time)) / 1000;
@@ -154,7 +154,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer setMessageState(Integer id, SystemEnum state) {
         PhoneMessage update = new PhoneMessage();
         update.setId(id);
@@ -163,7 +163,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer validateMessage(String phone, String code) {
         PhoneMessage message = messageByPhone(phone);
         if(message == null)

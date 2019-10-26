@@ -1,15 +1,14 @@
 package com.moguying.plant.core.service.payment;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.system.PayOrder;
-import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.payment.PayRequestInfo;
 import com.moguying.plant.core.entity.payment.request.*;
 import com.moguying.plant.core.entity.payment.response.*;
+import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
+import com.moguying.plant.core.entity.system.PayOrder;
 
 public interface PaymentService {
 
@@ -19,7 +18,7 @@ public interface PaymentService {
      * @param sendRegSmsCodeRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<SendRegSmsCodeResponse> sendRegSms(SendRegSmsCodeRequest sendRegSmsCodeRequest);
 
 
@@ -28,7 +27,7 @@ public interface PaymentService {
      * @param registerRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<RegisterSyncResponse> userRegister(RegisterRequest registerRequest);
 
 
@@ -37,7 +36,7 @@ public interface PaymentService {
      * @param realnameRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<RealnameSyncResponse> userRealname(RealnameRequest realnameRequest);
 
 
@@ -46,7 +45,7 @@ public interface PaymentService {
      * @param bindCardRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<BindCardResponse> bindCard(BindCardRequest bindCardRequest);
 
 
@@ -55,7 +54,7 @@ public interface PaymentService {
      * @param deleteBankCardRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<DeleteBankCardResponse> deleteCard(DeleteBankCardRequest deleteBankCardRequest);
 
 
@@ -64,7 +63,7 @@ public interface PaymentService {
      * @param queryBankCardBinRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<QueryBankCardBinResponse> queryBankCardBin(QueryBankCardBinRequest queryBankCardBinRequest);
 
     /**
@@ -72,7 +71,7 @@ public interface PaymentService {
      * @param paySignQueryRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<PaySignQueryResponse> paySignQuery(PaySignQueryRequest paySignQueryRequest);
 
 
@@ -82,7 +81,7 @@ public interface PaymentService {
      * @param bankCardRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<PayAuthAndSignResponse> authAndSignPayment(PayAuthAndSignRequest bankCardRequest);
 
 
@@ -91,7 +90,7 @@ public interface PaymentService {
      * @param sendPaySmsCodeRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<SendPaySmsCodeResponse> sendPaySmsCode(SendPaySmsCodeRequest sendPaySmsCodeRequest);
 
 
@@ -100,7 +99,7 @@ public interface PaymentService {
      * @param payRequestInfo
      * @return
      */
-    @DataSource("write")
+    
     ResultData<PaymentResponse> pay(PayRequestInfo payRequestInfo);
 
 
@@ -109,7 +108,7 @@ public interface PaymentService {
      * @param transferRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<TransferResponse> transferAmount(TransferRequest transferRequest);
 
 
@@ -117,7 +116,7 @@ public interface PaymentService {
      * 发送提现短信验证码
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<SendWithdrawSmsCodeResponse> sendWithdrawSmsCode(SendWithdrawSmsCodeRequest smsCodeRequest);
 
 
@@ -126,7 +125,7 @@ public interface PaymentService {
      * @param withdrawMoneyRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<WithdrawMoneyResponse> withdrawMoney(WithdrawMoneyRequest withdrawMoneyRequest);
 
 
@@ -135,7 +134,7 @@ public interface PaymentService {
     /**
      * 设置支付密码-页面
      */
-    @DataSource("write")
+    
     PaymentRequest modifyPayPassword(ModifyPayPasswordRequest modifyPayPasswordRequest);
 
 
@@ -143,7 +142,7 @@ public interface PaymentService {
      * 提现-页面
      * @return
      */
-    @DataSource("write")
+    
     PaymentRequest withdrawMoneyPage(WithdrawMoneyPageRequest withdrawRequest);
 
 
@@ -154,7 +153,7 @@ public interface PaymentService {
      * @param imageUploadRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<ImageUploadResponse> imageUpload(ImageUploadRequest imageUploadRequest);
 
 
@@ -163,7 +162,7 @@ public interface PaymentService {
      * @param bindCardSmsCodeRequest
      * @return
      */
-    @DataSource("write")
+    
     PaymentResponse<SendSmsCodeResponse> sendBindCardSmsCode(SendBindCardSmsCodeRequest bindCardSmsCodeRequest);
 
 
@@ -172,7 +171,7 @@ public interface PaymentService {
      * @param payRequestInfo
      * @return
      */
-    @DataSource("write")
+    
     ResultData<PaymentResponse> sendPayInfo(PayRequestInfo payRequestInfo, String authMsg);
 
 
@@ -182,11 +181,11 @@ public interface PaymentService {
      * @param userId
      * @return
      */
-    @DataSource("write")
+    
     ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId, BaseMapper dao, Class<? extends PayOrder> classs);
 
 
-    @DataSource("write")
+    
     PaymentRequest<WebHtmlPayRequest> generateWebHtmlPayData(SeedOrderDetail payOrder);
 
 

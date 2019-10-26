@@ -10,42 +10,4 @@
     id, user_name, user_phone
   </sql>
 
-
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.user.UserInner">
-    insert into plant_user_inner
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="userName != null">
-        user_name,
-      </if>
-      <if test="userPhone != null">
-        user_phone,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="userPhone != null">
-        #{userPhone,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.user.UserInner">
-    update plant_user_inner
-    <set>
-      <if test="userName != null">
-        user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="userPhone != null">
-        user_phone = #{userPhone,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 </mapper>

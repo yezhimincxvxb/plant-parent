@@ -1,8 +1,7 @@
 package com.moguying.plant.core.service.account.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.*;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.account.MoneyWithdrawDAO;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.user.UserBankDAO;
@@ -93,24 +92,23 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     }
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<MoneyWithdraw> apiMoneyWithdrawList(Integer page, Integer size, MoneyWithdraw where) {
         moneyWithdrawDAO.selectiveForApi(where);
         return null;
     }
 
-    @Pagination
+
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<MoneyWithdraw> moneyWithdrawList(Integer page, Integer size, MoneyWithdraw where) {
         moneyWithdrawDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addMoneyWithdraw(MoneyWithdraw moneyWithdraw, Integer bankId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -160,13 +158,13 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse> reviewMoneyWithdraw(Integer id, Integer state) {
         return reviewMoneyWithdraw(id,state,null);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse> reviewMoneyWithdraw(Integer id, Integer state, Integer verifyUserId) {
 
         ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
@@ -251,19 +249,19 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public MoneyWithdraw selectById(Integer id) {
         return moneyWithdrawDAO.selectById(id);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public MoneyWithdraw selectByOrderNumber(String orderNumber) {
         return moneyWithdrawDAO.selectByOrderNumber(orderNumber);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> sendWithdrawSms(MoneyWithdraw moneyWithdraw) {
         ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> resultData = new ResultData<>(MessageEnum.ERROR,null);
         List<MoneyWithdraw> withdraws = moneyWithdrawDAO.selectSelective(moneyWithdraw);
@@ -302,7 +300,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse<WithdrawMoneyResponse>> withdrawToAccount(MoneyWithdraw moneyWithdraw, String smsCode) {
         ResultData<PaymentResponse<WithdrawMoneyResponse>> resultData = new ResultData<>(MessageEnum.ERROR,null);
         List<MoneyWithdraw> withdraws = moneyWithdrawDAO.selectSelective(moneyWithdraw);
@@ -339,7 +337,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     }
 
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public void downloadExcel(Integer userId, PageSearch<MoneyWithdraw> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("提现列表", request.getServletContext(), userId, downloadDir);

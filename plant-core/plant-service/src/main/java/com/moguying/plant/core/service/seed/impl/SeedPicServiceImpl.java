@@ -1,7 +1,6 @@
 package com.moguying.plant.core.service.seed.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.seed.SeedPicDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.seed.SeedPic;
@@ -17,9 +16,8 @@ public class SeedPicServiceImpl implements SeedPicService {
     @Autowired
     private SeedPicDAO seedPicDAO;
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<SeedPic> seedPicList(Integer page, Integer size) {
         SeedPic seedPic = new SeedPic();
         //未删除
@@ -29,13 +27,13 @@ public class SeedPicServiceImpl implements SeedPicService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public int seePicAdd(SeedPic seedPic) {
         return seedPicDAO.insert(seedPic);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public SeedPic seedPicDelete(Long id) {
         SeedPic deletePic = seedPicDAO.selectById(id);
         if( deletePic == null)
@@ -50,19 +48,19 @@ public class SeedPicServiceImpl implements SeedPicService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<SeedPic> seedPic(SeedPic seedPic) {
         return seedPicDAO.selectSelective(seedPic);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<SeedPic> seedPicByRange(List<Integer> range) {
         return seedPicDAO.selectByRange(range);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public SeedPic seedPicById(Long id) {
         return seedPicDAO.selectById(id);
     }

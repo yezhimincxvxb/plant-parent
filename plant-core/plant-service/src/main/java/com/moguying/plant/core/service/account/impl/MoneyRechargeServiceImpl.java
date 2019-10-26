@@ -1,11 +1,10 @@
 package com.moguying.plant.core.service.account.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.MoneyStateEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.account.MoneyRechargeDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
@@ -38,9 +37,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
     private UserMoneyService moneyService;
 
 
-    @Pagination
     @Override
-    @DataSource("read")
     public PageResult<MoneyRecharge> moneyRechargeList(Integer page, Integer size, MoneyRecharge where) {
         moneyRechargeDAO.selectSelective(where);
         return null;
@@ -48,7 +45,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
 
 
     @Override
-    @DataSource("read")
+    @DS("slave")
     public MoneyRecharge rechargeInfoById(Integer id) {
         return moneyRechargeDAO.selectByPrimaryKey(id);
     }
@@ -56,7 +53,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> reviewRecharge(Integer id, Boolean state) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
         MoneyRecharge recharge = moneyRechargeDAO.selectByPrimaryKey(id);
@@ -95,7 +92,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addMoneyRecharge(MoneyRecharge addRecharge) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
 

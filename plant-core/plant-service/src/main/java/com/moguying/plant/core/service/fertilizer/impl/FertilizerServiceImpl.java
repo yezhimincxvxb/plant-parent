@@ -1,10 +1,9 @@
 package com.moguying.plant.core.service.fertilizer.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.fertilizer.FertilizerTypeDAO;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
@@ -17,10 +16,10 @@ import com.moguying.plant.core.entity.TriggerEventResult;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.FertilizerType;
+import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
-import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.seed.vo.PlantOrderResponse;
 import com.moguying.plant.core.entity.user.vo.UserFertilizerInfo;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
@@ -59,7 +58,7 @@ public class FertilizerServiceImpl implements FertilizerService {
     private SaleCoinLogDao saleCoinLogDao;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public int addFertilizer(Fertilizer add) {
         add.setAddTime(new Date());
         if (fertilizerDAO.insert(add) > 0)
@@ -73,7 +72,7 @@ public class FertilizerServiceImpl implements FertilizerService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> deleteFertilizer(int id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (userFertilizerDAO.fertilizerIsUsing(id) > 0)
@@ -83,9 +82,8 @@ public class FertilizerServiceImpl implements FertilizerService {
         return resultData;
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Fertilizer> fertilizerList(int page, int size, Fertilizer where) {
         fertilizerDAO.selectSelective(where);
         return null;
@@ -93,7 +91,7 @@ public class FertilizerServiceImpl implements FertilizerService {
 
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<FertilizerType> fertilizerType() {
         return fertilizerTypeDAO.selectSelective(null);
     }
@@ -106,7 +104,7 @@ public class FertilizerServiceImpl implements FertilizerService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<BigDecimal> useFertilizers(FertilizerUseCondition condition, List<Integer> fertilizers, String orderNumber) {
         ResultData<BigDecimal> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
@@ -154,14 +152,14 @@ public class FertilizerServiceImpl implements FertilizerService {
 
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> distributeFertilizer(String triggerGetEvent, Integer userId) {
         return distributeFertilizer(triggerGetEvent, new TriggerEventResult().setUserId(userId));
     }
 
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> distributeFertilizer(String triggerGetEvent, TriggerEventResult triggerEventResult) {
         return distributeFertilizer(triggerGetEvent, triggerEventResult, null);
     }
@@ -169,7 +167,7 @@ public class FertilizerServiceImpl implements FertilizerService {
 
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> distributeFertilizer(String triggerGetEvent, TriggerEventResult triggerEventResult, Integer fertilizerId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
@@ -250,7 +248,7 @@ public class FertilizerServiceImpl implements FertilizerService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public boolean useDoneFertilizers(String orderNumber) {
         UserFertilizer where = new UserFertilizer();
         where.setUseOrderNumber(orderNumber);
@@ -261,22 +259,20 @@ public class FertilizerServiceImpl implements FertilizerService {
     }
 
     @Override
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     public PageResult<ExchangeInfo> showFertilizer(Integer page, Integer size) {
         fertilizerDAO.showFertilizer();
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Fertilizer findById(Integer fertilizerId) {
         return fertilizerDAO.selectById(fertilizerId);
     }
 
     @Override
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     public PageResult<ExchangeInfo> showFertilizerLog(Integer page, Integer size, Integer userId) {
         saleCoinLogDao.showFertilizerLog(userId);
         return null;

@@ -1,7 +1,7 @@
 package com.moguying.plant.core.service.content.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.content.ArticleContentDAO;
 import com.moguying.plant.core.dao.content.ArticleDAO;
 import com.moguying.plant.core.dao.content.ArticleTypeDAO;
@@ -28,13 +28,13 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
     private ArticleDAO articleDAO;
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<ArticleType> articleTypeList() {
         return articleTypeDAO.selectSelective();
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addArticleType(ArticleType articleType) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         if(null != articleTypeDAO.selectByUrlName(articleType.getUrlName()))
@@ -45,7 +45,7 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> deleteArticleType(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
         if(null == articleTypeDAO.selectById(id))
@@ -68,7 +68,7 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer updateArticleType(Integer id,ArticleType update) {
         ArticleType type = articleTypeDAO.selectById(id);
         if(type != null){
@@ -80,7 +80,7 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
 
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public ArticleType selectTypeByUrlName(String urlName) {
         return articleTypeDAO.selectByUrlName(urlName);
     }

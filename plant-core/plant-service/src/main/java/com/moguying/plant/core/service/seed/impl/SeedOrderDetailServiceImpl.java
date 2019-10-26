@@ -1,10 +1,9 @@
 package com.moguying.plant.core.service.seed.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SeedEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
@@ -48,46 +47,43 @@ public class SeedOrderDetailServiceImpl implements SeedOrderDetailService {
     private String downloadDir;
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<SeedOrderDetail> seedOrderDetailList(Integer page, Integer size, SeedOrderDetail where) {
         seedOrderDetailDAO.selectSelective(where);
         return null;
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<SeedOrderDetail> userSeedOrderList(Integer page,Integer size,Integer userId,Integer state) {
         seedOrderDetailDAO.selectListByUserIdAndState(userId,state);
         return null;
 
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<SeedOrderDetail> selectUserPayListByUserId(Integer page, Integer size, Integer userId) {
         seedOrderDetailDAO.selectUserPayListByUserId(userId);
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Integer seedCanPlantBlockId (Integer id) {
         return seedOrderDetailDAO.findPlantBlockIdById(id);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public SeedOrderDetail orderDetailByIdAndUserId(Integer id,Integer userId) {
         return seedOrderDetailDAO.selectByIdAndUserIdWithSeedTypeInfo(id,userId);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource(value = "write")
+    @DS(value = "write")
     public ResultData<Integer> seedOrderCancel(Integer id, Integer userId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         SeedOrderDetail detail = seedOrderDetailDAO.selectByIdAndUserIdWithSeedTypeInfo(id,userId);
@@ -124,18 +120,18 @@ public class SeedOrderDetailServiceImpl implements SeedOrderDetailService {
     }
 
     @Override
-    @DataSource(value = "read")
+    @DS(value = "read")
     public List<SeedOrderDetail> needPayOrderList() {
         return seedOrderDetailDAO.selectListByUserIdAndState(null,SeedEnum.SEED_ORDER_DETAIL_NEED_PAY.getState());
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public SeedOrderDetail selectByOrderNumber(String orderNumber) {
         return seedOrderDetailDAO.selectByOrderNumber(orderNumber);
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public void downloadExcel(Integer userId, PageSearch<SeedOrderDetail> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包订单", request.getServletContext(), userId, downloadDir);

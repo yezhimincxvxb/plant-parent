@@ -11,53 +11,6 @@
     id, type_name, description, position_flag
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.content.AdvType" keyProperty="id" useGeneratedKeys="true">
-    insert into plant_adv_type
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="typeName != null">
-        type_name,
-      </if>
-      <if test="description != null">
-        description,
-      </if>
-      <if test="positionFlag != null">
-        position_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="typeName != null">
-        #{typeName,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="positionFlag != null">
-        #{positionFlag,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.content.AdvType">
-    update plant_adv_type
-    <set>
-      <if test="typeName != null">
-        type_name = #{typeName,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="positionFlag != null">
-        position_flag = #{positionFlag,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_adv_type
     <where>

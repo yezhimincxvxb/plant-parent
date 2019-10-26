@@ -7,17 +7,28 @@ debug: false
 server:
   port: 9000
 spring:
-
   aop:
     auto: true
     proxy-target-class: true
   profiles: dev
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
-    username: root
-    password: 123456
-    type: com.zaxxer.hikari.HikariDataSource
+    dynamic:
+      primary: write
+      datasource:
+        write:
+          username: write
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+        read:
+          username: read
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.108:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+      hikari:
+        max-pool-size: 100
+        min-idle: 20
+        idle-timeout: 1000
   mvc:
     view:
       suffix: .html
@@ -25,10 +36,6 @@ spring:
   http:
     encoding:
       charset: UTF-8
-  redis:
-    host: 192.168.5.220
-    port: 6869
-    password: AEnz2DF\\Od,GWD#C*+
   thymeleaf:
     encoding: UTF-8
     prefix: classpath:/views/
@@ -36,6 +43,26 @@ spring:
     servlet:
       content-type: text/html
     cache: false
+  redis:
+    host: 192.168.5.220
+    port: 6869
+    password: AEnz2DF\Od,GWD#C*+
+    database: 0
+    timeout: 4000
+    lettuce:
+      pool:
+        min-idle: 20
+        max-idle: 120
+        max-wait: 2000
+
+cache:
+  default-ttl: 300
+
+
+
+
+
+
 
 mybatis-plus:
   global-config:
@@ -44,6 +71,8 @@ mybatis-plus:
     banner: false
   mapper-locations: classpath:mapper/*DAO.xml
   type-aliases-package: com.moguying.plant.core.entity
+  configuration:
+    map-underscore-to-camel-case: true
 
 
 message:
@@ -64,6 +93,10 @@ message:
     send: 【蘑菇营】您在商城购买产品已发货，详情可登录app查看或咨询客服400-669-0808！
   fertilizer:
     send: 【蘑菇营】恭喜您注册成功！蘑菇营为答谢您的支持，特奉上16元满减券，券已发放至你的账户中，请登录查收，开启趣味种植之旅~
+
+meta:
+  content:
+    img: '<style>img{max-width:100%!important;}</style>'
 
 payment:
   merNo: 0009500
@@ -121,3 +154,9 @@ device:
     url: http://iot.klha.net:8080/services/iotDataService?wsdl
     user: tanv
     password: tanv666
+
+logging:
+  level:
+    com.moguying: debug
+  file: ./logs/plant-web.log
+

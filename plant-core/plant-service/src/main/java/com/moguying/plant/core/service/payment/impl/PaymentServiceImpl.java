@@ -5,26 +5,26 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.moguying.plant.constant.*;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.payment.PaymentInfoDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.account.UserMoney;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.payment.PayRequestInfo;
 import com.moguying.plant.core.entity.payment.PaymentInfo;
 import com.moguying.plant.core.entity.payment.request.*;
 import com.moguying.plant.core.entity.payment.response.*;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
+import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
 import com.moguying.plant.core.entity.system.PayOrder;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserBank;
-import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
-import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
-import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.payment.PaymentService;
@@ -106,7 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<SendRegSmsCodeResponse> sendRegSms(SendRegSmsCodeRequest sendRegSmsCodeRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -169,7 +169,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<RegisterSyncResponse> userRegister(RegisterRequest registerRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -227,7 +227,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<RealnameSyncResponse> userRealname(RealnameRequest realnameRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -270,7 +270,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<BindCardResponse> bindCard(BindCardRequest bindCardRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -312,7 +312,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<QueryBankCardBinResponse> queryBankCardBin(QueryBankCardBinRequest queryBankCardBinRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -357,7 +357,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<DeleteBankCardResponse> deleteCard(DeleteBankCardRequest deleteBankCardRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -403,7 +403,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<PaySignQueryResponse> paySignQuery(PaySignQueryRequest paySignQueryRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -445,7 +445,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<PayAuthAndSignResponse> authAndSignPayment(PayAuthAndSignRequest payAuthAndSignRequest) {
 
         try {
@@ -492,7 +492,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<SendPaySmsCodeResponse> sendPaySmsCode(SendPaySmsCodeRequest sendPaySmsCodeRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -535,7 +535,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse> pay(PayRequestInfo payRequestInfo) {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
         UserBank bank = userService.bankCard(payRequestInfo.getUserId(),payRequestInfo.getBankId());
@@ -607,7 +607,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<TransferResponse> transferAmount(TransferRequest transferRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -652,7 +652,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<SendWithdrawSmsCodeResponse> sendWithdrawSmsCode(SendWithdrawSmsCodeRequest smsCodeRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -690,7 +690,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<WithdrawMoneyResponse> withdrawMoney(WithdrawMoneyRequest withdrawMoneyRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -727,7 +727,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentRequest modifyPayPassword(ModifyPayPasswordRequest modifyPayPasswordRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -755,7 +755,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentRequest withdrawMoneyPage(WithdrawMoneyPageRequest withdrawRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -787,7 +787,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<ImageUploadResponse> imageUpload(ImageUploadRequest imageUploadRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -836,7 +836,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentResponse<SendSmsCodeResponse> sendBindCardSmsCode(SendBindCardSmsCodeRequest bindCardSmsCodeRequest) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();
@@ -871,7 +871,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<PaymentResponse> sendPayInfo(PayRequestInfo payRequestInfo,String authMsg) {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
         UserBank bank = userService.bankCard(payRequestInfo.getUserId(),payRequestInfo.getBankId());
@@ -995,7 +995,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId, BaseMapper dao, Class<? extends PayOrder> classs) {
         ResultData<SendPayOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
         try {
@@ -1088,7 +1088,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public PaymentRequest<WebHtmlPayRequest> generateWebHtmlPayData(SeedOrderDetail seedOrderDetail) {
         try {
             PaymentRequest paymentRequest = new PaymentRequest();

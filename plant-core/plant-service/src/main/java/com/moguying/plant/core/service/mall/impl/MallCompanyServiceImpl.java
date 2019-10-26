@@ -1,6 +1,6 @@
 package com.moguying.plant.core.service.mall.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.mall.MallCompanyDAO;
 import com.moguying.plant.core.entity.mall.MallCompany;
 import com.moguying.plant.core.service.mall.MallCompanyService;
@@ -16,13 +16,13 @@ public class MallCompanyServiceImpl implements MallCompanyService {
     private MallCompanyDAO mallCompanyDAO;
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public MallCompany findByCode(String companyCode) {
         return mallCompanyDAO.findByCode(companyCode);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<MallCompany> getAllComName() {
         return mallCompanyDAO.getAllComName();
     }

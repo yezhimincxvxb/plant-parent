@@ -1,9 +1,8 @@
 package com.moguying.plant.core.service.account.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.FieldEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.account.UserMoneyLogDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
@@ -33,14 +32,13 @@ public class UserMoneyLogServiceImpl implements UserMoneyLogService {
     private String downloadDir;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public int addLog(UserMoneyLog userMoneyLog) {
         return userMoneyLogDAO.insert(userMoneyLog);
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<UserMoneyLog> moneyLogList(Integer page, Integer size, UserMoneyLog where) {
         userMoneyLogDAO.selectSelective(where);
         return null;
@@ -52,7 +50,7 @@ public class UserMoneyLogServiceImpl implements UserMoneyLogService {
      * @return
      */
     @Override
-    @DataSource("read")
+    @DS("read")
     public BigDecimal sumFieldAndType(FieldEnum field, Integer userId, List<MoneyOpEnum> opEnums) {
         return userMoneyLogDAO.fieldSumByTypeUserId(field.getField(),userId, opEnums,null,null);
     }
@@ -65,13 +63,13 @@ public class UserMoneyLogServiceImpl implements UserMoneyLogService {
      * @return
      */
     @Override
-    @DataSource("read")
+    @DS("read")
     public AccountMoneyLogInfo userMoneyLogInfo(Integer userId, AccountMoneyLogInfo where) {
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<UserMoneyLog> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("资金日志", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(userMoneyLogDAO, search, UserMoneyLog.class, downloadInfo)).start();

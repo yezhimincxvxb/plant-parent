@@ -35,7 +35,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 @Slf4j
 public class AHomeController {
@@ -72,7 +72,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping(value = "/banner")
-    @ResponseBody
     public ResponseData<List<Banner>> bannerList() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 bannerService.listForHome(BannerEnum.TYPE_MOBILE.getType()));
@@ -85,7 +84,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping("/banner/{typeName}")
-    @ResponseBody
     public ResponseData<List<Banner>> mallBannerList(@PathVariable String typeName) {
 
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -100,7 +98,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping("/activity")
-    @ResponseBody
     public PageResult<Activity> activityList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return activityService.activityListForHome(page, size, null, null);
@@ -115,14 +112,12 @@ public class AHomeController {
      * @return
      */
     @GetMapping("/activity/{id}")
-    @ResponseBody
     public ResponseData<Activity> activityDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.activityDetail(id));
     }
 
 
     @GetMapping("/newest/activity")
-    @ResponseBody
     public ResponseData<List<Activity>> newestActivity() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.newestActivity());
     }
@@ -147,7 +142,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping(value = "/block")
-    @ResponseBody
     public ResponseData<List<HomeBlock>> blockList() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 blockService.blockListForHome());
@@ -161,7 +155,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping("/block/{id}")
-    @ResponseBody
     public ResponseData<BlockDetail> blockDetail(@PathVariable Integer id) {
         ResultData<Block> resultData = blockService.blockInfo(id);
         if (!resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
@@ -193,7 +186,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping(value = "/index/seed")
-    @ResponseBody
     public PageResult<HomeSeed> seedList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                          @RequestParam(value = "size", defaultValue = "10") Integer size) {
         PageResult<HomeSeed> pageResult = seedService.seedListForHome(page, size);
@@ -216,7 +208,6 @@ public class AHomeController {
      * @return
      */
     @RequestMapping("/index/seed/{id}")
-    @ResponseBody
     public ResponseData<SeedDetail> seedDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), seedService.seedDetail(id));
     }
@@ -229,7 +220,6 @@ public class AHomeController {
      * @return
      */
     @PostMapping("/index/mall")
-    @ResponseBody
     public PageResult<HomeProduct> productList(@RequestBody HomeProduct search) {
         return mallProductService.productListForHome(search.getPage(), search.getSize(), search);
     }
@@ -242,7 +232,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping("/product/{id}")
-    @ResponseBody
     public ResponseData<HomeProductDetail> productDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 mallProductService.productDetailForAppMall(id));
@@ -254,7 +243,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping("/apk/info")
-    @ResponseBody
     public ResponseData<Apk> newestApkInfo() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 apkService.newestApkInfo());
@@ -268,7 +256,6 @@ public class AHomeController {
      * @return
      */
     @PostMapping("/plant/block")
-    @ResponseBody
     public ResponseData<Block> findSeedTypeInBlock(@RequestBody SeedTypeInBlock seedTypeInBlock) {
         Block block = blockService.findBlockBySeedType(seedTypeInBlock.getSeedTypeId());
         if (null == block.getId())
@@ -281,7 +268,6 @@ public class AHomeController {
      * 获取推荐菌包
      */
     @GetMapping("/recommend/seed")
-    @ResponseBody
     public ResponseData<List<HomeSeed>> recommendSeed() {
         List<HomeSeed> recommendSeed = seedService.recommendSeed();
         for (HomeSeed homeSeed : recommendSeed) {
@@ -299,7 +285,6 @@ public class AHomeController {
      * @return
      */
     @PostMapping("/calculation")
-    @ResponseBody
     public ResponseData<Calculation> calculation(@RequestBody Calculation calculation) {
         if (null != calculation.getCount() && null != calculation.getPrice()) {
             calculation.setTotalAmount(InterestUtil.INSTANCE.calAmount(calculation.getCount(), calculation.getPrice()));
@@ -319,7 +304,6 @@ public class AHomeController {
      * @return
      */
     @PostMapping("/device/gateway")
-    @ResponseBody
     public PageResult<DeviceGateway> gatewayList(@RequestBody PageSearch<DeviceGateway> pageSearch){
         return deviceService.deviceGatewayList(pageSearch.getPage(),pageSearch.getSize(),pageSearch.getWhere());
     }
@@ -331,7 +315,6 @@ public class AHomeController {
      * @return
      */
     @PostMapping("/device/data")
-    @ResponseBody
     public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where){
         ResultData<List<DeviceGatewayData>> resultData = deviceService.gatewayData(where.getGatewayLogo());
 

@@ -1,18 +1,17 @@
 package com.moguying.plant.core.service.seed.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SeedEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.seed.Seed;
-import com.moguying.plant.core.entity.seed.vo.SeedReview;
 import com.moguying.plant.core.entity.common.vo.HomeSeed;
+import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.vo.SeedDetail;
+import com.moguying.plant.core.entity.seed.vo.SeedReview;
 import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.seed.SeedService;
 import com.moguying.plant.utils.InterestUtil;
@@ -51,9 +50,8 @@ public class SeedServiceImpl implements SeedService {
     }
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Seed> seedList(Integer page , Integer size , Seed seed) {
         seedDAO.selectSelective(seed);
         return null;
@@ -66,7 +64,7 @@ public class SeedServiceImpl implements SeedService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> review(Integer id, SeedReview seedReview, Integer verifyUserId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         Seed reviewSeed = seedDAO.selectById(id);
@@ -109,7 +107,7 @@ public class SeedServiceImpl implements SeedService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> seedSave(Seed seed,boolean isAdd) {
 
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
@@ -144,7 +142,7 @@ public class SeedServiceImpl implements SeedService {
      * @return
      */
     @Override
-    @DataSource("read")
+    @DS("read")
     public Seed seed(Integer id) {
         return seedDAO.selectByPrimaryKeyWithBLOB(id);
     }
@@ -157,7 +155,7 @@ public class SeedServiceImpl implements SeedService {
      * @return
      */
     @Override
-    @DataSource("read")
+    @DS("read")
     public Integer seedFull(Integer id) {
         return -1;
     }
@@ -169,7 +167,7 @@ public class SeedServiceImpl implements SeedService {
      * @return
      */
     @Override
-    @DataSource("write")
+    @DS("write")
     public Boolean seedShow(Integer id) {
         Seed seed = seedDAO.selectById(id);
         if(null == seed)
@@ -182,40 +180,39 @@ public class SeedServiceImpl implements SeedService {
     }
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<HomeSeed> seedListForHome(Integer page, Integer size) {
         seedDAO.selectSeedListForHome();
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public ResultData<Integer> seedCancel(Integer id) {
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public SeedDetail seedDetail(Integer id) {
         return seedDAO.seedDetail(id);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<HomeSeed> recommendSeed() {
         return seedDAO.recommendSeed();
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public HomeSeed selectOneSaleDownSeed() {
         return seedDAO.selectOneFullSeed();
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<Seed> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包售罄列表", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(seedDAO, search, Seed.class, downloadInfo)).start();

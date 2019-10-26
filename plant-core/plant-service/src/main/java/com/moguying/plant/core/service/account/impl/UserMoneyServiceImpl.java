@@ -1,17 +1,16 @@
 package com.moguying.plant.core.service.account.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.account.UserMoneyLogDAO;
 import com.moguying.plant.core.dao.user.UserMoneyDetailDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
-import com.moguying.plant.core.entity.mall.vo.ProductInfo;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
+import com.moguying.plant.core.entity.mall.vo.ProductInfo;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
+import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.common.DownloadService;
 import org.slf4j.Logger;
@@ -44,16 +43,15 @@ public class UserMoneyServiceImpl implements UserMoneyService {
     @Autowired
     private UserMoneyLogDAO userMoneyLogDAO;
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<UserMoney> userMoneyList(Integer page, Integer size, UserMoney where) {
         userMoneyDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public UserMoneyOperator updateAccount(UserMoneyOperator operator) {
 
         UserMoney operateMoney = operator.getUserMoney();
@@ -117,33 +115,32 @@ public class UserMoneyServiceImpl implements UserMoneyService {
 
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public UserMoney userMoneyInfo(Integer userId) {
         return userMoneyDAO.selectById(userId);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<UserMoney> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("资金账户", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(userMoneyDAO, search, UserMoney.class, downloadInfo)).start();
     }
 
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     @Override
     public PageResult<UserMoneyDetail> findUserMoney(Integer page, Integer size, Integer userId, String dateTime, List<Integer> list) {
         userMoneyDetailDAO.findUserMoney(userId, dateTime, list);
         return null;
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public UserMoneyDetail findUserMoneyById(Integer id) {
         return userMoneyDetailDAO.findUserMoneyById(id);
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public List<ProductInfo> findProducts(String type, String detailId) {
         if ("购买商城商品".equals(type)) {
@@ -159,14 +156,14 @@ public class UserMoneyServiceImpl implements UserMoneyService {
         }
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public BigDecimal getTotal(Integer userId, String dateTime, List<Integer> list) {
         return userMoneyDetailDAO.getTotal(userId, dateTime, list);
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public int updateUserMoney(UserMoney userMoney) {
         return userMoneyDAO.updateByPrimaryKeySelective(userMoney);
     }

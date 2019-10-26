@@ -1,8 +1,7 @@
 package com.moguying.plant.core.service.system.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.system.ApkDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
@@ -19,16 +18,15 @@ public class ApkServiceImpl implements ApkService {
     @Autowired
     private ApkDAO apkDAO;
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Apk> apkList(Integer page, Integer size , Apk where) {
         apkDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> apkDelete(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         Apk apk = apkDAO.selectById(id);
@@ -41,7 +39,7 @@ public class ApkServiceImpl implements ApkService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> saveApk(Apk where) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         if(null == where.getId()){
@@ -59,7 +57,7 @@ public class ApkServiceImpl implements ApkService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Apk newestApkInfo() {
         return apkDAO.newestApkInfo();
     }

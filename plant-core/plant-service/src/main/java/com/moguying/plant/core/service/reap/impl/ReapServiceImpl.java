@@ -1,11 +1,10 @@
 package com.moguying.plant.core.service.reap.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.ReapEnum;
 import com.moguying.plant.constant.SystemEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
@@ -13,13 +12,13 @@ import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
+import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
-import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.user.vo.TotalMoney;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.common.DownloadService;
@@ -77,16 +76,15 @@ public class ReapServiceImpl<T> implements ReapService {
     @Autowired
     private UserFertilizerService userFertilizerService;
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<Reap> reapList(Integer page, Integer size, Reap where) {
         reapDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer updateReapState(List<Integer> idList, Reap where) {
         //发送短信
         if (reapDAO.updateStateByRange(idList, where) > 0) {
@@ -101,26 +99,26 @@ public class ReapServiceImpl<T> implements ReapService {
 
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public Integer reapDone(List<Integer> idList) {
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<Reap> reapListByUserId(Integer userId) {
         return reapDAO.selectListCountByUserId(userId, ReapEnum.REAP_DONE.getState());
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public BigDecimal reapProfitStatistics(Integer userId, Date startTime, Date endTime, List<ReapEnum> reapEnums) {
         BigDecimal result = reapDAO.reapProfitStatistics(userId, startTime, endTime, reapEnums);
         return Optional.ofNullable(result).orElse(BigDecimal.ZERO);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public BigDecimal plantProfitStatistics(Integer userId, Date startTime, Date endTime, ReapEnum reapEnum) {
         BigDecimal result;
         if (reapEnum == null) {
@@ -138,7 +136,7 @@ public class ReapServiceImpl<T> implements ReapService {
      * 种植份数统计
      */
     @Override
-    @DataSource("read")
+    @DS("read")
     public Integer reapStatistics(Integer userId, ReapEnum reapEnum, Boolean isEqual) {
         Integer result;
         if (reapEnum == null)
@@ -154,7 +152,7 @@ public class ReapServiceImpl<T> implements ReapService {
     @TriggerEvent(action = "sale")
     @Transactional
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<TriggerEventResult<InnerMessage>> saleReap(Integer seedType, Integer userId) {
         ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, null);
         User userInfo = userDAO.userInfoById(userId);
@@ -215,7 +213,7 @@ public class ReapServiceImpl<T> implements ReapService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Reap reapInfoByIdAndUserId(Integer id, Integer userId) {
         Reap where = new Reap();
         where.setId(id);
@@ -227,7 +225,7 @@ public class ReapServiceImpl<T> implements ReapService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer autoReap(Date reapTime) {
         List<Integer> reapIds = reapDAO.selectCanReapByTime(DateUtil.INSTANCE.todayEnd(reapTime));
         Reap update = new Reap();
@@ -239,41 +237,40 @@ public class ReapServiceImpl<T> implements ReapService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<Reap> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("采摘列表", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(reapDAO, search, Reap.class, downloadInfo)).start();
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<ExchangeInfo> showReap(Integer page, Integer size, Integer userId) {
         reapDAO.showReap(userId);
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<Reap> findReapListByName(String productName, Integer userId) {
         return reapDAO.findReapListByName(productName, userId);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Integer sumCoin(Integer userId, List<Integer> idList) {
         return reapDAO.sumCoin(userId, idList);
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public TotalMoney findMoney(List<Integer> idList) {
         return reapDAO.findMoney(idList);
     }
 
     @Override
     @Transactional(propagation = Propagation.NESTED)
-    @DataSource("write")
+    @DS("write")
     public Boolean exchangeMogubi(Integer userId, UserMoney userMoney, List<Reap> reaps) {
 
         // 用户未开通蘑菇币功能
@@ -337,8 +334,7 @@ public class ReapServiceImpl<T> implements ReapService {
 
 
     @Override
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     public PageResult<ExchangeInfo> showReapLog(Integer page, Integer size, Integer userId) {
         reapDAO.showReapLog(userId);
         return null;
@@ -346,7 +342,7 @@ public class ReapServiceImpl<T> implements ReapService {
 
     @Override
     @Transactional
-    @DataSource("write")
+    @DS("write")
     public Boolean exchangeFertilizer(Integer userId, Integer fertilizerId, SaleCoin saleCoin, Fertilizer fertilizer) {
 
         // 发券

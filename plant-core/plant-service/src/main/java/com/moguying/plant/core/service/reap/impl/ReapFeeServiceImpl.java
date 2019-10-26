@@ -1,8 +1,7 @@
 package com.moguying.plant.core.service.reap.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapFeeDAO;
 import com.moguying.plant.core.dao.seed.SeedDaysDAO;
@@ -41,7 +40,7 @@ public class ReapFeeServiceImpl implements ReapFeeService {
     private String downloadDir;
 
     @Override
-    @DataSource("write")
+    @DS("write")
     @Transactional
     public ResultData<Integer> addReapFee(ReapFee reapFee) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
@@ -63,9 +62,8 @@ public class ReapFeeServiceImpl implements ReapFeeService {
         return resultData;
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
-    @Pagination
     public PageResult<ReapFee> reapFeeList(Integer page, Integer size, ReapFee where) {
         reapFeeDAO.selectSelective(where);
         return null;
@@ -73,7 +71,7 @@ public class ReapFeeServiceImpl implements ReapFeeService {
 
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<ReapFee> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("渠道费用",request.getServletContext(),userId,downloadDir);
         new Thread(new DownloadService<>(reapFeeDAO,search, ReapFee.class,downloadInfo)).start();

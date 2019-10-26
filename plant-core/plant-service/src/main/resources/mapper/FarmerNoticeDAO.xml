@@ -12,63 +12,6 @@
     id, user_id, message, `state`, add_time
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.farmer.FarmerNotice">
-    insert into plant_farmer_notice
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="message != null">
-        message,
-      </if>
-      <if test="state != null">
-        `state`,
-      </if>
-      <if test="addTime != null">
-        add_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="message != null">
-        #{message,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null">
-        #{state,jdbcType=TINYINT},
-      </if>
-      <if test="addTime != null">
-        #{addTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.farmer.FarmerNotice">
-    update plant_farmer_notice
-    <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="message != null">
-        message = #{message,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null">
-        `state` = #{state,jdbcType=TINYINT},
-      </if>
-      <if test="addTime != null">
-        add_time = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
-  
   <select id="countNewNotice" resultType="int">
     select count(*) from plant_farmer_notice
     <where>

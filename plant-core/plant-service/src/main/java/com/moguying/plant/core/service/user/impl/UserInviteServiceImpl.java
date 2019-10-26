@@ -1,11 +1,10 @@
 package com.moguying.plant.core.service.user.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.FieldEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.annotation.FarmerTrigger;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.dao.user.UserInviteDAO;
@@ -49,7 +48,7 @@ public class UserInviteServiceImpl implements UserInviteService {
     @Value("${invite.rate}")
     private String inviteRate;
 
-    @DataSource("write")
+    @DS("write")
     @FarmerTrigger(action = "invitedUser")
     @Override
     //warning:这里返回的User为邀请人id,而不是初邀请人
@@ -71,7 +70,7 @@ public class UserInviteServiceImpl implements UserInviteService {
         return resultData;
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
     public InviteStatistics inviteStatistics(Integer inviteUserId) {
         InviteStatistics statistics = new InviteStatistics();
@@ -83,9 +82,8 @@ public class UserInviteServiceImpl implements UserInviteService {
         return statistics;
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<UserInvite> inviteList(Integer page, Integer size , Integer userId) {
         userInviteDAO.inviteList(userId);
         return null;
@@ -93,7 +91,7 @@ public class UserInviteServiceImpl implements UserInviteService {
 
     @TriggerEvent(action = "invitedPlant")
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<TriggerEventResult<InnerMessage>> inviterPlanted(User plantedUser, Reap reap, User inviteUser) {
         ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR,null);
 

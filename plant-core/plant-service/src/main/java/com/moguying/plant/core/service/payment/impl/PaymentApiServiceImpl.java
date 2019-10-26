@@ -1,15 +1,15 @@
 package com.moguying.plant.core.service.payment.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.system.PayOrder;
-import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.payment.PayRequestInfo;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
+import com.moguying.plant.core.entity.system.PayOrder;
+import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.payment.PaymentApiService;
 import com.moguying.plant.core.service.payment.PaymentService;
@@ -33,7 +33,7 @@ public class PaymentApiServiceImpl implements PaymentApiService {
 
     @Transactional
     @Override
-    @DataSource
+    @DS("write")
     public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, PayOrder orderDetail, User userInfo) {
         ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
         //仅全额由余额支付时校验支付密码

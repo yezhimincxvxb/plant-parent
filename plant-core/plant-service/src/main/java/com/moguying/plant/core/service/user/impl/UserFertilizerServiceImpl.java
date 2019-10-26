@@ -1,10 +1,9 @@
 package com.moguying.plant.core.service.user.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.fertilizer.FertilizerTypeDAO;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
@@ -14,10 +13,10 @@ import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.FertilizerType;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
-import com.moguying.plant.core.entity.seed.SeedOrderDetail;
-import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerSearch;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
+import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.user.vo.UserFertilizerInfo;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.common.DownloadService;
@@ -60,9 +59,8 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     private String downloadDir;
 
 
-    @Pagination
     @Override
-    @DataSource("write")
+    @DS("write")
     public PageResult<UserFertilizerInfo> userFertilizers(Integer page, Integer size, Integer userId, FertilizerSearch search) {
         FertilizerUseCondition condition = new FertilizerUseCondition();
         condition.setUserId(userId);
@@ -75,7 +73,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<UserFertilizerInfo> canUseFertilizers(FertilizerUseCondition condition) {
         if (null != condition.getSeedOrderId()) {
             //查询匹配对应菌包类型
@@ -103,16 +101,15 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         return userFertilizerDAO.userFertilizers(condition);
     }
 
-    @DataSource("read")
+    @DS("read")
     @Override
-    @Pagination
     public PageResult<UserFertilizer> userFertilizerList(Integer page, Integer size, UserFertilizer where) {
         userFertilizerDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public void downloadExcel(Integer userId, PageSearch<UserFertilizer> search, HttpServletRequest request) {
         new Thread(new DownloadService<>(userFertilizerDAO, search, UserFertilizer.class,
                 new DownloadInfo("用户优惠券", request.getServletContext(), userId, downloadDir))).start();
@@ -125,7 +122,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
      * @return
      */
     @Override
-    @DataSource
+    @DS("write")
     public ResultData<Integer> addUserFertilizer(UserFertilizer userFertilizer) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         Fertilizer fertilizer = fertilizerDAO.selectById(userFertilizer.getFertilizerId());
@@ -147,7 +144,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Boolean redPackageSuccess(UserFertilizer userFertilizer) {
         UserMoneyOperator operator = new UserMoneyOperator();
         operator.setOperationId(userFertilizer.getUseOrderNumber());

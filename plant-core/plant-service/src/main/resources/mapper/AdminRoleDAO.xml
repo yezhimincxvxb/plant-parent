@@ -10,44 +10,6 @@
     id, role_name, action_code
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.admin.AdminRole">
-    insert into plant_admin_role
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="roleName != null">
-        role_name,
-      </if>
-      <if test="actionCode != null">
-        action_code,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="roleName != null">
-        #{roleName,jdbcType=VARCHAR},
-      </if>
-      <if test="actionCode != null">
-        #{actionCode,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.admin.AdminRole">
-    update plant_admin_role
-    <set>
-      <if test="roleName != null">
-        role_name = #{roleName,jdbcType=VARCHAR},
-      </if>
-      <if test="actionCode != null">
-        action_code = #{actionCode,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_admin_role
     <where>

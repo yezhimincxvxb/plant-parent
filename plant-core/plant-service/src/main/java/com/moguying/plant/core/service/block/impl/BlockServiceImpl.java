@@ -1,9 +1,8 @@
 package com.moguying.plant.core.service.block.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.BlockStateEnum;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
@@ -30,15 +29,14 @@ public class BlockServiceImpl implements BlockService {
 
 
     @Override
-    @Pagination
-    @DataSource("read")
+    @DS("read")
     public PageResult<Block> blockList(Integer page, Integer limit, Block where) {
         blockDAO.selectSelective(where);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addBlock(Block block) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,-1);
         Block useBlock = blockDAO.selectBlockByNumber(block.getNumber());
@@ -63,7 +61,7 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> updateBlock(Integer id, Block update) {
 
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
@@ -91,7 +89,7 @@ public class BlockServiceImpl implements BlockService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> deleteBlock(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         Block block = blockDAO.selectById(id);
@@ -109,7 +107,7 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public ResultData<Block> blockInfo(Integer id) {
         ResultData<Block> resultData = new ResultData<>(MessageEnum.ERROR,null);
         Block block = blockDAO.selectById(id);
@@ -119,7 +117,7 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Boolean seeBlock(Integer id) {
         Block block = blockDAO.selectById(id);
         if(block == null)
@@ -134,13 +132,13 @@ public class BlockServiceImpl implements BlockService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public List<HomeBlock> blockListForHome() {
         return blockDAO.selectBlockListForHome();
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Block findBlockBySeedType(Integer seedTypeId) {
         Block where = new Block();
         where.setSeedType(seedTypeId);

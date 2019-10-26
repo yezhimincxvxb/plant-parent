@@ -9,37 +9,6 @@
     trigger_event, mark
   </sql>
 
-  <insert id="insert" parameterType="com.moguying.plant.core.entity.fertilizer.TriggerEvent">
-    insert into plant_trigger_event
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="triggerEvent != null">
-        trigger_event,
-      </if>
-      <if test="mark != null">
-        mark,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="triggerEvent != null">
-        #{triggerEvent,jdbcType=VARCHAR},
-      </if>
-      <if test="mark != null">
-        #{mark,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-
-  <update id="updateById" parameterType="com.moguying.plant.core.entity.fertilizer.TriggerEvent">
-    update plant_trigger_event
-    <set>
-      <if test="mark != null">
-        mark = #{mark,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where trigger_event = #{triggerEvent,jdbcType=VARCHAR}
-  </update>
-
-  
   <select id="selectSelective" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from plant_trigger_event
     <where>

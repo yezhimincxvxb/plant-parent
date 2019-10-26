@@ -1,6 +1,5 @@
 package com.moguying.plant.core.service.content.impl;
 
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.content.AdvDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.content.Adv;
@@ -22,7 +21,6 @@ public class AdvServiceImpl implements AdvService {
     }
 
 
-    @Pagination
     @Override
     public PageResult<Adv> advList(Integer page, Integer size, Adv adv) {
         advDAO.selectSelection(adv);

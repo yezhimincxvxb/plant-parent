@@ -1,7 +1,6 @@
 package com.moguying.plant.core.service.admin.impl;
 
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.core.dao.admin.AdminMenuDAO;
 import com.moguying.plant.core.dao.admin.AdminMessageDAO;
 import com.moguying.plant.core.dao.admin.AdminUserDAO;
@@ -42,7 +41,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public AdminUser login(String name, String password) {
         AdminUser adminUser = adminUserDAO.selectByNameAndPassword(name,password);
         if(null == adminUser) return null;
@@ -56,7 +55,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public AdminUser userInfo(Integer id) {
         AdminUser user = adminUserDAO.adminUserInfoById(id);
         user.setHasNewMessage(adminMessageDAO.hasNewMessage(id) > 0);
@@ -67,21 +66,20 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public Integer addAdminMessage(AdminMessage adminMessage) {
         return adminMessageDAO.insert(adminMessage);
     }
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<AdminMessage> adminMessageList(Integer page, Integer size, AdminMessage where) {
         adminMessageDAO.selectSelective(where);
         return null;
     }
 
-    @DataSource("write")
+    @DS("write")
     @Override
     public Integer saveAdminUser(AdminUser adminUser) {
         if(null != adminUser.getPhone()){
@@ -104,15 +102,14 @@ public class AdminUserServiceImpl implements AdminUserService {
         }
     }
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<AdminUser> adminUserList(Integer page, Integer size, AdminUser where) {
         adminUserDAO.selectSelective(where);
         return null;
     }
 
-    @DataSource("write")
+    @DS("write")
     @Override
     public Integer readMessage(Integer userId) {
         return adminMessageDAO.updateUserMessage(userId,1);

@@ -1,8 +1,7 @@
 package com.moguying.plant.core.service.mall.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.mall.MallCarDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -26,16 +25,15 @@ public class MallCarServiceImpl implements MallCarService {
     MallProductDAO mallProductDAO;
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<OrderItem> userCarItems(Integer page, Integer size, Integer userId) {
         mallCarDAO.userCarItemList(userId);
         return null;
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> addItemToCar(MallCar mallCar) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         if(null == mallProductDAO.productCountEnough(mallCar.getProductId(),mallCar.getProductCount()))
@@ -52,7 +50,7 @@ public class MallCarServiceImpl implements MallCarService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Boolean> removeItemFromCar(List<OrderItem> ids,Integer userId) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
         if(mallCarDAO.deleteItemByRange(ids,userId) > 0)
@@ -61,7 +59,7 @@ public class MallCarServiceImpl implements MallCarService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> modifyItemCount(OrderItem orderItem) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         MallCar item = mallCarDAO.selectById(orderItem.getId());
@@ -83,7 +81,7 @@ public class MallCarServiceImpl implements MallCarService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public BigDecimal getCheckedItemAmount(Integer userId) {
         BigDecimal amount = mallCarDAO.sumCheckedItemAmount(userId);
        if(null == amount)
@@ -92,7 +90,7 @@ public class MallCarServiceImpl implements MallCarService {
     }
 
     @Override
-    @DataSource("write")
+    @DS("write")
     public ResultData<Integer> checkItems(List<OrderItem> items,Integer userId,Boolean check) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         if(mallCarDAO.checkItems(items,userId,check) > 0)
@@ -101,7 +99,7 @@ public class MallCarServiceImpl implements MallCarService {
     }
 
     @Override
-    @DataSource("read")
+    @DS("read")
     public Boolean isAllCheck(Integer userId) {
         Integer unCheckCount = mallCarDAO.countByCheckState(false,userId);
         if(null == unCheckCount || unCheckCount == 0)

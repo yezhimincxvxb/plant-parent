@@ -1,8 +1,7 @@
 package com.moguying.plant.core.service.device.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.DataSource;
-import com.moguying.plant.core.annotation.Pagination;
 import com.moguying.plant.core.dao.device.DeviceGatewayDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
@@ -53,7 +52,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    @DataSource
+    @DS("write")
     public ResultData<Integer> curAllData() {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         try {
@@ -176,9 +175,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
 
-    @Pagination
     @Override
-    @DataSource("read")
+    @DS("read")
     public PageResult<DeviceGateway> deviceGatewayList(Integer page, Integer size, DeviceGateway deviceGateway) {
         deviceGatewayDAO.selectSelective(deviceGateway);
         return null;
