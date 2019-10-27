@@ -1,6 +1,8 @@
 package com.moguying.plant.core.dao.mall;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.mall.vo.MallCar;
 import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import org.apache.ibatis.annotations.Param;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 @Repository
 public interface MallCarDAO extends BaseMapper<MallCar> {
-    List<OrderItem> userCarItemList(Integer userId);
+    IPage<OrderItem> userCarItemList(Page<OrderItem> page, @Param("userId") Integer userId);
     Integer addCarItemCount(@Param("id") Integer id, @Param("count") Integer count);
     MallCar selectByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
     Integer deleteItemByRange(@Param("items") List<OrderItem> items, @Param("userId") Integer userId);

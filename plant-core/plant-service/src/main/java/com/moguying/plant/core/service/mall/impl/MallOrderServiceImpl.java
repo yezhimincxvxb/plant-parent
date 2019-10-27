@@ -2,6 +2,9 @@ package com.moguying.plant.core.service.mall.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MallEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
@@ -114,8 +117,8 @@ public class MallOrderServiceImpl implements MallOrderService {
     @Override
     @DS("read")
     public PageResult<MallOrder> mallOrderList(Integer page, Integer size, MallOrderSearch where) {
-        mallOrderDAO.selectSelective(where);
-        return null;
+        IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -299,9 +302,9 @@ public class MallOrderServiceImpl implements MallOrderService {
     @Override
     @DS(value = "read")
     public List<MallOrder> needPayOrders() {
-        MallOrderSearch where = new MallOrderSearch();
+        MallOrder where = new MallOrder();
         where.setState(MallEnum.ORDER_NEED_PAY.getState());
-        return mallOrderDAO.selectSelective(where);
+        return mallOrderDAO.selectList(new QueryWrapper<>(where));
     }
 
     @Override

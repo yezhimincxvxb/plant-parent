@@ -45,32 +45,32 @@
     left join plant_user t4 on t1.invite_uid = t4.id
     left join plant_seed_type t5 on t2.seed_type = t5.id
     <where>
-      <if test="userPhone != null and userPhone != ''">
-        t3.phone = #{userPhone}
+      <if test="wq.userPhone != null and wq.userPhone != ''">
+        t3.phone = #{wq.userPhone}
       </if>
-      <if test="invitePhone != null and invitePhone != ''">
-        AND t3.phone = #{invitePhone}
+      <if test="wq.invitePhone != null and wq.invitePhone != ''">
+        AND t3.phone = #{wq.invitePhone}
       </if>
-      <if test="inviteUid != null">
-        AND t1.invite_uid = #{inviteUid}
+      <if test="wq.inviteUid != null">
+        AND t1.invite_uid = #{wq.inviteUid}
       </if>
-      <if test="isFirst != null">
-        AND t1.is_first = #{isFirst}
+      <if test="wq.isFirst != null">
+        AND t1.is_first = #{wq.isFirst}
       </if>
-      <if test="regStartTime != null and regEndTime != null">
+      <if test="wq.regStartTime != null and wq.regEndTime != null">
         <![CDATA[
-            AND UNIX_TIMESTAMP(t3.reg_time) >= UNIX_TIMESTAMP(#{regStartTime})
-            AND UNIX_TIMESTAMP(t3.reg_time) <= UNIX_TIMESTAMP(#{regEndTime})
+            AND UNIX_TIMESTAMP(t3.reg_time) >= UNIX_TIMESTAMP(#{wq.regStartTime})
+            AND UNIX_TIMESTAMP(t3.reg_time) <= UNIX_TIMESTAMP(#{wq.regEndTime})
         ]]>
       </if>
-      <if test="startTime != null and endTime != null">
+      <if test="wq.startTime != null and wq.endTime != null">
         <![CDATA[
-            AND UNIX_TIMESTAMP(t2.add_time) >= UNIX_TIMESTAMP(#{startTime})
-            AND UNIX_TIMESTAMP(t2.add_time) <= UNIX_TIMESTAMP(#{endTime})
+            AND UNIX_TIMESTAMP(t2.add_time) >= UNIX_TIMESTAMP(#{wq.startTime})
+            AND UNIX_TIMESTAMP(t2.add_time) <= UNIX_TIMESTAMP(#{wq.endTime})
         ]]>
       </if>
-      <if test="userRealName != null and userRealName != ''">
-        AND t3.real_name = #{userRealName}
+      <if test="wq.userRealName != null and wq.userRealName != ''">
+        AND t3.real_name = #{wq.userRealName}
       </if>
     </where>
   </select>

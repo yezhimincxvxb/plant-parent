@@ -1,6 +1,8 @@
 package com.moguying.plant.core.dao.mall;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.user.vo.UserMallOrder;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 @Repository
 public interface MallOrderDAO extends BaseMapper<MallOrder> {
-    List<MallOrder> selectSelective(MallOrderSearch where);
+    IPage<MallOrder> selectSelective(Page<MallOrder> page, @Param("wq") MallOrderSearch where);
     List<UserMallOrder> userOrderListByState(@Param("userId") Integer userId, @Param("state") Integer state);
 
     MallOrder findByIdAndNum(@Param("userId") Integer userId, @Param("number") String number);

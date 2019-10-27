@@ -26,40 +26,4 @@
   </update>
 
 
-
-  <select id="selectSelective" parameterType="SeedPic" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_seed_pic
-    <where>
-      <if test="id != null">
-        id = #{id}
-      </if>
-      <if test="picName != null">
-        AND pic_name = #{picName}
-      </if>
-      <if test="picUrl != null">
-        AND pic_url = #{picUrl}
-      </if>
-      <if test="picUrlThumb != null">
-        AND pic_url_thumb = #{picUrlThumb}
-      </if>
-      <if test="isDelete != null">
-        AND is_delete = #{isDelete}
-      </if>
-    </where>
-    order by id desc
-  </select>
-
-
-  <select id="selectByRange"  resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_seed_pic
-    <where>
-    id in
-      <foreach collection="range" open="(" close=")" item="item" separator=",">
-        #{item}
-      </foreach>
-    </where>
-    and is_delete = 0
-  </select>
-
-
 </mapper>

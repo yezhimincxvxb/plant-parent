@@ -1,6 +1,10 @@
 package com.moguying.plant.core.service.content.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.content.BannerDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -18,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@CacheConfig(cacheNames = "banner")
 public class BannerServiceImpl implements BannerService {
 
     @Autowired
@@ -28,19 +31,26 @@ public class BannerServiceImpl implements BannerService {
     @Override
     @DS("read")
     public PageResult<Banner> bannerList(Integer page, Integer size, Banner where) {
-        bannerDAO.selectSelective(where);
-        return null;
+        LambdaQueryWrapper<Banner> query = new QueryWrapper<Banner>().lambda()
+                .isNotNull(Banner::getId)
+                .eq(Banner::getId, where.getId())
+                .isNotNull(Banner::getName)
+                .like(Banner::getName, where.getName())
+                .isNotNull(Banner::getIsShow)
+                .eq(Banner::getIsShow, where.getIsShow());
+
+        IPage<Banner> pageResult = bannerDAO.selectPage(new Page<>(page, size), query);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
     @DS("write")
-    @CachePut(key = "#banner.id")
     public ResultData<Integer> addBanner(Banner banner) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         Banner where = new Banner();
         where.setName(banner.getName());
-        List<Banner> banners = bannerDAO.selectSelective(where);
-        if(banners.size() > 0)
+        Integer count = bannerDAO.selectCount(new QueryWrapper<>(where));
+        if(null != count  && count > 0)
             return resultData.setMessageEnum(MessageEnum.BANNER_NAME_EXISTS);
         banner.setAddTime(new Date());
         if(bannerDAO.insert(banner) > 0)
@@ -50,18 +60,15 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @DS("write")
-    @CachePut(key = "#update.id")
     public ResultData<Integer> updateBanner(Integer id, Banner update) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
         if(bannerDAO.selectById(id) == null)
             return resultData.setMessageEnum(MessageEnum.BANNER_NOT_EXISTS);
         Banner where = new Banner();
         where.setName(update.getName());
-        List<Banner> banners = bannerDAO.selectSelective(where);
-        for(Banner banner : banners){
-            if(!banner.getId().equals(id))
-               return resultData.setMessageEnum(MessageEnum.BANNER_NAME_EXISTS);
-        }
+        Integer count  = bannerDAO.selectCount(new QueryWrapper<>(where));
+        if(null != count && count > 0)
+            return resultData.setMessageEnum(MessageEnum.BANNER_NAME_EXISTS);
 
         update.setId(id);
         if(bannerDAO.updateById(update) > 0)
@@ -71,7 +78,6 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @DS("write")
-    @CacheEvict(key = "#id")
     public Integer deleteBanner(Integer id) {
         if(bannerDAO.deleteById(id) > 0)
             return id;
@@ -80,7 +86,6 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @DS("write")
-    @CachePut(key = "#id")
     public Boolean setBannerShowState(Integer id) {
         Banner banner = bannerDAO.selectById(id);
         if(banner == null)
@@ -93,7 +98,6 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @DS("read")
-    @Cacheable(key = "'type:'+ #type")
     public List<Banner> listForHome(Integer type) {
         return bannerDAO.bannerListForHome(type);
     }

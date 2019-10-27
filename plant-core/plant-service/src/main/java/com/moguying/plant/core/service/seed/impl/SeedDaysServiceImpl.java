@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.seed.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.seed.SeedDaysDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.seed.SeedDays;
@@ -18,8 +21,8 @@ public class SeedDaysServiceImpl implements SeedDaysService {
     @Override
     @DS("read")
     public PageResult<SeedDays> seedDaysList(Integer page, Integer size) {
-        seedDaysDAO.selectSelective(null);
-        return null;
+        IPage<SeedDays> pageResult = seedDaysDAO.selectPage(new Page<>(page, size), new QueryWrapper<>());
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

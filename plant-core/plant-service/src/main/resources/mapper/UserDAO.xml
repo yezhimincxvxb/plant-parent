@@ -44,38 +44,38 @@
         t1.payment_account,t1.payment_state,t2.phone as invite_name from plant_user t1
         left join plant_user t2 on t1.invite_uid = t2.id
         <where>
-            <if test="id != null">
-                t1.id = #{id}
+            <if test="wq.id != null">
+                t1.id = #{wq.id}
             </if>
-            <if test="password != null">
-                AND t1.password = #{password}
+            <if test="wq.password != null">
+                AND t1.password = #{wq.password}
             </if>
-            <if test="phone != null and phone != ''">
-                <bind name="phoneLike" value="'%' + phone + '%'"/>
+            <if test="wq.phone != null and wq.phone != ''">
+                <bind name="phoneLike" value="'%' + wq.phone + '%'"/>
                 AND t1.phone like #{phoneLike}
             </if>
-            <if test="realName != null and realName != ''">
-                <bind name="nameLike" value="'%' + realName + '%'"/>
+            <if test="wq.realName != null and wq.realName != ''">
+                <bind name="nameLike" value="'%' + wq.realName + '%'"/>
                 AND t1.real_name like #{nameLike}
             </if>
-            <if test="inviteName != null and inviteName != ''">
-                <bind name="inviteNameLike" value="'%' + inviteName + '%'"/>
+            <if test="wq.inviteName != null and wq.inviteName != ''">
+                <bind name="inviteNameLike" value="'%' + wq.inviteName + '%'"/>
                 AND t2.phone like #{inviteNameLike}
             </if>
-            <if test="userState != null">
-                AND t1.user_state = #{userState}
+            <if test="wq.userState != null">
+                AND t1.user_state = #{wq.userState}
             </if>
-            <if test="startTime != null and endTime != null">
+            <if test="wq.startTime != null and wq.endTime != null">
               <![CDATA[
-                AND UNIX_TIMESTAMP(#{startTime}) >= UNIX_TIMESTAMP(t1.reg_time)
-                AND UNIX_TIMESTAMP(#{endTime}) <= UNXIX_TIMESTAMP(t1.reg_time)
+                AND UNIX_TIMESTAMP(#{wq.startTime}) >= UNIX_TIMESTAMP(t1.reg_time)
+                AND UNIX_TIMESTAMP(#{wq.endTime}) <= UNXIX_TIMESTAMP(t1.reg_time)
               ]]>
             </if>
-            <if test="idCard != null and idCard != ''">
-                AND t1.id_card = #{idCard}
+            <if test="wq.idCard != null and wq.idCard != ''">
+                AND t1.id_card = #{wq.idCard}
             </if>
-            <if test="inviteCode != null">
-                AND t1.invite_code = #{inviteCode}
+            <if test="wq.inviteCode != null">
+                AND t1.invite_code = #{wq.inviteCode}
             </if>
 
         </where>

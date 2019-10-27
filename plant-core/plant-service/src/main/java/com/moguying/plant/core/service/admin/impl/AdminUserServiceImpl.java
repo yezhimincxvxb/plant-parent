@@ -88,9 +88,9 @@ public class AdminUserServiceImpl implements AdminUserService {
         if(null != adminUser.getPhone()){
             User where = new User();
             where.setPhone(adminUser.getPhone());
-            List<User> users = userDAO.selectSelective(where);
-            if(null != users && users.size() == 1){
-                adminUser.setBindId(users.get(0).getId());
+            User user = userDAO.selectOne(new QueryWrapper<>(where));
+            if(null != user ){
+                adminUser.setBindId(user.getId());
             }
         }
 

@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.user.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.FieldEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
@@ -85,8 +87,8 @@ public class UserInviteServiceImpl implements UserInviteService {
     @Override
     @DS("read")
     public PageResult<UserInvite> inviteList(Integer page, Integer size , Integer userId) {
-        userInviteDAO.inviteList(userId);
-        return null;
+        IPage<UserInvite> pageResult = userInviteDAO.inviteList(new Page<>(page, size), userId);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @TriggerEvent(action = "invitedPlant")

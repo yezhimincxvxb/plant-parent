@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.user.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
@@ -66,10 +68,10 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         condition.setUserId(userId);
         if (null != search.getType())
             condition.setType(search.getType());
-        userFertilizerDAO.userFertilizers(condition);
+        IPage<UserFertilizerInfo> pageResult = userFertilizerDAO.userFertilizers(new Page<>(page, size), condition);
         //查询即置过期
         userFertilizerDAO.updateOutTimeFertilizer(userId);
-        return null;
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -98,7 +100,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
                 .filter((x) -> x.getId() < 4)
                 .forEach((x) -> types.add(x.getId()));
         condition.setTypes(types);
-        return userFertilizerDAO.userFertilizers(condition);
+        return userFertilizerDAO.userFertilizers(null,condition).getRecords();
     }
 
     @DS("read")

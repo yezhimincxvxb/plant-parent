@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.block.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.BlockStateEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
@@ -9,6 +12,7 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.common.vo.HomeBlock;
 import com.moguying.plant.core.service.block.BlockService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +23,18 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BlockServiceImpl implements BlockService {
-
-    Logger log = LoggerFactory.getLogger(BlockServiceImpl.class);
-
-
+    
     @Autowired
     private BlockDAO blockDAO;
 
 
     @Override
     @DS("read")
-    public PageResult<Block> blockList(Integer page, Integer limit, Block where) {
-        blockDAO.selectSelective(where);
-        return null;
+    public PageResult<Block> blockList(Integer page, Integer size, Block where) {
+        IPage<Block> pageResult = blockDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -144,7 +146,7 @@ public class BlockServiceImpl implements BlockService {
         where.setSeedType(seedTypeId);
         where.setIsShow(true);
         where.setState(BlockStateEnum.OPEN.getState());
-        List<Block> blocks = blockDAO.selectSelective(where);
+        List<Block> blocks = blockDAO.selectList(new QueryWrapper<>(where));
         if(null == blocks || blocks.isEmpty())
             return where;
         if(blocks.size() == 1)

@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.system.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.system.ApkDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -21,8 +24,8 @@ public class ApkServiceImpl implements ApkService {
     @Override
     @DS("read")
     public PageResult<Apk> apkList(Integer page, Integer size , Apk where) {
-        apkDAO.selectSelective(where);
-        return null;
+        IPage<Apk> pageResult = apkDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

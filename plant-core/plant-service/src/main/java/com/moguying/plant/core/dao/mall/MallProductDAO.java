@@ -1,6 +1,8 @@
 package com.moguying.plant.core.dao.mall;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.common.vo.HomeProduct;
@@ -15,19 +17,19 @@ import java.util.List;
  */
 @Repository
 public interface MallProductDAO extends BaseMapper<MallProduct> {
-    List<MallProduct> selectSelective(MallProduct where);
+    IPage<MallProduct> selectSelective(Page<MallProduct> page, @Param("wq") MallProduct where);
     Integer updateProductHasCountById(@Param("count") Integer count, @Param("productId") Integer productId);
-    List<HomeProduct> selectProductForApp(HomeProduct search);
+    IPage<HomeProduct> selectProductForApp(Page<MallProduct> page,@Param("wq") HomeProduct search);
     HomeProductDetail selectProductDetailForApp(Integer id);
     Integer productCountEnough(@Param("productId") Integer productId, @Param("count") Integer count);
 
     /**
      * 兑换实物列表
      */
-    List<ExchangeInfo> showProducts();
+    IPage<ExchangeInfo> showProducts(Page<ExchangeInfo> page);
 
     /**
      * 兑换实物日志列表
      */
-    List<ExchangeInfo> showProductLog(Integer userId);
+    IPage<ExchangeInfo> showProductLog(Page<ExchangeInfo> page, @Param("userId") Integer userId);
 }

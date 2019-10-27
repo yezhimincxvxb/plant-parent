@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.user.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.ApiEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.UserEnum;
@@ -72,9 +75,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @DS("read")
-    public PageResult<User> userList(Integer page, Integer limit, User where) {
-        userDAO.selectSelective(where);
-        return null;
+    public PageResult<User> userList(Integer page, Integer size, User where) {
+        IPage<User> pageResult = userDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @TriggerEvent(action = "register")
@@ -85,7 +88,7 @@ public class UserServiceImpl implements UserService {
         if (user.getPhone() != null) {
             User where = new User();
             where.setPhone(user.getPhone());
-            if (userDAO.selectSelective(where).size() > 0) {
+            if (userDAO.selectCount(new QueryWrapper<>(where)) > 0) {
                 return resultData.setMessageEnum(MessageEnum.PHONE_EXISTS);
             }
         }
@@ -126,10 +129,7 @@ public class UserServiceImpl implements UserService {
         where.setPhone(phone);
         if (state != null)
             where.setUserState(state.getState() == 1);
-        List<User> userList = userDAO.selectSelective(where);
-        if (userList.size() == 1)
-            return userList.get(0);
-        return null;
+        return userDAO.selectOne(new QueryWrapper<>(where));
     }
 
     @Override
@@ -163,10 +163,9 @@ public class UserServiceImpl implements UserService {
         if (user.getInviteName() != null && !StringUtils.isBlank(user.getInviteName())) {
             User invite = new User();
             invite.setPhone(user.getInviteName());
-            List<User> inviteList = userDAO.selectSelective(invite);
-            Integer inviteUid;
-            if (inviteList.size() == 1 && !(inviteUid = inviteList.get(0).getId()).equals(id))
-                user.setInviteUid(inviteUid);
+            User inviteUser = userDAO.selectOne(new QueryWrapper<>(invite));
+            if (null != inviteUser)
+                user.setInviteUid(inviteUser.getId());
             else
                 return resultData.setMessageEnum(MessageEnum.INVITE_USER_NOT_EXISTS);
         }
@@ -404,7 +403,7 @@ public class UserServiceImpl implements UserService {
     private boolean idCardExists(String idCard) {
         User where = new User();
         where.setIdCard(idCard);
-        return userDAO.selectSelective(where).size() > 0;
+        return userDAO.selectCount(new QueryWrapper<>(where)) > 0;
     }
 
 
@@ -453,7 +452,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @DS("read")
     public User userInfo(User where) {
-        return userDAO.selectSelective(where).stream().filter(Objects::nonNull).findFirst().orElse(null);
+        return userDAO.selectOne(new QueryWrapper<>(where));
     }
 }
 

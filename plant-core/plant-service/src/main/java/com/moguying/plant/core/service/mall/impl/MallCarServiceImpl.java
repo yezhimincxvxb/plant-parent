@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.mall.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.mall.MallCarDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
@@ -28,8 +30,8 @@ public class MallCarServiceImpl implements MallCarService {
     @Override
     @DS("read")
     public PageResult<OrderItem> userCarItems(Integer page, Integer size, Integer userId) {
-        mallCarDAO.userCarItemList(userId);
-        return null;
+        IPage<OrderItem> pageResult = mallCarDAO.userCarItemList(new Page<>(page, size), userId);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.moguying.plant.core.dao.seed;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,9 +14,9 @@ import java.util.List;
  */
 @Repository
 public interface SeedOrderDetailDAO extends BaseMapper<SeedOrderDetail> {
-    List<SeedOrderDetail> selectSelective(SeedOrderDetail where);
-    List<SeedOrderDetail> selectListByUserIdAndState(@Param("userId") Integer userId, @Param("state") Integer state);
-    List<SeedOrderDetail> selectUserPayListByUserId(Integer userId);
+    IPage<SeedOrderDetail> selectSelective(Page<SeedOrderDetail> page, @Param("wq") SeedOrderDetail where);
+    IPage<SeedOrderDetail> selectListByUserIdAndState(Page<SeedOrderDetail> page,@Param("userId") Integer userId, @Param("state") Integer state);
+    IPage<SeedOrderDetail> selectUserPayListByUserId(Page<SeedOrderDetail> page,@Param("userId") Integer userId);
     Integer sumOrderCountBySeedId(@Param("seedId") Integer seedId, @Param("state") Integer state);
     Integer findPlantBlockIdById(Integer id);
     SeedOrderDetail selectByIdAndUserIdWithSeedTypeInfo(@Param("id") Integer id, @Param("userId") Integer userId);

@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.reap.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.ReapEnum;
@@ -79,8 +82,8 @@ public class ReapServiceImpl<T> implements ReapService {
     @Override
     @DS("read")
     public PageResult<Reap> reapList(Integer page, Integer size, Reap where) {
-        reapDAO.selectSelective(where);
-        return null;
+        IPage<Reap> pageResult = reapDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -160,7 +163,7 @@ public class ReapServiceImpl<T> implements ReapService {
         where.setUserId(userId);
         where.setState(ReapEnum.REAP_DONE.getState());
         where.setSeedType(seedType);
-        List<Reap> reapList = reapDAO.selectSelective(where);
+        List<Reap> reapList = reapDAO.selectList(new QueryWrapper<>(where));
         if (null == reapList)
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
         if (reapList.size() <= 0)
@@ -218,10 +221,7 @@ public class ReapServiceImpl<T> implements ReapService {
         Reap where = new Reap();
         where.setId(id);
         where.setUserId(userId);
-        List<Reap> reaps = reapDAO.selectSelective(where);
-        if (null != reaps && reaps.size() == 1)
-            return reaps.get(0);
-        return null;
+        return reapDAO.selectOne(new QueryWrapper<>(where));
     }
 
     @Override

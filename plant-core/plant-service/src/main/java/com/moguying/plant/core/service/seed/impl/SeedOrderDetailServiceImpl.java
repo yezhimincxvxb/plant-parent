@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.seed.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SeedEnum;
@@ -50,23 +53,23 @@ public class SeedOrderDetailServiceImpl implements SeedOrderDetailService {
     @Override
     @DS("read")
     public PageResult<SeedOrderDetail> seedOrderDetailList(Integer page, Integer size, SeedOrderDetail where) {
-        seedOrderDetailDAO.selectSelective(where);
-        return null;
+        IPage<SeedOrderDetail> pageResult = seedOrderDetailDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
     @DS("read")
     public PageResult<SeedOrderDetail> userSeedOrderList(Integer page,Integer size,Integer userId,Integer state) {
-        seedOrderDetailDAO.selectListByUserIdAndState(userId,state);
-        return null;
+        IPage<SeedOrderDetail> pageResult = seedOrderDetailDAO.selectListByUserIdAndState(new Page<>(page, size), userId, state);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
 
     }
 
     @Override
     @DS("read")
     public PageResult<SeedOrderDetail> selectUserPayListByUserId(Integer page, Integer size, Integer userId) {
-        seedOrderDetailDAO.selectUserPayListByUserId(userId);
-        return null;
+        IPage<SeedOrderDetail> pageResult = seedOrderDetailDAO.selectUserPayListByUserId(new Page<>(page, size), userId);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -122,7 +125,8 @@ public class SeedOrderDetailServiceImpl implements SeedOrderDetailService {
     @Override
     @DS(value = "read")
     public List<SeedOrderDetail> needPayOrderList() {
-        return seedOrderDetailDAO.selectListByUserIdAndState(null,SeedEnum.SEED_ORDER_DETAIL_NEED_PAY.getState());
+        return seedOrderDetailDAO.selectList(new QueryWrapper<SeedOrderDetail>()
+                .lambda().eq(SeedOrderDetail::getState,SeedEnum.SEED_ORDER_DETAIL_NEED_PAY.getState()));
     }
 
     @Override

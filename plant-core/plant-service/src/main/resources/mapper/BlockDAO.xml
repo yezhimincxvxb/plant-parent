@@ -52,20 +52,20 @@
     t2.class_name as seed_type_name from plant_block t1
     left join plant_seed_type t2 on t1.seed_type = t2.id
     <where>
-      <if test="number != null">
-        number = #{number}
+      <if test="wq.number != null">
+        number = #{wq.number}
       </if>
-      <if test="seedType !=null">
+      <if test="wq.seedType !=null">
         AND seed_type = #{seedType}
       </if>
-      <if test="level != null ">
-        AND level = #{level}
+      <if test="wq.level != null ">
+        AND level = #{wq.level}
       </if>
-      <if test="isShow != null">
-        AND is_show = #{isShow}
+      <if test="wq.isShow != null">
+        AND is_show = #{wq.isShow}
       </if>
-      <if test="state != null">
-        AND state = #{state}
+      <if test="wq.state != null">
+        AND state = #{wq.state}
       </if>
       AND t1.is_delete = 0
     </where>

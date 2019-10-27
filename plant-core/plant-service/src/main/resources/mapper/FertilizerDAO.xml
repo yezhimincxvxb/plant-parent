@@ -48,20 +48,20 @@
         left join plant_seed_type t4 on t1.use_in_seed_type = t4.id
         left join plant_fertilizer_type t5 on t1.type_id = t5.id
         <where>
-            <if test="id != null">
-                t1.id = #{id}
+            <if test="wq.id != null">
+                t1.id = #{wq.id}
             </if>
-            <if test="typeId != null">
-                AND t1.type_id = #{typeId}
+            <if test="wq.typeId != null">
+                AND t1.type_id = #{wq.typeId}
             </if>
-            <if test="startTime != null">
+            <if test="wq.startTime != null">
                 <![CDATA[
-        AND UNIX_TIMESTAMP(t1.start_time) <= UNIX_TIMESTAMP(#{startTime})
-        AND UNIX_TIMESTAMP(t1.expire_time) >= UNIX_TIMESTAMP(#{startTime})
+        AND UNIX_TIMESTAMP(t1.start_time) <= UNIX_TIMESTAMP(#{wq.startTime})
+        AND UNIX_TIMESTAMP(t1.expire_time) >= UNIX_TIMESTAMP(#{wq.startTime})
       ]]>
             </if>
-            <if test="triggerGetEvent != null and triggerGetEvent != ''">
-                AND t1.trigger_get_event = #{triggerGetEvent}
+            <if test="wq.triggerGetEvent != null and wq.triggerGetEvent != ''">
+                AND t1.trigger_get_event = #{wq.triggerGetEvent}
             </if>
         </where>
         order by t1.id desc

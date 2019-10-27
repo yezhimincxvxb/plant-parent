@@ -1,8 +1,11 @@
 package com.moguying.plant.core.dao.reap;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.coin.SaleCoinLog;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,5 +24,5 @@ public interface SaleCoinLogDao extends BaseMapper<SaleCoinLog> {
     /**
      * 显示兑换券记录
      */
-    List<ExchangeInfo> showFertilizerLog(Integer userId);
+    IPage<ExchangeInfo> showFertilizerLog(Page<ExchangeInfo> page , @Param("userId") Integer userId);
 }

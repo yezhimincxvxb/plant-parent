@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.content.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.content.ArticleContentDAO;
 import com.moguying.plant.core.dao.content.ArticleDAO;
@@ -41,8 +44,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @DS("read")
     public PageResult<Article> articleList(Integer page, Integer size, Article where) {
-        articleDAO.selectSelective(where);
-        return null;
+        IPage<Article> pageResult = articleDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -93,6 +96,6 @@ public class ArticleServiceImpl implements ArticleService {
         //公告类型，TODO 上线需改动
         where.setTypeId(1);
         where.setIsShow(true);
-        return articleDAO.selectSelective(where);
+        return articleDAO.selectList(new QueryWrapper<>(where));
     }
 }

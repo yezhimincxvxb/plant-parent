@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.seed.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SeedEnum;
 import com.moguying.plant.core.dao.seed.SeedDAO;
@@ -53,8 +55,8 @@ public class SeedServiceImpl implements SeedService {
     @Override
     @DS("read")
     public PageResult<Seed> seedList(Integer page , Integer size , Seed seed) {
-        seedDAO.selectSelective(seed);
-        return null;
+        IPage<Seed> pageResult = seedDAO.selectSelective(new Page<>(page, size), seed);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     /**
@@ -183,8 +185,8 @@ public class SeedServiceImpl implements SeedService {
     @Override
     @DS("read")
     public PageResult<HomeSeed> seedListForHome(Integer page, Integer size) {
-        seedDAO.selectSeedListForHome();
-        return null;
+        IPage<HomeSeed> pageResult = seedDAO.selectSeedListForHome(new Page<>(page, size));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

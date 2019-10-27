@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.mall.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
@@ -25,6 +27,7 @@ import com.moguying.plant.core.scheduled.task.CloseMallPayOrder;
 import com.moguying.plant.core.service.mall.MallProductService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.utils.DateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +44,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
+@Slf4j
 public class MallProductServiceImpl implements MallProductService {
-
-    Logger log = LoggerFactory.getLogger(MallProductServiceImpl.class);
-
 
     @Autowired
     private MallProductDAO mallProductDAO;
@@ -168,8 +169,8 @@ public class MallProductServiceImpl implements MallProductService {
     @Override
     @DS("read")
     public PageResult<MallProduct> productList(Integer page, Integer size, MallProduct where) {
-        mallProductDAO.selectSelective(where);
-        return null;
+        IPage<MallProduct> pageResult = mallProductDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
 
@@ -340,7 +341,7 @@ public class MallProductServiceImpl implements MallProductService {
     @Override
     @DS("read")
     public PageResult<HomeProduct> productListForHome(Integer page, Integer size, HomeProduct search) {
-        mallProductDAO.selectProductForApp(search);
+        mallProductDAO.selectProductForApp(new Page<>(page,size),search);
         return null;
     }
 
@@ -353,14 +354,14 @@ public class MallProductServiceImpl implements MallProductService {
     @Override
     @DS("read")
     public PageResult<ExchangeInfo> showProducts(Integer page, Integer size) {
-        mallProductDAO.showProducts();
-        return null;
+        IPage<ExchangeInfo> pageResult = mallProductDAO.showProducts(new Page<>(page, size));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
     @DS("read")
     public PageResult<ExchangeInfo> showProductLog(Integer page, Integer size, Integer userId) {
-        mallProductDAO.showProductLog(userId);
-        return null;
+        IPage<ExchangeInfo> pageResult = mallProductDAO.showProductLog(new Page<>(page, size), userId);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 }

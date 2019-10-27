@@ -12,6 +12,5 @@ import java.util.List;
  */
 @Repository
 public interface SeedPicDAO extends BaseMapper<SeedPic> {
-    List<SeedPic> selectSelective(SeedPic seedPic);
-    List<SeedPic> selectByRange(@Param("range") List<Integer> range);
+
 }

@@ -1,7 +1,10 @@
 package com.moguying.plant.core.dao.content;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.content.Banner;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +14,6 @@ import java.util.List;
  */
 @Repository
 public interface BannerDAO extends BaseMapper<Banner> {
-    List<Banner> selectSelective(Banner where);
+    IPage<Banner> selectSelective(Page<Banner> page, @Param("wq") Banner where);
     List<Banner> bannerListForHome(Integer type);
 }

@@ -57,12 +57,12 @@
         <include refid="Base_Column_List"/>
         from plant_mall_product
         <where>
-            <if test="name != null and name != ''">
-                <bind name="nameLike" value="'%'+ name +'%'"/>
+            <if test="wq.name != null and wq.name != ''">
+                <bind name="nameLike" value="'%'+ wq.name +'%'"/>
                 name like #{nameLike}
             </if>
-            <if test="isShow != null">
-                AND is_show = #{isShow}
+            <if test="wq.isShow != null">
+                AND is_show = #{wq.isShow}
             </if>
         </where>
     </select>
@@ -76,8 +76,8 @@
   <select id="selectProductForApp" resultMap="AppHomeMallProduct">
     select id,thumb_pic_url,name,price,old_price,has_count from plant_mall_product
     where is_show = 1 and left_count > 0
-    <if test="name != null and name != ''">
-      <bind name="nameLike" value="'%'+ name +'%'"/>
+    <if test="wq.name != null and wq.name != ''">
+      <bind name="nameLike" value="'%'+ wq.name +'%'"/>
       AND name like #{nameLike}
     </if>
     order by add_time desc

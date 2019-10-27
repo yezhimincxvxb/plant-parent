@@ -1,6 +1,8 @@
 package com.moguying.plant.core.dao.seed;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.vo.UserSeedOrder;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 @Repository
 public interface SeedOrderDAO extends BaseMapper<SeedOrder> {
-    List<SeedOrder> selectSelective(SeedOrder where);
+    IPage<SeedOrder> selectSelective(Page<SeedOrder> page, @Param("wq") SeedOrder where);
     Integer incrSeedOrder(SeedOrder seedOrder);
     SeedOrder selectByUserId(Integer userId);
     SeedOrder selectByIdAndUserId(@Param("id") Integer id, @Param("userId") Integer userId);

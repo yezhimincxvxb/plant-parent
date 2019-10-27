@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.fertilizer.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
@@ -85,15 +88,15 @@ public class FertilizerServiceImpl implements FertilizerService {
     @Override
     @DS("read")
     public PageResult<Fertilizer> fertilizerList(int page, int size, Fertilizer where) {
-        fertilizerDAO.selectSelective(where);
-        return null;
+        IPage<Fertilizer> pageResult = fertilizerDAO.selectSelective(new Page<>(page,size),where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
 
     @Override
     @DS("read")
     public List<FertilizerType> fertilizerType() {
-        return fertilizerTypeDAO.selectSelective(null);
+        return fertilizerTypeDAO.selectList(new QueryWrapper<>());
     }
 
 
@@ -131,7 +134,7 @@ public class FertilizerServiceImpl implements FertilizerService {
                 condition.setProductId(0);
         }
 
-        List<UserFertilizerInfo> fertilizerInfos = userFertilizerDAO.userFertilizers(condition);
+        List<UserFertilizerInfo> fertilizerInfos = userFertilizerDAO.userFertilizers(null,condition).getRecords();
         // 用户使用的券
         List<UserFertilizerInfo> userFertilizerInfos = userFertilizerDAO.selectByIds(fertilizers);
         if (!fertilizerInfos.containsAll(userFertilizerInfos))
@@ -177,7 +180,7 @@ public class FertilizerServiceImpl implements FertilizerService {
         where.setStartTime(new Date());
 
         // 获取可发放的所有券
-        List<Fertilizer> fertilizers = fertilizerDAO.selectSelective(where);
+        List<Fertilizer> fertilizers = fertilizerDAO.selectList(new QueryWrapper<>(where));
         if (null == fertilizers || fertilizers.size() <= 0) return resultData;
 
         for (Fertilizer fertilizer : fertilizers) {
@@ -261,8 +264,8 @@ public class FertilizerServiceImpl implements FertilizerService {
     @Override
     @DS("read")
     public PageResult<ExchangeInfo> showFertilizer(Integer page, Integer size) {
-        fertilizerDAO.showFertilizer();
-        return null;
+        IPage<ExchangeInfo> pageResult = fertilizerDAO.showFertilizer(new Page<>(page, size));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -274,7 +277,7 @@ public class FertilizerServiceImpl implements FertilizerService {
     @Override
     @DS("read")
     public PageResult<ExchangeInfo> showFertilizerLog(Integer page, Integer size, Integer userId) {
-        saleCoinLogDao.showFertilizerLog(userId);
-        return null;
+        IPage<ExchangeInfo> pageResult = saleCoinLogDao.showFertilizerLog(new Page<>(page, size), userId);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 }

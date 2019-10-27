@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.reap.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapFeeDAO;
@@ -65,8 +67,8 @@ public class ReapFeeServiceImpl implements ReapFeeService {
     @DS("read")
     @Override
     public PageResult<ReapFee> reapFeeList(Integer page, Integer size, ReapFee where) {
-        reapFeeDAO.selectSelective(where);
-        return null;
+        IPage<ReapFee> pageResult = reapFeeDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
 

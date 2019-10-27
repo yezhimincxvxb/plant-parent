@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.farmer.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.FarmerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.FarmerTrigger;
@@ -187,10 +190,12 @@ public class FarmerServiceImpl implements FarmerService {
     @Override
     @DS("write")
     public PageResult<FarmerNotice> farmerNoticeList(Integer page , Integer size, FarmerNotice where) {
-        farmerNoticeDAO.selectSelective(where);
+
+        IPage<FarmerNotice> pageResult =
+                farmerNoticeDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where).orderByDesc("add_time"));
         //查看完已读
         farmerNoticeDAO.updateStateByUserId(where.getUserId(),FarmerEnum.NOTICE_READ.getState());
-        return null;
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     /**

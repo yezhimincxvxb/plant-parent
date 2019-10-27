@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.content.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.content.ArticleContentDAO;
 import com.moguying.plant.core.dao.content.ArticleDAO;
@@ -30,7 +31,7 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
     @Override
     @DS("read")
     public List<ArticleType> articleTypeList() {
-        return articleTypeDAO.selectSelective();
+        return articleTypeDAO.selectList(new QueryWrapper<>());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
 
         Article where = new Article();
         where.setTypeId(id);
-        List<Article> articles = articleDAO.selectSelective(where);
+        List<Article> articles = articleDAO.selectList(new QueryWrapper<>(where));
         if(articles.size() > 0){
             if(articleContentDAO.deleteByArticleIds(articles) <= 0)
                 return resultData.setMessageEnum(MessageEnum.DELETE_ARTICLE_CONTENT_FAIL);

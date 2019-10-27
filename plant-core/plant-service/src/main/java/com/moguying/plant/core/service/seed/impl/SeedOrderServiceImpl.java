@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.seed.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
@@ -46,8 +48,8 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Override
     @DS("read")
     public PageResult<SeedOrder> seedOrderList(Integer page, Integer size, SeedOrder where) {
-        seedOrderDAO.selectSelective(where);
-        return null;
+        IPage<SeedOrder> pageResult = seedOrderDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

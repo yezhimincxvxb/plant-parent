@@ -106,43 +106,43 @@
         left join plant_mall_product t5 on t2.use_in_product = t5.id
         left join plant_seed_type t6 on t2.use_in_seed_type = t6.id
         <where>
-            <if test="userId != null">
-                t1.user_id = #{userId}
+            <if test="wq.userId != null">
+                t1.user_id = #{wq.userId}
             </if>
-            <if test="productId != null">
-                AND (t2.use_in_product = #{productId} OR t2.use_in_product = 0)
+            <if test="wq.productId != null">
+                AND (t2.use_in_product = #{wq.productId} OR t2.use_in_product = 0)
             </if>
-            <if test="blockId != null">
-                AND (t2.use_in_block = #{blockId} OR t2.use_in_block = 0)
+            <if test="wq.blockId != null">
+                AND (t2.use_in_block = #{wq.blockId} OR t2.use_in_block = 0)
             </if>
-            <if test="seedTypeId != null">
-                AND (t2.use_in_seed_type = #{seedTypeId} OR t2.use_in_seed_type = 0)
+            <if test="wq.seedTypeId != null">
+                AND (t2.use_in_seed_type = #{wq.seedTypeId} OR t2.use_in_seed_type = 0)
             </if>
-            <if test="amount != null">
+            <if test="wq.amount != null">
                 <![CDATA[
         AND
         (
-        (#{amount} >= t2.amount_min AND #{amount} <= t2.amount_max AND t2.amount_max is not null)
+        (#{wq.amount} >= t2.amount_min AND #{wq.amount} <= t2.amount_max AND t2.amount_max is not null)
         OR
-        (#{amount} >= t2.amount_min AND t2.amount_max is null)
+        (#{wq.amount} >= t2.amount_min AND t2.amount_max is null)
         )
       ]]>
             </if>
-            <if test="expireTime != null">
+            <if test="wq.expireTime != null">
                 <![CDATA[
-        AND UNIX_TIMESTAMP(t2.start_time) <= UNIX_TIMESTAMP(#{expireTime})
-        AND UNIX_TIMESTAMP(t2.expire_time) >= UNIX_TIMESTAMP(#{expireTime})
+        AND UNIX_TIMESTAMP(t2.start_time) <= UNIX_TIMESTAMP(#{wq.expireTime})
+        AND UNIX_TIMESTAMP(t2.expire_time) >= UNIX_TIMESTAMP(#{wq.expireTime})
       ]]>
             </if>
-            <if test="state != null">
-                AND t1.state = #{state}
+            <if test="wq.state != null">
+                AND t1.state = #{wq.state}
             </if>
-            <if test="type != null">
-                AND t2.type_id = #{type}
+            <if test="wq.type != null">
+                AND t2.type_id = #{wq.type}
             </if>
-            <if test="types != null">
+            <if test="wq.types != null">
                 AND t2.type_id in
-                <foreach collection="types" item="item" separator="," close=")" open="(">
+                <foreach collection="wq.types" item="item" separator="," close=")" open="(">
                     #{item}
                 </foreach>
             </if>

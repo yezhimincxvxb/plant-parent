@@ -1,8 +1,11 @@
 package com.moguying.plant.core.dao.block;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.common.vo.HomeBlock;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +15,7 @@ import java.util.List;
  */
 @Repository
 public interface BlockDAO extends BaseMapper<Block> {
-    List<Block> selectSelective(Block where);
+    IPage<Block> selectSelective(Page<Block> page, @Param("wq") Block where);
     Block selectBlockByNumber(String number);
     Integer blockIsFree(Integer id);
     List<HomeBlock> selectBlockListForHome();

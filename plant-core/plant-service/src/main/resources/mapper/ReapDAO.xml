@@ -80,36 +80,36 @@
         left join plant_seed_type t3 on t1.seed_type = t3.id
         left join plant_block t4 on t1.block_id = t4.id
         <where>
-            <if test="id != null">
-                t1.id = #{id}
+            <if test="wq.id != null">
+                t1.id = #{wq.id}
             </if>
-            <if test="orderId != null">
-                AND t1.order_id = #{orderId}
+            <if test="wq.orderId != null">
+                AND t1.order_id = #{wq.orderId}
             </if>
-            <if test="seedType != null">
-                AND t1.seed_type = #{seedType}
+            <if test="wq.seedType != null">
+                AND t1.seed_type = #{wq.seedType}
             </if>
-            <if test="state != null">
-                AND t1.state = #{state}
+            <if test="wq.state != null">
+                AND t1.state = #{wq.state}
             </if>
-            <if test="userId != null">
-                AND t1.user_id = #{userId}
+            <if test="wq.userId != null">
+                AND t1.user_id = #{wq.userId}
             </if>
-            <if test="phone != null and phone != ''">
-                <bind name="phoneLike" value="'%' + phone + '%'"/>
+            <if test="wq.phone != null and wq.phone != ''">
+                <bind name="phoneLike" value="'%' + wq.phone + '%'"/>
                 AND t2.phone like #{phoneLike}
             </if>
-            <if test="realName != null and phone != ''">
-                <bind name="realNameLike" value="'%' + realName + '%'"/>
+            <if test="wq.realName != null and wq.phone != ''">
+                <bind name="realNameLike" value="'%' + wq.realName + '%'"/>
                 AND t2.real_name like #{realNameLike}
             </if>
 
-            <if test="seedTypeName != null and seedTypeName != ''">
-                <bind name="seedTypeNameLike" value="'%' + seedTypeName + '%'"/>
+            <if test="wq.seedTypeName != null and wq.seedTypeName != ''">
+                <bind name="seedTypeNameLike" value="'%' + wq.seedTypeName + '%'"/>
                 AND t3.class_name like #{seedTypeNameLike}
             </if>
-            <if test="blockNumber != null and blockNumber != ''">
-                AND t4.number like #{blockNumber}
+            <if test="wq.blockNumber != null and wq.blockNumber != ''">
+                AND t4.number like #{wq.blockNumber}
             </if>
         </where>
         order by t1.id desc

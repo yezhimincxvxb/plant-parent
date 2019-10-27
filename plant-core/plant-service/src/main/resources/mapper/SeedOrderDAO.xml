@@ -34,18 +34,18 @@
     left join plant_seed_type t2 on t1.seed_type = t2.id
     left join plant_user t3 on t1.user_id = t3.id
     <where>
-      <if test="phone != null">
-        <bind name="phoneLike" value="'%'+ phone +'%'"/>
+      <if test="wq.phone != null">
+        <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
         t3.phone like #{phoneLike}
       </if>
-      <if test="seedTypeName != null">
-        AND t2.class_name = #{seedTypeName}
+      <if test="wq.seedTypeName != null">
+        AND t2.class_name = #{wq.seedTypeName}
       </if>
-      <if test="userId != null">
-        AND t1.user_id = #{userId}
+      <if test="wq.userId != null">
+        AND t1.user_id = #{wq.userId}
       </if>
-      <if test="seedType != null">
-        AND t1.seed_type = #{seedType}
+      <if test="wq.seedType != null">
+        AND t1.seed_type = #{wq.seedType}
       </if>
     </where>
     order by (t1.buy_count-t1.plant_count) desc

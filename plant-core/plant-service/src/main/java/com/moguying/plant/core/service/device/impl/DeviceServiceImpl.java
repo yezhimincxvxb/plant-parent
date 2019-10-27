@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.device.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.device.DeviceGatewayDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -178,8 +181,9 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     @DS("read")
     public PageResult<DeviceGateway> deviceGatewayList(Integer page, Integer size, DeviceGateway deviceGateway) {
-        deviceGatewayDAO.selectSelective(deviceGateway);
-        return null;
+        IPage<DeviceGateway> pageResult = deviceGatewayDAO.selectPage(new Page<>(page,size),
+                new QueryWrapper<>(deviceGateway).orderByDesc("id"));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
 }

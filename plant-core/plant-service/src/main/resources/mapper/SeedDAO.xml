@@ -86,24 +86,24 @@
   <select id="selectSelective" parameterType="Seed" resultMap="BaseResultMap" >
     select <include refid="Base_Column_List" /> from plant_seed
     <where>
-      <if test="id != null">
+      <if test="wq.id != null">
         id = #{id}
       </if>
-      <if test="name != null and name != ''">
-      <bind value="'%' + name + '%'" name="nameLike"/>
+      <if test="wq.name != null and wq.name != ''">
+      <bind value="'%' + wq.name + '%'" name="nameLike"/>
         AND name like #{nameLike}
       </if>
-      <if test="state != null">
-        AND state = #{state}
+      <if test="wq.state != null">
+        AND state = #{wq.state}
       </if>
-      <if test="openTime != null">
+      <if test="wq.openTime != null">
       <![CDATA[
-        AND UNIX_TIMESTAMP(open_time) <= UNIX_TIMESTAMP(#{openTime})
+        AND UNIX_TIMESTAMP(open_time) <= UNIX_TIMESTAMP(#{wq.openTime})
       ]]>
       </if>
-      <if test="closeTime != null">
+      <if test="wq.closeTime != null">
       <![CDATA[
-        AND UNIX_TIMESTAMP(close_time) >= UNIX_TIMESTAMP(#{closeTime})
+        AND UNIX_TIMESTAMP(close_time) >= UNIX_TIMESTAMP(#{wq.closeTime})
       ]]>
       </if>
     </where>

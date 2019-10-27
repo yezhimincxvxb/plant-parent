@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.seed.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.seed.SeedContentDAO;
 import com.moguying.plant.core.dao.seed.SeedTypeDAO;
@@ -58,8 +61,8 @@ public class SeedTypeServiceImpl implements SeedTypeService {
     @Override
     @DS("read")
     public PageResult<SeedType> seedTypeList(Integer page, Integer size, SeedType seedClass) {
-        seedTypeDAO.selectSelective(seedClass);
-        return null;
+        IPage<SeedType> pageResult = seedTypeDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(seedClass));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
