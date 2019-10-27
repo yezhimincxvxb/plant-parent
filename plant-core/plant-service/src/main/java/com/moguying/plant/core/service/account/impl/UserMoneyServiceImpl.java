@@ -1,8 +1,9 @@
 package com.moguying.plant.core.service.account.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
-import com.moguying.plant.core.dao.account.UserMoneyLogDAO;
 import com.moguying.plant.core.dao.user.UserMoneyDetailDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
@@ -13,8 +14,7 @@ import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
 import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.common.DownloadService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,8 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackForClassName = {"Exception"})
+@Slf4j
 public class UserMoneyServiceImpl implements UserMoneyService {
-
-    Logger log = LoggerFactory.getLogger(UserMoneyServiceImpl.class);
 
     @Value("${excel.download.dir}")
     private String downloadDir;
@@ -40,14 +39,11 @@ public class UserMoneyServiceImpl implements UserMoneyService {
     @Autowired
     private UserMoneyDetailDAO userMoneyDetailDAO;
 
-    @Autowired
-    private UserMoneyLogDAO userMoneyLogDAO;
-
     @Override
     @DS("read")
     public PageResult<UserMoney> userMoneyList(Integer page, Integer size, UserMoney where) {
-        userMoneyDAO.selectSelective(where);
-        return null;
+        IPage<UserMoney> pageResult = userMoneyDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -130,8 +126,8 @@ public class UserMoneyServiceImpl implements UserMoneyService {
     @DS("read")
     @Override
     public PageResult<UserMoneyDetail> findUserMoney(Integer page, Integer size, Integer userId, String dateTime, List<Integer> list) {
-        userMoneyDetailDAO.findUserMoney(userId, dateTime, list);
-        return null;
+        IPage<UserMoneyDetail> pageResult = userMoneyDetailDAO.findUserMoney(new Page<>(page, size), userId, dateTime, list);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @DS("read")

@@ -1,8 +1,11 @@
 package com.moguying.plant.core.entity.account.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Data
 public class WithdrawRequest implements Serializable {
 
     private static final long serialVersionUID = -4306427271971509256L;
@@ -31,61 +34,5 @@ public class WithdrawRequest implements Serializable {
      */
     private String orderNumber;
 
-
-    public String getOrderNumber() {
-        return orderNumber;
-    }
-
-    public void setOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
-    }
-
-    public String getSeqNo() {
-        return seqNo;
-    }
-
-    public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo;
-    }
-
-    public String getSmsCode() {
-        return smsCode;
-    }
-
-    public void setSmsCode(String smsCode) {
-        this.smsCode = smsCode;
-    }
-
-    public Integer getBankId() {
-        return bankId;
-    }
-
-    public void setBankId(Integer bankId) {
-        this.bankId = bankId;
-    }
-
-    public Integer getWithdrawId() {
-        return withdrawId;
-    }
-
-    public void setWithdrawId(Integer withdrawId) {
-        this.withdrawId = withdrawId;
-    }
-
-    public BigDecimal getMoney() {
-        return money;
-    }
-
-    public void setMoney(BigDecimal money) {
-        this.money = money;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
 }

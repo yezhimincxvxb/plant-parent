@@ -1,6 +1,7 @@
 package com.moguying.plant.core.entity.fertilizer;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -15,7 +16,7 @@ public class TriggerEvent implements Serializable {
     /**
      * 触发事件英文
      */
-    @TableField
+    @TableId
     private String triggerEvent;
 
     /**

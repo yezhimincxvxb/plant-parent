@@ -1,6 +1,13 @@
 package com.moguying.plant.core.service.content.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moguying.plant.core.dao.content.ActivityDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.content.Activity;
@@ -16,7 +23,7 @@ import java.util.List;
 
 
 @Service
-public class ActivityServiceImpl implements ActivityService {
+public class ActivityServiceImpl extends ServiceImpl<ActivityDAO,Activity> implements ActivityService {
 
     @Autowired
     private ActivityDAO activityDAO;
@@ -26,9 +33,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     @DS("read")
-    public PageResult<Activity> activityList(Integer page, Integer size) {
-        activityDAO.activityList();
-        return null;
+    public PageResult<Activity> activityList(Integer page, Integer size, Activity where) {
+        IPage<Activity> activityIPage = activityDAO.selectPage(new Page<>(page,size), new QueryWrapper<>(where));
+        return new PageResult<>(activityIPage.getTotal(),activityIPage.getRecords());
     }
 
     @Override

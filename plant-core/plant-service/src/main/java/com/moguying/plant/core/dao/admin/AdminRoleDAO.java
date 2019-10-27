@@ -11,6 +11,4 @@ import java.util.List;
  */
 @Repository
 public interface AdminRoleDAO extends BaseMapper<AdminRole> {
-
-    List<AdminRole> selectSelective(AdminRole where);
 }

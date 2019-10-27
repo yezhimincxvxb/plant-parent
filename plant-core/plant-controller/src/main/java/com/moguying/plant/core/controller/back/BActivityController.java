@@ -1,7 +1,14 @@
 package com.moguying.plant.core.controller.back;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.additional.query.impl.QueryChainWrapper;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.service.content.ActivityService;
@@ -9,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/backEnd/activity")
 public class BActivityController {
 
@@ -19,15 +26,11 @@ public class BActivityController {
 
     /**
      * 活动列表
-     * @param page
-     * @param size
      * @return
      */
-    @GetMapping
-    @ResponseBody
-    public PageResult<Activity> activityList(@RequestParam(value = "page",defaultValue = "1") Integer page,
-                                             @RequestParam(value = "size",defaultValue = "10") Integer size){
-        return activityService.activityList(page,size);
+    @PostMapping("/list")
+    public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search){
+        return activityService.activityList(search.getPage(),search.getSize(),search.getWhere());
     }
 
 
@@ -37,7 +40,6 @@ public class BActivityController {
      * @return
      */
     @GetMapping("/{id}")
-    @ResponseBody
     public ResponseData<Activity> activityDetail(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),activityService.activityDetail(id));
     }
@@ -49,7 +51,6 @@ public class BActivityController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public ResponseData<Integer> addActivity(@RequestBody Activity addActivity){
         Integer id = activityService.addActivity(addActivity);
         if(id > 0)
@@ -63,7 +64,6 @@ public class BActivityController {
      * @return
      */
     @PutMapping("/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateActivity(@RequestBody Activity updateActivity, @PathVariable Integer id){
         updateActivity.setId(id);
         Integer rows = activityService.updateActivity(updateActivity);
@@ -82,7 +82,6 @@ public class BActivityController {
      * @return
      */
     @DeleteMapping("/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteActivity(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),activityService.deleteActivityById(id));
     }

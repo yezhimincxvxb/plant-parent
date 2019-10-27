@@ -9,16 +9,4 @@
   <sql id="Base_Column_List">
     id, role_name, action_code
   </sql>
-
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_admin_role
-    <where>
-      <if test="id != null">
-        id = #{id}
-      </if>
-      <if test="roleName != null">
-        AND role_name = #{roleName}
-      </if>
-    </where>
-  </select>
 </mapper>

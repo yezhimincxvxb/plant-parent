@@ -1,6 +1,8 @@
 package com.moguying.plant.core.service.account.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.FieldEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.dao.account.UserMoneyLogDAO;
@@ -40,8 +42,8 @@ public class UserMoneyLogServiceImpl implements UserMoneyLogService {
     @Override
     @DS("read")
     public PageResult<UserMoneyLog> moneyLogList(Integer page, Integer size, UserMoneyLog where) {
-        userMoneyLogDAO.selectSelective(where);
-        return null;
+        IPage<UserMoneyLog> pageResult = userMoneyLogDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     /**

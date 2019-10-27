@@ -36,6 +36,7 @@ spring:
   http:
     encoding:
       charset: UTF-8
+      force: true
   thymeleaf:
     encoding: UTF-8
     prefix: classpath:/views/

@@ -47,31 +47,31 @@
     select <include refid="Base_Column_List"/>,t2.phone,t2.real_name,sum(t1.available_money + t1.freeze_money + t1.collect_money) as total_amount from plant_user_money t1
     left join plant_user t2 on t1.user_id = t2.id
     <where>
-      <if test="userId != null">
-        user_id = #{userId}
+      <if test="wq.userId != null">
+        user_id = #{wq.userId}
       </if>
-      <if test="phone != null">
-        <bind value="'%' + phone + '%'" name="phoneLike"/>
+      <if test="wq.phone != null">
+        <bind value="'%' + wq.phone + '%'" name="phoneLike"/>
         AND t2.phone like #{phoneLike}
       </if>
-      <if test="realName != null">
-        <bind value="'%' + realName + '%'" name="realNameLike"/>
+      <if test="wq.realName != null">
+        <bind value="'%' + wq.realName + '%'" name="realNameLike"/>
         AND t2.real_name like #{realNameLike}
       </if>
-      <if test="availableMoney != null">
-        AND available_money = #{availableMoney}
+      <if test="wq.availableMoney != null">
+        AND available_money = #{wq.availableMoney}
       </if>
-      <if test="freezeMoney != null">
-        AND freeze_money = #{freezeMoney}
+      <if test="wq.freezeMoney != null">
+        AND freeze_money = #{wq.freezeMoney}
       </if>
-      <if test="collectMoney != null">
-        AND collect_money = #{collectMoney}
+      <if test="wq.collectMoney != null">
+        AND collect_money = #{wq.collectMoney}
       </if>
-      <if test="collectCapital != null">
-        AND collect_capital = #{collectCapital}
+      <if test="wq.collectCapital != null">
+        AND collect_capital = #{wq.collectCapital}
       </if>
-      <if test="collectInterest != null">
-        AND collect_interest = #{collectInterest}
+      <if test="wq.collectInterest != null">
+        AND collect_interest = #{wq.collectInterest}
       </if>
     </where>
     group by user_id

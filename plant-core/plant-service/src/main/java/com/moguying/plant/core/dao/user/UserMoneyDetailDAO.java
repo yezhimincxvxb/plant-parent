@@ -1,6 +1,8 @@
 package com.moguying.plant.core.dao.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.mall.vo.ProductInfo;
 import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
 import org.apache.ibatis.annotations.Param;
@@ -15,7 +17,7 @@ public interface UserMoneyDetailDAO extends BaseMapper<UserMoneyDetail> {
     /**
      * 获取用户资金明细
      */
-    List<UserMoneyDetail> findUserMoney(@Param("userId") Integer userId, @Param("dateTime") String dateTime, @Param("list") List<Integer> list);
+    IPage<UserMoneyDetail> findUserMoney(Page<UserMoneyDetail> page, @Param("userId") Integer userId, @Param("dateTime") String dateTime, @Param("list") List<Integer> list);
 
     /**
      * 根据ID获取资金详情

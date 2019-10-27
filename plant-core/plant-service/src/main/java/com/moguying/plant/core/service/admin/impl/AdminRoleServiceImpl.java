@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.admin.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.admin.AdminMenuDAO;
 import com.moguying.plant.core.dao.admin.AdminRoleDAO;
@@ -34,8 +37,8 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     @Override
     @DS("read")
     public PageResult<AdminRole> roleList(Integer page, Integer size, AdminRole where) {
-        roleDAO.selectSelective(where);
-        return null;
+        IPage<AdminRole> pageResult = roleDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @DS("write")

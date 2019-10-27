@@ -108,7 +108,7 @@ public enum  MessageEnum {
     SEED_REAP_CAN_NOT_SALE("成品无可出售份数",10102),
     SEED_REAP_SALE_ERROR("成品出售失败",10103),
     BANK_CARD_ID_EMPTY("请选择提现银行卡",10104),
-    WITHDRAW_NO_SUCCESS("靖处理审核成功记录",10105),
+    WITHDRAW_NO_SUCCESS("未处理审核成功记录",10105),
     WITHDRAW_SEND_SMS_UPDATE_ERROR("更新提现短信流水号失败",10106),
     WITHDRAW_UPDATE_STATE_ERROR("更新提现状态失败",10107),
     WITHDRAW_PAYMENT_RETURN_NOT_MATCH("第三方提现返回不匹配",10108),

@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.account.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.dao.account.MoneyWithdrawDAO;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
@@ -95,16 +98,16 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @Override
     @DS("read")
     public PageResult<MoneyWithdraw> apiMoneyWithdrawList(Integer page, Integer size, MoneyWithdraw where) {
-        moneyWithdrawDAO.selectiveForApi(where);
-        return null;
+        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectPage(new Page<>(page,size),new QueryWrapper<>(where));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
 
     @Override
     @DS("read")
     public PageResult<MoneyWithdraw> moneyWithdrawList(Integer page, Integer size, MoneyWithdraw where) {
-        moneyWithdrawDAO.selectSelective(where);
-        return null;
+        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectSelective(new Page<>(page,size),where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
@@ -264,11 +267,10 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @DS("write")
     public ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> sendWithdrawSms(MoneyWithdraw moneyWithdraw) {
         ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        List<MoneyWithdraw> withdraws = moneyWithdrawDAO.selectSelective(moneyWithdraw);
-        if(null == withdraws || withdraws.size() != 1 )
+        MoneyWithdraw withdraw = moneyWithdrawDAO.selectOne(new QueryWrapper<>(moneyWithdraw));
+        if (null == withdraw)
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NOT_EXISTS);
 
-        MoneyWithdraw withdraw = withdraws.get(0);
         if(!withdraw.getState().equals(MoneyStateEnum.WITHDRAW_SUCCESS.getState()))
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NO_SUCCESS);
         User userInfo = userDAO.userInfoById(withdraw.getUserId());
@@ -303,10 +305,9 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @DS("write")
     public ResultData<PaymentResponse<WithdrawMoneyResponse>> withdrawToAccount(MoneyWithdraw moneyWithdraw, String smsCode) {
         ResultData<PaymentResponse<WithdrawMoneyResponse>> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        List<MoneyWithdraw> withdraws = moneyWithdrawDAO.selectSelective(moneyWithdraw);
-        if(null == withdraws || withdraws.size() != 1 )
+        MoneyWithdraw withdraw = moneyWithdrawDAO.selectOne(new QueryWrapper<>(moneyWithdraw));
+        if(null == withdraw)
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NOT_EXISTS);
-        MoneyWithdraw withdraw = withdraws.get(0);
         if(!withdraw.getState().equals(MoneyStateEnum.WITHDRAW_SUCCESS.getState()))
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NO_SUCCESS);
         User userInfo = userDAO.userInfoById(withdraw.getUserId());

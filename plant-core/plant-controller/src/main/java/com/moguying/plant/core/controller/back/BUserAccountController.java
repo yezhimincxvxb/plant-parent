@@ -47,6 +47,8 @@ public class BUserAccountController {
     @PostMapping(value = "/list")
     @ResponseBody
     public PageResult<UserMoney> userAccountList(@RequestBody PageSearch<UserMoney> search){
+        if(null == search.getWhere())
+            search.setWhere(new UserMoney());
         return userMoneyService.userMoneyList(search.getPage(),search.getSize(),search.getWhere());
     }
 
@@ -75,6 +77,8 @@ public class BUserAccountController {
     @PostMapping(value = "/log")
     @ResponseBody
     public PageResult<UserMoneyLog> accountLogList(@RequestBody PageSearch<UserMoneyLog> search){
+        if(null == search.getWhere())
+            search.setWhere(new UserMoneyLog());
         return userMoneyLogService.moneyLogList(search.getPage(),search.getSize(),search.getWhere());
     }
 
@@ -102,8 +106,8 @@ public class BUserAccountController {
      */
     @GetMapping(value = "/recharge")
     @ResponseBody
-    public PageResult<MoneyRecharge> rechargeList(@RequestParam("page") Integer page, @RequestParam("size") Integer size){
-        return moneyRechargeService.moneyRechargeList(null,null);
+    public PageResult<MoneyRecharge> rechargeList(@RequestBody PageSearch<MoneyRecharge> search){
+        return moneyRechargeService.moneyRechargeList(search.getPage(),search.getSize(),search.getWhere());
     }
 
 
@@ -115,6 +119,8 @@ public class BUserAccountController {
     @PostMapping(value = "/withdraw")
     @ResponseBody
     public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch<MoneyWithdraw> search){
+        if(null == search.getWhere())
+            search.setWhere(new MoneyWithdraw());
         return moneyWithdrawService.moneyWithdrawList(search.getPage(),search.getSize(),search.getWhere());
     }
 

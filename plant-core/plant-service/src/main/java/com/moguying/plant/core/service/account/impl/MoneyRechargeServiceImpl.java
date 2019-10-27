@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.account.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
@@ -40,8 +41,8 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
 
     @Override
     public PageResult<MoneyRecharge> moneyRechargeList(Integer page, Integer size, MoneyRecharge where) {
-        moneyRechargeDAO.selectSelective(where);
-        return null;
+        IPage<MoneyRecharge> pageResult = moneyRechargeDAO.selectPage(new Page<>(page,size),new QueryWrapper<>(where));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
 

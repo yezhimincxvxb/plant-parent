@@ -51,7 +51,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 
-@Controller
+@RestController
 @RequestMapping("/api/account")
 public class AAccountController {
 
@@ -90,7 +90,6 @@ public class AAccountController {
      * @return
      */
     @GetMapping
-    @ResponseBody
     public ResponseData<AccountInfo> accountInfo(@LoginUserId Integer userId) {
         UserMoney userMoney = moneyService.userMoneyInfo(userId);
         Date firstDayOfMonth = DateUtil.INSTANCE.firstDayOfMonth();
@@ -118,7 +117,6 @@ public class AAccountController {
      * @return
      */
     @GetMapping("/withdraw")
-    @ResponseBody
     public PageResult<MoneyWithdraw> withdrawList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                   @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                   @LoginUserId Integer userId) {
@@ -138,7 +136,6 @@ public class AAccountController {
      * @return
      */
     @GetMapping("/withdraw/review")
-    @ResponseBody
     public PageResult<MoneyWithdraw> withdrawReviewList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                         @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                         @LoginUserId Integer userId) {
@@ -163,7 +160,6 @@ public class AAccountController {
      */
     @ValidateUser
     @PostMapping("/withdraw")
-    @ResponseBody
     public ResponseData<Integer> withdraw(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getBankId())
             return new ResponseData<>(MessageEnum.BANK_CARD_ID_EMPTY.getMessage(), MessageEnum.BANK_CARD_ID_EMPTY.getState());
@@ -195,7 +191,6 @@ public class AAccountController {
      */
     @ValidateUser
     @PostMapping("/withdraw/sms")
-    @ResponseBody
     public ResponseData<SendWithdrawSmsCodeResponse> sendWithdrawSms(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getWithdrawId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -221,7 +216,6 @@ public class AAccountController {
      */
     @ValidateUser
     @PutMapping("/withdraw")
-    @ResponseBody
     public ResponseData<Integer> withdrawToAccount(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getWithdrawId() || null == withdrawRequest.getSeqNo() || null == withdrawRequest.getSmsCode())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -244,7 +238,6 @@ public class AAccountController {
      */
     @ValidateUser
     @PostMapping("/to/account")
-    @ResponseBody
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> toAccountPage(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
 
@@ -284,7 +277,6 @@ public class AAccountController {
      * @return
      */
     @GetMapping(value = "/profit")
-    @ResponseBody
     public ResponseData<Profit> profitStatistics(@RequestParam("type") Integer type, @LoginUserId Integer userId) {
         if (type.equals(1)) {
             MonthProfit monthProfit = new MonthProfit();
@@ -331,7 +323,6 @@ public class AAccountController {
      * @return
      */
     @PostMapping("/recharge")
-    @ResponseBody
     @Deprecated
     public ResponseData<Integer> recharge(@RequestParam("money") String money, @LoginUserId Integer userId) {
 
@@ -373,7 +364,6 @@ public class AAccountController {
      * @return
      */
     @PutMapping("/recharge")
-    @ResponseBody
     @Deprecated
     public ResponseData<Integer> rechargeDo(@RequestBody PayWithCode recharge, @LoginUserId Integer userId) {
 
@@ -412,7 +402,6 @@ public class AAccountController {
      * 用户资金明细
      */
     @PostMapping("/capital/detail")
-    @ResponseBody
     public PageResult<?> capitalDetail(
             @LoginUserId Integer userId,
             @RequestBody PageSearch<String> pageSearch) {
@@ -480,7 +469,6 @@ public class AAccountController {
      * 资金详情
      */
     @GetMapping("/capital/info/{id}")
-    @ResponseBody
     public ResponseData<DetailInfo> capitalInfo(@PathVariable("id") Integer id) {
 
         UserMoneyDetail userMoney = userMoneyService.findUserMoneyById(id);
@@ -512,7 +500,6 @@ public class AAccountController {
      * 收入/支出
      */
     @GetMapping("/getTotal")
-    @ResponseBody
     public ResponseData<InAndOutMoney> getTotal(
             @LoginUserId Integer userId,
             @RequestParam("dateTime") String dateTime) {

@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.admin.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.admin.AdminMenuDAO;
 import com.moguying.plant.core.dao.admin.AdminMessageDAO;
 import com.moguying.plant.core.dao.admin.AdminUserDAO;
@@ -75,8 +78,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     @DS("read")
     public PageResult<AdminMessage> adminMessageList(Integer page, Integer size, AdminMessage where) {
-        adminMessageDAO.selectSelective(where);
-        return null;
+        IPage<AdminMessage> pageResult = adminMessageDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @DS("write")
@@ -105,8 +108,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     @DS("read")
     public PageResult<AdminUser> adminUserList(Integer page, Integer size, AdminUser where) {
-        adminUserDAO.selectSelective(where);
-        return null;
+        IPage<AdminUser> pageResult = adminUserDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @DS("write")

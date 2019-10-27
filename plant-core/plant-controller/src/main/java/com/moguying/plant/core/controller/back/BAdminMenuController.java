@@ -32,7 +32,8 @@ public class BAdminMenuController {
     @PostMapping("/list")
     @ResponseBody
     public PageResult<AdminMenu> menuList(@RequestBody PageSearch<AdminMenu> search){
-
+        if(null == search.getWhere())
+            search.setWhere(new AdminMenu());
         return adminMenuService.menuList(search.getPage(),search.getSize(),search.getWhere());
     }
 

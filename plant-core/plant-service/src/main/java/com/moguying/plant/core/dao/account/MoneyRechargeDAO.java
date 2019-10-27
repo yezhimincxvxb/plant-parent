@@ -19,9 +19,5 @@ public interface MoneyRechargeDAO extends BaseMapper<MoneyRecharge> {
 
     MoneyRecharge selectByPrimaryKey(Integer id);
 
-    IPage<MoneyRecharge> selectByPage(Page page, @Param("recharge") MoneyRecharge where);
-
-
-
 
 }

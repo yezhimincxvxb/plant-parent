@@ -33,33 +33,33 @@
     collect_interest, affect_type, affect_time, affect_ip, detail_id, affect_info,t2.phone,t2.real_name from plant_user_money_log t1
     left join plant_user t2 on t1.user_id = t2.id
     <where>
-        <if test="userId != null">
-          user_id = #{userId}
+        <if test="wq.userId != null">
+          user_id = #{wq.userId}
         </if>
-        <if test="'' != phone and phone != null">
-          <bind name="phoneLike" value="'%'+ phone +'%'"/>
+        <if test="'' != wq.phone and wq.phone != null">
+          <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
           AND t2.phone like #{phoneLike}
         </if>
-      <if test="realName != null and realName != ''">
-        <bind name="realNameLike" value="'%'+ realName +'%'"/>
+      <if test="wq.realName != null and wq.realName != ''">
+        <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
         AND t2.real_name like #{realNameLike}
       </if>
-        <if test="affectType != null">
-          AND affect_type = #{affectType}
+        <if test="wq.affectType != null">
+          AND affect_type = #{wq.affectType}
         </if>
 
-        <if test="startTime != null">
+        <if test="wq.startTime != null">
           <![CDATA[
-            AND UNIX_TIMESTAMP(affect_time) <= UNIX_TIMESTAMP(#{startTime})
+            AND UNIX_TIMESTAMP(affect_time) <= UNIX_TIMESTAMP(#{wq.startTime})
           ]]>
         </if>
-        <if test="endTime != null">
+        <if test="wq.endTime != null">
           <![CDATA[
-              AND UNIX_TIMESTAMP(affect_time) <= UNIX_TIMESTAMP(#{endTime})
+              AND UNIX_TIMESTAMP(affect_time) <= UNIX_TIMESTAMP(#{wq.endTime})
             ]]>
         </if>
-        <if test="detailId != null and detailId != ''">
-          AND detail_id = #{detailId}
+        <if test="wq.detailId != null and wq.detailId != ''">
+          AND detail_id = #{wq.detailId}
         </if>
 
     </where>

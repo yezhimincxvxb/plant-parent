@@ -17,7 +17,7 @@
     <!-- 获取用户资金明细 -->
     <select id="findUserMoney" resultMap="baseResultMap">
         select
-        <include refid="baseSQL"></include>, date_format(affect_time,'%Y-%m-%d') dateTime
+        <include refid="baseSQL"/>, date_format(affect_time,'%Y-%m-%d') dateTime
         from plant_user_money_log
         <where>
             user_id = #{userId}

@@ -38,8 +38,8 @@
     from plant_admin_user t1
     left join plant_user t2 on t1.bind_id = t2.id
     <where>
-      <if test="userName != null">
-        t1.user_name = #{userName}
+      <if test="wq.userName != null">
+        t1.user_name = #{wq.userName}
       </if>
     </where>
     order by t1.id desc

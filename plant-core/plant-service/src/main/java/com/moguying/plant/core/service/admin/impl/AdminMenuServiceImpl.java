@@ -1,6 +1,9 @@
 package com.moguying.plant.core.service.admin.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.admin.AdminMenuDAO;
 import com.moguying.plant.core.dao.admin.AdminMenuMetaDAO;
@@ -56,27 +59,22 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     @DS("read")
     public List<AdminMenu> parentMenu() {
-        AdminMenu where = new AdminMenu();
-        where.setParentId(0);
-        return adminMenuDAO.selectSelective(where);
+        QueryWrapper<AdminMenu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(AdminMenu::getParentId,0);
+        return adminMenuDAO.selectList(queryWrapper);
     }
 
     @Override
     @DS("read")
     public PageResult<AdminMenu> menuList(Integer page, Integer size, AdminMenu where) {
-        adminMenuDAO.selectSelective(where);
-        return null;
+        IPage<AdminMenu> pageResult = adminMenuDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @DS("read")
     @Override
     public AdminMenu adminMenu(Integer id) {
-        AdminMenu where = new AdminMenu();
-        where.setId(id);
-        List<AdminMenu> adminMenus = adminMenuDAO.selectSelective(where);
-        if(null != adminMenus && adminMenus.size() == 1)
-            return adminMenus.get(0);
-        return null;
+        return adminMenuDAO.selectOne(new QueryWrapper<AdminMenu>().lambda().eq(AdminMenu::getId,id));
     }
 
 
@@ -93,10 +91,8 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         if (null == menu)
             return resultData.setMessageEnum(MessageEnum.ADMIN_MENU_NOT_EXIST);
         if (menu.getParentId().equals(0)) {
-            AdminMenu where = new AdminMenu();
-            where.setParentId(id);
             List<Integer> menuIds = new ArrayList<>();
-            adminMenuDAO.selectSelective(where).stream()
+            adminMenuDAO.selectList(new QueryWrapper<AdminMenu>().lambda().eq(AdminMenu::getParentId,id)).stream()
                     .map(AdminMenu::getId)
                     .forEach(menuIds::add);
             if(menuIds.size() > 0) {
@@ -114,7 +110,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     @DS("read")
     public List<AdminMenu> menus(AdminMenu menu) {
-        return adminMenuDAO.selectSelective(menu);
+        return adminMenuDAO.selectList(new QueryWrapper<>(menu));
     }
 
     @DS("read")
