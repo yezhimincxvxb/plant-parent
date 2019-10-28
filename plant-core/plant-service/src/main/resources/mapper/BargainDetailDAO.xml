@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.bargain.BargainDetailDao">
+
+    <!-- 基本字段映射 -->
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.bargain.BargainDetail">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_count" property="productCount"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="bargain_amount" property="bargainAmount"/>
+        <result column="left_amount" property="leftAmount"/>
+        <result column="total_count" property="totalCount"/>
+        <result column="bargain_count" property="bargainCount"/>
+        <result column="state" property="state"/>
+        <result column="add_time" property="addTime"/>
+        <result column="bargain_time" property="bargainTime"/>
+        <result column="close_time" property="closeTime"/>
+        <result column="order_number" property="orderNumber"/>
+    </resultMap>
+
+    <!-- 基本查询字段 -->
+    <sql id="BaseColumnList">
+   id, user_id, product_id, product_count, total_amount, bargain_amount, left_amount,
+   total_count, bargain_count, state, add_time, bargain_time, close_time, order_number
+  </sql>
+
+    <!-- 用户砍价详情 -->
+    <select id="getOneByOpen" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumnList"/>
+        from plant_bargain_detail
+        <where>
+            user_id = #{userId}
+            <if test="productId != null">
+                and product_id = #{productId}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            and unix_timestamp(add_time) &lt; unix_timestamp()
+            and unix_timestamp(close_time) &gt; unix_timestamp()
+        </where>
+    </select>
+
+    <!-- 用户砍价详情 -->
+    <select id="getOneByClose" resultMap="BaseResultMap">
+        select t1.*
+        from plant_bargain_detail t1
+        left join plant_mall_order t2 on t1.order_number = t2.order_number
+        <where>
+            t1.user_id = #{userId}
+            <if test="productId != null">
+                and t1.product_id = #{productId}
+            </if>
+            <if test="state != null">
+                and t1.state = #{state}
+            </if>
+            and t2.state = 0
+        </where>
+    </select>
+
+    <!-- 砍价成功记录(所有用户) -->
+    <select id="successLogs" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
+        select t3.phone `phone`, t4.name `productName`, t1.product_count `productCount`
+        from plant_bargain_detail t1
+        left join plant_mall_order t2 on t1.order_number = t2.order_number
+        left join plant_user t3 on t2.user_id = t3.id
+        left join plant_mall_product t4 on t1.product_id = t4.id
+        <where>
+            t2.state = 1
+        </where>
+        order by t2.pay_time desc
+    </select>
+
+    <!-- 送出商品数量 -->
+    <select id="sendNumber" resultType="com.moguying.plant.core.entity.bargain.vo.SendNumber">
+        select t1.product_id `productId`, sum(t1.product_count) `productCount`
+        from plant_bargain_detail t1
+        left join plant_mall_order t2 on t1.order_number = t2.order_number
+        where t2.state = 1
+        group by t1.product_id
+    </select>
+
+    <!-- 砍价成功人数 -->
+    <select id="getNumber" resultType="java.lang.Integer">
+        select count(t2.id)
+        from plant_bargain_detail t1
+        left join plant_mall_order t2 on t1.order_number = t2.order_number
+        <where>
+            t2.state = 1
+            and t1.product_id = #{productId}
+        </where>
+    </select>
+
+    <!-- 砍价进行中的成品列表 -->
+    <select id="doingList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
+        select t1.id `id`, t2.name `productName`, t1.bargain_amount `bargainAmount`, t1.left_amount `leftAmount`,
+        t2.summary_desc `productInfo`, t2.pic_url `picUrl`, t1.add_time `beginTime`, t1.close_time `endTime`,
+        sum(t1.bargain_amount / t1.total_amount) `rate`, t2.id `productId`, sum(t2.price * t2.bargain_number)
+        `productPrice`
+        from plant_bargain_detail t1
+        left join plant_mall_product t2 on t1.product_id = t2.id
+        <where>
+            t1.user_id = #{userId}
+            and t1.state = 0
+            and unix_timestamp(t1.add_time) &lt; unix_timestamp()
+            and unix_timestamp(t1.close_time) &gt; unix_timestamp()
+            <if test="id != null">
+                and t1.id = #{id}
+            </if>
+        </where>
+        group by t1.id
+    </select>
+
+    <!-- 砍价成功记录 -->
+    <select id="ownLog" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
+        select t2.id `id`, t3.name `productName`, t3.summary_desc `productInfo`, t3.pic_url `picUrl`, t2.add_time
+        `endTime`
+        from plant_bargain_detail t1
+        left join plant_mall_order t2 on t1.order_number = t2.order_number
+        left join plant_mall_product t3 on t1.product_id = t3.id
+        <where>
+            t2.user_id = #{userId}
+        </where>
+        order by t2.add_time desc
+    </select>
+
+    <!-- 砍价成功的订单 -->
+    <select id="submitOrder" resultType="com.moguying.plant.core.entity.mall.MallOrder">
+        select t1.*
+        from plant_mall_order t1
+        left join plant_bargain_detail t2 on t1.order_number = t2.order_number
+        <where>
+            t1.state = 0
+            and t2.user_id = #{userId}
+            and t2.product_id = #{productId}
+            and t2.state = 1
+            and unix_timestamp(t2.add_time) &lt; unix_timestamp()
+            and unix_timestamp(t2.close_time) &gt; unix_timestamp()
+        </where>
+    </select>
+
+    <!-- 砍价详情ids -->
+    <select id="getAllId" resultType="java.lang.Integer">
+        select id
+        from plant_bargain_detail
+        where product_id = #{productId} and state = 0
+    </select>
+
+    <!-- 砍价成功后的订单ids -->
+    <select id="getOrderIds" resultType="java.lang.Integer">
+        select t2.id
+        from plant_bargain_detail t1
+        left join plant_mall_order t2 on t1.order_number = t2.order_number
+        <where>
+            t1.product_id = #{productId}
+            and t2.state = 0
+        </where>
+    </select>
+
+    <!-- 批量关单 -->
+    <update id="setState">
+        update plant_bargain_detail set state = 1
+        <where>
+            id in
+            <foreach item="id" collection="idList" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+
+</mapper>

@@ -11,6 +11,7 @@ import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
@@ -28,8 +29,6 @@ import com.moguying.plant.core.service.mall.MallProductService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -363,5 +362,17 @@ public class MallProductServiceImpl implements MallProductService {
     public PageResult<ExchangeInfo> showProductLog(Integer page, Integer size, Integer userId) {
         IPage<ExchangeInfo> pageResult = mallProductDAO.showProductLog(new Page<>(page, size), userId);
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+    }
+
+    @Override
+    @DS("read")
+    public PageResult<BargainResponse> productList(Integer page, Integer size) {
+        IPage<BargainResponse> pageResult = mallProductDAO.productList(new Page<>(page, size));
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+    }
+
+    @Override
+    public BargainResponse productInfo(Integer id) {
+        return mallProductDAO.productInfo(id);
     }
 }

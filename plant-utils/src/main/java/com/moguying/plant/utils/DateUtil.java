@@ -113,6 +113,40 @@ public enum  DateUtil {
         return todayEnd(calendar.getTime());
     }
 
+    /**
+     * 当前时间是否在某段时间内
+     */
+    public Boolean betweenTime(Date begin, Date end, Date now) {
+        Calendar cBegin = Calendar.getInstance();
+        cBegin.setTime(begin);
+
+        Calendar cEnd = Calendar.getInstance();
+        cEnd.setTime(end);
+
+        Calendar cNow = Calendar.getInstance();
+        cNow.setTime(now);
+        return cNow.after(cBegin) && cNow.before(cEnd);
+    }
+
+    public Boolean betweenTime(Date begin, Date end) {
+        return betweenTime(begin, end, new Date());
+    }
+
+    public Boolean betweenTime(Date begin) {
+        Date end = nextDay(begin);
+        return betweenTime(begin, end, new Date());
+    }
+
+    /**
+     * 下一天时间
+     */
+    public Date nextDay(Date begin) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(begin);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
+    }
+
     public static void main(String[] args) {
         System.out.println(DateUtil.INSTANCE.todayEnd(DateUtil.INSTANCE.lastDayOfNextMonth()));
     }

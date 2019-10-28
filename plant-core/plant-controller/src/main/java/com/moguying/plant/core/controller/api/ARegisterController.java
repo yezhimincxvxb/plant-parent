@@ -56,44 +56,57 @@ public class ARegisterController {
     @PostMapping(value = "/register")
     @ResponseBody
     public ResponseData<LoginResponse> register(@RequestBody Register register){
-        if(!CommonUtil.INSTANCE.isPhone(register.getPhone()))
-            return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(),MessageEnum.PHONE_ERROR.getState());
-       User user = userService.userInfoByPhone(register.getPhone(),null);
-       User addUser = new User();
-       //用户是否已存在
-       if(user != null)
-           return new ResponseData<>(MessageEnum.PHONE_EXISTS.getMessage(),MessageEnum.PHONE_EXISTS.getState());
-        addUser.setPhone(register.getPhone());
-       //校验短信验证码
-       if(StringUtils.isEmpty(register.getMsgCode()))
-           return new ResponseData<>(MessageEnum.MESSAGE_CODE_IS_EMPTY.getMessage(),MessageEnum.MESSAGE_CODE_IS_EMPTY.getState());
-       PhoneMessage message = messageService.messageByPhone(register.getPhone());
-       if(message == null || !message.getCode().equals(register.getMsgCode()))
-           return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(),MessageEnum.MESSAGE_CODE_ERROR.getState());
-       messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
-       //校验邀请人
-       if(!StringUtils.isEmpty(register.getInviteCode())) {
-           User inviteUser = userService.userInfoByPhone(register.getInviteCode(),null);
-            if(inviteUser == null)
-                return new ResponseData<>(MessageEnum.INVITE_USER_NOT_EXISTS.getMessage(),MessageEnum.INVITE_USER_NOT_EXISTS.getState());
-           addUser.setInviteUid(inviteUser.getId());
-       }
-       addUser.setRegSource(UserEnum.REG_SOURCE_MOBILE.getStateName());
-       ResultData<TriggerEventResult<InnerMessage>> resultData = userService.addUser(addUser);
-       //如果邀请人不为空
-       if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)){
-           if (addUser.getInviteUid() != null) {
-               UserInvite invite = new UserInvite();
-               invite.setUserId(addUser.getId());
-               invite.setPhone(addUser.getPhone());
-               invite.setInviteUserId(addUser.getInviteUid());
-               userInviteService.saveInviteInfo(invite);
-           }
+        // 校验手机号格式
+        if (!CommonUtil.INSTANCE.isPhone(register.getPhone()))
+            return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
 
-           return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),
-                   userService.loginSuccess(addUser.getId(), addUser.getPhone()).getData().getData());
-       }
-       return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        // 用户是否已存在
+        User user = userService.userInfoByPhone(register.getPhone(), null);
+        if (user != null)
+            return new ResponseData<>(MessageEnum.PHONE_EXISTS.getMessage(), MessageEnum.PHONE_EXISTS.getState());
+
+        // 校验短信验证码
+        if (StringUtils.isEmpty(register.getMsgCode()))
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_IS_EMPTY.getMessage(), MessageEnum.MESSAGE_CODE_IS_EMPTY.getState());
+
+        // 短信验证码是否失效(一分钟有效)
+        PhoneMessage message = messageService.messageByPhone(register.getPhone());
+        if (message == null || !message.getCode().equals(register.getMsgCode()))
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
+
+        // 验证后更新状态
+        messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
+
+        // 创建用户，封装数据
+        User addUser = new User();
+        addUser.setPhone(register.getPhone());
+        addUser.setRegSource(UserEnum.REG_SOURCE_MOBILE.getStateName());
+
+        // 校验邀请人
+        if (!StringUtils.isEmpty(register.getInviteCode())) {
+            // 邀请人信息
+            User inviteUser = userService.userInfoByInviteCode(register.getInviteCode(), null);
+            if (inviteUser == null)
+                return new ResponseData<>(MessageEnum.INVITE_USER_NOT_EXISTS.getMessage(), MessageEnum.INVITE_USER_NOT_EXISTS.getState());
+            addUser.setInviteUid(inviteUser.getId());
+        }
+
+        // 添加用户
+        ResultData<TriggerEventResult<InnerMessage>> resultData = userService.addUser(addUser);
+
+        // 如果邀请人不为空
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+            if (addUser.getInviteUid() != null) {
+                UserInvite invite = new UserInvite();
+                invite.setUserId(addUser.getId());
+                invite.setPhone(addUser.getPhone());
+                invite.setInviteUserId(addUser.getInviteUid());
+                userInviteService.saveInviteInfo(invite);
+            }
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),
+                    userService.loginSuccess(addUser.getId(), addUser.getPhone()).getData().getData());
+        }
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 

@@ -80,7 +80,7 @@ public class UserInviteServiceImpl implements UserInviteService {
         statistics.setInvitePlantAmount(userInviteDAO.sumInviteAmount(FieldEnum.PLANT_AMOUNT.getField(),inviteUserId));
         statistics.setInviteAward(userInviteDAO.sumInviteAmount(FieldEnum.INVITE_AWARD.getField(),inviteUserId));
         User userInfo = userDAO.userInfoById(inviteUserId);
-        statistics.setPhone(userInfo.getPhone());
+        statistics.setPhone(userInfo.getInviteCode());
         return statistics;
     }
 

@@ -18,8 +18,12 @@ import java.util.List;
 @Repository
 public interface MallOrderDAO extends BaseDAO<MallOrder> {
     IPage<MallOrder> selectSelective(Page<MallOrder> page, @Param("wq") MallOrderSearch where);
+
     List<MallOrder> selectSelective(@Param("wq") MallOrderSearch where);
+
     IPage<UserMallOrder> userOrderListByState(Page<MallOrder> page,@Param("userId") Integer userId, @Param("state") Integer state);
 
     MallOrder findByIdAndNum(@Param("userId") Integer userId, @Param("number") String number);
+
+    Integer closeOrder(@Param("ids") List<Integer> ids);
 }

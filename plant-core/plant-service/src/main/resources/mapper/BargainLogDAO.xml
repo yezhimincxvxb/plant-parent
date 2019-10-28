@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.bargain.BargainLogDao">
+
+    <!-- 基本字段映射 -->
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.bargain.BargainLog">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="share_id" property="shareId"/>
+        <result column="product_id" property="productId"/>
+        <result column="detail_id" property="detailId"/>
+        <result column="help_amount" property="helpAmount"/>
+        <result column="message" property="message"/>
+        <result column="help_time" property="helpTime"/>
+    </resultMap>
+
+    <!-- 基本查询字段 -->
+    <sql id="BaseColumnList">
+   id, user_id, share_id, product_id, detail_id, help_amount, message, help_time
+  </sql>
+
+    <!-- 同一用户是否已帮 -->
+    <select id="getBargainCount" resultType="java.lang.Integer">
+        select count(t2.id)
+        from plant_bargain_log t1
+        left join plant_bargain_detail t2 on t1.detail_id = t2.id
+        <where>
+            <if test="userId != null">
+                t1.user_id = #{userId}
+            </if>
+            <if test="shareId != null">
+                and t1.share_id = #{shareId}
+            </if>
+            <if test="productId != null">
+                and t1.product_id = #{productId}
+            </if>
+            and t2.state = 0
+            and unix_timestamp(t2.add_time) &lt; unix_timestamp()
+            and unix_timestamp(t2.close_time) &gt; unix_timestamp()
+        </where>
+    </select>
+
+    <!-- 当天帮砍次数 -->
+    <select id="getBargainCountToday" resultType="java.lang.Integer">
+        select count(id)
+        from plant_bargain_log
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+                and share_id != #{userId}
+            </if>
+            and to_days(help_time) = to_days(now())
+        </where>
+    </select>
+
+    <!-- 好友帮砍记录 -->
+    <select id="helpLog" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
+        select t2.phone `phone`, t1.help_amount `bargainAmount`, t1.message `message`, t1.help_time `beginTime`
+        from plant_bargain_log t1
+        left join plant_user t2 on t1.user_id = t2.id
+        left join plant_bargain_detail t3 on t1.detail_id = t3.id
+        <where>
+            t1.share_id = #{shareId}
+            and t1.product_id = #{productId}
+            and unix_timestamp(t3.add_time) &lt; unix_timestamp()
+            and unix_timestamp(t3.close_time) &gt; unix_timestamp()
+        </where>
+        order by t1.help_time desc
+    </select>
+
+</mapper>

@@ -1,0 +1,268 @@
+package com.moguying.plant.core.controller.api;
+
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.annotation.LoginUserId;
+import com.moguying.plant.core.dao.bargain.BargainDetailDao;
+import com.moguying.plant.core.dao.mall.MallProductDAO;
+import com.moguying.plant.core.dao.user.UserAddressDAO;
+import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
+import com.moguying.plant.core.entity.ResponseData;
+import com.moguying.plant.core.entity.bargain.BargainDetail;
+import com.moguying.plant.core.entity.bargain.BargainLog;
+import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
+import com.moguying.plant.core.entity.bargain.vo.ShareResult;
+import com.moguying.plant.core.entity.common.vo.BuyResponse;
+import com.moguying.plant.core.entity.mall.MallOrder;
+import com.moguying.plant.core.entity.mall.MallProduct;
+import com.moguying.plant.core.entity.mall.vo.BuyProduct;
+import com.moguying.plant.core.entity.seed.vo.SubmitOrder;
+import com.moguying.plant.core.entity.user.UserAddress;
+import com.moguying.plant.core.service.bargain.BargainDetailService;
+import com.moguying.plant.core.service.bargain.BargainLogService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/login/bargain")
+@Slf4j
+public class ABargainLoginController {
+
+    @Autowired
+    private MallProductDAO mallProductDAO;
+
+    @Autowired
+    private BargainDetailService bargainDetailService;
+
+    @Autowired
+    private BargainLogService bargainLogService;
+
+    @Autowired
+    private UserAddressDAO userAddressDAO;
+
+    @Autowired
+    private BargainDetailDao bargainDetailDao;
+
+    /**
+     * 分享
+     */
+    @PostMapping("/share")
+    public ResponseData<ShareResult> share(@LoginUserId Integer userId, @RequestBody BuyProduct buyProduct) {
+
+        ShareResult result = new ShareResult().setUserId(null).setMessage("分享失败");
+        ResponseData<ShareResult> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
+
+        // 参数错误
+        if (userId == null || buyProduct == null || buyProduct.getProductId() == null)
+            return responseData
+                    .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
+                    .setState(MessageEnum.PARAMETER_ERROR.getState());
+
+        // 重复分享
+        BargainDetail detail = bargainDetailService.getOneByOpen(userId, buyProduct.getProductId(), false);
+        if (detail != null)
+            return responseData.setData(result.setOrderId(detail.getId()).setUserId(userId).setMessage("成功"));
+
+        // 产品存在
+        MallProduct product = mallProductDAO.selectById(buyProduct.getProductId());
+        if (product == null || !product.getIsShow() || product.getBargainCount() <= 0 || product.getBargainNumber() <= 0)
+            return responseData
+                    .setMessage(MessageEnum.MALL_PRODUCT_NOT_EXISTS.getMessage())
+                    .setState(MessageEnum.MALL_PRODUCT_NOT_EXISTS.getState());
+
+        // 库存足够
+        if (product.getLeftCount() < product.getBargainNumber())
+            return responseData
+                    .setMessage(MessageEnum.MALL_PRODUCT_NOT_ENOUGH.getMessage())
+                    .setState(MessageEnum.MALL_PRODUCT_NOT_ENOUGH.getState());
+
+        // 限量商品
+        if (product.getIsLimit() && product.getBargainLimit() < product.getBargainNumber())
+            return responseData
+                    .setMessage(MessageEnum.MAX_LIMIT.getMessage())
+                    .setState(MessageEnum.MAX_LIMIT.getState());
+
+        // 首次分享
+        BargainDetail firstDetail = bargainDetailService.shareSuccess(userId, buyProduct, product);
+        if (firstDetail != null)
+            return responseData.setData(result.setOrderId(firstDetail.getId()).setUserId(userId).setMessage("首次成功"));
+
+        return responseData
+                .setMessage(MessageEnum.ERROR.getMessage())
+                .setState(MessageEnum.ERROR.getState());
+    }
+
+    /**
+     * 砍价中的产品列表
+     */
+    @PostMapping("/doing/list")
+    public PageResult<BargainResponse> doingList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
+        return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId);
+    }
+
+    /**
+     * 砍价中的产品详情
+     */
+    @GetMapping("/product/info/{id}")
+    public ResponseData<BargainResponse> productInfo(@LoginUserId Integer userId, @PathVariable("id") Integer id) {
+        ResponseData<BargainResponse> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
+        BargainResponse response = bargainDetailService.productInfo(userId, id);
+
+        if (response != null) {
+            Integer productId = response.getProductId();
+            Integer number = bargainDetailService.getNumber(productId);
+            response.setSendNumber(number);
+            return responseData.setData(response);
+        }
+        return responseData;
+    }
+
+    /**
+     * 砍价
+     */
+    @PostMapping("/help/chop")
+    public ResponseData<String> helpChop(@LoginUserId Integer userId, @RequestBody BargainLog bargainLog) {
+        ResponseData<String> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), "砍价失败");
+
+        // 参数
+        if (bargainLog == null || bargainLog.getShareId() == null || bargainLog.getProductId() == null)
+            return responseData
+                    .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
+                    .setState(MessageEnum.PARAMETER_ERROR.getState());
+
+        // 自己已砍
+        if (userId.equals(bargainLog.getShareId()))
+            return responseData
+                    .setMessage(MessageEnum.NOT_OWN_BARGAIN.getMessage())
+                    .setState(MessageEnum.NOT_OWN_BARGAIN.getState());
+
+        // 好友已帮
+        Integer count = bargainLogService.getBargainCount(userId, bargainLog.getShareId(), bargainLog.getProductId());
+        if (count >= 1)
+            return responseData
+                    .setMessage(MessageEnum.HELPED_ORDER.getMessage())
+                    .setState(MessageEnum.HELPED_ORDER.getState());
+
+        // 当天帮砍上限
+        Integer countToday = bargainLogService.getBargainCountToday(userId);
+        if (countToday > 3)
+            return responseData
+                    .setMessage(MessageEnum.HELPED_OVER.getMessage())
+                    .setState(MessageEnum.HELPED_OVER.getState());
+
+        // 砍价详情
+        BargainDetail detail = bargainDetailService.getOneByOpen(bargainLog.getShareId(), bargainLog.getProductId(), false);
+        if (detail == null)
+            return responseData
+                    .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
+                    .setState(MessageEnum.SHARE_NOT_FOUND.getState());
+
+        // 帮砍
+        Boolean helpSuccess = bargainDetailService.helpSuccess(userId, bargainLog, detail);
+        if (helpSuccess)
+            return responseData.setData("砍价成功");
+
+        return responseData
+                .setMessage(MessageEnum.ERROR.getMessage())
+                .setState(MessageEnum.ERROR.getState());
+    }
+
+    /**
+     * 好友帮砍记录
+     */
+    @PostMapping("/help/log")
+    public PageResult<BargainResponse> helpLog(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
+        return bargainLogService.helpLog(pageSearch.getPage(), pageSearch.getSize(), userId, pageSearch.getWhere());
+    }
+
+    /**
+     * 砍价成功记录(用户本人)
+     */
+    @PostMapping("/own/log")
+    public PageResult<BargainResponse> ownLog(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
+        return bargainDetailService.ownLog(pageSearch.getPage(), pageSearch.getSize(), userId);
+    }
+
+    /**
+     * 提交订单
+     */
+    @PostMapping("/submit/order")
+    public ResponseData<BuyResponse> submitOrder(@LoginUserId Integer userId, @RequestBody SubmitOrder submitOrder) {
+
+        ResponseData<BuyResponse> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), null);
+
+        // 参数
+        if (userId == null || submitOrder == null || submitOrder.getProductId() == null || submitOrder.getAddressId() == null)
+            return responseData
+                    .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
+                    .setState(MessageEnum.PARAMETER_ERROR.getState());
+
+        // 商品不存在
+        MallProduct product = mallProductDAO.selectById(submitOrder.getProductId());
+        if (product == null || !product.getIsShow())
+            return responseData
+                    .setMessage(MessageEnum.MALL_PRODUCT_NOT_EXISTS.getMessage())
+                    .setState(MessageEnum.MALL_PRODUCT_NOT_EXISTS.getState());
+
+        // 地址不存在
+        UserAddress address = userAddressDAO.selectByIdAndUserId(submitOrder.getAddressId(), userId, false);
+        if (null == address)
+            return responseData
+                    .setMessage(MessageEnum.USER_ADDRESS_NO_EXISTS.getMessage())
+                    .setState(MessageEnum.USER_ADDRESS_NO_EXISTS.getState());
+
+        // 砍价详情
+        BargainDetail detail = bargainDetailService.getOneByClose(userId, submitOrder.getProductId(), true);
+        if (detail == null)
+            return responseData
+                    .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
+                    .setState(MessageEnum.SHARE_NOT_FOUND.getState());
+
+        // 订单存在
+        MallOrder mallOrder = bargainDetailService.submitOrder(userId, submitOrder.getProductId());
+        if (mallOrder == null)
+            return responseData
+                    .setMessage(MessageEnum.MALL_ORDER_NOT_EXISTS.getMessage())
+                    .setState(MessageEnum.MALL_ORDER_NOT_EXISTS.getState());
+
+        // 提单
+        mallOrder.setBuyMark(submitOrder.getMark());
+        Boolean submitSuccess = bargainDetailService.submitSuccess(userId, product, address, detail, mallOrder);
+        if (submitSuccess) {
+            BuyResponse buyResponse = new BuyResponse();
+            buyResponse.setOrderId(mallOrder.getId());
+            buyResponse.setOrderNumber(mallOrder.getOrderNumber());
+            buyResponse.setAddress(address);
+            return responseData.setData(buyResponse);
+        }
+
+        return responseData
+                .setMessage(MessageEnum.MALL_ORDER_UPDATE_ERROR.getMessage())
+                .setState(MessageEnum.MALL_ORDER_UPDATE_ERROR.getState());
+    }
+
+    /**
+     * 超时关单
+     */
+    @GetMapping("/time/out/{orderId}")
+    public ResponseData<String> closeByTimeOut(@LoginUserId Integer userId, @PathVariable("orderId") Integer id) {
+        ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
+
+        // 关单订单不存在
+        BargainDetail detail = bargainDetailService.getOneByOpen(userId, id, false);
+        if (detail == null)
+            return responseData
+                    .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
+                    .setState(MessageEnum.SHARE_NOT_FOUND.getState());
+
+        // 关单
+        detail.setState(true);
+        if (bargainDetailDao.updateById(detail) <= 0) return responseData;
+
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData("关单成功");
+    }
+}

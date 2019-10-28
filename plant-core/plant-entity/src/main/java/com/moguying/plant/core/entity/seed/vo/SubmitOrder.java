@@ -20,4 +20,8 @@ public class SubmitOrder implements Serializable {
      */
     private Integer state;
 
+    /**
+     * 产品id
+     */
+    private Integer productId;
 }
