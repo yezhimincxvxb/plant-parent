@@ -162,7 +162,7 @@ public class SeedOrderDetail implements Serializable, PayOrder {
      * 实际支付金额
      */
     @JSONField(ordinal = 22,deserialize = false,serializeUsing = BigDecimalSerialize.class)
-    @TableField
+    @TableField(exist = false)
     private BigDecimal realPayAmount;
 
     @JSONField(ordinal = 23)

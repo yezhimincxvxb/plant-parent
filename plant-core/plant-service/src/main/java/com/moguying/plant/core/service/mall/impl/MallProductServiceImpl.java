@@ -341,8 +341,8 @@ public class MallProductServiceImpl implements MallProductService {
     @Override
     @DS("read")
     public PageResult<HomeProduct> productListForHome(Integer page, Integer size, HomeProduct search) {
-        mallProductDAO.selectProductForApp(new Page<>(page,size),search);
-        return null;
+        IPage<HomeProduct> pageResult = mallProductDAO.selectProductForApp(new Page<>(page, size), search);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

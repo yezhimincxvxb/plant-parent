@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.seed.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.block.BlockDAO;
@@ -64,7 +65,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
         SeedOrder where = new SeedOrder();
         where.setUserId(seedOrderDetail.getUserId());
         where.setSeedType(seed.getSeedType());
-        List<SeedOrder> seedOrders = seedOrderDAO.selectSelective(where);
+        List<SeedOrder> seedOrders = seedOrderDAO.selectList(new QueryWrapper<>(where));
 
         if(seedOrders == null || seedOrders.size() <= 0){
             SeedOrder add = new SeedOrder();

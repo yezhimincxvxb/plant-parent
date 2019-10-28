@@ -297,7 +297,7 @@ public class UserServiceImpl implements UserService {
                 addressDAO.setDefault(address.getId(), address.getUserId());
             } else {
                 // 是否设置为默认地址
-                if (address.getIsDeFault()) {
+                if (address.getIsDefault()) {
                     addressDAO.setNoDefault(address.getId(), address.getUserId());
                 }
             }
@@ -329,7 +329,7 @@ public class UserServiceImpl implements UserService {
             if (addressList.size() == 1 || addressDAO.getDefaultNum(address.getUserId()) == 0) {
                 addressDAO.setDefault(id, address.getUserId());
             } else {
-                if (null != address.getIsDeFault() && address.getIsDeFault()) {
+                if (null != address.getIsDefault() && address.getIsDefault()) {
                     addressDAO.setNoDefault(id, address.getUserId());
                 }
             }
@@ -410,8 +410,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @DS("read")
     public PageResult<UserMessage> userMessageList(Integer page, Integer size, Integer userId) {
-        userMessageDAO.messageListByUserId(userId, false);
-        return null;
+        IPage<UserMessage> pageResult = userMessageDAO.messageListByUserId(new Page<>(page, size), userId, false);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.moguying.plant.core.dao.mall;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moguying.plant.core.entity.mall.vo.MallCar;
+import com.moguying.plant.core.entity.mall.MallCar;
 import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

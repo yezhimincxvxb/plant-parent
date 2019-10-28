@@ -336,8 +336,8 @@ public class ReapServiceImpl<T> implements ReapService {
     @Override
     @DS("read")
     public PageResult<ExchangeInfo> showReapLog(Integer page, Integer size, Integer userId) {
-        reapDAO.showReapLog(userId);
-        return null;
+        IPage<ExchangeInfo> pageResult = reapDAO.showReapLog(new Page<>(page, size), userId);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

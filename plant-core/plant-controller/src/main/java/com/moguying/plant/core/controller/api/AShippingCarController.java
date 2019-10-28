@@ -6,6 +6,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.common.vo.ModifyItemResponse;
+import com.moguying.plant.core.entity.mall.MallCar;
 import com.moguying.plant.core.entity.mall.vo.*;
 import com.moguying.plant.core.service.mall.MallCarService;
 import org.springframework.beans.factory.annotation.Autowired;

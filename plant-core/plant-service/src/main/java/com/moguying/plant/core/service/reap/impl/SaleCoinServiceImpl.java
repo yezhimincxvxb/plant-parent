@@ -19,20 +19,20 @@ public class SaleCoinServiceImpl implements SaleCoinService {
 
     @Override
     public SaleCoin findById(Integer userId) {
-        return saleCoinDao.findById(userId);
+        return saleCoinDao.selectById(userId);
     }
 
     @Override
     @DS("write")
     public int insertSaleCoin(SaleCoin saleCoin) {
-        return saleCoinDao.insertSaleCoin(saleCoin);
+        return saleCoinDao.insert(saleCoin);
     }
 
     @Override
     @DS("write")
     public UserSaleCoin updateSaleCoin(UserSaleCoin userSaleCoin) {
         SaleCoin saleCoin = userSaleCoin.getSaleCoin();
-        if (saleCoinDao.updateSaleCoin(saleCoin) <= 0) return null;
+        if (saleCoinDao.updateById(saleCoin) <= 0) return null;
         return userSaleCoin;
     }
 }

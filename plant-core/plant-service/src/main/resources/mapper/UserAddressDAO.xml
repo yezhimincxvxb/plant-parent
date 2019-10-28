@@ -12,7 +12,7 @@
     <result column="detail_address" jdbcType="VARCHAR" property="detailAddress" />
     <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
     <result column="is_default" jdbcType="BIT" property="isDefault" />
-    <result column="is_delete" jdbcType="BIT" property="isDefault" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, province_name, city_name, town_name, receive_user_name, receive_phone, 

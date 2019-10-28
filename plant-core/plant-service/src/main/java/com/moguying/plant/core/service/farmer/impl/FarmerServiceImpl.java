@@ -420,7 +420,7 @@ public class FarmerServiceImpl implements FarmerService {
         String triggerEvent = "farmerLevel" + level;
         Fertilizer where = new Fertilizer();
         where.setTriggerGetEvent(triggerEvent);
-        List<Fertilizer> gifts = fertilizerDAO.selectSelective(where);
+        List<Fertilizer> gifts = fertilizerDAO.selectList(new QueryWrapper<>(where));
         int count = userFertilizerDAO.countByTriggerEvent(userId,triggerEvent);
         levelGift.setFertilizers(gifts);
         levelGift.setHasPickUp(count > 0);

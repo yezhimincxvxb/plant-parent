@@ -8,48 +8,4 @@
         <result column="coin_count" property="coinCount"/>
     </resultMap>
 
-    <!-- 根据ID查询 -->
-    <select id="findById" parameterType="Integer" resultMap="baseMap">
-        select user_id, coin_count
-        from plant_sale_coin
-        <where>
-            user_id = #{userId}
-        </where>
-    </select>
-
-    <!-- 添加用户-蘑菇币信息 -->
-    <insert id="insertSaleCoin" parameterType="com.moguying.plant.core.entity.coin.SaleCoin">
-        insert into plant_sale_coin
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                user_id,
-            </if>
-            <if test="coinCount != null">
-                coin_count
-            </if>
-        </trim>
-        values
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                #{userId},
-            </if>
-            <if test="coinCount != null">
-                #{coinCount}
-            </if>
-        </trim>
-    </insert>
-
-    <!-- 更新蘑菇币 -->
-    <insert id="updateSaleCoin" parameterType="com.moguying.plant.core.entity.coin.SaleCoin">
-        update plant_sale_coin
-        <set>
-            <if test="coinCount != null">
-                coin_count = #{coinCount}
-            </if>
-        </set>
-        <where>
-            user_id = #{userId}
-        </where>
-    </insert>
-
 </mapper>

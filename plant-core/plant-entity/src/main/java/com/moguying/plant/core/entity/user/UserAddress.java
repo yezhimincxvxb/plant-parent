@@ -77,7 +77,7 @@ public class UserAddress implements Serializable {
 
     @JSONField(name = "isDefault",ordinal = 10)
     @TableField
-    private Boolean isDeFault;
+    private Boolean isDefault;
 
     @JSONField(name = "isDelete",ordinal = 11)
     @TableField

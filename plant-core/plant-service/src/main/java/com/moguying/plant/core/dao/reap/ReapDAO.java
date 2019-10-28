@@ -67,6 +67,6 @@ public interface ReapDAO extends BaseMapper<Reap> {
     /**
      * 查询兑换蘑菇币记录
      */
-    List<ExchangeInfo> showReapLog(Integer userId);
+    IPage<ExchangeInfo> showReapLog(Page<ExchangeInfo> page,@Param("userId") Integer userId);
 
 }

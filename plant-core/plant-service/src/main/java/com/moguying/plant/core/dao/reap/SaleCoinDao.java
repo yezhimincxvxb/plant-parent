@@ -9,20 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SaleCoinDao extends BaseMapper<SaleCoin> {
-
-    /**
-     * 根据ID查询
-     */
-    SaleCoin findById(Integer userId);
-
-    /**
-     * 添加用户-蘑菇币信息
-     */
-    int insertSaleCoin(SaleCoin saleCoin);
-
-    /**
-     * 更新蘑菇币c
-     */
-    int updateSaleCoin(SaleCoin saleCoin);
-
 }

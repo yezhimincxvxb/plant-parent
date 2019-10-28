@@ -8,8 +8,6 @@ import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * 蘑菇币日志持久层
  */

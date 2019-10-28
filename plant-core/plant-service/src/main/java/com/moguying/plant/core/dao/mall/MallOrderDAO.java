@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface MallOrderDAO extends BaseMapper<MallOrder> {
     IPage<MallOrder> selectSelective(Page<MallOrder> page, @Param("wq") MallOrderSearch where);
-    List<UserMallOrder> userOrderListByState(@Param("userId") Integer userId, @Param("state") Integer state);
+    IPage<UserMallOrder> userOrderListByState(Page<MallOrder> page,@Param("userId") Integer userId, @Param("state") Integer state);
 
     MallOrder findByIdAndNum(@Param("userId") Integer userId, @Param("number") String number);
 }

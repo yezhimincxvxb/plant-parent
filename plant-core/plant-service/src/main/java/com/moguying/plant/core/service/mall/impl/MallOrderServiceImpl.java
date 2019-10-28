@@ -142,8 +142,8 @@ public class MallOrderServiceImpl implements MallOrderService {
     @Override
     @DS("read")
     public PageResult<UserMallOrder> userMallOrderListByState(Integer page, Integer size, Integer userId, Integer state) {
-        mallOrderDAO.userOrderListByState(userId, state);
-        return null;
+        IPage<UserMallOrder> pageResult = mallOrderDAO.userOrderListByState(new Page<>(page, size), userId, state);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
