@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/backEnd/system")
+@RestController
+@RequestMapping("/system")
 public class BSystemController {
 
     @Autowired
@@ -25,7 +25,6 @@ public class BSystemController {
     private ApkService apkService;
 
     @GetMapping("/trigger/event")
-    @ResponseBody
     public ResponseData<List<TriggerEvent>> triggerEventList(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),triggerEventService.triggerEventList());
     }
@@ -38,7 +37,6 @@ public class BSystemController {
      * @return
      */
     @GetMapping("/apk")
-    @ResponseBody
     public PageResult<Apk> apkList(@RequestParam(value = "page",defaultValue = "1") Integer page,
                                    @RequestParam(value = "size",defaultValue = "10") Integer size){
         return apkService.apkList(page,size,null);
@@ -51,7 +49,6 @@ public class BSystemController {
      * @return
      */
     @DeleteMapping("/apk/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteApk(@PathVariable Integer id){
         ResultData<Integer> resultData = apkService.apkDelete(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -63,7 +60,6 @@ public class BSystemController {
      * @return
      */
     @PutMapping("/apk")
-    @ResponseBody
     public ResponseData<Integer> showApk(@RequestBody Apk update){
         ResultData<Integer> resultData = apkService.saveApk(update);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());

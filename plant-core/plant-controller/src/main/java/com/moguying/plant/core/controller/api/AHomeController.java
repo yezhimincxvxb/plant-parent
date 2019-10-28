@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
 @Slf4j
 public class AHomeController {
 
@@ -129,7 +128,6 @@ public class AHomeController {
      * @return
      */
     @GetMapping(value = "/annotation")
-    @ResponseBody
     public ResponseData<List<Article>> annotationList() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 articleService.articleForHome()

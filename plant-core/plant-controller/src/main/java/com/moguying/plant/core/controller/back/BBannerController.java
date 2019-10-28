@@ -2,16 +2,16 @@ package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.content.Banner;
 import com.moguying.plant.core.service.content.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/backEnd/banner")
+@RequestMapping("/banner")
 public class BBannerController {
 
 
@@ -21,14 +21,14 @@ public class BBannerController {
 
     /**
      * banner列表
-     * @param page
-     * @param size
+     * @param search
      * @return
      */
-    @GetMapping("/list")
-    public PageResult<Banner> bannerList(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
-                                         @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
-        return bannerService.bannerList(page,size,null);
+    @PostMapping("/list")
+    public PageResult<Banner> bannerList(@RequestBody PageSearch<Banner> search){
+        if(null == search.getWhere())
+            search.setWhere(new Banner());
+        return bannerService.bannerList(search.getPage(),search.getSize(),search.getWhere());
     }
 
 

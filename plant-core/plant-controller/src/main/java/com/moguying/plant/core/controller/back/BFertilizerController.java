@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Controller
-@RequestMapping("/backEnd/fertilizer")
+@RestController
+@RequestMapping("/fertilizer")
 public class BFertilizerController {
 
     @Autowired
@@ -33,15 +33,14 @@ public class BFertilizerController {
     /**
      * 券列表
      *
-     * @param page
-     * @param size
+     * @param search
      * @return
      */
-    @GetMapping
-    @ResponseBody
-    public PageResult<Fertilizer> fertilizerList(@RequestParam(value = "page", defaultValue = "1") int page,
-                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
-        return fertilizerService.fertilizerList(page, size, null);
+    @PostMapping("/list")
+    public PageResult<Fertilizer> fertilizerList(@RequestBody PageSearch<Fertilizer> search) {
+        if(null == search.getWhere())
+            search.setWhere(new Fertilizer());
+        return fertilizerService.fertilizerList(search.getPage(),search.getSize(),search.getWhere());
     }
 
 
@@ -52,7 +51,6 @@ public class BFertilizerController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public ResponseData<Integer> addFertilizer(@RequestBody Fertilizer fertilizer) {
         if (null == fertilizer)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -69,7 +67,6 @@ public class BFertilizerController {
      * @return
      */
     @DeleteMapping("/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteFertilizer(@PathVariable Integer id) {
         if (id == null || id <= 0)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -84,7 +81,6 @@ public class BFertilizerController {
      * @return
      */
     @GetMapping("/type")
-    @ResponseBody
     public ResponseData<List<FertilizerType>> fertilizerType() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), fertilizerService.fertilizerType());
     }
@@ -97,7 +93,6 @@ public class BFertilizerController {
      * @return
      */
     @PostMapping("/user/fertilizer")
-    @ResponseBody
     public PageResult<UserFertilizer> userFertilizers(@RequestBody PageSearch<UserFertilizer> search) {
         return userFertilizerService.userFertilizerList(search.getPage(), search.getSize(), search.getWhere());
     }
@@ -110,7 +105,6 @@ public class BFertilizerController {
      * @return
      */
     @PostMapping("/user/excel")
-    @ResponseBody
     public ResponseData<Integer> downloadUserFertilizer(@RequestBody PageSearch<UserFertilizer> search, HttpServletRequest request,
                                                         @SessionAttribute(SessionAdminUser.sessionKey) AdminUser user) {
         userFertilizerService.downloadExcel(user.getId(), search, request);
@@ -125,7 +119,6 @@ public class BFertilizerController {
      * @return
      */
     @PostMapping("/user/add")
-    @ResponseBody
     public ResponseData<Integer> addUserFertilizer(@RequestBody UserFertilizer fertilizer) {
         ResultData<Integer> resultData = userFertilizerService.addUserFertilizer(fertilizer);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
@@ -136,7 +129,6 @@ public class BFertilizerController {
      * 券推送
      */
     @PostMapping("/user/push")
-    @ResponseBody
     public ResponseData<String> pushFertilizer(@RequestBody Fertilizer push) {
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 

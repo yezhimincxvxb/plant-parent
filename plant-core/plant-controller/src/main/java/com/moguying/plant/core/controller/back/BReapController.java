@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@Controller
-@RequestMapping("/backEnd/reap")
+@RestController
+@RequestMapping("/reap")
 public class BReapController {
 
 
@@ -33,7 +33,6 @@ public class BReapController {
      * @return
      */
     @PostMapping(value = "/list")
-    @ResponseBody
     public PageResult<Reap> reapList(@RequestBody PageSearch<Reap> search){
         return reapService.reapList(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -47,7 +46,6 @@ public class BReapController {
      * @return
      */
     @PostMapping("/excel")
-    @ResponseBody
     public ResponseData<Integer> reapListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                @RequestBody PageSearch<Reap> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere()))
@@ -63,8 +61,7 @@ public class BReapController {
      * @param ids
      * @return
      */
-    @PutMapping(produces = "application/json")
-    @ResponseBody
+    @PutMapping
     public ResponseData<Integer> reap(@RequestParam String ids, @RequestParam Integer state){
         if(StringUtils.isEmpty(ids))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());

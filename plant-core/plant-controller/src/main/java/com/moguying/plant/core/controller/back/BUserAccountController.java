@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
-@Controller
-@RequestMapping("/backEnd/account")
+@RestController
+@RequestMapping("/account")
 public class BUserAccountController {
 
     @Autowired
@@ -45,7 +45,6 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/list")
-    @ResponseBody
     public PageResult<UserMoney> userAccountList(@RequestBody PageSearch<UserMoney> search){
         if(null == search.getWhere())
             search.setWhere(new UserMoney());
@@ -61,7 +60,6 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/excel")
-    @ResponseBody
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                @RequestBody PageSearch<UserMoney> search, HttpServletRequest request){
         userMoneyService.downloadExcel(user.getId(),search,request);
@@ -75,7 +73,6 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/log")
-    @ResponseBody
     public PageResult<UserMoneyLog> accountLogList(@RequestBody PageSearch<UserMoneyLog> search){
         if(null == search.getWhere())
             search.setWhere(new UserMoneyLog());
@@ -90,7 +87,6 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/log/excel")
-    @ResponseBody
     public ResponseData<Integer> downloadLogExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                   @RequestBody PageSearch<UserMoneyLog> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere())) search.setWhere(new UserMoneyLog());
@@ -105,7 +101,6 @@ public class BUserAccountController {
      * @return
      */
     @GetMapping(value = "/recharge")
-    @ResponseBody
     public PageResult<MoneyRecharge> rechargeList(@RequestBody PageSearch<MoneyRecharge> search){
         return moneyRechargeService.moneyRechargeList(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -117,7 +112,6 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/withdraw")
-    @ResponseBody
     public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch<MoneyWithdraw> search){
         if(null == search.getWhere())
             search.setWhere(new MoneyWithdraw());
@@ -133,7 +127,6 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/withdraw/excel")
-    @ResponseBody
     public ResponseData<Integer> withdrawListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                    @RequestBody PageSearch<MoneyWithdraw> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere())) search.setWhere(new MoneyWithdraw());
@@ -148,7 +141,6 @@ public class BUserAccountController {
      * @return
      */
     @PutMapping("/withdraw/{id}")
-    @ResponseBody
     public ResponseData<Integer> reviewWithdraw(@PathVariable Integer id, @RequestParam("state") Boolean isPass,
                                                 @SessionAttribute(SessionAdminUser.sessionKey)AdminUser adminUser){
         ResultData<PaymentResponse> resultData = moneyWithdrawService.reviewMoneyWithdraw(id,

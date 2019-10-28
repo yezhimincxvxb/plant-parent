@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
-@RequestMapping("/backEnd/reap/fee")
+@RestController
+@RequestMapping("/reap/fee")
 @Slf4j
 public class BReapFeeController {
 
@@ -30,7 +30,6 @@ public class BReapFeeController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public PageResult<ReapFee> reapFeePageResult(@RequestBody PageSearch<ReapFee> search) {
 
         return reapFeeService.reapFeeList(search.getPage(),search.getSize(),search.getWhere());
@@ -44,7 +43,6 @@ public class BReapFeeController {
      * @return
      */
     @PostMapping("/cop")
-    @ResponseBody
     public PageResult<ReapFee> reapFeeCopPageResult(@RequestBody PageSearch<ReapFee> search,
                                                     @SessionAttribute(SessionAdminUser.sessionKey) AdminUser user) {
         ReapFee reapFee = search.getWhere();
@@ -63,7 +61,6 @@ public class BReapFeeController {
      * @return
      */
     @PostMapping(value = "/cop/excel")
-    @ResponseBody
     public ResponseData<Integer> copDownloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                   @RequestBody PageSearch<ReapFee> search, HttpServletRequest request){
         ReapFee reapFee = search.getWhere();
@@ -84,7 +81,6 @@ public class BReapFeeController {
      * @return
      */
     @PostMapping(value = "/excel")
-    @ResponseBody
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                @RequestBody PageSearch<ReapFee> search, HttpServletRequest request){
         reapFeeService.downloadExcel(user.getId(),search,request);

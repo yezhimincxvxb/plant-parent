@@ -23,8 +23,8 @@ import java.io.IOException;
 /**
  * 菌包图片管理
  */
-@Controller
-@RequestMapping("/backEnd/seedPic")
+@RestController
+@RequestMapping("/seedPic")
 @Slf4j
 public class BSeedPicController {
 
@@ -39,7 +39,6 @@ public class BSeedPicController {
      * @return
      */
     @GetMapping(value = "/list")
-    @ResponseBody
     public PageResult<SeedPic> seedPicList(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
                                            @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
 
@@ -51,7 +50,6 @@ public class BSeedPicController {
      * @return
      */
     @PostMapping(value = "/add")
-    @ResponseBody
     public ResponseData<String> seedPicAdd(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         String path = request.getServletContext().getRealPath("upload");
         SeedPic seedPic = new SeedPic();
@@ -96,7 +94,6 @@ public class BSeedPicController {
      * @return
      */
     @DeleteMapping(value = "/delete/{id}")
-    @ResponseBody
     public ResponseData<Long> seedPicDelete(@PathVariable Long id, HttpServletRequest request){
         if (id == null || id < 0 || id == 0)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState(), id);

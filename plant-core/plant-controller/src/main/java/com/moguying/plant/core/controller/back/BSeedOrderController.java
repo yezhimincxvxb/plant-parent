@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
-@Controller
-@RequestMapping("/backEnd/seedOrder")
+@RestController
+@RequestMapping("/seedOrder")
 public class BSeedOrderController {
 
     @Autowired
@@ -34,7 +34,6 @@ public class BSeedOrderController {
      * @return
      */
     @PostMapping(value = "/list")
-    @ResponseBody
     public PageResult<SeedOrder> seedOrderList(@RequestBody PageSearch<SeedOrder> search) {
         return seedOrderService.seedOrderList(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -48,7 +47,6 @@ public class BSeedOrderController {
      * @return
      */
     @PostMapping(value = "/excel")
-    @ResponseBody
     public ResponseData<Integer> seedOrderListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                     @RequestBody PageSearch<SeedOrder> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere()))
@@ -63,7 +61,6 @@ public class BSeedOrderController {
      * @return
      */
     @PostMapping(value = "/pay/list")
-    @ResponseBody
     public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestBody PageSearch<SeedOrderDetail> search){
         return seedOrderDetailService.seedOrderDetailList(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -77,7 +74,6 @@ public class BSeedOrderController {
      * @return
      */
     @PostMapping("/pay/list/excel")
-    @ResponseBody
     public ResponseData<Integer> seedPayOrderListExcel(@SessionAttribute(SessionAdminUser.sessionKey)AdminUser user,
                                                        @RequestBody PageSearch<SeedOrderDetail> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere()))

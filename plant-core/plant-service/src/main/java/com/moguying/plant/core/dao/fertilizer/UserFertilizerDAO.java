@@ -1,8 +1,8 @@
 package com.moguying.plant.core.dao.fertilizer;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.user.vo.UserFertilizerInfo;
@@ -15,8 +15,10 @@ import java.util.List;
  * UserFertilizerDAO继承基类
  */
 @Repository
-public interface UserFertilizerDAO extends BaseMapper<UserFertilizer> {
-    List<UserFertilizer> selectSelective(UserFertilizer userFertilizer);
+public interface UserFertilizerDAO extends BaseDAO<UserFertilizer> {
+    IPage<UserFertilizer> selectSelective(Page page,@Param("wq") UserFertilizer userFertilizer);
+
+    List<UserFertilizer> selectSelective(@Param("wq") UserFertilizer userFertilizer);
 
     Integer fertilizerIsUsing(Integer fertilizerId);
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.ReapEnum;
+import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
@@ -19,9 +20,10 @@ import java.util.List;
  * ReapDAO继承基类
  */
 @Repository
-public interface ReapDAO extends BaseMapper<Reap> {
+public interface ReapDAO extends BaseDAO<Reap> {
 
     IPage<Reap> selectSelective(Page<Reap> page, @Param("wq") Reap reap);
+    List<Reap> selectSelective( @Param("wq") Reap reap);
     Integer updateStateByRange(@Param("idList") List<Integer> idList, @Param("reap") Reap update);
     List<Integer> selectCanReapByTime(@Param("reapTime") Date reapTime);
     List<InnerMessage> selectPhoneByRange(@Param("idList") List<Integer> idList);

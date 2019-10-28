@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/backEnd")
 @Slf4j
 public class BAdminLoginController {
 

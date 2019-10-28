@@ -60,26 +60,26 @@
         left join plant_fertilizer_type t3 on t2.type_id = t3.id
         left join plant_user t4 on t1.user_id = t4.id
         <where>
-            <if test="id != null">
-                t1.id = #{id}
+            <if test="wq.id != null">
+                t1.id = #{wq.id}
             </if>
-            <if test="userId != null">
-                AND t1.user_id = #{userId}
+            <if test="wq.userId != null">
+                AND t1.user_id = #{wq.userId}
             </if>
-            <if test="fertilizerId != null">
-                AND t1.fertilizer_id = #{fertilizerId}
+            <if test="wq.fertilizerId != null">
+                AND t1.fertilizer_id = #{wq.fertilizerId}
             </if>
-            <if test="state != null ">
-                AND t1.state = #{state}
+            <if test="wq.state != null ">
+                AND t1.state = #{wq.state}
             </if>
-            <if test="phone != null and phone != ''">
-                AND t4.phone = #{phone}
+            <if test="wq.phone != null and wq.phone != ''">
+                AND t4.phone = #{wq.phone}
             </if>
-            <if test="realName != null and realName != ''">
-                AND t4.real_name = #{realName}
+            <if test="wq.realName != null and wq.realName != ''">
+                AND t4.real_name = #{wq.realName}
             </if>
-            <if test="useOrderNumber != null and useOrderNumber != ''">
-                AND t1.use_order_number = #{useOrderNumber}
+            <if test="wq.useOrderNumber != null and wq.useOrderNumber != ''">
+                AND t1.use_order_number = #{wq.useOrderNumber}
             </if>
 
         </where>

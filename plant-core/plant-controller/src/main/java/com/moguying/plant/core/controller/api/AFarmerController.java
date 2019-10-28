@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/api/farmer")
+@RestController
+@RequestMapping("/farmer")
 public class AFarmerController {
 
 
@@ -29,7 +29,6 @@ public class AFarmerController {
      * @return
      */
     @GetMapping
-    @ResponseBody
     public ResponseData<FarmerData> farmerInfo(@LoginUserId Integer userId){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),
                 farmerService.userFarmerData(userId));
@@ -42,7 +41,6 @@ public class AFarmerController {
      * @return
      */
     @PostMapping("/sign")
-    @ResponseBody
     public ResponseData<Integer> userSignIn(@LoginUserId Integer userId){
         ResultData<User> resultData = farmerService.userDailySignIn(userId);
         return new ResponseData<>(((ResultData) resultData).getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -55,7 +53,6 @@ public class AFarmerController {
      * @return
      */
     @PostMapping("/notices")
-    @ResponseBody
     public PageResult<FarmerNotice> notices(@LoginUserId Integer userId, @RequestBody PageSearch<FarmerNotice> search){
         FarmerNotice where  = new FarmerNotice();
         if(null != search.getWhere())
@@ -70,7 +67,6 @@ public class AFarmerController {
      * @return
      */
     @PostMapping("/notices/del")
-    @ResponseBody
     public ResponseData<Integer> delNotice(@RequestBody FarmerNotice notice){
         ResultData<Integer> resultData = farmerService.delNotice(notice);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -86,7 +82,6 @@ public class AFarmerController {
      * @return
      */
     @PostMapping("/pick/up/energy")
-    @ResponseBody
     public ResponseData<Integer> pickUpEnergy(@LoginUserId Integer userId, @RequestBody FarmerEnergy farmerEnergy){
         farmerEnergy.setUserId(userId);
         ResultData<Integer> resultData = farmerService.pickUpEnergy(farmerEnergy);
@@ -100,7 +95,6 @@ public class AFarmerController {
      * @return
      */
     @PostMapping("/pick/up/gift")
-    @ResponseBody
     public ResponseData<Integer> pickUpGift(@LoginUserId Integer userId){
         ResultData<Integer> resultData = farmerService.pickUpLevelGift(userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -113,7 +107,6 @@ public class AFarmerController {
      * @return
      */
     @PostMapping("/level/up/gift")
-    @ResponseBody
     public ResponseData<FarmerLevelGift> levelUpGift(@LoginUserId Integer userId, @RequestBody FarmerLevel level){
         ResultData<FarmerLevelGift> levelGift = farmerService.userLevelGift(userId,level.getLevel());
         return new ResponseData<>(levelGift.getMessageEnum().getMessage(),levelGift.getMessageEnum().getState(),levelGift.getData());

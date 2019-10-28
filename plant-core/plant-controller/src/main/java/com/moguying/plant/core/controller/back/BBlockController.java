@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/backEnd/block")
+@RequestMapping("/block")
 public class BBlockController {
 
     @Autowired
     private BlockService blockService;
 
     @PostMapping(value = "/list")
-    public PageResult<Block> list(@RequestBody PageSearch<Block> search) {
+    public PageResult<Block> blockList(@RequestBody PageSearch<Block> search) {
         if(null == search.getWhere())
             search.setWhere(new Block());
         return blockService.blockList(search.getPage(),search.getSize(),search.getWhere());

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/api/mall/car")
+@RestController
+@RequestMapping("/mall/car")
 public class AShippingCarController {
 
 
@@ -29,7 +29,6 @@ public class AShippingCarController {
      * 添加入购物车
      */
     @PostMapping
-    @ResponseBody
     public ResponseData<Integer> addToCar(@RequestBody BuyProduct itemToCar, @LoginUserId Integer userId){
         MallCar mallCar = new MallCar();
         mallCar.setUserId(userId);
@@ -44,7 +43,6 @@ public class AShippingCarController {
      * 购物车列表
      */
     @GetMapping
-    @ResponseBody
     public ResponseData<CarItemList> carItems(@LoginUserId Integer userId, @RequestParam(value = "page",defaultValue = "1") Integer page,
                                               @RequestParam(value = "size",defaultValue = "10") Integer size
                                          ){
@@ -63,7 +61,6 @@ public class AShippingCarController {
      * 删除购物车中的商品
      */
     @PostMapping("/delete")
-    @ResponseBody
     public ResponseData<ModifyItemResponse> deleteItems(@LoginUserId Integer userId, @RequestBody List<OrderItem> ids){
         ResultData<Boolean> resultData = mallCarService.removeItemFromCar(ids,userId);
         ResponseData<ModifyItemResponse> responseData = new ResponseData<>();
@@ -81,7 +78,6 @@ public class AShippingCarController {
      * 修改购物车数量
      */
     @PostMapping("/count")
-    @ResponseBody
     public ResponseData<ModifyItemResponse> plushItemCount(@LoginUserId Integer userId,@RequestBody OrderItem orderItem){
         ResultData<Integer> resultData = mallCarService.modifyItemCount(orderItem);
         ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -99,7 +95,6 @@ public class AShippingCarController {
      * @return
      */
     @PostMapping("/check")
-    @ResponseBody
     public ResponseData<ModifyItemResponse> checkItem(@LoginUserId Integer userId,@RequestBody CheckItems checkItems){
         ResultData<Integer> resultData = mallCarService.checkItems(checkItems.getItems(),userId,checkItems.getCheck());
         ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());

@@ -1,6 +1,7 @@
 package com.moguying.plant.core.dao.mall;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.mall.Express;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * ExpressDAO继承基类
  */
 @Repository
-public interface ExpressDAO extends BaseMapper<Express> {
+public interface ExpressDAO extends BaseDAO<Express> {
 }

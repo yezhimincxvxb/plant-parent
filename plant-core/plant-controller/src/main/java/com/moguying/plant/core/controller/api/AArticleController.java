@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/api/article")
+@RestController
+@RequestMapping("/article")
 public class AArticleController {
 
     @Autowired
@@ -25,7 +25,6 @@ public class AArticleController {
     private ArticleService articleService;
 
     @GetMapping("/types")
-    @ResponseBody
     public ResponseData<List<ArticleType>> articleTypes(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleTypeService.articleTypeList());
     }
@@ -33,7 +32,6 @@ public class AArticleController {
 
 
     @PostMapping("/{urlName}")
-    @ResponseBody
     public PageResult<Article> articleList(@RequestBody PageSearch<Article> search, @PathVariable String urlName){
         PageResult<Article> list = new PageResult<>();
         ArticleType type = articleTypeService.selectTypeByUrlName(urlName);
@@ -50,7 +48,6 @@ public class AArticleController {
 
 
     @GetMapping("/{urlName}/{id}")
-    @ResponseBody
     public ResponseData<Article> articleDetail(@PathVariable String urlName, @PathVariable Integer id){
         ResponseData<Article> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
         ArticleType type = articleTypeService.selectTypeByUrlName(urlName);

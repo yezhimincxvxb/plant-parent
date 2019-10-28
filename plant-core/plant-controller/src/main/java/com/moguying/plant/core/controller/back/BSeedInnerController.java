@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/backEnd/seed/inner")
+@RestController
+@RequestMapping("/seed/inner")
 public class BSeedInnerController {
 
 
@@ -27,8 +27,7 @@ public class BSeedInnerController {
      *
      * @return
      */
-    @GetMapping(value = "/list", produces = "application/json")
-    @ResponseBody
+    @GetMapping(value = "/list")
     public PageResult<SeedInnerOrderCount> innerList(@RequestParam Integer page, @RequestParam Integer size) {
         return seedInnerService.seedInnerList(page, size);
     }
@@ -41,8 +40,7 @@ public class BSeedInnerController {
      * @param userCount
      * @return
      */
-    @GetMapping(value = "/user/list", produces = "application/json")
-    @ResponseBody
+    @GetMapping(value = "/user/list")
     public ResponseData<List<UserInner>> innerUserList(@RequestParam(name = "seed_id") Integer seedId, @RequestParam("icount") Integer innerCount, @RequestParam(name = "ucount") Integer userCount) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),
                     seedInnerService.seedInnerUserList(seedId, innerCount, userCount));
@@ -54,8 +52,7 @@ public class BSeedInnerController {
      * @param seedInnerBuy
      * @return
      */
-    @PostMapping(value = "/order", produces = "application/json")
-    @ResponseBody
+    @PostMapping(value = "/order")
     public ResponseData<Integer> innerOrder(@RequestBody SeedInnerBuy seedInnerBuy) {
 
         Integer count = -1;

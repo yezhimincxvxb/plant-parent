@@ -52,7 +52,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/account")
 public class AAccountController {
 
 

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 菌包周期管理
  */
-@Controller
-@RequestMapping("/backEnd/seedDays")
+@RestController
+@RequestMapping("/seedDays")
 public class BSeedDaysController {
 
     @Autowired
@@ -28,7 +28,6 @@ public class BSeedDaysController {
      * @return
      */
     @GetMapping(value = "/list")
-    @ResponseBody
     public PageResult<SeedDays> seedDaysList(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
                                              @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
         return seedDaysService.seedDaysList(page,size);
@@ -40,7 +39,6 @@ public class BSeedDaysController {
      * @return_
      */
     @PostMapping(value = "/add")
-    @ResponseBody
     public ResponseData seedDaysAdd(@RequestBody SeedDays days){
         if(days.getGrowDays() == null || days.getGrowDays() == 0 || days.getGrowDays() < 0 || StringUtils.isEmpty(days.getGrowDaysName()))
             return new ResponseData(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
@@ -59,7 +57,6 @@ public class BSeedDaysController {
      * @return
      */
     @DeleteMapping(value = "/delete/{id}")
-    @ResponseBody
     public ResponseData seedDaysDelete(@PathVariable Integer id){
         if(seedDaysService.seedDaysDelete(id) < 1)
             return new ResponseData(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
@@ -73,7 +70,6 @@ public class BSeedDaysController {
      * @return
      */
     @PutMapping(value = "/edit")
-    @ResponseBody
     public ResponseData seedDaysEdit(@RequestBody SeedDays seedDays){
         if(seedDaysService.seedDaysEdit(seedDays) < 1)
             return new ResponseData(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());

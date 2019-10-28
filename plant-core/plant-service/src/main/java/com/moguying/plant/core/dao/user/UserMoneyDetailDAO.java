@@ -1,8 +1,8 @@
 package com.moguying.plant.core.dao.user;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.mall.vo.ProductInfo;
 import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
 import org.apache.ibatis.annotations.Param;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface UserMoneyDetailDAO extends BaseMapper<UserMoneyDetail> {
+public interface UserMoneyDetailDAO extends BaseDAO<UserMoneyDetail> {
 
     /**
      * 获取用户资金明细

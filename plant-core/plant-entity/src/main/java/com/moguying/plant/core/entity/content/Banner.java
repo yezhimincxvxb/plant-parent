@@ -1,10 +1,7 @@
 package com.moguying.plant.core.entity.content;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -31,7 +28,7 @@ public class Banner implements Serializable {
      * banner名
      */
     @JSONField(ordinal = 3)
-    @TableField
+    @TableField(condition = SqlCondition.LIKE)
     private String name;
 
     /**

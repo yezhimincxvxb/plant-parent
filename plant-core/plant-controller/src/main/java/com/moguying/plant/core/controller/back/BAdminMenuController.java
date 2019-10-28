@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/backEnd/admin/menu")
+@RestController
+@RequestMapping("/admin/menu")
 public class BAdminMenuController {
 
     @Autowired
@@ -30,7 +30,6 @@ public class BAdminMenuController {
      * @return
      */
     @PostMapping("/list")
-    @ResponseBody
     public PageResult<AdminMenu> menuList(@RequestBody PageSearch<AdminMenu> search){
         if(null == search.getWhere())
             search.setWhere(new AdminMenu());
@@ -46,7 +45,6 @@ public class BAdminMenuController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public ResponseData<Integer> saveMenu(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user, @RequestBody AdminMenu menu) {
         ResultData<Integer> resultData = adminMenuService.saveAdminMenu(menu);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -59,7 +57,6 @@ public class BAdminMenuController {
      * @return
      */
     @DeleteMapping("/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteMenu(@PathVariable Integer id){
         ResultData<Integer> resultData  = adminMenuService.deleteMenu(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -72,7 +69,6 @@ public class BAdminMenuController {
      * @return
      */
     @GetMapping("/{id}")
-    @ResponseBody
     public ResponseData<AdminMenu> adminMenu(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),adminMenuService.adminMenu(id));
     }
@@ -85,7 +81,6 @@ public class BAdminMenuController {
      * @return
      */
     @GetMapping("/parent")
-    @ResponseBody
     public ResponseData<List<AdminMenu>> parentMenu(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),adminMenuService.parentMenu());
     }
@@ -96,7 +91,6 @@ public class BAdminMenuController {
      * @return
      */
     @GetMapping("/tree")
-    @ResponseBody
     public ResponseData<MenuTree> menuTree() {
         MenuTree tree = new MenuTree();
         List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuService.menus(null));

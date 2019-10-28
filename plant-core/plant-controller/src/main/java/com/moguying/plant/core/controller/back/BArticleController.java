@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/backEnd/article")
+@RestController
+@RequestMapping("/article")
 public class BArticleController {
 
 
@@ -34,7 +34,6 @@ public class BArticleController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public ResponseData<Integer> addArticle(@RequestBody Article article){
         if(articleService.addArticle(article) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
@@ -47,7 +46,6 @@ public class BArticleController {
      * @return
      */
     @DeleteMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteArticle(@PathVariable Integer id){
         if(articleService.deleteArticle(id) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
@@ -60,8 +58,9 @@ public class BArticleController {
      * @return
      */
     @PostMapping(value = "/list")
-    @ResponseBody
     public PageResult<Article> articleList(@RequestBody PageSearch<Article> search){
+        if(null == search.getWhere())
+                search.setWhere(new Article());
         return articleService.articleList(search.getPage(),search.getSize(),search.getWhere());
     }
 
@@ -72,7 +71,6 @@ public class BArticleController {
      * @return
      */
     @GetMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Article> getArticle(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleService.getArticle(id));
     }
@@ -85,7 +83,6 @@ public class BArticleController {
      * @return
      */
     @PutMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateArticle(@PathVariable Integer id, @RequestBody Article update){
         ResultData<Integer> resultData = articleService.updateArticle(id,update);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -96,7 +93,6 @@ public class BArticleController {
      * @return
      */
     @GetMapping(value = "/type")
-    @ResponseBody
     public ResponseData<List<ArticleType>> typeList(){
 
        return  new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleTypeService.articleTypeList());
@@ -109,7 +105,6 @@ public class BArticleController {
      * @return
      */
     @PostMapping(value = "/type")
-    @ResponseBody
     public ResponseData<Integer> addArticleType(@RequestBody ArticleType type){
         ResultData<Integer> resultData = articleTypeService.addArticleType(type);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -123,7 +118,6 @@ public class BArticleController {
      * @return
      */
     @PutMapping(value = "/type/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateArticleType(@PathVariable Integer id, @RequestBody ArticleType type){
         if(articleTypeService.updateArticleType(id,type) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
@@ -137,7 +131,6 @@ public class BArticleController {
      * @return
      */
     @DeleteMapping("/type/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteArticleType(@PathVariable Integer id){
         ResultData<Integer> resultData = articleTypeService.deleteArticleType(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());

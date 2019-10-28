@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
-@Controller
-@RequestMapping("/backEnd/mall/order")
+@RestController
+@RequestMapping("/mall/order")
 public class BMallOrderController {
 
     @Autowired
@@ -33,7 +33,6 @@ public class BMallOrderController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public PageResult<MallOrder> mallOrderList(@RequestBody MallOrderSearch search) {
         return mallOrderService.mallOrderList(search.getPage(), search.getSize(), search);
     }
@@ -46,7 +45,6 @@ public class BMallOrderController {
      * @return
      */
     @GetMapping("/{id}")
-    @ResponseBody
     public ResponseData<MallOrder> mallOrderDetail(@PathVariable Integer id) {
         if (null == id || id <= 0)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -58,7 +56,6 @@ public class BMallOrderController {
      * 确认发货
      */
     @PutMapping
-    @ResponseBody
     public ResponseData<Integer> addLogistics(@RequestBody MallOrder mallOrder) {
 
         if (null == mallOrder || mallOrder.getId() <= 0 || null == mallOrder.getExpressOrderNumber() || null == mallOrder.getExpressComCode())
@@ -84,7 +81,6 @@ public class BMallOrderController {
      * 显示快递公司名称
      */
     @PostMapping("/getAllComName")
-    @ResponseBody
     public ResponseData<List<MallCompany>> getAllComName() {
         List<MallCompany> mallCompanies = mallCompanyService.getAllComName();
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallCompanies);

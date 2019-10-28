@@ -57,8 +57,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-@Controller
-@RequestMapping("/api/user")
+@RestController
+@RequestMapping("/user")
 @Slf4j
 public class AUserController {
 
@@ -128,7 +128,6 @@ public class AUserController {
      * @return
      */
     @GetMapping
-    @ResponseBody
     public ResponseData<UserSummaryInfo> index(@LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -148,7 +147,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/info")
-    @ResponseBody
     public ResponseData<User> userInfo(@LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -167,7 +165,6 @@ public class AUserController {
      * @return
      */
     @PutMapping(value = "/pay/password")
-    @ResponseBody
     public ResponseData<Integer> setPayPassword(@RequestBody PayPassword payPassword, @LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
 
@@ -202,7 +199,6 @@ public class AUserController {
      * @return
      */
     @PutMapping("/forget/password")
-    @ResponseBody
     public ResponseData<Integer> forgetPassword(@LoginUserId Integer userId, @RequestBody ForgetPayPassword forgetPayPassword) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -224,7 +220,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/withdraw/password")
-    @ResponseBody
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> setWithdrawPassword(@LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
@@ -270,7 +265,6 @@ public class AUserController {
      * @return
      */
     @PutMapping("/password")
-    @ResponseBody
     public ResponseData<Integer> modifyPassword(@RequestBody LoginPassword loginPassword, @LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -297,7 +291,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/real/name")
-    @ResponseBody
     public ResponseData<RealName> realName(@LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -319,7 +312,6 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/real/name")
-    @ResponseBody
     public ResponseData<Integer> validateRealName(@RequestBody RealName realName, @LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
         if (userInfo == null)
@@ -379,7 +371,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/card")
-    @ResponseBody
     public ResponseData<List<UserBank>> cardInfo(@LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
         if (userInfo == null)
@@ -397,7 +388,6 @@ public class AUserController {
      * @return
      */
     @PutMapping(value = "/bind/card")
-    @ResponseBody
     public ResponseData<Integer> bindCard(@RequestBody BindCard bindCard, @LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (user == null)
@@ -463,7 +453,6 @@ public class AUserController {
      * @return
      */
     @DeleteMapping("/delete/card/{id}")
-    @ResponseBody
     public ResponseData<String> deleteBindCard(@LoginUserId Integer userId, @PathVariable Integer id) {
         UserBank bank = userService.bankCard(userId, id);
         if (null == bank)
@@ -490,7 +479,6 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/send/bind/sms")
-    @ResponseBody
     public ResponseData<SendSmsCodeResponse> sendBindCardSms(@RequestBody BindCard bindCard, @LoginUserId Integer userId) {
 
         User userInfo = userService.userInfoById(userId);
@@ -525,7 +513,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/address/default")
-    @ResponseBody
     public ResponseData<UserAddress> defaultAddress(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 userService.userDefaultAddress(userId));
@@ -538,7 +525,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/address")
-    @ResponseBody
     public ResponseData<List<UserAddress>> address(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 userService.addressList(userId));
@@ -552,7 +538,6 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/address")
-    @ResponseBody
     public ResponseData<Integer> addAddress(@RequestBody UserAddress address, @LoginUserId Integer userId) {
         address.setUserId(userId);
         ResultData<Integer> resultData = userService.addAddress(address);
@@ -567,7 +552,6 @@ public class AUserController {
      * @return
      */
     @PutMapping(value = "/address/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateAddress(@RequestBody UserAddress address, @PathVariable Integer id, @LoginUserId Integer userId) {
         if (id == null)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -585,7 +569,6 @@ public class AUserController {
      * @return
      */
     @DeleteMapping("/address/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteAddress(@PathVariable Integer id, @LoginUserId Integer userId) {
         if (id == null)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -605,7 +588,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/address/{id}")
-    @ResponseBody
     public ResponseData<UserAddress> addressDetail(@PathVariable Integer id, @LoginUserId Integer userId) {
         if (id == null)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -620,7 +602,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/seed")
-    @ResponseBody
     public ResponseData<List<UserSeedOrder>> seedList(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 seedOrderService.userSeedOrder(userId));
@@ -635,7 +616,6 @@ public class AUserController {
      * @return
      */
     @PostMapping("/seed")
-    @ResponseBody
     public ResponseData<CanPlantOrder> seedInBlock(@RequestBody BlockDetail blockDetail, @LoginUserId Integer userId) {
         CanPlantOrder canPlantOrder = seedOrderService.sumUserSeedByBlockId(blockDetail.getBlockId(), userId);
         if (null == canPlantOrder) {
@@ -651,7 +631,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/product")
-    @ResponseBody
     public ResponseData<List<Reap>> productList(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 reapService.reapListByUserId(userId));
@@ -666,7 +645,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/order")
-    @ResponseBody
     public PageResult<SeedOrderDetail> seedOrderList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                      @LoginUserId Integer userId) {
@@ -682,7 +660,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/order/{orderId}/protocol")
-    @ResponseBody
     public ResponseData<String> seedOrderProtocol(@LoginUserId Integer userId, @PathVariable Integer orderId) {
         User userInfo = userService.userInfoById(userId);
         SeedOrderDetail seedOrderDetail = seedOrderDetailService.orderDetailByIdAndUserId(orderId, userId);
@@ -707,7 +684,6 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/reap")
-    @ResponseBody
     public PageResult<Reap> reapList(@LoginUserId Integer userId, @RequestBody ReapSearch search) {
         Reap where = new Reap();
         where.setUserId(userId);
@@ -722,7 +698,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/reap/{reapId}/protocol")
-    @ResponseBody
     public ResponseData<String> reapProtocol(@LoginUserId Integer userId, @PathVariable Integer reapId, Model model) {
         User userInfo = userService.userInfoById(userId);
         Reap reapInfo = reapService.reapInfoByIdAndUserId(reapId, userId);
@@ -755,7 +730,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/order/unpay")
-    @ResponseBody
     public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                            @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                            @LoginUserId Integer userId) {
@@ -771,7 +745,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/order/{id}")
-    @ResponseBody
     public ResponseData<SeedOrderDetail> seedOrderDetail(@PathVariable("id") Integer id, @LoginUserId Integer userId) {
         SeedOrderDetail detail = seedOrderDetailService.orderDetailByIdAndUserId(id, userId);
         if (null == detail)
@@ -789,7 +762,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/message")
-    @ResponseBody
     public PageResult<UserMessage> messageList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                @LoginUserId Integer userId) {
@@ -803,7 +775,6 @@ public class AUserController {
      * @return
      */
     @PutMapping(value = "/message/read")
-    @ResponseBody
     public ResponseData<Boolean> readMessage(@LoginUserId Integer userId) {
         UserMessage userMessage = new UserMessage();
         userMessage.setUserId(userId);
@@ -819,7 +790,6 @@ public class AUserController {
      * @return
      */
     @DeleteMapping(value = "/message/delete/{id}")
-    @ResponseBody
     public ResponseData<Boolean> deletedMessage(@PathVariable Integer id, @LoginUserId Integer userId) {
         UserMessage userMessage = new UserMessage();
         userMessage.setId(id);
@@ -837,7 +807,6 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/invite")
-    @ResponseBody
     public ResponseData<InviteStatistics> inviteStatistics(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 userInviteService.inviteStatistics(userId));
@@ -852,7 +821,6 @@ public class AUserController {
      * @return
      */
     @GetMapping("/invite/list")
-    @ResponseBody
     public PageResult<UserInvite> inviteList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                              @RequestParam(value = "size", defaultValue = "10") Integer size,
                                              @LoginUserId Integer userId) {
@@ -867,7 +835,6 @@ public class AUserController {
      * @return
      */
     @PostMapping("/fertilizer")
-    @ResponseBody
     public PageResult<UserFertilizerInfo> userFertilizers(@LoginUserId Integer userId, @RequestBody FertilizerSearch search) {
         return userFertilizerService.userFertilizers(search.getPage(), search.getSize(), userId, search);
     }
@@ -876,7 +843,6 @@ public class AUserController {
      * 领取红包
      */
     @GetMapping("/redPackage/{id}")
-    @ResponseBody
     public ResponseData<String> redPackage(@LoginUserId Integer userId, @PathVariable("id") Integer id) {
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "领取失败");
 
@@ -900,7 +866,6 @@ public class AUserController {
      * 在使用时可用的券
      */
     @PostMapping("/valid/fertilizer")
-    @ResponseBody
     public ResponseData<List<UserFertilizerInfo>> fertilizers(@LoginUserId Integer userId, @RequestBody FertilizerUseCondition condition) {
         condition.setUserId(userId);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -914,7 +879,6 @@ public class AUserController {
      * @param userId
      */
     @GetMapping("/invite/poster")
-    @ResponseBody
     @SuppressWarnings("unchecked")
     public ResponseData<UserPoster> invitePosterImage(@LoginUserId Integer userId, HttpServletResponse response) {
         ClassPathResource resource = new ClassPathResource(inviteBgImagePath);
@@ -965,7 +929,6 @@ public class AUserController {
      * @return
      */
     @PostMapping("/wechat/info")
-    @ResponseBody
     public ResponseData<WeChatShare> createWeChatInfo(@LoginUserId Integer userId, @RequestBody WeChatShare requestShare) {
         User userInfo = userService.userInfoById(userId);
         if (null == userInfo)

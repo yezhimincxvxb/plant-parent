@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
-@RequestMapping("/backEnd/admin/role")
+@RestController
+@RequestMapping("/admin/role")
 public class BAdminRoleController {
 
     @Autowired

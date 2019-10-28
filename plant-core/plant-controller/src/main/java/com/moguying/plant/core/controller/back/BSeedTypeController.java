@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/backEnd/seedType")
+@RestController
+@RequestMapping("/seedType")
 @Slf4j
 public class BSeedTypeController {
 
@@ -26,7 +26,6 @@ public class BSeedTypeController {
      * @return
      */
     @GetMapping(value = "/tree")
-    @ResponseBody
     public PageResult<SeedType> seedTypeList(@RequestParam(value = "page",defaultValue = "1") Integer page,
                                              @RequestParam(value = "size",defaultValue = "10") Integer size){
         SeedType where = new SeedType();
@@ -42,7 +41,6 @@ public class BSeedTypeController {
      * @return
      */
     @PostMapping(value = "/add")
-    @ResponseBody
     public ResponseData<Integer> seedTypeAdd(@RequestBody SeedType seedTypeAdd){
 
         if(StringUtils.isEmpty(seedTypeAdd.getClassName()) || seedTypeAdd.getOrderNumber() < 0)
@@ -58,7 +56,6 @@ public class BSeedTypeController {
      * @return
      */
     @DeleteMapping(value = "/delete/{id}")
-    @ResponseBody
     public ResponseData<Integer> seedTypeDelete(@PathVariable Integer id){
         if(id == 0 || id < 0)
             return new ResponseData<>(MessageEnum.ID_ERROR.getMessage(),MessageEnum.ID_ERROR.getState(),id);
@@ -77,7 +74,6 @@ public class BSeedTypeController {
      * @return
      */
     @PutMapping(value = "/edit")
-    @ResponseBody
     public ResponseData<Integer> seedTypeEdit(@RequestBody SeedType seedClass) {
         if(seedClass == null)
             return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState(),null);
@@ -92,7 +88,6 @@ public class BSeedTypeController {
      * @return
      */
     @GetMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<SeedType> seedType(@PathVariable Integer id){
         if(id == 0 || id < 0 )
             return new ResponseData<>(MessageEnum.ID_ERROR.getMessage(),MessageEnum.ID_ERROR.getState(),null);

@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/backEnd/nav")
+@RestController
+@RequestMapping("/nav")
 public class BNavController {
 
 
@@ -25,7 +25,6 @@ public class BNavController {
      * @return
      */
     @GetMapping(value = "/list")
-    @ResponseBody
     public PageResult<Nav> mallNavList(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
                                        @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
 
@@ -38,8 +37,7 @@ public class BNavController {
      * @param nav
      * @return
      */
-    @PostMapping(produces = "application/json")
-    @ResponseBody
+    @PostMapping
     public ResponseData<Integer> addNav(@RequestBody Nav nav){
         Integer result;
         if((result = navService.addNav(nav)) > 0)
@@ -55,7 +53,6 @@ public class BNavController {
      * @return
      */
     @DeleteMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteNav(@PathVariable Integer id){
         if(navService.deleteNav(id) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
@@ -69,7 +66,6 @@ public class BNavController {
      * @return
      */
     @GetMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Nav> getNav(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),navService.nav(id));
     }
@@ -82,7 +78,6 @@ public class BNavController {
      * @return
      */
     @PutMapping(value = "/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateNav(@PathVariable Integer id, @RequestBody Nav nav){
 
         if(navService.updateNave(id,nav) > 0)

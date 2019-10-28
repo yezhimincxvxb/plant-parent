@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/backEnd/admin/user")
+@RestController
+@RequestMapping("/admin/user")
 @Slf4j
 public class BAdminUserController {
 
@@ -29,7 +29,6 @@ public class BAdminUserController {
      * @return
      */
     @GetMapping("/info")
-    @ResponseBody
     public ResponseData<AdminUser> userInfo(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser adminUser){
 
         AdminUser user =  adminUserService.userInfo(adminUser.getId());
@@ -46,7 +45,6 @@ public class BAdminUserController {
      * @return
      */
     @PostMapping("/message")
-    @ResponseBody
     public PageResult<AdminMessage> userMessage(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                 @RequestBody PageSearch<AdminMessage> search) {
         AdminMessage where;
@@ -66,7 +64,6 @@ public class BAdminUserController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public ResponseData<Integer> addUser(@RequestBody AdminUser user){
         if(adminUserService.saveAdminUser(user) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
@@ -79,7 +76,6 @@ public class BAdminUserController {
      * @return
      */
     @PostMapping("/list")
-    @ResponseBody
     public PageResult<AdminUser> adminUserList(@RequestBody PageSearch<AdminUser> search){
         return adminUserService.adminUserList(search.getPage(),search.getSize(),search.getWhere());
     }

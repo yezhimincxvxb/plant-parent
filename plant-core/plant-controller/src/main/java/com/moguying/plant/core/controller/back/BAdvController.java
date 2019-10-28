@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
-@RequestMapping("/backEnd/")
+@RestController
 @Slf4j
 public class BAdvController {
 
@@ -62,7 +61,6 @@ public class BAdvController {
      * @return
      */
     @PostMapping(value = "/adv/type")
-    @ResponseBody
     public ResponseData<Integer> addAdvType(@RequestBody AdvType advType){
         if(advTypeService.addAdvType(advType) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),advType.getId());
@@ -77,7 +75,6 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/type/list")
-    @ResponseBody
     public PageResult<AdvType> advTypeList(@RequestParam("page") Integer page, @RequestParam("size") Integer size){
         return advTypeService.advTypeList(page,size,null);
     }
@@ -89,7 +86,6 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/type/{id}")
-    @ResponseBody
     public ResponseData<AdvType> getAdvType(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(), advTypeService.advType(id));
     }
@@ -101,7 +97,6 @@ public class BAdvController {
      * @return
      */
     @PutMapping(value = "/adv/type/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateAdvType(@PathVariable Integer id, @RequestBody AdvType advType){
         Integer result = advTypeService.updateAdvType(id,advType);
         if(result > 0)
@@ -116,7 +111,6 @@ public class BAdvController {
      * @return
      */
     @PostMapping(value = "/adv")
-    @ResponseBody
     public ResponseData<Integer> addAdv(@RequestBody Adv adv){
         if(advService.addAdv(adv) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),adv.getId());
@@ -131,7 +125,6 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/list")
-    @ResponseBody
     public PageResult<Adv> advList(@RequestParam(value = "page",defaultValue = "1" ,required = false) Integer page,
                                    @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
         return advService.advList(page,size,null);
@@ -144,7 +137,6 @@ public class BAdvController {
      * @return
      */
     @DeleteMapping(value = "/adv/{id}")
-    @ResponseBody
     public ResponseData<Integer> deleteAdv(@PathVariable Integer id){
         Integer result =  advService.deleteAdv(id);
         if(result > 0)
@@ -159,7 +151,6 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/{id}")
-    @ResponseBody
     public ResponseData<Adv> getAdv(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),advService.adv(id));
     }
@@ -172,7 +163,6 @@ public class BAdvController {
      * @return
      */
     @PutMapping(value = "/adv/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateAdv(@PathVariable Integer id, @RequestBody Adv adv){
         if(null == adv)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
@@ -184,7 +174,6 @@ public class BAdvController {
 
 
     @PostMapping(value = "/upload/{savePath}")
-    @ResponseBody
     public ResponseData<Map> uploadAdvPic(@PathVariable String savePath, @RequestParam("file") MultipartFile file, HttpServletRequest request){
         if(!pathMap.containsKey(savePath))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());

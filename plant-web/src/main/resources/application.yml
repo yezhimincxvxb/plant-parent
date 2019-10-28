@@ -33,6 +33,8 @@ spring:
     view:
       suffix: .html
       prefix: /WEB-INF/views/
+    pathmatch:
+      use-suffix-pattern: true
   http:
     encoding:
       charset: UTF-8
@@ -55,15 +57,11 @@ spring:
         min-idle: 20
         max-idle: 120
         max-wait: 2000
-
-cache:
-  default-ttl: 300
-
-
-
-
-
-
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 mybatis-plus:
   global-config:
@@ -75,6 +73,8 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
 
+cache:
+  default-ttl: 300 #默认缓存时长
 
 message:
   send:
@@ -121,10 +121,10 @@ order:
   expire:
     time: 300
 upload:
-  host: http://192.168.5.220:9000
+  host: 192.168.5.220:9000
 editor:
   upload:
-    host: http://192.168.5.220:9000
+    host: 192.168.5.220:9000
 farmer:
   energy:
     ok:

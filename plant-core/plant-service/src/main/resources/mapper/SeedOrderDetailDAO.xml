@@ -109,27 +109,27 @@
     left join plant_seed_type t3 on t2.seed_type = t3.id
     left join plant_user t4 on t1.user_id = t4.id
     <where>
-      <if test="phone != null and phone != ''">
-        <bind name="phoneLike" value="'%'+ phone + '%'"/>
+      <if test="wq.phone != null and wq.phone != ''">
+        <bind name="phoneLike" value="'%'+ wq.phone + '%'"/>
         t4.phone like #{phoneLike}
       </if>
-      <if test="seedTypeName != null and seedTypeName != ''">
-        AND t3.class_name = #{seedTypeName}
+      <if test="wq.seedTypeName != null and wq.seedTypeName != ''">
+        AND t3.class_name = #{wq.seedTypeName}
       </if>
-      <if test="realName != null and realName != ''">
-        <bind name="realNameLike" value="'%'+ realName + '%'"/>
+      <if test="wq.realName != null and wq.realName != ''">
+        <bind name="realNameLike" value="'%'+ wq.realName + '%'"/>
         AND t4.real_name like #{realNameLike}
       </if>
-      <if test="state != null">
-        AND t1.state = #{state}
+      <if test="wq.state != null">
+        AND t1.state = #{wq.state}
       </if>
-      <if test="orderNumber != null and orderNumber != ''">
-        AND t1.order_number = #{orderNumber}
+      <if test="wq.orderNumber != null and wq.orderNumber != ''">
+        AND t1.order_number = #{wq.orderNumber}
       </if>
-      <if test="startTime != null and endTime != null">
+      <if test="wq.startTime != null and wq.endTime != null">
         <![CDATA[
-            AND UNIX_TIMESTAMP(#{startTime}) <= UNIX_TIMESTAMP(t1.add_time)
-            AND UNIX_TIMESTAMP(#{endTime}) >= UNIX_TIMESTAMP(t1.add_time)
+            AND UNIX_TIMESTAMP(#{wq.startTime}) <= UNIX_TIMESTAMP(t1.add_time)
+            AND UNIX_TIMESTAMP(#{wq.endTime}) >= UNIX_TIMESTAMP(t1.add_time)
         ]]>
       </if>
     </where>

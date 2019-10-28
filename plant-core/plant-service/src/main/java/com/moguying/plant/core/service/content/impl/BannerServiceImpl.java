@@ -31,15 +31,7 @@ public class BannerServiceImpl implements BannerService {
     @Override
     @DS("read")
     public PageResult<Banner> bannerList(Integer page, Integer size, Banner where) {
-        LambdaQueryWrapper<Banner> query = new QueryWrapper<Banner>().lambda()
-                .isNotNull(Banner::getId)
-                .eq(Banner::getId, where.getId())
-                .isNotNull(Banner::getName)
-                .like(Banner::getName, where.getName())
-                .isNotNull(Banner::getIsShow)
-                .eq(Banner::getIsShow, where.getIsShow());
-
-        IPage<Banner> pageResult = bannerDAO.selectPage(new Page<>(page, size), query);
+        IPage<Banner> pageResult = bannerDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 

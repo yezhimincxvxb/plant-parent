@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.util.Date;
 
 @Controller
-@RequestMapping("/api")
 public class ARegisterController {
 
     @Autowired

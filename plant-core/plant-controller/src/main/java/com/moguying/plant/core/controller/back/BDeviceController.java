@@ -8,9 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/backEnd/device")
+@RestController
+@RequestMapping("/device")
 public class BDeviceController {
 
     @Autowired
@@ -22,7 +23,6 @@ public class BDeviceController {
      * @return
      */
     @PostMapping("/refresh")
-    @ResponseBody
     public ResponseData<Integer> refreshDevice() {
         ResultData<Integer> resultData = deviceService.curAllData();
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());

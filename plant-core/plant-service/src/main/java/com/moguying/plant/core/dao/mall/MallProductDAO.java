@@ -3,6 +3,7 @@ package com.moguying.plant.core.dao.mall;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.common.vo.HomeProduct;
@@ -16,7 +17,7 @@ import java.util.List;
  * MallProductDAO继承基类
  */
 @Repository
-public interface MallProductDAO extends BaseMapper<MallProduct> {
+public interface MallProductDAO extends BaseDAO<MallProduct> {
     IPage<MallProduct> selectSelective(Page<MallProduct> page, @Param("wq") MallProduct where);
     Integer updateProductHasCountById(@Param("count") Integer count, @Param("productId") Integer productId);
     IPage<HomeProduct> selectProductForApp(Page<MallProduct> page,@Param("wq") HomeProduct search);

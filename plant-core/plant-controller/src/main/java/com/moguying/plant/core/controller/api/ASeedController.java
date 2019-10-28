@@ -45,8 +45,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-@Controller
-@RequestMapping("/api/seed")
+@RestController
+@RequestMapping("/seed")
 @Slf4j
 public class ASeedController {
 
@@ -92,7 +92,6 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping(value = "/buy")
-    @ResponseBody
     public ResponseData<BuyOrderResponse> buySeed(@LoginUserId Integer userId, @RequestBody BuyOrder buyOrder) {
         if (null == buyOrder.getCount() || buyOrder.getCount() <= 0)
             return new ResponseData<>(MessageEnum.SEED_COUNT_NOT_RIGHT.getMessage(), MessageEnum.SEED_COUNT_NOT_RIGHT.getState());
@@ -113,7 +112,6 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping("/pay")
-    @ResponseBody
     public ResponseData<SendPayOrderResponse> sendPayOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getIsCheck())
             return new ResponseData<>(MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getMessage(), MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getState());
@@ -135,7 +133,6 @@ public class ASeedController {
      */
     @ValidateUser
     @PutMapping("/pay")
-    @ResponseBody
     public ResponseData<PayOrderResponse> payOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if ((null != payOrder.getPayMsgCode() && null != payOrder.getPayPassword()) ||
                 (null == payOrder.getPayPassword() && null == payOrder.getPayMsgCode()))
@@ -166,7 +163,6 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping("/order/pay")
-    @ResponseBody
     public ResponseData<BuyOrderResponse> orderPay(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getOrderId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -206,7 +202,6 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping("/order/cancel")
-    @ResponseBody
     public ResponseData<Integer> orderCancel(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getOrderId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -241,7 +236,6 @@ public class ASeedController {
      * @return
      */
     @PostMapping(value = "/exc/{reapId}")
-    @ResponseBody
     public ResponseData<Integer> exchangeReap(@PathVariable Integer reapId,
                                               @RequestBody ExcReap excReap) {
         ResultData<Integer> resultData = plantOrderService.plantReapExchange(reapId, excReap);
@@ -257,7 +251,6 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping(value = "/sale")
-    @ResponseBody
     public ResponseData<SaleResponse> saleSeed(@LoginUserId Integer userId, @RequestBody SaleRequest saleRequest) {
         if (null == saleRequest.getSeedType())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -277,7 +270,6 @@ public class ASeedController {
      */
     @ValidateUser
     @GetMapping("/pay/data/{orderId}")
-    @ResponseBody
     public ResponseData<PaymentRequest<WebHtmlPayRequest>> payData(@LoginUserId Integer userId, @PathVariable Integer orderId) {
         SeedOrderDetail orderDetail = seedOrderDetailService.orderDetailByIdAndUserId(orderId, userId);
         if (null == orderDetail || !orderDetail.getState().equals(SeedEnum.SEED_ORDER_DETAIL_NEED_PAY.getState()))
@@ -290,7 +282,6 @@ public class ASeedController {
      * 兑换列表 (需要用户登录)
      */
     @PostMapping("/exchangeListByUser")
-    @ResponseBody
     public PageResult<ExchangeInfo> exchangeListByUser(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
         Integer page = pageSearch.getPage();
         Integer size = pageSearch.getSize();
@@ -302,7 +293,6 @@ public class ASeedController {
      * 兑换蘑菇币
      */
     @PostMapping("/exchangeMGB")
-    @ResponseBody
     public ResponseData<String> exchangeMGB(@LoginUserId Integer userId, @RequestBody PageSearch<String> pageSearch) {
 
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "兑换失败");
@@ -332,7 +322,6 @@ public class ASeedController {
      * 蘑菇币支付
      */
     @PostMapping("/paymentMGB")
-    @ResponseBody
     public ResponseData<String> paymentMGB(@LoginUserId Integer userId, @RequestBody MallOrder mallOrder) {
 
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "支付失败");
@@ -377,7 +366,6 @@ public class ASeedController {
      * 兑换券
      */
     @PostMapping("/exchangeQ")
-    @ResponseBody
     public ResponseData<String> exchangeQ(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
 
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "兑换失败");
@@ -409,7 +397,6 @@ public class ASeedController {
      * 兑换记录
      */
     @PostMapping("/exchangeLog")
-    @ResponseBody
     public PageResult<ExchangeInfo> exchangeLog(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
         Integer page = pageSearch.getPage();
         Integer size = pageSearch.getSize();
@@ -430,7 +417,6 @@ public class ASeedController {
      * 用户蘑菇币
      */
     @GetMapping("/getUserCoin")
-    @ResponseBody
     public ResponseData<Integer> getUserCoin(@LoginUserId Integer userId) {
         SaleCoin saleCoin = saleCoinService.findById(userId);
         if (saleCoin == null)

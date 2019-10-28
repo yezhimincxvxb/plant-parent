@@ -3,16 +3,15 @@ package com.moguying.plant.core.service.common;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.admin.AdminMessage;
 import com.moguying.plant.core.service.admin.AdminUserService;
+import com.moguying.plant.utils.ApplicationContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -24,7 +23,7 @@ import java.util.List;
 
 
 @Slf4j
-public class DownloadService<T extends BaseMapper, K> implements Runnable {
+public class DownloadService<T extends BaseDAO, K> implements Runnable {
 
     private T dao;
 
@@ -44,12 +43,12 @@ public class DownloadService<T extends BaseMapper, K> implements Runnable {
     @Override
     public void run() {
         try {
-            List<K> data = dao.selectList(null);
+            List<K> data = dao.selectSelective(search.getWhere());
             if (data.size() <= 0) return;
             String fileName = downloadInfo.getFileName();
             ServletContext servletContext = downloadInfo.getContext();
             File savePath =  new File(servletContext.getRealPath(downloadInfo.getSavePath()));
-
+            log.debug("file save path ====>{}",savePath);
             Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(fileName, fileName, ExcelType.HSSF), classes, data);
             if(!savePath.exists())
                 savePath.mkdirs();
@@ -57,8 +56,7 @@ public class DownloadService<T extends BaseMapper, K> implements Runnable {
             FileOutputStream fos = new FileOutputStream(savePath.getPath().concat("/").concat(saveFile));
             workbook.write(fos);
             fos.close();
-            WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
-            AdminUserService service = context.getBean(AdminUserService.class);
+            AdminUserService service = ApplicationContextUtil.getBean(AdminUserService.class);
             AdminMessage add = new AdminMessage();
             add.setAddTime(new Date());
             add.setDownloadUrl(downloadInfo.getSavePath().concat(saveFile));

@@ -106,8 +106,8 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     @DS("read")
     @Override
     public PageResult<UserFertilizer> userFertilizerList(Integer page, Integer size, UserFertilizer where) {
-        userFertilizerDAO.selectSelective(where);
-        return null;
+        IPage<UserFertilizer> pageResult = userFertilizerDAO.selectSelective(new Page(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override

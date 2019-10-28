@@ -12,8 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-@Controller
-@RequestMapping("/backEnd/mall")
+@RestController
+@RequestMapping("/mall")
 public class BMallProductController {
 
 
@@ -22,7 +22,6 @@ public class BMallProductController {
 
 
     @GetMapping("/{id}")
-    @ResponseBody
     public ResponseData<MallProduct> productDetail(@PathVariable Integer id){
         ResultData<MallProduct> resultData = productService.productDetail(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState()
@@ -36,7 +35,6 @@ public class BMallProductController {
      * @return
      */
     @PostMapping
-    @ResponseBody
     public ResponseData<Integer> addProduct(@RequestBody MallProduct product){
         ResultData<Integer> resultData = productService.saveProduct(product);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -49,7 +47,6 @@ public class BMallProductController {
      * @return
      */
     @PutMapping("/{id}")
-    @ResponseBody
     public ResponseData<Integer> updateProduct(@PathVariable Integer id, @RequestBody MallProduct product){
         product.setId(id);
         ResultData<Integer> resultData = productService.saveProduct(product);
@@ -63,7 +60,6 @@ public class BMallProductController {
      * @return
      */
     @PutMapping("/show/{id}")
-    @ResponseBody
     public ResponseData<Integer> showProduct(@PathVariable Integer id){
         if(productService.showProduct(id))
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
@@ -77,7 +73,6 @@ public class BMallProductController {
      * @return
      */
     @PostMapping("/list")
-    @ResponseBody
     public PageResult<MallProduct> productList(@RequestBody PageSearch<MallProduct> search){
         return productService.productList(search.getPage(),search.getSize(),search.getWhere());
     }
