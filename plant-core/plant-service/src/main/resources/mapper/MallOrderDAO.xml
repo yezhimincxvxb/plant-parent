@@ -99,4 +99,19 @@
         </where>
     </select>
 
+    <!-- 关单 -->
+    <update id="closeOrder">
+        update plant_mall_order
+        <set>
+            state = 4
+            and close_time = now()
+        </set>
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+
 </mapper>

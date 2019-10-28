@@ -118,5 +118,32 @@ public class MallProduct implements Serializable {
     @TableField
     private Integer consumeCoins;
 
+    /**
+     * 砍价份数
+     */
+    @JSONField(ordinal = 17)
+    @TableField
+    private Integer bargainNumber;
+
+    /**
+     * 需砍刀数
+     */
+    @JSONField(ordinal = 18)
+    @TableField
+    private Integer bargainCount;
+
+    /**
+     * 是否限量
+     */
+    @JSONField(ordinal = 19)
+    @TableField
+    private Boolean isLimit;
+
+    /**
+     * 限量数量
+     */
+    @JSONField(ordinal = 20)
+    @TableField
+    private Integer bargainLimit;
 
 }

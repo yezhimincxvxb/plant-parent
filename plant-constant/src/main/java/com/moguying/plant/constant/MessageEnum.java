@@ -145,7 +145,14 @@ public enum  MessageEnum {
     ADMIN_MENU_NOT_EXIST("路由菜单不存在",10139),
     USER_OUT_OF_AGE("用户已超年龄，请更换实名信息",10140),
     COINS_NOT_ENOUGH("蘑菇币不足，无法兑换",10141),
-    ADMIN_ROLE_NOT_EXIST("用户角色不存在",10142);
+    CLOSE_ORDER("已关单",10142),
+    SHARE_NOT_FOUND("分享订单无效",10143),
+    HELPED_ORDER("已帮砍过了，无法重复帮砍",10144),
+    HELPED_OVER("当天帮砍已达上限",10145),
+    MAX_LIMIT("商品已达限量",10146),
+    NOT_OWN_BARGAIN("自己已砍过了，邀请好友来砍",10147),
+    ADMIN_ROLE_NOT_EXIST("用户角色不存在",10148),
+    MALL_PRODUCT_TYPE_CAN_NOT_DELETE("此商品类型已绑定商品，不可删除",10149);
 
 
 

@@ -31,7 +31,6 @@ import com.moguying.plant.utils.PasswordUtil;
 import com.moguying.plant.utils.RedisUtil;
 import com.moguying.plant.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +38,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -77,7 +79,7 @@ public class UserServiceImpl implements UserService {
     @DS("read")
     public PageResult<User> userList(Integer page, Integer size, User where) {
         IPage<User> pageResult = userDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @TriggerEvent(action = "register")
@@ -85,25 +87,40 @@ public class UserServiceImpl implements UserService {
     @DS("write")
     public ResultData<TriggerEventResult<InnerMessage>> addUser(User user) {
         ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, null);
+
+        // 手机号是否已存在
         if (user.getPhone() != null) {
             User where = new User();
             where.setPhone(user.getPhone());
-            if (userDAO.selectCount(new QueryWrapper<>(where)) > 0) {
+            if (userDAO.selectOne(new QueryWrapper<>(where)) != null) {
                 return resultData.setMessageEnum(MessageEnum.PHONE_EXISTS);
             }
         }
+
+        // 身份证是否存在
         if (user.getIdCard() != null && idCardExists(user.getIdCard()))
             return resultData.setMessageEnum(MessageEnum.IDCARD_EXISTS);
 
+        // 密码
         if (user.getPassword() != null)
             user.setPassword(PasswordUtil.INSTANCE.encode(user.getPassword().getBytes()));
+
+        // 支付密码
         if (user.getPayPassword() != null)
             user.setPayPassword(PasswordUtil.INSTANCE.encode(user.getPayPassword().getBytes()));
+
         user.setRegTime(new Date());
         user.setUserState(true);
-        user.setInviteCode(RandomStringUtils.randomAlphanumeric(30));
+
+        // 新增用户
         if (userDAO.insert(user) > 0) {
-            //初始化用户账户
+            // 更新邀请码
+            User update = new User();
+            update.setId(user.getId());
+            update.setInviteCode(CommonUtil.INSTANCE.createInviteCode(user.getId()));
+            userDAO.updateById(update);
+
+            // 初始化用户账户
             userMoneyDAO.insert(new UserMoney(user.getId()));
             InnerMessage message = new InnerMessage();
             message.setUserId(user.getId());
@@ -129,6 +146,16 @@ public class UserServiceImpl implements UserService {
         where.setPhone(phone);
         if (state != null)
             where.setUserState(state.getState() == 1);
+        return userDAO.selectOne(new QueryWrapper<>(where));
+    }
+
+    @Override
+    @DS("read")
+    public User userInfoByInviteCode(String inviteCode, UserEnum state) {
+        User where = new User();
+        where.setInviteCode(inviteCode);
+
+        if (state != null) where.setUserState(state.getState() == 1);
         return userDAO.selectOne(new QueryWrapper<>(where));
     }
 
@@ -411,7 +438,7 @@ public class UserServiceImpl implements UserService {
     @DS("read")
     public PageResult<UserMessage> userMessageList(Integer page, Integer size, Integer userId) {
         IPage<UserMessage> pageResult = userMessageDAO.messageListByUserId(new Page<>(page, size), userId, false);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override

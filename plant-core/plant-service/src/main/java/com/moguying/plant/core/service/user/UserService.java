@@ -19,78 +19,55 @@ import java.util.List;
 public interface UserService {
 
     //用户列表
-    
     PageResult<User> userList(Integer page, Integer limit, User where);
 
     //添加用户
-    
     ResultData<TriggerEventResult<InnerMessage>> addUser(User user);
 
     //Id查找用户信息
-    
     User userInfoById(Integer id);
 
-
     //phone查找用户信息
-    
     User userInfoByPhone(String phone, UserEnum userEnum);
 
-    
+    User userInfoByInviteCode(String inviteCode, UserEnum userEnum);
+
     User userInfoByInviteCodeAndId(Integer userId, String inviteCode);
 
-    
     ResultData<Integer> saveBankCard(UserBank bank);
 
-    
     ResultData<Integer> deleteCard(Integer id);
 
-    
     List<UserBank> bankCardList(Integer userId);
 
-    
     UserBank bankCard(Integer userId, Integer id);
 
-    
     UserBank bankCardByOrderNumber(String orderNumber);
 
-    
     ResultData<Integer> addAddress(UserAddress address);
 
-    
     List<UserAddress> addressList(Integer userId);
 
-    
     ResultData<Integer> updateAddress(Integer id, UserAddress address);
 
-    
     ResultData<Integer> deleteAddress(UserAddress address);
 
-    
     ResultData<User> saveUserInfo(Integer id, User user);
 
-    
     User loginByPhoneAndPassword(String phone, String password);
 
-    
     UserSummaryInfo userSummaryInfo(User user);
 
-    
     PageResult<UserMessage> userMessageList(Integer page, Integer size, Integer userId);
 
-    
     UserAddress userDefaultAddress(Integer userId);
 
-    
     UserAddress userAddressByIdAndUserId(Integer id, Integer userId, Boolean isDelete);
 
-    
     ResultData<TriggerEventResult<LoginResponse>> loginSuccess(Integer id, String phone);
 
-
-    
     void downloadExcel(Integer userId, PageSearch<User> search, HttpServletRequest request);
 
-    
     User userInfo(User where);
 
 }

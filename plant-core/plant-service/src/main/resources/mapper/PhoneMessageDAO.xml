@@ -14,11 +14,9 @@
   </sql>
 
   <select id="selectByPhoneInTime" resultMap="BaseResultMap">
-    select * from plant_phone_message where
-    phone = #{phone}
-    <![CDATA[
-    and UNIX_TIMESTAMP(add_time) > #{inTime}
-    ]]>
+    select * from plant_phone_message
+    where phone = #{phone}
+    and UNIX_TIMESTAMP(add_time) &gt; #{inTime}
     and state = 0
   </select>
 </mapper>
