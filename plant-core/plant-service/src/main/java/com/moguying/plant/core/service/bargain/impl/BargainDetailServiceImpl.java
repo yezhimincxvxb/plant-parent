@@ -75,11 +75,6 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         return new BigDecimal(val + new Random().nextInt(11)).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_UP);
     }
 
-    @Override
-    @DS("read")
-    public BargainDetail getOneByOpen(Integer userId, Integer productId, Boolean state) {
-        return bargainDetailDao.getOneByOpen(userId, productId, state);
-    }
 
     @Override
     @DS("read")
@@ -99,34 +94,50 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
         if (buyProduct == null || product == null) return null;
 
+        // 重复分享
+        List<BargainDetail> details = bargainDetailDao.getOneByOpen(userId, buyProduct.getProductId(), false);
+        if (details != null && !details.isEmpty()) {
+            if (details.size() >= 2) {
+                for (int i = 1; i < details.size(); i++) {
+                    bargainDetailDao.deleteById(details.get(i));
+                }
+            }
+            BargainDetail detail = details.get(0);
+            detail.setMessage("分享成功");
+            return detail;
+        }
+
         // 总价、第一刀砍了多少
         BigDecimal totalAmount = product.getPrice().multiply(new BigDecimal(product.getBargainNumber()));
         BigDecimal bargainAmount = totalAmount.multiply(getRate(userRate));
 
         // 首次分享，生成砍价详情
-        BargainDetail detail = new BargainDetail();
-        detail.setUserId(userId);
-        detail.setProductId(product.getId());
-        detail.setProductCount(product.getBargainNumber());
-        detail.setTotalAmount(totalAmount);
-        detail.setBargainAmount(bargainAmount);
-        detail.setLeftAmount(totalAmount.subtract(bargainAmount));
-        detail.setTotalCount(product.getBargainCount());
-        detail.setBargainCount(1);
-        detail.setAddTime(new Date());
-        detail.setBargainTime(new Date());
-        detail.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
-        if (bargainDetailDao.insert(detail) <= 0) return null;
+        BargainDetail add = new BargainDetail();
+        add.setUserId(userId);
+        add.setProductId(product.getId());
+        add.setProductCount(product.getBargainNumber());
+        add.setTotalAmount(totalAmount);
+        add.setBargainAmount(bargainAmount);
+        add.setLeftAmount(totalAmount.subtract(bargainAmount));
+        add.setTotalCount(product.getBargainCount());
+        add.setBargainCount(1);
+        add.setAddTime(new Date());
+        add.setBargainTime(new Date());
+        add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
+        if (bargainDetailDao.insert(add) <= 0) return null;
 
         // 日志
         BargainLog log = new BargainLog();
         log.setUserId(userId);
         log.setShareId(userId);
         log.setProductId(product.getId());
-        log.setDetailId(detail.getId());
+        log.setDetailId(add.getId());
         log.setHelpAmount(bargainAmount);
         log.setHelpTime(new Date());
-        if (bargainLogDao.insert(log) > 0) return detail;
+        if (bargainLogDao.insert(log) > 0) {
+            add.setMessage("首次分享");
+            return add;
+        }
         return null;
     }
 
@@ -225,8 +236,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @DS("read")
     public BargainVo productInfo(Integer userId, Integer orderId) {
         IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(1, 1), userId, orderId);
-        if (pageResult == null || pageResult.getTotal() != 1) return null;
-        return pageResult.getRecords().get(0);
+        return pageResult.getTotal() > 0 ? pageResult.getRecords().get(0) : null;
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface BargainDetailDao extends BaseMapper<BargainDetail> {
 
-    BargainDetail getOneByOpen(@Param("userId") Integer userId, @Param("productId") Integer productId, @Param("state") Boolean state);
+    List<BargainDetail> getOneByOpen(@Param("userId") Integer userId, @Param("productId") Integer productId, @Param("state") Boolean state);
 
     BargainDetail getOneByClose(@Param("userId") Integer userId, @Param("productId") Integer productId, @Param("state") Boolean state);
 

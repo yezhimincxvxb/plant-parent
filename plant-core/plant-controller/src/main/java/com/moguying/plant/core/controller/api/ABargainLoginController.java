@@ -2,7 +2,6 @@ package com.moguying.plant.core.controller.api;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
-import com.moguying.plant.core.dao.bargain.BargainDetailDao;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -40,9 +39,6 @@ public class ABargainLoginController {
     @Autowired
     private UserAddressDAO userAddressDAO;
 
-    @Autowired
-    private BargainDetailDao bargainDetailDao;
-
     /**
      * 分享
      */
@@ -57,11 +53,6 @@ public class ABargainLoginController {
             return responseData
                     .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
                     .setState(MessageEnum.PARAMETER_ERROR.getState());
-
-        // 重复分享
-        BargainDetail detail = bargainDetailService.getOneByOpen(userId, buyProduct.getProductId(), false);
-        if (detail != null)
-            return responseData.setData(result.setOrderId(detail.getId()).setUserId(userId).setMessage("成功"));
 
         // 产品存在
         MallProduct product = mallProductDAO.selectById(buyProduct.getProductId());
@@ -83,9 +74,9 @@ public class ABargainLoginController {
                     .setState(MessageEnum.MAX_LIMIT.getState());
 
         // 首次分享
-        BargainDetail firstDetail = bargainDetailService.shareSuccess(userId, buyProduct, product);
-        if (firstDetail != null)
-            return responseData.setData(result.setOrderId(firstDetail.getId()).setUserId(userId).setMessage("首次成功"));
+        BargainDetail detail = bargainDetailService.shareSuccess(userId, buyProduct, product);
+        if (detail != null)
+            return responseData.setData(result.setOrderId(detail.getId()).setUserId(userId).setMessage(detail.getMessage()));
 
         return responseData
                 .setMessage(MessageEnum.ERROR.getMessage())

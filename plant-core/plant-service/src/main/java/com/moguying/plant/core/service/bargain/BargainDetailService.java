@@ -14,8 +14,6 @@ import java.util.List;
 
 public interface BargainDetailService {
 
-    BargainDetail getOneByOpen(Integer userId, Integer productId, Boolean state);
-
     BargainDetail getOneByClose(Integer userId, Integer productId, Boolean state);
 
     BargainDetail shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product);
