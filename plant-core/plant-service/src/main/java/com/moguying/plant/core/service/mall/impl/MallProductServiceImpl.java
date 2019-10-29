@@ -372,6 +372,7 @@ public class MallProductServiceImpl implements MallProductService {
     }
 
     @Override
+    @DS("read")
     public BargainVo productInfo(Integer productId) {
         return mallProductDAO.productInfo(productId);
     }

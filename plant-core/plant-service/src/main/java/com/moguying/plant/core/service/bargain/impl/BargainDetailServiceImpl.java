@@ -97,11 +97,13 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         // 重复分享
         List<BargainDetail> details = bargainDetailDao.getOneByOpen(userId, buyProduct.getProductId(), false);
         if (details != null && !details.isEmpty()) {
+            // 删除多余的订单
             if (details.size() >= 2) {
                 for (int i = 1; i < details.size(); i++) {
                     bargainDetailDao.deleteById(details.get(i));
                 }
             }
+            // 只获取第一单
             BargainDetail detail = details.get(0);
             detail.setMessage("分享成功");
             return detail;
