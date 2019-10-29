@@ -107,7 +107,7 @@
             and t1.state = 0
             and unix_timestamp(t1.add_time) &lt; unix_timestamp()
             and unix_timestamp(t1.close_time) &gt; unix_timestamp()
-            <if test="id != null">
+            <if test="orderId != null">
                 and t1.id = #{orderId}
             </if>
         </where>

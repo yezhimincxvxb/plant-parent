@@ -15,5 +15,5 @@ public interface BargainLogDao extends BaseMapper<BargainLog> {
 
     Integer getBargainCountToday(@Param("userId") Integer userId);
 
-    IPage<BargainVo> helpLog(Page<BargainVo> page, @Param("shareId") Integer shareId, @Param("productId") Integer productId);
+    IPage<BargainVo> helpLog(Page<BargainVo> page, @Param("shareId") Integer shareId, @Param("orderId") Integer orderId);
 }

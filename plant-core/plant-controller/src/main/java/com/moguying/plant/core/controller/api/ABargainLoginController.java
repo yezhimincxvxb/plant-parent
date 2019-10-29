@@ -155,7 +155,7 @@ public class ABargainLoginController {
 
         // 砍价详情
         BargainDetail detail = bargainDetailService.getOneById(bargainDetail.getId());
-        if (detail == null)
+        if (detail == null || detail.getState())
             return responseData
                     .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());
@@ -254,7 +254,7 @@ public class ABargainLoginController {
 
         // 关单订单不存在
         BargainDetail detail = bargainDetailService.getOneById(orderId);
-        if (detail == null)
+        if (detail == null || detail.getState())
             return responseData
                     .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());

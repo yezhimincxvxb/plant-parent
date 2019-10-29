@@ -136,8 +136,8 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     public Boolean helpSuccess(Integer userId, BargainDetail detail) {
 
         BargainDetail update;
-        // 超时关单
-        if (!DateUtil.INSTANCE.betweenTime(detail.getAddTime(), detail.getCloseTime()) && !detail.getState()) {
+        // 关单
+        if (!DateUtil.INSTANCE.betweenTime(detail.getAddTime(), detail.getCloseTime()) || detail.getTotalCount() <= detail.getBargainCount()) {
             // 更新状态
             update = new BargainDetail();
             update.setId(detail.getId());
