@@ -37,22 +37,25 @@ public class BAdvController {
     @Value("${upload.host}")
     private String uploadHost;
 
-    @Value("${editor.upload.host}")
+    @Value("${upload.editor.host}")
     private String editorUploadHost;
+
+    @Value("${upload.save-path}")
+    private String uploadSavePath;
 
     private static Map<String,String> pathMap = new HashMap<>();
 
     static {
-        pathMap.put("adv","/upload/adv/");
-        pathMap.put("banner","/upload/banner/");
-        pathMap.put("article","/upload/article/");
-        pathMap.put("editor","/upload/editor/");
-        pathMap.put("mall","/upload/mall/");
-        pathMap.put("block","/upload/block/");
-        pathMap.put("seed","/upload/seed/");
-        pathMap.put("activity","/upload/activity/");
-        pathMap.put("contract","/upload/contract/");
-        pathMap.put("apk","/upload/apk/");
+        pathMap.put("adv","/images/adv/");
+        pathMap.put("banner","/images/banner/");
+        pathMap.put("article","/images/article/");
+        pathMap.put("editor","/images/editor/");
+        pathMap.put("mall","/images/mall/");
+        pathMap.put("block","/images/block/");
+        pathMap.put("seed","/images/seed/");
+        pathMap.put("activity","/images/activity/");
+        pathMap.put("contract","/images/contract/");
+        pathMap.put("apk","/images/apk/");
     }
 
     /**
@@ -178,7 +181,7 @@ public class BAdvController {
         if(!pathMap.containsKey(savePath))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
 
-        String path = request.getServletContext().getRealPath(pathMap.get(savePath));
+        String path = uploadSavePath.concat(pathMap.get(savePath));
         Map<String,String> result = new HashMap<>();
         String host = "";
 

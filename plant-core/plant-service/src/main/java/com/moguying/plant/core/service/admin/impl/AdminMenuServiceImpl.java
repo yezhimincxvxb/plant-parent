@@ -59,9 +59,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     @DS("read")
     public List<AdminMenu> parentMenu() {
-        QueryWrapper<AdminMenu> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(AdminMenu::getParentId,0);
-        return adminMenuDAO.selectList(queryWrapper);
+        AdminMenu where = new AdminMenu();
+        where.setParentId(0);
+        return adminMenuDAO.selectSelective(where);
     }
 
     @Override

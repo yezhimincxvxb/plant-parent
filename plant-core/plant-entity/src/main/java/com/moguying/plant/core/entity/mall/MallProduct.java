@@ -151,14 +151,17 @@ public class MallProduct implements Serializable {
      * 商品类型id
      */
     @JSONField(serialize = false)
+    @TableField
     private Integer typeId;
 
 
     @JSONField(ordinal = 17)
+    @TableField(exist = false)
     private String typeName;
 
 
     @JSONField(ordinal = 18)
+    @TableField
     private Boolean isHot;
 
 }

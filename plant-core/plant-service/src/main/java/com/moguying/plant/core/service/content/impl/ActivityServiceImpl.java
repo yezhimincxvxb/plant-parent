@@ -75,22 +75,22 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO,Activity> imple
     @DS("read")
     public PageResult<Activity> activityListForHome(Integer page,Integer size,Date startTime, Date endTime) {
         IPage<Activity> pageResult = activityDAO.activityListForHome(new Page<>(page,size),startTime,endTime);
-        for(Activity activity : pageResult.getRecords()){
-            int compare = DateUtils.truncatedCompareTo(activity.getOpenTime(),new Date(), Calendar.DATE);
+        List<Activity> list = pageResult.getRecords();
+        list.forEach((x)->{
+            int compare = DateUtils.truncatedCompareTo(x.getOpenTime(),new Date(), Calendar.DATE);
             if( compare > 0)
-                activity.setState(0);
+                x.setState(0);
             else if(compare == 0)
-                activity.setState(1);
+                x.setState(1);
             else{
-                int endTimeCompare = DateUtils.truncatedCompareTo(activity.getCloseTime(),new Date(), Calendar.DATE);
+                int endTimeCompare = DateUtils.truncatedCompareTo(x.getCloseTime(),new Date(), Calendar.DATE);
                 if(endTimeCompare > 0)
-                    activity.setState(1);
+                    x.setState(1);
                 else
-                    activity.setState(2);
+                    x.setState(2);
             }
-
-        }
-        return null;
+        });
+        return new PageResult<>(pageResult.getTotal(),list);
     }
 
     @Override

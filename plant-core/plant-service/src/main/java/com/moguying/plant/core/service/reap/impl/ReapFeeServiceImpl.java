@@ -1,11 +1,13 @@
 package com.moguying.plant.core.service.reap.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapFeeDAO;
+import com.moguying.plant.core.dao.reap.ReapFeeParamDAO;
 import com.moguying.plant.core.dao.seed.SeedDaysDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
@@ -13,10 +15,12 @@ import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapFee;
+import com.moguying.plant.core.entity.reap.ReapFeeParam;
 import com.moguying.plant.core.entity.seed.SeedDays;
 import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.reap.ReapFeeService;
 import com.moguying.plant.utils.InterestUtil;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,7 +36,7 @@ public class ReapFeeServiceImpl implements ReapFeeService {
     private ReapDAO reapDAO;
 
     @Autowired
-    private SeedDaysDAO seedDaysDAO;
+    private ReapFeeParamDAO reapFeeParamDAO;
 
 
     @Autowired
@@ -48,14 +52,19 @@ public class ReapFeeServiceImpl implements ReapFeeService {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
         Reap reap = reapDAO.selectByIdAndUserId(reapFee.getReapId(),reapFee.getUserId());
         if(null == reap) return  resultData;
+        //获取到指定渠道的结算比
+        ReapFeeParam where = new ReapFeeParam();
+        where.setInviteUid(reapFee.getInviteUid());
+        where.setSeedType(reap.getSeedType());
+        ReapFeeParam reapFeeParam = reapFeeParamDAO.selectOne(new QueryWrapper<>(where));
+        if(null == reapFeeParam) return resultData;
         Integer isFirst = reapDAO.countByUserIdAndGrowUpDays(reapFee.getUserId(),reap.getSeedGrowDays());
-        SeedDays seedDays = seedDaysDAO.selectById(reap.getSeedGrowDays());
         BigDecimal feeAmount;
         if (isFirst == 1) {
-            feeAmount = reap.getPreAmount().multiply(seedDays.getFirstPlantRate());
+            feeAmount = reap.getPreAmount().multiply(reapFeeParam.getFirstPlantRate());
             reapFee.setIsFirst(true);
         } else {
-            feeAmount = reap.getPreAmount().multiply(seedDays.getPlantRate());
+            feeAmount = reap.getPreAmount().multiply(reapFeeParam.getPlantRate());
         }
         feeAmount = InterestUtil.INSTANCE.divide(feeAmount, new BigDecimal("100.00"));
         reapFee.setFeeAmount(feeAmount);

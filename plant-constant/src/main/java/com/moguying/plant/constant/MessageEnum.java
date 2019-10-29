@@ -152,7 +152,9 @@ public enum  MessageEnum {
     MAX_LIMIT("商品已达限量",10146),
     NOT_OWN_BARGAIN("自己已砍过了，邀请好友来砍",10147),
     ADMIN_ROLE_NOT_EXIST("用户角色不存在",10148),
-    MALL_PRODUCT_TYPE_CAN_NOT_DELETE("此商品类型已绑定商品，不可删除",10149);
+    MALL_PRODUCT_TYPE_CAN_NOT_DELETE("此商品类型已绑定商品，不可删除",10149),
+    IS_NOT_A_CHANNEL("非渠道用户",10150),
+    SEED_TYPE_NOT_EXIST("菌包类型不存在",10151);
 
 
 

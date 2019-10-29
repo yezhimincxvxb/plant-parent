@@ -32,18 +32,4 @@ public class SeedDays implements Serializable {
      */
     @TableField
     private String mark;
-
-
-    /**
-     * 首次种植运营结算比
-     */
-    @TableField
-    private BigDecimal firstPlantRate;
-
-    /**
-     * 正常种植运营结算比
-     */
-    @TableField
-    private BigDecimal plantRate;
-
 }

@@ -328,7 +328,7 @@ CREATE TABLE `plant_reap_fee_param` (
   `invite_uid` int(11) NOT NULL DEFAULT '0' COMMENT '渠道id',
   `first_plant_rate` decimal(15,3) NOT NULL COMMENT '首种费用结算比率',
   `plant_rate` decimal(15,3) NOT NULL COMMENT '普种费用结算比率',
-  `days` int(11) NOT NULL COMMENT '种植天数',
+  `seed_type` int(11) NOT NULL COMMENT '菌包种类',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

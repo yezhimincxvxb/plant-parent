@@ -34,6 +34,9 @@ public class BSeedPicController {
     @Value("${upload.host}")
     private String uploadHost;
 
+    @Value("${upload.save-path}")
+    private String uploadSavePath;
+
     /**
      * 菌包图片列表
      * @return
@@ -51,7 +54,7 @@ public class BSeedPicController {
      */
     @PostMapping(value = "/add")
     public ResponseData<String> seedPicAdd(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        String path = request.getServletContext().getRealPath("upload");
+        String path = uploadSavePath.concat("/images/");
         SeedPic seedPic = new SeedPic();
         seedPic.setIsDelete(new Byte("0"));
         byte[] bytes = new byte[1024*2]; //1M
@@ -70,12 +73,12 @@ public class BSeedPicController {
             if(!saveFile.exists())
                 saveFile.mkdirs();
             file.transferTo(saveFile);
-            seedPic.setPicUrl(host + "/upload/" + fileName + "." + subFix);
+            seedPic.setPicUrl(host + "/images/" + fileName + "." + subFix);
             Thumbnails.of(saveFile)
                     .sourceRegion(Positions.CENTER,216,216)
                     .scale(1)
                     .toFile(thumbFile);
-            seedPic.setPicUrlThumb(host + "/upload/thumb_" + fileName + "." + subFix );
+            seedPic.setPicUrlThumb(host + "/images/thumb_" + fileName + "." + subFix );
 
         } catch (IOException e) {
             return new ResponseData<>(MessageEnum.FILE_UPLOAD_ERROR.getMessage(),MessageEnum.FILE_UPLOAD_ERROR.getState());
