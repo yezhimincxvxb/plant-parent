@@ -390,3 +390,11 @@ ADD COLUMN `type_id` int(0) NULL COMMENT '商品类别' AFTER `id`;
 ALTER TABLE `moguying`.`plant_mall_product`
 ADD COLUMN  `is_limit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否限量[0否，1是]' AFTER `bargain_limit`;
 
+
+/** 是否新手适用 **/
+ALTER TABLE `moguying`.`plant_seed_type`
+ADD COLUMN `is_for_new` tinyint(1) NOT NULL DEFAULT 0 AFTER `exchange_num`;
+
+/** 每种菌类产量 **/
+ALTER TABLE `moguying`.`plant_seed_type`
+ADD COLUMN `per_weigh` decimal(15, 2) NOT NULL COMMENT '每份产量重' AFTER `is_for_new`;
