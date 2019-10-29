@@ -331,3 +331,62 @@ CREATE TABLE `plant_reap_fee_param` (
   `days` int(11) NOT NULL COMMENT '种植天数',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/***砍价详情*****/
+CREATE TABLE `plant_bargain_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `product_id` int(11) NOT NULL COMMENT '产品id',
+  `product_count` int(11) NOT NULL COMMENT '产品数量',
+  `total_amount` decimal(15,2) NOT NULL COMMENT '产品总价',
+  `bargain_amount` decimal(15,2) NOT NULL COMMENT '已砍价格',
+  `left_amount` decimal(15,2) NOT NULL COMMENT '剩余价格',
+  `total_count` int(11) NOT NULL COMMENT '需砍总数',
+  `bargain_count` int(11) NOT NULL COMMENT '已砍次数',
+  `state` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否关单[0 已关单；1 进行中]',
+  `add_time` datetime NOT NULL COMMENT '生成时间',
+  `bargain_time` datetime NOT NULL COMMENT '帮砍时间',
+  `close_time` datetime NOT NULL COMMENT '关单时间',
+  `order_number` varchar(50) NOT NULL DEFAULT '' COMMENT '订单号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/***帮砍日志*****/
+CREATE TABLE `plant_bargain_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `share_id` int(11) NOT NULL COMMENT '分享者id',
+  `product_id` int(11) NOT NULL COMMENT '产品id',
+  `detail_id` int(11) NOT NULL COMMENT '详情id',
+  `help_amount` decimal(15,2) NOT NULL COMMENT '帮砍价格',
+  `message` varchar(255) NOT NULL COMMENT '备注信息',
+  `help_time` datetime NOT NULL COMMENT '帮砍时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/***该产品需砍多少次*****/
+ALTER TABLE `moguying`.`plant_mall_product`
+ADD COLUMN `bargain_count` int(11) NOT NULL DEFAULT '0' COMMENT '砍价次数' AFTER `consume_coins`;
+
+
+CREATE TABLE `plant_mall_product_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(255) DEFAULT NULL COMMENT '分类名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/***该产品砍价可得多少份*****/
+ALTER TABLE `moguying`.`plant_mall_product`
+ADD COLUMN `bargain_number` int(11) NOT NULL DEFAULT '0' COMMENT '砍价份数' AFTER `bargain_count`;
+
+/***该产品砍价限量多少份*****/
+ALTER TABLE `moguying`.`plant_mall_product`
+ADD COLUMN `bargain_limit` int(11) NOT NULL DEFAULT '0' COMMENT '砍价限量' AFTER `bargain_number`;
+
+ALTER TABLE `moguying`.`plant_mall_product`
+ADD COLUMN `type_id` int(0) NULL COMMENT '商品类别' AFTER `id`;
+
+/***该产品是否限量*****/
+ALTER TABLE `moguying`.`plant_mall_product`
+ADD COLUMN  `is_limit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否限量[0否，1是]' AFTER `bargain_limit`;
+

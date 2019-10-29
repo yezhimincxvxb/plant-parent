@@ -12,12 +12,11 @@ import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
-import com.moguying.plant.core.entity.bargain.vo.SendNumber;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
+import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.mall.vo.BuyProduct;
-import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
@@ -89,6 +88,11 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     }
 
     @Override
+    public BargainDetail getOneById(Integer id) {
+        return bargainDetailDao.selectById(id);
+    }
+
+    @Override
     @DS("write")
     @Transactional
     public BargainDetail shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
@@ -129,7 +133,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("write")
     @Transactional
-    public Boolean helpSuccess(Integer userId, BargainLog bargainLog, BargainDetail detail) {
+    public Boolean helpSuccess(Integer userId, BargainDetail detail) {
 
         BargainDetail update;
         // 超时关单
@@ -155,7 +159,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             // 生成订单
             MallOrder mallOrder = new MallOrder();
             mallOrder.setOrderNumber(orderNumber);
-            mallOrder.setUserId(bargainLog.getShareId());
+            mallOrder.setUserId(detail.getUserId());
             mallOrder.setState(0);
             mallOrder.setAddTime(new Date());
             if (mallOrderDAO.insert(mallOrder) <= 0) return false;
@@ -192,43 +196,43 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         log.setProductId(detail.getProductId());
         log.setDetailId(detail.getId());
         log.setHelpAmount(helpAmount);
-        log.setMessage(bargainLog.getMessage() == null ? "" : bargainLog.getMessage());
+        log.setMessage(detail.getMessage() == null ? "" : detail.getMessage());
         log.setHelpTime(new Date());
         return bargainLogDao.insert(log) > 0;
     }
 
     @Override
     @DS("read")
-    public PageResult<BargainResponse> successLogs(Integer page, Integer size) {
-        IPage<BargainResponse> pageResult = bargainDetailDao.successLogs(new Page<>(page, size));
+    public PageResult<BargainVo> successLogs(Integer page, Integer size) {
+        IPage<BargainVo> pageResult = bargainDetailDao.successLogs(new Page<>(page, size));
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("read")
-    public List<SendNumber> sendNumber() {
+    public List<SendNumberVo> sendNumber() {
         return bargainDetailDao.sendNumber();
     }
 
     @Override
     @DS("read")
-    public PageResult<BargainResponse> doingList(Integer page, Integer size, Integer userId) {
-        IPage<BargainResponse> pageResult = bargainDetailDao.doingList(new Page<>(page, size), userId, null);
+    public PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId) {
+        IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(page, size), userId, null);
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("read")
-    public BargainResponse productInfo(Integer userId, Integer id) {
-        IPage<BargainResponse> pageResult = bargainDetailDao.doingList(new Page<>(1, 1), userId, id);
+    public BargainVo productInfo(Integer userId, Integer orderId) {
+        IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(1, 1), userId, orderId);
         if (pageResult == null || pageResult.getTotal() != 1) return null;
         return pageResult.getRecords().get(0);
     }
 
     @Override
     @DS("read")
-    public PageResult<BargainResponse> ownLog(Integer page, Integer size, Integer userId) {
-        IPage<BargainResponse> pageResult = bargainDetailDao.ownLog(new Page<>(page, size), userId);
+    public PageResult<BargainVo> ownLog(Integer page, Integer size, Integer userId) {
+        IPage<BargainVo> pageResult = bargainDetailDao.ownLog(new Page<>(page, size), userId);
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 

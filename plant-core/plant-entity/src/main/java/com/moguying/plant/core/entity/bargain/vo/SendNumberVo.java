@@ -3,7 +3,7 @@ package com.moguying.plant.core.entity.bargain.vo;
 import lombok.Data;
 
 @Data
-public class SendNumber {
+public class SendNumberVo {
 
     /**
      * 商品id

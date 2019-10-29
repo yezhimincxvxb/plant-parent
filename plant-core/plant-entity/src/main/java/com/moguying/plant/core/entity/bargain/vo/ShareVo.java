@@ -3,7 +3,7 @@ package com.moguying.plant.core.entity.bargain.vo;
 import lombok.Data;
 
 @Data
-public class ShareResult {
+public class ShareVo {
 
     /**
      * 订单id
@@ -20,17 +20,17 @@ public class ShareResult {
      */
     private String message;
 
-    public ShareResult setOrderId(Integer orderId) {
+    public ShareVo setOrderId(Integer orderId) {
         this.orderId = orderId;
         return this;
     }
 
-    public ShareResult setUserId(Integer userId) {
+    public ShareVo setUserId(Integer userId) {
         this.userId = userId;
         return this;
     }
 
-    public ShareResult setMessage(String message) {
+    public ShareVo setMessage(String message) {
         this.message = message;
         return this;
     }
