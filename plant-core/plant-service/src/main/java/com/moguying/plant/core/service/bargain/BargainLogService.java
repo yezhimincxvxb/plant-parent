@@ -10,5 +10,5 @@ public interface BargainLogService {
 
     Integer getBargainCountToday(Integer userId);
 
-    PageResult<BargainVo> helpLog(Integer page, Integer size, Integer shareId, Integer productId);
+    PageResult<BargainVo> helpLog(Integer page, Integer size, Integer shareId, Integer orderId);
 }

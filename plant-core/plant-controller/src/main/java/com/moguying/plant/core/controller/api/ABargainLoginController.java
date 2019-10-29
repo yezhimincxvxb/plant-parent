@@ -155,7 +155,7 @@ public class ABargainLoginController {
 
         // 砍价详情
         BargainDetail detail = bargainDetailService.getOneById(bargainDetail.getId());
-        if (detail == null)
+        if (detail == null || detail.getState())
             return responseData
                     .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());
@@ -245,27 +245,5 @@ public class ABargainLoginController {
                 .setState(MessageEnum.MALL_ORDER_UPDATE_ERROR.getState());
     }
 
-    /**
-     * 超时关单
-     */
-    @GetMapping("/time/out/{orderId}")
-    public ResponseData<String> closeByTimeOut(@LoginUserId Integer userId, @PathVariable("orderId") Integer orderId) {
-        ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
 
-        // 关单订单不存在
-        BargainDetail detail = bargainDetailService.getOneById(orderId);
-        if (detail == null)
-            return responseData
-                    .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
-                    .setState(MessageEnum.SHARE_NOT_FOUND.getState());
-
-        // 关单
-        detail.setState(true);
-        if (bargainDetailDao.updateById(detail) <= 0) return responseData;
-
-        return responseData
-                .setMessage(MessageEnum.SUCCESS.getMessage())
-                .setState(MessageEnum.SUCCESS.getState())
-                .setData("关单成功");
-    }
 }

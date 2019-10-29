@@ -2,9 +2,11 @@ package com.moguying.plant.core.controller.api;
 
 
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.dao.bargain.BargainDetailDao;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
+import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
@@ -29,6 +31,9 @@ public class ABargainController {
 
     @Autowired
     private MallProductService mallProductService;
+
+    @Autowired
+    private BargainDetailDao bargainDetailDao;
 
     /**
      * 砍价成功记录(所有用户)
@@ -103,6 +108,30 @@ public class ABargainController {
                 .setMessage(MessageEnum.SUCCESS.getMessage())
                 .setState(MessageEnum.SUCCESS.getState())
                 .setData(bargain);
+    }
+
+    /**
+     * 超时关单
+     */
+    @GetMapping("/time/out/{orderId}")
+    public ResponseData<String> closeByTimeOut(@PathVariable("orderId") Integer orderId) {
+        ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
+
+        // 关单订单不存在
+        BargainDetail detail = bargainDetailService.getOneById(orderId);
+        if (detail == null || detail.getState())
+            return responseData
+                    .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
+                    .setState(MessageEnum.SHARE_NOT_FOUND.getState());
+
+        // 关单
+        detail.setState(true);
+        if (bargainDetailDao.updateById(detail) <= 0) return responseData;
+
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData("关单成功");
     }
 
 }

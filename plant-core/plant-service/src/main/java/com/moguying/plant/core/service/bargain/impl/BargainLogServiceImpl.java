@@ -30,8 +30,8 @@ public class BargainLogServiceImpl implements BargainLogService {
 
     @Override
     @DS("read")
-    public PageResult<BargainVo> helpLog(Integer page, Integer size, Integer shareId, Integer productId) {
-        IPage<BargainVo> pageResult = bargainLogDao.helpLog(new Page<>(page, size), shareId, productId);
+    public PageResult<BargainVo> helpLog(Integer page, Integer size, Integer shareId, Integer orderId) {
+        IPage<BargainVo> pageResult = bargainLogDao.helpLog(new Page<>(page, size), shareId, orderId);
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 }

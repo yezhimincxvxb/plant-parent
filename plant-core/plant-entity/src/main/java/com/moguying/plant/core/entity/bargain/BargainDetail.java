@@ -121,6 +121,7 @@ public class BargainDetail implements Serializable {
     /**
      * 辅助字段
      */
+    @TableField(exist = false)
     private String message;
 
 }

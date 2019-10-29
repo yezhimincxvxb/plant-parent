@@ -58,9 +58,7 @@
         left join plant_bargain_detail t3 on t1.detail_id = t3.id
         <where>
             t1.share_id = #{shareId}
-            and t1.product_id = #{productId}
-            and unix_timestamp(t3.add_time) &lt; unix_timestamp()
-            and unix_timestamp(t3.close_time) &gt; unix_timestamp()
+            and t1.detail_id = #{orderId}
         </where>
         order by t1.help_time desc
     </select>
