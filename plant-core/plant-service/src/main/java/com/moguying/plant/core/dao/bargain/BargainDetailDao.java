@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
-import com.moguying.plant.core.entity.bargain.vo.SendNumber;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
+import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,13 +19,13 @@ public interface BargainDetailDao extends BaseMapper<BargainDetail> {
 
     BargainDetail getOneByClose(@Param("userId") Integer userId, @Param("productId") Integer productId, @Param("state") Boolean state);
 
-    IPage<BargainResponse> successLogs(Page<BargainResponse> page);
+    IPage<BargainVo> successLogs(Page<BargainVo> page);
 
-    List<SendNumber> sendNumber();
+    List<SendNumberVo> sendNumber();
 
-    IPage<BargainResponse> doingList(Page<BargainResponse> page, @Param("userId") Integer userId, @Param("id") Integer id);
+    IPage<BargainVo> doingList(Page<BargainVo> page, @Param("userId") Integer userId, @Param("orderId") Integer orderId);
 
-    IPage<BargainResponse> ownLog(Page<BargainResponse> page, @Param("userId") Integer userId);
+    IPage<BargainVo> ownLog(Page<BargainVo> page, @Param("userId") Integer userId);
 
     MallOrder submitOrder(@Param("userId") Integer userId, @Param("productId") Integer productId);
 

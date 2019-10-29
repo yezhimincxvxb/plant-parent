@@ -140,7 +140,7 @@
     </select>
 
     <!-- 砍价商品 -->
-    <select id="productList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
+    <select id="productList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
         select id `productId`, pic_url `picUrl`, summary_desc `productInfo`, is_limit `isLimit`, bargain_limit `totalNumber`, bargain_number `productCount`
         from plant_mall_product
         where is_show = 1
@@ -150,10 +150,10 @@
     </select>
 
     <!-- 砍价商品详情 -->
-    <select id="productInfo" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
-        select `name` `productName`, summary_desc `productInfo`, sum(price * bargain_number) `productPrice`, pic_url `picUrl`
+    <select id="productInfo" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
+        select id `productId`, `name` `productName`, summary_desc `productInfo`, sum(price * bargain_number) `productPrice`, pic_url `picUrl`
         from plant_mall_product
-        where id = #{id}
+        where id = #{productId}
         group by id
     </select>
 

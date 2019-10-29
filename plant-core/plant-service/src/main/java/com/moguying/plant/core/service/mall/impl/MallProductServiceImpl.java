@@ -11,7 +11,7 @@ import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
@@ -366,13 +366,13 @@ public class MallProductServiceImpl implements MallProductService {
 
     @Override
     @DS("read")
-    public PageResult<BargainResponse> productList(Integer page, Integer size) {
-        IPage<BargainResponse> pageResult = mallProductDAO.productList(new Page<>(page, size));
+    public PageResult<BargainVo> productList(Integer page, Integer size) {
+        IPage<BargainVo> pageResult = mallProductDAO.productList(new Page<>(page, size));
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
     @Override
-    public BargainResponse productInfo(Integer id) {
-        return mallProductDAO.productInfo(id);
+    public BargainVo productInfo(Integer productId) {
+        return mallProductDAO.productInfo(productId);
     }
 }

@@ -294,6 +294,7 @@ CREATE TABLE `plant_sale_coin_log` (
 
 
 /**权限相关**/
+
 CREATE TABLE `plant_admin_dept` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `dept_name` varchar(255) DEFAULT NULL,
@@ -321,6 +322,15 @@ ADD COLUMN `buy_coins` int(11) NOT NULL DEFAULT '0' COMMENT '订单蘑菇币';
 
 ALTER TABLE `moguying`.`plant_mall_order`
 ADD COLUMN `total_coins` int(11) NOT NULL DEFAULT '0' COMMENT '蘑菇币总数' AFTER `buy_amount`;
+
+CREATE TABLE `plant_reap_fee_param` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invite_uid` int(11) NOT NULL DEFAULT '0' COMMENT '渠道id',
+  `first_plant_rate` decimal(15,3) NOT NULL COMMENT '首种费用结算比率',
+  `plant_rate` decimal(15,3) NOT NULL COMMENT '普种费用结算比率',
+  `days` int(11) NOT NULL COMMENT '种植天数',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /***砍价详情*****/
 CREATE TABLE `plant_bargain_detail` (
@@ -379,19 +389,4 @@ ADD COLUMN `type_id` int(0) NULL COMMENT '商品类别' AFTER `id`;
 /***该产品是否限量*****/
 ALTER TABLE `moguying`.`plant_mall_product`
 ADD COLUMN  `is_limit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否限量[0否，1是]' AFTER `bargain_limit`;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

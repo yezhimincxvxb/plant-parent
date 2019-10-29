@@ -2,7 +2,7 @@ package com.moguying.plant.core.service.mall;
 
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
 import com.moguying.plant.core.entity.common.vo.HomeProduct;
@@ -37,7 +37,7 @@ public interface MallProductService {
 
     PageResult<ExchangeInfo> showProductLog(Integer page, Integer size, Integer userId);
 
-    PageResult<BargainResponse> productList(Integer page, Integer size);
+    PageResult<BargainVo> productList(Integer page, Integer size);
 
-    BargainResponse productInfo(Integer id);
+    BargainVo productInfo(Integer productId);
 }

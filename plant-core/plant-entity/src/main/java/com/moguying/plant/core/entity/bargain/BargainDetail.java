@@ -117,4 +117,10 @@ public class BargainDetail implements Serializable {
     @JSONField(ordinal = 14)
     private String orderNumber;
 
+
+    /**
+     * 辅助字段
+     */
+    private String message;
+
 }

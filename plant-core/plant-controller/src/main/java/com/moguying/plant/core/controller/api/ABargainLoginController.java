@@ -9,9 +9,8 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
-import com.moguying.plant.core.entity.bargain.BargainLog;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
-import com.moguying.plant.core.entity.bargain.vo.ShareResult;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
+import com.moguying.plant.core.entity.bargain.vo.ShareVo;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallProduct;
@@ -25,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/login/bargain")
+@RequestMapping("/login/bargain")
 @Slf4j
 public class ABargainLoginController {
 
@@ -48,10 +47,10 @@ public class ABargainLoginController {
      * 分享
      */
     @PostMapping("/share")
-    public ResponseData<ShareResult> share(@LoginUserId Integer userId, @RequestBody BuyProduct buyProduct) {
+    public ResponseData<ShareVo> share(@LoginUserId Integer userId, @RequestBody BuyProduct buyProduct) {
 
-        ShareResult result = new ShareResult().setUserId(null).setMessage("分享失败");
-        ResponseData<ShareResult> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
+        ShareVo result = new ShareVo().setUserId(null).setMessage("分享失败");
+        ResponseData<ShareVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
 
         // 参数错误
         if (userId == null || buyProduct == null || buyProduct.getProductId() == null)
@@ -97,23 +96,26 @@ public class ABargainLoginController {
      * 砍价中的产品列表
      */
     @PostMapping("/doing/list")
-    public PageResult<BargainResponse> doingList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
+    public PageResult<BargainVo> doingList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId);
     }
 
     /**
      * 砍价中的产品详情
      */
-    @GetMapping("/product/info/{id}")
-    public ResponseData<BargainResponse> productInfo(@LoginUserId Integer userId, @PathVariable("id") Integer id) {
-        ResponseData<BargainResponse> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
-        BargainResponse response = bargainDetailService.productInfo(userId, id);
+    @GetMapping("/product/info/{orderId}")
+    public ResponseData<BargainVo> productInfo(@LoginUserId Integer userId, @PathVariable("orderId") Integer orderId) {
+        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
+        BargainVo response = bargainDetailService.productInfo(userId, orderId);
 
         if (response != null) {
             Integer productId = response.getProductId();
             Integer number = bargainDetailService.getNumber(productId);
             response.setSendNumber(number);
-            return responseData.setData(response);
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState())
+                    .setData(response);
         }
         return responseData;
     }
@@ -122,23 +124,23 @@ public class ABargainLoginController {
      * 砍价
      */
     @PostMapping("/help/chop")
-    public ResponseData<String> helpChop(@LoginUserId Integer userId, @RequestBody BargainLog bargainLog) {
+    public ResponseData<String> helpChop(@LoginUserId Integer userId, @RequestBody BargainDetail bargainDetail) {
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), "砍价失败");
 
         // 参数
-        if (bargainLog == null || bargainLog.getShareId() == null || bargainLog.getProductId() == null)
+        if (bargainDetail == null || bargainDetail.getId() == null || bargainDetail.getUserId() == null)
             return responseData
                     .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
                     .setState(MessageEnum.PARAMETER_ERROR.getState());
 
         // 自己已砍
-        if (userId.equals(bargainLog.getShareId()))
+        if (userId.equals(bargainDetail.getUserId()))
             return responseData
                     .setMessage(MessageEnum.NOT_OWN_BARGAIN.getMessage())
                     .setState(MessageEnum.NOT_OWN_BARGAIN.getState());
 
         // 好友已帮
-        Integer count = bargainLogService.getBargainCount(userId, bargainLog.getShareId(), bargainLog.getProductId());
+        Integer count = bargainLogService.getBargainCount(userId, bargainDetail.getId());
         if (count >= 1)
             return responseData
                     .setMessage(MessageEnum.HELPED_ORDER.getMessage())
@@ -152,14 +154,15 @@ public class ABargainLoginController {
                     .setState(MessageEnum.HELPED_OVER.getState());
 
         // 砍价详情
-        BargainDetail detail = bargainDetailService.getOneByOpen(bargainLog.getShareId(), bargainLog.getProductId(), false);
+        BargainDetail detail = bargainDetailService.getOneById(bargainDetail.getId());
         if (detail == null)
             return responseData
                     .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());
 
         // 帮砍
-        Boolean helpSuccess = bargainDetailService.helpSuccess(userId, bargainLog, detail);
+        detail.setMessage(bargainDetail.getMessage());
+        Boolean helpSuccess = bargainDetailService.helpSuccess(userId, detail);
         if (helpSuccess)
             return responseData.setData("砍价成功");
 
@@ -172,7 +175,7 @@ public class ABargainLoginController {
      * 好友帮砍记录
      */
     @PostMapping("/help/log")
-    public PageResult<BargainResponse> helpLog(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
+    public PageResult<BargainVo> helpLog(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
         return bargainLogService.helpLog(pageSearch.getPage(), pageSearch.getSize(), userId, pageSearch.getWhere());
     }
 
@@ -180,7 +183,7 @@ public class ABargainLoginController {
      * 砍价成功记录(用户本人)
      */
     @PostMapping("/own/log")
-    public PageResult<BargainResponse> ownLog(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
+    public PageResult<BargainVo> ownLog(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.ownLog(pageSearch.getPage(), pageSearch.getSize(), userId);
     }
 
@@ -193,7 +196,7 @@ public class ABargainLoginController {
         ResponseData<BuyResponse> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), null);
 
         // 参数
-        if (userId == null || submitOrder == null || submitOrder.getProductId() == null || submitOrder.getAddressId() == null)
+        if (submitOrder == null || submitOrder.getProductId() == null || submitOrder.getAddressId() == null)
             return responseData
                     .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
                     .setState(MessageEnum.PARAMETER_ERROR.getState());
@@ -246,11 +249,11 @@ public class ABargainLoginController {
      * 超时关单
      */
     @GetMapping("/time/out/{orderId}")
-    public ResponseData<String> closeByTimeOut(@LoginUserId Integer userId, @PathVariable("orderId") Integer id) {
+    public ResponseData<String> closeByTimeOut(@LoginUserId Integer userId, @PathVariable("orderId") Integer orderId) {
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
 
         // 关单订单不存在
-        BargainDetail detail = bargainDetailService.getOneByOpen(userId, id, false);
+        BargainDetail detail = bargainDetailService.getOneById(orderId);
         if (detail == null)
             return responseData
                     .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())

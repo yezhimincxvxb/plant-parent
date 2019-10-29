@@ -1,15 +1,13 @@
 package com.moguying.plant.core.dao.mall;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.mall.MallProduct;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.common.vo.HomeProduct;
 import com.moguying.plant.core.entity.common.vo.HomeProductDetail;
-import com.moguying.plant.core.entity.mall.MallProduct;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +30,7 @@ public interface MallProductDAO extends BaseDAO<MallProduct> {
 
     IPage<ExchangeInfo> showProductLog(Page<ExchangeInfo> page, @Param("userId") Integer userId);
 
-    IPage<BargainResponse> productList(Page<BargainResponse> page);
+    IPage<BargainVo> productList(Page<BargainVo> page);
 
-    BargainResponse productInfo(@Param("id") Integer id);
+    BargainVo productInfo(@Param("productId") Integer productId);
 }

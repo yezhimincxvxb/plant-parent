@@ -2,13 +2,13 @@ package com.moguying.plant.core.service.bargain;
 
 
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 
 public interface BargainLogService {
 
-    Integer getBargainCount(Integer userId, Integer shareId, Integer productId);
+    Integer getBargainCount(Integer userId, Integer detailId);
 
     Integer getBargainCountToday(Integer userId);
 
-    PageResult<BargainResponse> helpLog(Integer page, Integer size, Integer shareId, Integer productId);
+    PageResult<BargainVo> helpLog(Integer page, Integer size, Integer shareId, Integer productId);
 }

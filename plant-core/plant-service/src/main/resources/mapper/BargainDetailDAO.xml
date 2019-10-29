@@ -62,7 +62,7 @@
     </select>
 
     <!-- 砍价成功记录(所有用户) -->
-    <select id="successLogs" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
+    <select id="successLogs" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
         select t3.phone `phone`, t4.name `productName`, t1.product_count `productCount`
         from plant_bargain_detail t1
         left join plant_mall_order t2 on t1.order_number = t2.order_number
@@ -75,7 +75,7 @@
     </select>
 
     <!-- 送出商品数量 -->
-    <select id="sendNumber" resultType="com.moguying.plant.core.entity.bargain.vo.SendNumber">
+    <select id="sendNumber" resultType="com.moguying.plant.core.entity.bargain.vo.SendNumberVo">
         select t1.product_id `productId`, sum(t1.product_count) `productCount`
         from plant_bargain_detail t1
         left join plant_mall_order t2 on t1.order_number = t2.order_number
@@ -95,8 +95,8 @@
     </select>
 
     <!-- 砍价进行中的成品列表 -->
-    <select id="doingList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
-        select t1.id `id`, t2.name `productName`, t1.bargain_amount `bargainAmount`, t1.left_amount `leftAmount`,
+    <select id="doingList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
+        select t1.id `orderId`, t2.name `productName`, t1.bargain_amount `bargainAmount`, t1.left_amount `leftAmount`,
         t2.summary_desc `productInfo`, t2.pic_url `picUrl`, t1.add_time `beginTime`, t1.close_time `endTime`,
         sum(t1.bargain_amount / t1.total_amount) `rate`, t2.id `productId`, sum(t2.price * t2.bargain_number)
         `productPrice`
@@ -108,14 +108,14 @@
             and unix_timestamp(t1.add_time) &lt; unix_timestamp()
             and unix_timestamp(t1.close_time) &gt; unix_timestamp()
             <if test="id != null">
-                and t1.id = #{id}
+                and t1.id = #{orderId}
             </if>
         </where>
         group by t1.id
     </select>
 
     <!-- 砍价成功记录 -->
-    <select id="ownLog" resultType="com.moguying.plant.core.entity.bargain.vo.BargainResponse">
+    <select id="ownLog" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
         select t2.id `id`, t3.name `productName`, t3.summary_desc `productInfo`, t3.pic_url `picUrl`, t2.add_time
         `endTime`
         from plant_bargain_detail t1

@@ -3,9 +3,8 @@ package com.moguying.plant.core.service.bargain;
 
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
-import com.moguying.plant.core.entity.bargain.BargainLog;
-import com.moguying.plant.core.entity.bargain.vo.BargainResponse;
-import com.moguying.plant.core.entity.bargain.vo.SendNumber;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
+import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.mall.vo.BuyProduct;
@@ -21,17 +20,19 @@ public interface BargainDetailService {
 
     BargainDetail shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product);
 
-    Boolean helpSuccess(Integer userId, BargainLog bargainLog, BargainDetail detail);
+    BargainDetail getOneById(Integer id);
 
-    PageResult<BargainResponse> successLogs(Integer page, Integer size);
+    Boolean helpSuccess(Integer userId, BargainDetail detail);
 
-    List<SendNumber> sendNumber();
+    PageResult<BargainVo> successLogs(Integer page, Integer size);
 
-    PageResult<BargainResponse> doingList(Integer page, Integer size, Integer userId);
+    List<SendNumberVo> sendNumber();
 
-    BargainResponse productInfo(Integer userId, Integer id);
+    PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId);
 
-    PageResult<BargainResponse> ownLog(Integer page, Integer size, Integer userId);
+    BargainVo productInfo(Integer userId, Integer orderId);
+
+    PageResult<BargainVo> ownLog(Integer page, Integer size, Integer userId);
 
     MallOrder submitOrder(Integer userId, Integer productId);
 
