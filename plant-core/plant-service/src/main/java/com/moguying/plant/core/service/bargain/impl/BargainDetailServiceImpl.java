@@ -146,7 +146,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("write")
     @Transactional
-    public Boolean helpSuccess(Integer userId, BargainDetail detail) {
+    public BargainLog helpSuccess(Integer userId, BargainDetail detail) {
 
         BargainDetail update;
         // 关单
@@ -156,7 +156,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             update.setId(detail.getId());
             update.setState(true);
             bargainDetailDao.updateById(update);
-            return false;
+            return null;
         }
 
         // 更新
@@ -175,7 +175,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             mallOrder.setUserId(detail.getUserId());
             mallOrder.setState(0);
             mallOrder.setAddTime(new Date());
-            if (mallOrderDAO.insert(mallOrder) <= 0) return false;
+            if (mallOrderDAO.insert(mallOrder) <= 0) return null;
 
             // 关单
             update.setState(true);
@@ -185,7 +185,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             helpAmount = detail.getLeftAmount();
         } else {
             User user = userDAO.selectById(userId);
-            if (user == null) return false;
+            if (user == null) return null;
 
             //  注册时间在砍价详情生成之后，默认为新用户
             if (user.getRegTime().after(detail.getAddTime())) {
@@ -200,7 +200,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         update.setLeftAmount(detail.getLeftAmount().subtract(helpAmount));
         update.setBargainCount(detail.getBargainCount() + 1);
         update.setBargainTime(new Date());
-        if (bargainDetailDao.updateById(update) <= 0) return false;
+        if (bargainDetailDao.updateById(update) <= 0) return null;
 
         // 日志
         BargainLog log = new BargainLog();
@@ -211,7 +211,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         log.setHelpAmount(helpAmount);
         log.setMessage(detail.getMessage() == null ? "" : detail.getMessage());
         log.setHelpTime(new Date());
-        return bargainLogDao.insert(log) > 0;
+        return bargainLogDao.insert(log) > 0 ? log : null;
     }
 
     @Override

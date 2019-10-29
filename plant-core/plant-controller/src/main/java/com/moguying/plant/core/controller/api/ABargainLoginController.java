@@ -8,6 +8,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
+import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.ShareVo;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
@@ -115,8 +116,8 @@ public class ABargainLoginController {
      * 砍价
      */
     @PostMapping("/help/chop")
-    public ResponseData<String> helpChop(@LoginUserId Integer userId, @RequestBody BargainDetail bargainDetail) {
-        ResponseData<String> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), "砍价失败");
+    public ResponseData<BargainVo> helpChop(@LoginUserId Integer userId, @RequestBody BargainDetail bargainDetail) {
+        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), null);
 
         // 参数
         if (bargainDetail == null || bargainDetail.getId() == null || bargainDetail.getUserId() == null)
@@ -153,9 +154,13 @@ public class ABargainLoginController {
 
         // 帮砍
         detail.setMessage(bargainDetail.getMessage());
-        Boolean helpSuccess = bargainDetailService.helpSuccess(userId, detail);
-        if (helpSuccess)
-            return responseData.setData("砍价成功");
+        BargainLog log = bargainDetailService.helpSuccess(userId, detail);
+        if (log != null) {
+            BargainVo bargainVo = new BargainVo();
+            bargainVo.setHelpAmount(log.getHelpAmount());
+            bargainVo.setMessage("砍价成功");
+            return responseData.setData(bargainVo);
+        }
 
         return responseData
                 .setMessage(MessageEnum.ERROR.getMessage())

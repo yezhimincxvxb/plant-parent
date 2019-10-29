@@ -69,13 +69,13 @@ public class BargainVo {
     /**
      * 已砍价格
      */
-    @JSONField(ordinal = 11)
+    @JSONField(ordinal = 11, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal bargainAmount;
 
     /**
      * 剩余价格
      */
-    @JSONField(ordinal = 12)
+    @JSONField(ordinal = 12, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal leftAmount;
 
     /**
@@ -131,4 +131,10 @@ public class BargainVo {
             this.totalNumber = null;
         return totalNumber;
     }
+
+    /**
+     * 帮砍价格
+     */
+    @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal helpAmount;
 }
