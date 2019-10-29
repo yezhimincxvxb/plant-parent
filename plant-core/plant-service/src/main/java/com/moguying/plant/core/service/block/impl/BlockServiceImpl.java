@@ -4,17 +4,17 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moguying.plant.constant.BlockStateEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.Block;
-import com.moguying.plant.core.entity.common.vo.HomeBlock;
+import com.moguying.plant.core.entity.block.vo.BlockDetail;
 import com.moguying.plant.core.service.block.BlockService;
+import com.moguying.plant.utils.InterestUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class BlockServiceImpl implements BlockService {
+public class BlockServiceImpl extends ServiceImpl<BlockDAO,Block> implements BlockService {
     
     @Autowired
     private BlockDAO blockDAO;
@@ -133,10 +133,16 @@ public class BlockServiceImpl implements BlockService {
         return false;
     }
 
-    @Override
+
     @DS("read")
-    public List<HomeBlock> blockListForHome() {
-        return blockDAO.selectBlockListForHome();
+    @Override
+    public List<BlockDetail> blockRecommend() {
+        List<BlockDetail> blockDetails = blockDAO.blockRecommend();
+        blockDetails.forEach((x)->{
+            BigDecimal interest = InterestUtil.INSTANCE.calInterest(x.getSeedPrice(), x.getInterestRates(), x.getSeedGrowDays());
+            x.setSaleAmount(x.getSeedPrice().add(interest));
+        });
+        return blockDetails;
     }
 
     @Override

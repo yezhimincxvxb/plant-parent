@@ -39,4 +39,9 @@ public class HomeProduct implements Serializable {
     @JSONField(ordinal = 7)
     private Integer consumeCoins;
 
+    @JSONField(serialize = false)
+    private Boolean isHot;
+
+    @JSONField(serialize = false)
+    private Integer typeId;
 }

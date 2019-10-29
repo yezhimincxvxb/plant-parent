@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 @Data
 public class BlockDetail implements Serializable {
 
+    private static final long serialVersionUID = -5191847388385676423L;
+
     @JSONField(ordinal = 1)
     private Integer blockId;
 
@@ -50,5 +52,8 @@ public class BlockDetail implements Serializable {
 
     @JSONField(ordinal = 11)
     private String picUrl;
+
+    @JSONField(serialize = false)
+    private BigDecimal interestRates;
 
 }

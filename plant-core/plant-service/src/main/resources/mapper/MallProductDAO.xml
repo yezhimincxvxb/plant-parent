@@ -4,6 +4,7 @@
 
     <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.MallProduct">
         <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
@@ -15,9 +16,15 @@
         <result column="has_count" jdbcType="INTEGER" property="hasCount"/>
         <result column="summary_desc" jdbcType="VARCHAR" property="summaryDesc"/>
         <result column="is_show" jdbcType="BIT" property="isShow"/>
+        <result column="is_hot" jdbcType="BIT" property="isHot"/>
         <result column="delivery_info" jdbcType="VARCHAR" property="deliveryInfo"/>
         <result column="consume_coins" jdbcType="INTEGER" property="consumeCoins"/>
+        <result column="bargain_count" jdbcType="INTEGER" property="bargainCount"/>
+        <result column="bargain_number" jdbcType="INTEGER" property="bargainNumber"/>
+        <result column="bargain_limit" jdbcType="INTEGER" property="bargainLimit"/>
+        <result column="is_limit" property="isLimit"/>
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
     </resultMap>
 
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.mall.MallProduct">
@@ -43,8 +50,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
-    summary_desc, is_show, delivery_info, consume_coins, add_time
+    id, type_id,pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count, summary_desc,
+    is_show,is_hot delivery_info, consume_coins, bargain_count, bargain_number, bargain_limit, is_limit, add_time
    </sql>
 
     <sql id="Blob_Column_List">
@@ -54,8 +61,10 @@
     <select id="selectSelective" parameterType="com.moguying.plant.core.entity.mall.MallProduct"
             resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
-        from plant_mall_product
+        t1.id, type_id,pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
+        summary_desc, is_show, delivery_info, consume_coins,t2.type_name,is_hot,bargain_count, bargain_number, bargain_limit, is_limit, add_time
+        from plant_mall_product t1
+        left join plant_mall_product_type t2 on t1.type_id = t2.id
         <where>
             <if test="wq.name != null and wq.name != ''">
                 <bind name="nameLike" value="'%'+ wq.name +'%'"/>
@@ -63,6 +72,12 @@
             </if>
             <if test="wq.isShow != null">
                 AND is_show = #{wq.isShow}
+            </if>
+            <if test="wq.isHot != null">
+                AND is_hot = #{wq.isHot}
+            </if>
+            <if test="wq.typeId != null">
+                AND type_id = #{wq.typeId}
             </if>
         </where>
     </select>
@@ -76,10 +91,16 @@
   <select id="selectProductForApp" resultMap="AppHomeMallProduct">
     select id,thumb_pic_url,name,price,old_price,has_count from plant_mall_product
     where is_show = 1 and left_count > 0
-    <if test="wq.name != null and wq.name != ''">
-      <bind name="nameLike" value="'%'+ wq.name +'%'"/>
-      AND name like #{nameLike}
-    </if>
+      <if test="wq.name != null and wq.name != ''">
+          <bind name="nameLike" value="'%'+ wq.name +'%'"/>
+          AND name like #{nameLike}
+      </if>
+      <if test="wq.isHot != null ">
+          AND is_hot = #{wq.isHot}
+      </if>
+      <if test="wq.typeId != null">
+          AND type_id = #{wq.typeId}
+      </if>
     order by add_time desc
   </select>
 

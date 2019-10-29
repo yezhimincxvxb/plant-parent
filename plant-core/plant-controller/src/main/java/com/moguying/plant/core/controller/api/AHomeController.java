@@ -14,6 +14,7 @@ import com.moguying.plant.core.entity.content.Article;
 import com.moguying.plant.core.entity.content.Banner;
 import com.moguying.plant.core.entity.device.DeviceGateway;
 import com.moguying.plant.core.entity.device.vo.DeviceGatewayData;
+import com.moguying.plant.core.entity.mall.MallProductType;
 import com.moguying.plant.core.entity.seed.vo.SeedDetail;
 import com.moguying.plant.core.entity.seed.vo.SeedTypeInBlock;
 import com.moguying.plant.core.entity.system.Apk;
@@ -23,12 +24,12 @@ import com.moguying.plant.core.service.content.ArticleService;
 import com.moguying.plant.core.service.content.BannerService;
 import com.moguying.plant.core.service.device.DeviceService;
 import com.moguying.plant.core.service.mall.MallProductService;
+import com.moguying.plant.core.service.mall.MallProductTypeService;
 import com.moguying.plant.core.service.seed.SeedService;
 import com.moguying.plant.core.service.system.ApkService;
 import com.moguying.plant.utils.InterestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -63,6 +64,9 @@ public class AHomeController {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private MallProductTypeService mallProductTypeService;
 
 
     /**
@@ -135,14 +139,30 @@ public class AHomeController {
     }
 
     /**
-     * 棚区列表
+     * 推荐棚区列表
      *
      * @return
      */
     @GetMapping(value = "/block")
-    public ResponseData<List<HomeBlock>> blockList() {
+    public ResponseData<List<BlockDetail>> recommendBlock() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
-                blockService.blockListForHome());
+                blockService.blockRecommend());
+    }
+
+    /**
+     * 所有棚区
+     */
+    @PostMapping(value = "/block/list")
+    public PageResult<Block> blockList(@RequestBody PageSearch<Block> search) {
+        //必须是上架的大棚
+        if(null == search.getWhere()) {
+            Block where = new Block();
+            where.setIsShow(true);
+            search.setWhere(where);
+        } else {
+            search.getWhere().setIsShow(true);
+        }
+         return blockService.blockList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
@@ -221,6 +241,17 @@ public class AHomeController {
     public PageResult<HomeProduct> productList(@RequestBody HomeProduct search) {
         return mallProductService.productListForHome(search.getPage(), search.getSize(), search);
     }
+
+
+    /**
+     * 商品类型列表
+     * @return
+     */
+    @GetMapping("/index/mall/types")
+    public ResponseData<List<MallProductType>> productTypeList(){
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),mallProductTypeService.typeList(null));
+    }
+
 
 
     /**
@@ -320,7 +351,8 @@ public class AHomeController {
         responseData.setMessage(resultData.getMessageEnum().getMessage()).setState(resultData.getMessageEnum().getState());
         if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             //只取一组数据
-            return responseData.setData(resultData.getData().stream().filter((x) -> x.getSensorName().equals("1")).collect(Collectors.toList()));
+            return responseData.setData(resultData.getData().stream().filter((x) -> x.getSensorName().equals("1")
+                    || x.getSensorName().equals("6")).collect(Collectors.toList()));
         }
         return responseData;
     }

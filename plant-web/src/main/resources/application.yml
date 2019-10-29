@@ -76,6 +76,7 @@ mybatis-plus:
 cache:
   default-ttl: 300 #默认缓存时长
 
+#短信相关
 message:
   send:
     url: http://smssh1.253.com/msg/send/json
@@ -95,10 +96,12 @@ message:
   fertilizer:
     send: 【蘑菇营】恭喜您注册成功！蘑菇营为答谢您的支持，特奉上16元满减券，券已发放至你的账户中，请登录查收，开启趣味种植之旅~
 
+#富文本添加图片自适应
 meta:
   content:
     img: '<style>img{max-width:100%!important;}</style>'
 
+#第三方支付公司配置
 payment:
   merNo: 0009500
   version: 1.1
@@ -109,22 +112,35 @@ payment:
   password: Hyswkj2019
   return:
     url:
+
+#邀请奖励比例
 invite:
   rate: 0.0005
+
+#提现规则
 withdraw:
   min: 100.00
   max: 200000.00
   fee: 0.00
   daily:
     max: 1000000.00
+
+#订单有效时长（秒）
 order:
   expire:
     time: 300
+
+#上传host
 upload:
   host: 192.168.5.220:9000
+
+#富文本中上传host
 editor:
   upload:
     host: 192.168.5.220:9000
+
+
+#田园种植
 farmer:
   energy:
     ok:
@@ -133,28 +149,46 @@ farmer:
       max: 127800
     lose: 129600
 
+#邀请设置
 user:
   invite:
     bg:
       image: /images/user_private_invite_bg.jpg
     icon: /images/invite_icon.png
     url: https://m.zymoguying.com/index/promote/invitecode/
+
+#微信配置
 wx:
   appid: wx6bc272547276f111
   app:
     secret: 5f79f46886133514916393f6e603954d
+
+#excel导表路径
 excel:
   download:
     dir: /download/excel/
+
+#快递查询
 express:
   query:
     url: http://poll.kuaidi100.com/poll/query.do
 
+#有关物联网配置
 device:
   data:
     url: http://iot.klha.net:8080/services/iotDataService?wsdl
     user: tanv
     password: tanv666
+
+#砍价相关
+bargain:
+  own:
+    rate: 50
+  new:
+    rate: 20
+  old:
+    rate: 10
+
 
 logging:
   level:

@@ -28,14 +28,6 @@
     <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
   </resultMap>
 
-  <resultMap id="ResultMapForHomeList" type="com.moguying.plant.core.entity.common.vo.HomeBlock">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="number" jdbcType="VARCHAR" property="number" />
-    <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-
-  </resultMap>
-
   <sql id="Base_Column_List">
     id, `number`, seed_type, `level`, total_amount, per_price, total_count, left_count, interest_rates,
     has_count, is_show, `state`, add_time, is_delete,grow_days,max_plant,min_plant,pic_url,thumb_pic_url
@@ -95,10 +87,12 @@
     where t1.state <![CDATA[ < 2 ]]> and t1.block_id = #{id}
   </select>
 
-  <select id="selectBlockListForHome" resultMap="ResultMapForHomeList">
-    select t1.id,number,t2.class_name as seed_type_name ,t1.pic_url from plant_block t1
+  <select id="blockRecommend" resultType="BlockDetail">
+    select t1.id as block_id,number as block_number,total_amount as block_amount,left_count as block_left_count,
+    t2.class_name as seed_type_name ,t1.pic_url,t2.grow_days as seed_grow_days,t2.per_price as seed_price, t2.interest_rates
+    from plant_block t1
     left join plant_seed_type t2 on t1.seed_type = t2.id
-    where t1.is_show = 1 and t1.is_delete = 0 and t1.state = 1
+    where t1.is_show = 1 and t1.is_delete = 0 and t1.state = 0
   </select>
 
   <select id="selectBySeedType" resultMap="BaseResultMap">

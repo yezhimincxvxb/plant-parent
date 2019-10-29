@@ -146,4 +146,19 @@ public class MallProduct implements Serializable {
     @TableField
     private Integer bargainLimit;
 
+
+    /**
+     * 商品类型id
+     */
+    @JSONField(serialize = false)
+    private Integer typeId;
+
+
+    @JSONField(ordinal = 17)
+    private String typeName;
+
+
+    @JSONField(ordinal = 18)
+    private Boolean isHot;
+
 }

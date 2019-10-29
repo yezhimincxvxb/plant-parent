@@ -1,11 +1,10 @@
 package com.moguying.plant.core.dao.block;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.block.Block;
-import com.moguying.plant.core.entity.common.vo.HomeBlock;
+import com.moguying.plant.core.entity.block.vo.BlockDetail;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +19,7 @@ public interface BlockDAO extends BaseDAO<Block> {
     List<Block> selectSelective(@Param("wq") Block where);
     Block selectBlockByNumber(String number);
     Integer blockIsFree(Integer id);
-    List<HomeBlock> selectBlockListForHome();
     Block selectById(Integer id);
     Block selectBySeedType(Integer seedType);
+    List<BlockDetail> blockRecommend();
 }
