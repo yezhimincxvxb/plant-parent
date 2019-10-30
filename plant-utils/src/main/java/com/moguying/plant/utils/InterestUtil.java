@@ -1,5 +1,6 @@
 package com.moguying.plant.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ public enum  InterestUtil {
 
     public BigDecimal calInterest(BigDecimal money,BigDecimal rate,Integer day){
 
-        BigDecimal r = rate.divide(new BigDecimal("100.00"),4);
+        BigDecimal r = rate.divide(new BigDecimal("100.00"),4,BigDecimal.ROUND_DOWN);
         BigDecimal m = money.multiply(r);
         return  m.multiply(new BigDecimal(day)).divide(days,2,BigDecimal.ROUND_DOWN);
     }
@@ -33,6 +34,5 @@ public enum  InterestUtil {
     public BigDecimal divide(BigDecimal b1,BigDecimal b2){
         return b1.divide(b2,2,BigDecimal.ROUND_DOWN);
     }
-
 
 }

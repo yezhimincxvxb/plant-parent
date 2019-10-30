@@ -1,7 +1,5 @@
 package com.moguying.plant.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -10,7 +8,6 @@ import redis.clients.jedis.JedisPoolConfig;
 @Component
 public class RedisUtil {
 
-    Logger log = LoggerFactory.getLogger(RedisUtil.class);
 
     public RedisUtil() {
     }

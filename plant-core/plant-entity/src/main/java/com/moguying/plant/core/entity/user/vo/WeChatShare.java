@@ -1,9 +1,14 @@
 package com.moguying.plant.core.entity.user.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class WeChatShare {
 
-    public WeChatShare() {
-    }
 
     public WeChatShare(String timestamp, String noncestr, String signature) {
         this.timestamp = timestamp;
@@ -19,35 +24,4 @@ public class WeChatShare {
 
     private String url;
 
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getNoncestr() {
-        return noncestr;
-    }
-
-    public void setNoncestr(String noncestr) {
-        this.noncestr = noncestr;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }

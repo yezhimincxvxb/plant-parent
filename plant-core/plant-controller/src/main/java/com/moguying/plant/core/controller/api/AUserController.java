@@ -41,6 +41,7 @@ import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 
 @RestController
@@ -94,7 +96,7 @@ public class AUserController {
     private TemplateEngine templateEngine;
 
     @Autowired
-    private RedisUtil redisUtil;
+    private StringRedisTemplate redisUtil;
 
     @Value("${user.invite.bg.image}")
     private String inviteBgImagePath;
@@ -934,9 +936,8 @@ public class AUserController {
         if (null == userInfo)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
 
-        Jedis jedis = redisUtil.getJedis();
-        String accessToken = jedis.get("access_token");
-        String ticket = jedis.get("ticket");
+        String accessToken = redisUtil.opsForValue().get("access_token");
+        String ticket = redisUtil.opsForValue().get("ticket");
         if (null == accessToken) {
             Map<String, Object> params = new HashMap<>();
             params.put("appid", wxAppid);
@@ -947,11 +948,8 @@ public class AUserController {
             String accessTokenStr = CurlUtil.INSTANCE.httpRequest(tokenUrl, paramStr, "GET");
             JSONObject jsonObject = JSONObject.parseObject(accessTokenStr);
             if (null != jsonObject && jsonObject.getIntValue("errorCode") == 0) {
-                SetParams setParams = new SetParams();
-                setParams.nx();
-                setParams.ex(jsonObject.getIntValue("expires_in"));
                 accessToken = jsonObject.getString("access_token");
-                jedis.set("access_token", accessToken, setParams);
+                redisUtil.opsForValue().setIfAbsent("access_token", accessToken, Duration.ofSeconds(jsonObject.getLongValue("expires_in")));
             }
         }
 
@@ -963,11 +961,8 @@ public class AUserController {
             String ticketStr = CurlUtil.INSTANCE.httpRequest(ticketUrl, CFCARAUtil.joinMapValue(params, '&'), "GET");
             JSONObject jsonObject = JSONObject.parseObject(ticketStr);
             if (null != jsonObject && jsonObject.getIntValue("errorCode") == 0) {
-                SetParams setParams = new SetParams();
-                setParams.nx();
-                setParams.ex(jsonObject.getIntValue("expires_in"));
                 ticket = jsonObject.getString("ticket");
-                jedis.set("ticket", ticket, setParams);
+                redisUtil.opsForValue().setIfAbsent("ticket", ticket, Duration.ofSeconds(jsonObject.getLongValue("expires_in")));
             }
         }
 
@@ -978,7 +973,6 @@ public class AUserController {
         signParams.put("url", requestShare.getUrl());
         String sign = CommonUtil.INSTANCE.sha1Sign(CFCARAUtil.joinMapValue(signParams, '&'));
         WeChatShare share = new WeChatShare(signParams.get("timestamp").toString(), signParams.get("noncestr").toString(), sign);
-        redisUtil.releaseJedis(jedis);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), share);
     }
 
