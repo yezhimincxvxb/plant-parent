@@ -75,7 +75,6 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         return new BigDecimal(val + new Random().nextInt(11)).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_UP);
     }
 
-
     @Override
     @DS("read")
     public BargainDetail getOneByClose(Integer userId, Integer productId, Boolean state) {

@@ -12,35 +12,35 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public enum  DateUtil {
+public enum DateUtil {
     INSTANCE;
 
 
-    public String orderNumberWithDate(){
-        return DateFormatUtils.format(new Date(),"yyyyMMddHHmmsss").concat(RandomStringUtils.randomNumeric(6));
+    public String orderNumberWithDate() {
+        return DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss").concat(RandomStringUtils.randomNumeric(6));
     }
 
 
-    public String formatDateForPayment(Date now,String format){
-        return DateFormatUtils.format(now,format);
+    public String formatDateForPayment(Date now, String format) {
+        return DateFormatUtils.format(now, format);
     }
 
-    public String formatDateForPayment(Date now){
-        return DateFormatUtils.format(now,"yyyy-MM-dd HH:mm:ss");
+    public String formatDateForPayment(Date now) {
+        return DateFormatUtils.format(now, "yyyy-MM-dd HH:mm:ss");
     }
 
 
-    public Date firstDayOfMonth(){
+    public Date firstDayOfMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-           return simpleDateFormat.parse(localDate.toString());
+            return simpleDateFormat.parse(localDate.toString());
         } catch (ParseException e) {
             return null;
         }
     }
 
-    public Date fistDayOfNextMonth(){
+    public Date fistDayOfNextMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.firstDayOfNextMonth());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -51,7 +51,7 @@ public enum  DateUtil {
     }
 
 
-    public Date lastDayOfMonth(){
+    public Date lastDayOfMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -61,9 +61,9 @@ public enum  DateUtil {
         }
     }
 
-    public Date lastDayOfNextMonth(){
+    public Date lastDayOfNextMonth() {
         LocalDateTime localDateTime = LocalDateTime.now().with(TemporalAdjusters.firstDayOfNextMonth());
-        LocalDate localDate = LocalDate.of(localDateTime.getYear(),localDateTime.getMonth(),localDateTime.getDayOfMonth())
+        LocalDate localDate = LocalDate.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth())
                 .with(TemporalAdjusters.lastDayOfMonth());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -74,8 +74,7 @@ public enum  DateUtil {
     }
 
 
-
-    public Date todayBegin(Date date){
+    public Date todayBegin(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateStr = sdf.format(date);
         try {
@@ -85,31 +84,31 @@ public enum  DateUtil {
         }
     }
 
-    public Date todayBegin(){
+    public Date todayBegin() {
         return todayBegin(new Date());
     }
 
 
-    public Date todayEnd(Date date){
-       int dayMillisecond = 24 * 60 * 60 * 1000;
-       return new Date(todayBegin(date).getTime() + (dayMillisecond - 1000));
+    public Date todayEnd(Date date) {
+        int dayMillisecond = 24 * 60 * 60 * 1000;
+        return new Date(todayBegin(date).getTime() + (dayMillisecond - 1000));
     }
 
-    public Date todayEnd(){
+    public Date todayEnd() {
         return todayEnd(new Date());
     }
 
-    public Date dateBegin(Date date,int days){
+    public Date dateBegin(Date date, int days) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(Calendar.DATE,days);
+        calendar.add(Calendar.DATE, days);
         return todayBegin(calendar.getTime());
     }
 
-    public Date dateEnd(Date date ,int days){
+    public Date dateEnd(Date date, int days) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(Calendar.DATE,days);
+        calendar.add(Calendar.DATE, days);
         return todayEnd(calendar.getTime());
     }
 

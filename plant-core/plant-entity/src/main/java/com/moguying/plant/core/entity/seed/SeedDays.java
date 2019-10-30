@@ -32,4 +32,10 @@ public class SeedDays implements Serializable {
      */
     @TableField
     private String mark;
+
+    @TableField
+    private BigDecimal plantRate;
+
+    @TableField
+    private BigDecimal firstPlantRate;
 }
