@@ -62,7 +62,8 @@
             resultMap="BaseResultMap">
         select
         t1.id, type_id,pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
-        summary_desc, is_show, delivery_info, consume_coins,t2.type_name,is_hot,bargain_count, bargain_number, bargain_limit, is_limit, add_time
+        summary_desc, is_show, delivery_info, consume_coins,t2.type_name,is_hot,bargain_count, bargain_number,
+        bargain_limit, is_limit, add_time
         from plant_mall_product t1
         left join plant_mall_product_type t2 on t1.type_id = t2.id
         <where>
@@ -88,23 +89,23 @@
     where id = #{productId}
   </update>
 
-  <select id="selectProductForApp" resultMap="AppHomeMallProduct">
-    select id,thumb_pic_url,name,price,old_price,has_count from plant_mall_product
-    where is_show = 1 and left_count > 0
-      <if test="wq.name != null and wq.name != ''">
-          <bind name="nameLike" value="'%'+ wq.name +'%'"/>
-          AND name like #{nameLike}
-      </if>
-      <if test="wq.isHot != null ">
-          AND is_hot = #{wq.isHot}
-      </if>
-      <if test="wq.typeId != null">
-          AND type_id = #{wq.typeId}
-      </if>
-    order by add_time desc
-  </select>
+    <select id="selectProductForApp" resultMap="AppHomeMallProduct">
+        select id,thumb_pic_url,name,price,old_price,has_count from plant_mall_product
+        where is_show = 1 and left_count > 0
+        <if test="wq.name != null and wq.name != ''">
+            <bind name="nameLike" value="'%'+ wq.name +'%'"/>
+            AND name like #{nameLike}
+        </if>
+        <if test="wq.isHot != null ">
+            AND is_hot = #{wq.isHot}
+        </if>
+        <if test="wq.typeId != null">
+            AND type_id = #{wq.typeId}
+        </if>
+        order by add_time desc
+    </select>
 
-  <select id="selectProductDetailForApp" resultMap="AppHomeMallProductDetail">
+    <select id="selectProductDetailForApp" resultMap="AppHomeMallProductDetail">
     select id,pic_url,thumb_pic_url,name,price,old_price,has_count,summary_desc,product_desc,left_count from plant_mall_product
     where id = #{id} and is_show = 1
   </select>
@@ -139,9 +140,10 @@
         order by t1.add_time desc
     </select>
 
-    <!-- 砍价商品 -->
+    <!-- 砍价商品列表 -->
     <select id="productList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
-        select id `productId`, pic_url `picUrl`, summary_desc `productInfo`, is_limit `isLimit`, bargain_limit `totalNumber`, bargain_number `productCount`
+        select id `productId`, `name` `productName`, pic_url `picUrl`, summary_desc `productInfo`, is_limit `isLimit`,
+        bargain_limit `totalNumber`, bargain_number `productCount`
         from plant_mall_product
         where is_show = 1
         and bargain_count &gt; 0
