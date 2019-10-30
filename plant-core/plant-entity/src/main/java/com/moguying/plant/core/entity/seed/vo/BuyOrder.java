@@ -1,10 +1,14 @@
 package com.moguying.plant.core.entity.seed.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class BuyOrder implements Serializable {
 
 
+    private static final long serialVersionUID = -5177284057126377424L;
     /**
      * 购买份数
      */
@@ -21,29 +25,4 @@ public class BuyOrder implements Serializable {
      */
     private Boolean isPayByAccount;
 
-
-    public Boolean getPayByAccount() {
-        return isPayByAccount;
-    }
-
-    public void setPayByAccount(Boolean payByAccount) {
-        isPayByAccount = payByAccount;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-
-    public Integer getSeedId() {
-        return seedId;
-    }
-
-    public void setSeedId(Integer seedId) {
-        this.seedId = seedId;
-    }
 }
