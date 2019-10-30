@@ -155,7 +155,8 @@ public enum  MessageEnum {
     MALL_PRODUCT_TYPE_CAN_NOT_DELETE("此商品类型已绑定商品，不可删除",10149),
     IS_NOT_A_CHANNEL("非渠道用户",10150),
     SEED_TYPE_NOT_EXIST("菌包类型不存在",10151),
-    SEED_TYPE_NOT_FOR_TASTE("非新手体验类型",10152);
+    SEED_TYPE_NOT_FOR_TASTE("非新手体验类型",10152),
+    SEED_REAP_NOT_IN_TIME("成品未到采摘时间",10153);
 
 
 

@@ -111,6 +111,9 @@
             <if test="wq.blockNumber != null and wq.blockNumber != ''">
                 AND t4.number like #{wq.blockNumber}
             </if>
+            <if test="wq.isForNew != null and wq.isForNew != ''">
+                AND t3.is_for_new = #{wq.isForNew}
+            </if>
         </where>
         order by t1.id desc
     </select>

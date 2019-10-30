@@ -246,6 +246,11 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
     }
 
+    @Override
+    public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder) {
+        return plantSeed(userId,plantOrder,false);
+    }
+
     /**
      * 种植菌包
      *
@@ -256,19 +261,21 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @TriggerEvent(action = "plant")
     @Override
     @DS("write")
-    public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder) {
+    public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder,boolean isTaste) {
         ResultData<TriggerEventResult<PlantOrderResponse>> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
         // 是否设置了支付密码
         User user = userDAO.userInfoById(userId);
-        if (null == user || StringUtils.isEmpty(user.getPayPassword()))
-            return resultData.setMessageEnum(MessageEnum.NEED_PAY_PASSWORD);
+        //非体验时校验
+        if(!isTaste) {
+            if (null == user || StringUtils.isEmpty(user.getPayPassword()))
+                return resultData.setMessageEnum(MessageEnum.NEED_PAY_PASSWORD);
 
-        // 支付密码是否正确
-        String payPassword = PasswordUtil.INSTANCE.encode(plantOrder.getPayPassword().getBytes());
-        if (!payPassword.equals(user.getPayPassword()))
-            return resultData.setMessageEnum(MessageEnum.PAY_PASSWORD_ERROR);
-
+            // 支付密码是否正确
+            String payPassword = PasswordUtil.INSTANCE.encode(plantOrder.getPayPassword().getBytes());
+            if (!payPassword.equals(user.getPayPassword()))
+                return resultData.setMessageEnum(MessageEnum.PAY_PASSWORD_ERROR);
+        }
         // 菌包订单是否存在
         SeedOrder seedOrder = seedOrderDAO.selectByIdAndUserId(plantOrder.getOrderId(), userId);
         if (seedOrder == null)
@@ -307,8 +314,16 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
         // 种植周期
         SeedType seedType = seedTypeDAO.selectById(seedOrder.getSeedType());
-        Date plantTime = DateUtil.INSTANCE.dateBegin(new Date(), seedType.getPlantType() - 1);
-        Date endTime = DateUtil.INSTANCE.dateEnd(new Date(), seedType.getGrowDays());
+        Date plantTime;
+        Date endTime;
+        if (isTaste) {
+            //体验种植为当天可采
+            plantTime = new Date();
+            endTime = DateUtil.INSTANCE.todayEnd();
+        } else {
+            plantTime = DateUtil.INSTANCE.dateBegin(new Date(), seedType.getPlantType() - 1);
+            endTime = DateUtil.INSTANCE.dateEnd(new Date(), seedType.getGrowDays());
+        }
 
         // 更新订单信息
         SeedOrder updateSeedOrder = new SeedOrder();
@@ -330,36 +345,38 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         reap.setPlantTime(plantTime);
         reap.setPreReapTime(endTime);
         reap.setAddTime(new Date());
+        reap.setPlantWeigh(seedType.getPerWeigh().multiply(new BigDecimal(plantOrder.getPlantCount())));
         reap.setReapTimes(1);
         if (reapDAO.insert(reap) <= 0)
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_INFO_CREATE_FAIL);
+        //非体验时使用
+        if(!isTaste) {
+            // 更新预期本金
+            UserMoneyOperator operator = new UserMoneyOperator();
+            operator.setOperationId(reap.getOrderNumber());
+            operator.setOpType(MoneyOpEnum.PLANTED_SEED);
+            UserMoney money = new UserMoney(userId);
+            money.setCollectCapital(reap.getPreAmount());
+            operator.setUserMoney(money);
+            if (userMoneyService.updateAccount(operator) == null)
+                return resultData.setMessageEnum(MessageEnum.USER_MONEY_UPDATE_FAIL);
 
-        // 更新预期本金
-        UserMoneyOperator operator = new UserMoneyOperator();
-        operator.setOperationId(reap.getOrderNumber());
-        operator.setOpType(MoneyOpEnum.PLANTED_SEED);
-        UserMoney money = new UserMoney(userId);
-        money.setCollectCapital(reap.getPreAmount());
-        operator.setUserMoney(money);
-        if (userMoneyService.updateAccount(operator) == null)
-            return resultData.setMessageEnum(MessageEnum.USER_MONEY_UPDATE_FAIL);
+            // 更新预期收益
+            money = new UserMoney(userId);
+            money.setCollectInterest(reap.getPreProfit());
+            operator.setUserMoney(money);
+            if (userMoneyService.updateAccount(operator) == null)
+                return resultData.setMessageEnum(MessageEnum.USER_MONEY_UPDATE_FAIL);
 
-        // 更新预期收益
-        money = new UserMoney(userId);
-        money.setCollectInterest(reap.getPreProfit());
-        operator.setUserMoney(money);
-        if (userMoneyService.updateAccount(operator) == null)
-            return resultData.setMessageEnum(MessageEnum.USER_MONEY_UPDATE_FAIL);
-
-        // 是否有邀请人
-        if (null != user.getInviteUid() && !user.getInviteUid().equals(0)) {
-            User inviteUser = userDAO.selectById(user.getInviteUid());
-            // 给邀请人发奖、通知
-            if (null != inviteUser) {
-                userInviteService.inviterPlanted(user, reap, inviteUser);
+            // 是否有邀请人
+            if (null != user.getInviteUid() && !user.getInviteUid().equals(0)) {
+                User inviteUser = userDAO.selectById(user.getInviteUid());
+                // 给邀请人发奖、通知
+                if (null != inviteUser) {
+                    userInviteService.inviterPlanted(user, reap, inviteUser);
+                }
             }
         }
-
         // 更新棚区信息
         Block updateBlock = new Block();
         updateBlock.setId(plantOrder.getBlockId());

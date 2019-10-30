@@ -398,3 +398,6 @@ ADD COLUMN `is_for_new` tinyint(1) NOT NULL DEFAULT 0 AFTER `exchange_num`;
 /** 每种菌类产量 **/
 ALTER TABLE `moguying`.`plant_seed_type`
 ADD COLUMN `per_weigh` decimal(15, 2) NOT NULL COMMENT '每份产量重' AFTER `is_for_new`;
+
+ALTER TABLE `moguying`.`plant_reap`
+ADD COLUMN `plant_weigh` decimal(15, 2) NOT NULL COMMENT '出菇量(单位g)' AFTER `exchange_time`;

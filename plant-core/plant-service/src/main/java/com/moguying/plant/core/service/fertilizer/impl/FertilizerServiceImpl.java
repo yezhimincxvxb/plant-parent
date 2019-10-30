@@ -240,7 +240,7 @@ public class FertilizerServiceImpl implements FertilizerService {
                 }
 
                 // 新增券
-                if (userFertilizerDAO.insert(userFertilizer) > 0) {
+                if (userFertilizer.getFertilizerAmount().compareTo(BigDecimal.ZERO) > 0 && userFertilizerDAO.insert(userFertilizer) > 0) {
                     resultData.setMessageEnum(MessageEnum.SUCCESS);
                 } else {
                     return resultData.setMessageEnum(MessageEnum.ERROR);

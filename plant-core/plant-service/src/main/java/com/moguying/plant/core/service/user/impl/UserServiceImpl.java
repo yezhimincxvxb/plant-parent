@@ -28,7 +28,6 @@ import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.CommonUtil;
 import com.moguying.plant.utils.PasswordUtil;
-import com.moguying.plant.utils.RedisUtil;
 import com.moguying.plant.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -67,9 +66,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMessageDAO userMessageDAO;
-
-    @Autowired
-    private RedisUtil redisUtil;
 
     @Value("${excel.download.dir}")
     private String downloadDir;

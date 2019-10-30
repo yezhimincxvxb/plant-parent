@@ -204,11 +204,26 @@ public class Reap implements Serializable {
     @TableField
     private Date exchangeTime;
 
+
     /**
      * 用户真实姓名
      */
-    @JSONField(ordinal = 26)
+    @JSONField(ordinal = 27)
     @TableField(exist = false)
     private String realName;
+
+    /**
+     * 出菇量
+     */
+    @JSONField(ordinal = 28,serializeUsing = BigDecimalSerialize.class)
+    @TableField
+    private BigDecimal plantWeigh;
+
+    /**
+     * 是否体验种植
+     */
+    @JSONField(ordinal = 29)
+    @TableField(exist = false)
+    private Boolean isForNew;
 
 }
