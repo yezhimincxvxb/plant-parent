@@ -3,6 +3,7 @@ package com.moguying.plant.core.service.bargain;
 
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
+import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
@@ -20,7 +21,7 @@ public interface BargainDetailService {
 
     BargainDetail getOneById(Integer id);
 
-    Boolean helpSuccess(Integer userId, BargainDetail detail);
+    BargainLog helpSuccess(Integer userId, BargainDetail detail);
 
     PageResult<BargainVo> successLogs(Integer page, Integer size);
 

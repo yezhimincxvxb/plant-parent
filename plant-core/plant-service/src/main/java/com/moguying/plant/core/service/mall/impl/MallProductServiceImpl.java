@@ -78,7 +78,7 @@ public class MallProductServiceImpl implements MallProductService {
 
         // 默认收货地址
         UserAddress address = userAddressDAO.userDefaultAddress(userId);
-        if (null != address)  buyOrderResponse.setAddress(address);
+        if (null != address) buyOrderResponse.setAddress(address);
 
         List<BuyProduct> buyProducts = orderBuy.getProducts();
         if (buyProducts == null || buyProducts.size() <= 0)
@@ -134,7 +134,7 @@ public class MallProductServiceImpl implements MallProductService {
     @DS("write")
     public ResultData<Integer> saveProduct(MallProduct product) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
-        if(null != product.getProductDesc())
+        if (null != product.getProductDesc())
             product.setProductDesc(appendStr.concat(product.getProductDesc()));
         if (null != product.getId()) {
             if (null == mallProductDAO.selectById(product.getId())) {
@@ -169,7 +169,7 @@ public class MallProductServiceImpl implements MallProductService {
     @DS("read")
     public PageResult<MallProduct> productList(Integer page, Integer size, MallProduct where) {
         IPage<MallProduct> pageResult = mallProductDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
 
@@ -341,7 +341,7 @@ public class MallProductServiceImpl implements MallProductService {
     @DS("read")
     public PageResult<HomeProduct> productListForHome(Integer page, Integer size, HomeProduct search) {
         IPage<HomeProduct> pageResult = mallProductDAO.selectProductForApp(new Page<>(page, size), search);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -354,24 +354,25 @@ public class MallProductServiceImpl implements MallProductService {
     @DS("read")
     public PageResult<ExchangeInfo> showProducts(Integer page, Integer size) {
         IPage<ExchangeInfo> pageResult = mallProductDAO.showProducts(new Page<>(page, size));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("read")
     public PageResult<ExchangeInfo> showProductLog(Integer page, Integer size, Integer userId) {
         IPage<ExchangeInfo> pageResult = mallProductDAO.showProductLog(new Page<>(page, size), userId);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("read")
     public PageResult<BargainVo> productList(Integer page, Integer size) {
         IPage<BargainVo> pageResult = mallProductDAO.productList(new Page<>(page, size));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
+    @DS("read")
     public BargainVo productInfo(Integer productId) {
         return mallProductDAO.productInfo(productId);
     }
