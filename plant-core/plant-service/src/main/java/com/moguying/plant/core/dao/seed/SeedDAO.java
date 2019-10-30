@@ -20,9 +20,15 @@ public interface SeedDAO extends BaseDAO<Seed> {
     List<Seed> selectSelective(@Param("wq") Seed seed);
     Seed selectByPrimaryKeyWithBLOB(Integer id);
     Integer incrByPrimaryKey(Seed incrSeed);
-    IPage<HomeSeed> selectSeedListForHome(Page<Seed> page);
+    IPage<HomeSeed> selectSeedListForHome(Page<Seed> page,@Param("wq") HomeSeed homeSeed);
     SeedDetail seedDetail(Integer id);
     Integer decrSeedLeftCount(@Param("count") Integer count, @Param("id") Integer id);
     List<HomeSeed> recommendSeed();
     HomeSeed selectOneFullSeed();
+
+    /**
+     * 返回包含分类信息的菌包信息
+     * @return
+     */
+    Seed seedInfoWithTypeById(Integer id);
 }

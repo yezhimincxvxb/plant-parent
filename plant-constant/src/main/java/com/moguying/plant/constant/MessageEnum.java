@@ -154,7 +154,8 @@ public enum  MessageEnum {
     ADMIN_ROLE_NOT_EXIST("用户角色不存在",10148),
     MALL_PRODUCT_TYPE_CAN_NOT_DELETE("此商品类型已绑定商品，不可删除",10149),
     IS_NOT_A_CHANNEL("非渠道用户",10150),
-    SEED_TYPE_NOT_EXIST("菌包类型不存在",10151);
+    SEED_TYPE_NOT_EXIST("菌包类型不存在",10151),
+    SEED_TYPE_NOT_FOR_TASTE("非新手体验类型",10152);
 
 
 

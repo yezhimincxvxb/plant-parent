@@ -13,6 +13,7 @@ import com.moguying.plant.core.entity.user.User;
 public interface PlantOrderService {
 
     ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId);
+    ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId,boolean isTaste);
 
     ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId);
 

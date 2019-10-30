@@ -37,6 +37,14 @@
   </resultMap>
 
 
+  <resultMap id="SeedMapWithSeedType" type= "Seed" extends="BaseResultMap">
+    <collection property="typeInfo" ofType="SeedType">
+      <result column="per_weigh" property="perWeigh"/>
+      <result column="is_for_new" property="isForNew"/>
+    </collection>
+  </resultMap>
+
+
   <resultMap id="ContentSeedMap" type="Seed" extends="BaseResultMap">
     <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
     <collection property="content" ofType="SeedContent">
@@ -144,14 +152,21 @@
   </update>
 
   
-  <select id="selectSeedListForHome" resultMap="ResultSeedListForHome">
-    select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state
+  <select id="selectSeedListForHome" resultType="HomeSeed">
+    select t1.id,t1.name,left_count,t1.per_price,t1.interest_rates,t1.grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state,t3.per_weigh
     from plant_seed t1
     left join plant_seed_pic t2 on t1.pic_ids = t2.id
-    where t1.state = 1 and is_show = 1
-    <![CDATA[
-    AND UNIX_TIMESTAMP(t1.close_time) >= UNIX_TIMESTAMP(NOW())
+    left join plant_seed_type t3 on t1.seed_type = t3.id
+    <where>
+      t1.state = 1 AND t1.is_show = 1
+      <![CDATA[
+        AND UNIX_TIMESTAMP(t1.close_time) >= UNIX_TIMESTAMP(NOW())
     ]]>
+      <if test="wq.isForNew != null">
+        AND t3.is_for_new = #{wq.isForNew}
+      </if>
+    </where>
+
     order by t1.order_number desc
   </select>
   
@@ -185,12 +200,18 @@
     order by t1.left_count desc limit 3
   </select>
 
-  <select id="selectOneFullSeed" resultMap="ResultSeedListForHome">
+  <select id="selectOneFullSeed" resultType="HomeSeed">
     select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state
     from plant_seed t1
     left join plant_seed_pic t2 on t1.pic_ids = t2.id
     where t1.state = 2 and is_show = 1
     order by t1.full_time  desc limit 1
+  </select>
+
+  <select id="seedInfoWithTypeById" resultMap="SeedMapWithSeedType">
+    select  t1.*,t2.* from plant_seed t1
+    left join plant_seed_type t2 on t1.seed_type = t2.id
+    where t1.id = #{id}
   </select>
 
 

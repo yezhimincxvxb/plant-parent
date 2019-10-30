@@ -120,6 +120,12 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @Autowired
     private FertilizerService fertilizerService;
 
+    @Override
+    @DS("write")
+    public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId) {
+        return plantOrder(order,userId,false);
+    }
+
     /**
      * 提交菌包订单
      *
@@ -128,13 +134,13 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      */
     @Override
     @DS("write")
-    public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId) {
+    public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId,boolean isTaste) {
         User user = userDAO.selectById(userId);
         ResultData<BuyOrderResponse> result = new ResultData<>(MessageEnum.ERROR, null);
         if (null == user)
             return result.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
 
-        Seed seed = seedDAO.selectById(order.getSeedId());
+        Seed seed = seedDAO.seedInfoWithTypeById(order.getSeedId());
         //菌包是否存在，是否在售
         if (null == seed || !seed.getState().equals(SeedEnum.REVIEWED.getState()) || !seed.getIsShow())
             return result.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
@@ -171,14 +177,19 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             orderResponse.setGrowDays(seed.getGrowDays());
             orderResponse.setPerPrice(seed.getPerPrice());
             orderResponse.setOrderId(seedOrderDetail.getId());
-            UserMoney userMoney = moneyDAO.selectById(userId);
-            orderResponse.setAvailableMoney(userMoney.getAvailableMoney());
-            //默认订单180秒关单
-            orderResponse.setLeftSecond(expireTime.intValue());
             orderResponse.setOrderNumber(seedOrderDetail.getOrderNumber());
+            orderResponse.setPerWeigh(seed.getTypeInfo().getPerWeigh());
+            //非体验需加入关单队列
+            if(!isTaste) {
+                UserMoney userMoney = moneyDAO.selectById(userId);
+                orderResponse.setAvailableMoney(userMoney.getAvailableMoney());
+                //默认订单180秒关单
+                orderResponse.setLeftSecond(expireTime.intValue());
+
+                //添加至关单队列
+                closeOrderScheduled.addCloseItem(new CloseSeedPayOrder(seedOrderDetail.getId(), expireTime));
+            }
             result.setMessageEnum(MessageEnum.SUCCESS).setData(orderResponse);
-            //添加至关单队列
-            closeOrderScheduled.addCloseItem(new CloseSeedPayOrder(seedOrderDetail.getId(), expireTime));
         }
 
         return result;

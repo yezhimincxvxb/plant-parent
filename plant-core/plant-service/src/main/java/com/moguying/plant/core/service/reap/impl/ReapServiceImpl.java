@@ -269,7 +269,7 @@ public class ReapServiceImpl<T> implements ReapService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.NESTED)
+    @Transactional
     @DS("write")
     public Boolean exchangeMogubi(Integer userId, UserMoney userMoney, List<Reap> reaps) {
 

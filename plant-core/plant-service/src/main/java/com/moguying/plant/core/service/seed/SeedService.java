@@ -32,7 +32,7 @@ public interface SeedService {
     Boolean seedShow(Integer id);
 
     
-    PageResult<HomeSeed> seedListForHome(Integer page, Integer size);
+    PageResult<HomeSeed> seedListForHome(Integer page, Integer size,HomeSeed where);
 
     
     ResultData<Integer> seedCancel(Integer id);

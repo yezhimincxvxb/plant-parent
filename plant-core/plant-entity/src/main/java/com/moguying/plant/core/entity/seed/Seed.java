@@ -252,4 +252,11 @@ public class Seed implements Serializable {
     @Excel(name = "售罄时间",format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date fullTime;
+
+
+    /**
+     * 菌包分类信息
+     */
+    @TableField(exist = false)
+    private SeedType typeInfo;
 }

@@ -43,4 +43,10 @@ public class HomeSeed implements Serializable {
 
     @JSONField(ordinal = 10)
     private Integer state;
+
+    @JSONField(ordinal = 11)
+    private BigDecimal perWeigh;
+
+    @JSONField(ordinal = 12)
+    private Boolean isForNew;
 }

@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 public class BuyOrderResponse implements Serializable {
 
 
+    private static final long serialVersionUID = 4898881393676586830L;
+
     @JSONField(ordinal = 1)
     private String seedName;
 
@@ -37,4 +39,7 @@ public class BuyOrderResponse implements Serializable {
 
     @JSONField(ordinal = 9)
     private String orderNumber;
+
+    @JSONField(ordinal = 10,serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal perWeigh;
 }

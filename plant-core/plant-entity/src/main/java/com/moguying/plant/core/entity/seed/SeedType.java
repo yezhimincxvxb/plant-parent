@@ -105,4 +105,15 @@ public class SeedType implements Serializable {
     @TableField
     private Integer exchangeNum;
 
+    /**
+     * 是否新手体验
+     */
+    @JSONField(ordinal = 14)
+    private Boolean isForNew;
+
+    /**
+     * 每份产量
+     */
+    @JSONField(ordinal = 15)
+    private BigDecimal perWeigh;
 }

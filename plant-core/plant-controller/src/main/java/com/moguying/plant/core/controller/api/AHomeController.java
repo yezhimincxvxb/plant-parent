@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -203,13 +204,15 @@ public class AHomeController {
      *
      * @return
      */
-    @GetMapping(value = "/index/seed")
-    public PageResult<HomeSeed> seedList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                         @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        PageResult<HomeSeed> pageResult = seedService.seedListForHome(page, size);
+    @PostMapping(value = "/index/seed")
+    public PageResult<HomeSeed> seedList(@RequestBody PageSearch<HomeSeed> search) {
+        if(null == search.getWhere())  search.setWhere(new HomeSeed());
+        PageResult<HomeSeed> pageResult = seedService.seedListForHome(search.getPage(), search.getSize(),search.getWhere());
         List<HomeSeed> homeSeeds = pageResult.getData();
         //如果都已售罄，先一个售罄的显示
-        if (page == 1 && homeSeeds.size() == 0) {
+        if (search.getPage() == 1 && homeSeeds.size() == 0) {
+            //由于IPage默认底层实名的list中不包含add操作,所以如果page返回的list要添加项时应注意
+            homeSeeds = new ArrayList<>();
             homeSeeds.add(seedService.selectOneSaleDownSeed());
         }
         for (HomeSeed homeSeed : homeSeeds) {

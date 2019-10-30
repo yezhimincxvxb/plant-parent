@@ -16,15 +16,15 @@ spring:
       primary: write
       datasource:
         write:
-          username: write
+          username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+          url: jdbc:mysql://192.168.5.108:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
         read:
-          username: write
+          username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+          url: jdbc:mysql://192.168.5.108:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
       hikari:
         max-pool-size: 100
         min-idle: 20

@@ -26,10 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -184,8 +181,8 @@ public class SeedServiceImpl implements SeedService {
 
     @Override
     @DS("read")
-    public PageResult<HomeSeed> seedListForHome(Integer page, Integer size) {
-        IPage<HomeSeed> pageResult = seedDAO.selectSeedListForHome(new Page<>(page, size));
+    public PageResult<HomeSeed> seedListForHome(Integer page, Integer size,HomeSeed where) {
+        IPage<HomeSeed> pageResult = seedDAO.selectSeedListForHome(new Page<>(page, size),where);
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
