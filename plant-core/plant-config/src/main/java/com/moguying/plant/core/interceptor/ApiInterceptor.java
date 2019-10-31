@@ -6,12 +6,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import com.moguying.plant.constant.ApiEnum;
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,6 +31,9 @@ public class ApiInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        HandlerMethod method = (HandlerMethod) handler;
+        if(method.getMethod().getAnnotation(NoLogin.class) != null)
+            return true;
 
         String token = request.getHeader(ApiEnum.AUTH_TOKEN.getTypeStr());
         if(null == token || StringUtils.isEmpty(token)) {
