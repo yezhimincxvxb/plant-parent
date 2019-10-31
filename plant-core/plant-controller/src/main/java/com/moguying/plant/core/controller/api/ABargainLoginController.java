@@ -92,25 +92,6 @@ public class ABargainLoginController {
         return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId);
     }
 
-    /**
-     * 砍价中的产品详情
-     */
-    @GetMapping("/product/info/{orderId}")
-    public ResponseData<BargainVo> productInfo(@LoginUserId Integer userId, @PathVariable("orderId") Integer orderId) {
-        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
-        BargainVo response = bargainDetailService.productInfo(userId, orderId);
-
-        if (response != null) {
-            Integer productId = response.getProductId();
-            Integer number = bargainDetailService.getNumber(productId);
-            response.setSendNumber(number);
-            return responseData
-                    .setMessage(MessageEnum.SUCCESS.getMessage())
-                    .setState(MessageEnum.SUCCESS.getState())
-                    .setData(response);
-        }
-        return responseData;
-    }
 
     /**
      * 砍价

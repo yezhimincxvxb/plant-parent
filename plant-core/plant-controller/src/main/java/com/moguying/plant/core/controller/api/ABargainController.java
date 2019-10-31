@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -111,6 +112,26 @@ public class ABargainController {
     }
 
     /**
+     * 砍价中的产品详情
+     */
+    @GetMapping("/product/one/{orderId}")
+    public ResponseData<BargainVo> productInfoByOrderId(@PathVariable("orderId") Integer orderId) {
+        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
+        BargainVo response = bargainDetailService.productInfoByOrderId(orderId);
+
+        if (response != null) {
+            Integer productId = response.getProductId();
+            Integer number = bargainDetailService.getNumber(productId);
+            response.setSendNumber(number);
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState())
+                    .setData(response);
+        }
+        return responseData;
+    }
+
+    /**
      * 超时关单
      */
     @GetMapping("/time/out/{orderId}")
@@ -132,6 +153,11 @@ public class ABargainController {
                 .setMessage(MessageEnum.SUCCESS.getMessage())
                 .setState(MessageEnum.SUCCESS.getState())
                 .setData("关单成功");
+    }
+
+    public static void main(String[] args) {
+        LocalDate localDate = LocalDate.now();
+
     }
 
 }

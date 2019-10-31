@@ -137,4 +137,9 @@ public class BargainVo {
      */
     @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal helpAmount;
+
+    /**
+     * 用户id
+     */
+    private Integer userId;
 }
