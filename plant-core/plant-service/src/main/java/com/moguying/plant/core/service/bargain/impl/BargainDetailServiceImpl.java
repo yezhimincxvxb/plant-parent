@@ -21,6 +21,7 @@ import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.utils.DateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+@Slf4j
 @Service
 public class BargainDetailServiceImpl implements BargainDetailService {
 

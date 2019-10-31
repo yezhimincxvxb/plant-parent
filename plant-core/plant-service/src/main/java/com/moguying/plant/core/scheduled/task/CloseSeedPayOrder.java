@@ -1,10 +1,9 @@
 package com.moguying.plant.core.scheduled.task;
 
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
+import com.moguying.plant.utils.ApplicationContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
 
 
 public class CloseSeedPayOrder extends CloseOrderItem {
@@ -23,8 +22,7 @@ public class CloseSeedPayOrder extends CloseOrderItem {
     @Override
     public void run() {
         log.debug("close seed pay order:{}",toString());
-        WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
-        SeedOrderDetailService seedOrderDetailService = context.getBean(SeedOrderDetailService.class);
+        SeedOrderDetailService seedOrderDetailService = ApplicationContextUtil.getBean(SeedOrderDetailService.class);
         seedOrderDetailService.seedOrderCancel(id,null);
     }
 }
