@@ -14,7 +14,7 @@
 
 
 
-  <select id="selectSelective" parameterType="SeedDays" resultMap="BaseResultMap">
+  <select id="selectSelective" parameterType="com.moguying.plant.core.entity.seed.SeedDays" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from plant_seed_days
         <where>
           <if test="growDays != null">

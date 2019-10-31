@@ -37,9 +37,9 @@
   </resultMap>
 
 
-  <resultMap id="ContentSeedMap" type="Seed" extends="BaseResultMap">
+  <resultMap id="ContentSeedMap" type="com.moguying.plant.core.entity.seed.Seed" extends="BaseResultMap">
     <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
-    <collection property="content" ofType="SeedContent">
+    <collection property="content" ofType="com.moguying.plant.core.entity.seed.SeedContent">
       <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
       <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
     </collection>
@@ -66,7 +66,7 @@
     <result column="left_count" jdbcType="VARCHAR" property="leftCount" />
     <result column="per_price" jdbcType="VARCHAR" property="perPrice" />
     <result column="grow_days" jdbcType="INTEGER" property="growDays" />
-    <collection property="content" ofType="SeedContent">
+    <collection property="content" ofType="com.moguying.plant.core.entity.seed.SeedContent">
       <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
       <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
     </collection>
@@ -83,7 +83,7 @@
   </sql>
 
 
-  <select id="selectSelective" parameterType="Seed" resultMap="BaseResultMap" >
+  <select id="selectSelective" parameterType="com.moguying.plant.core.entity.seed.Seed" resultMap="BaseResultMap" >
     select <include refid="Base_Column_List" /> from plant_seed
     <where>
       <if test="wq.id != null">
@@ -182,7 +182,7 @@
     <![CDATA[
     AND UNIX_TIMESTAMP(t1.close_time) >= UNIX_TIMESTAMP(NOW())
     ]]>
-    order by t1.left_count desc limit 3
+    order by t1.left_count desc limit 2
   </select>
 
   <select id="selectOneFullSeed" resultMap="ResultSeedListForHome">

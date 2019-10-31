@@ -87,7 +87,7 @@
     where t1.state <![CDATA[ < 2 ]]> and t1.block_id = #{id}
   </select>
 
-  <select id="blockRecommend" resultType="BlockDetail">
+  <select id="blockRecommend" resultType="com.moguying.plant.core.entity.block.vo.BlockDetail">
     select t1.id as block_id,number as block_number,total_amount as block_amount,left_count as block_left_count,
     t2.class_name as seed_type_name ,t1.pic_url,t2.grow_days as seed_grow_days,t2.per_price as seed_price, t2.interest_rates
     from plant_block t1

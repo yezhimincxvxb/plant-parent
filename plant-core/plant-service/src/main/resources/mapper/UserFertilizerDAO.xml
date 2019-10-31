@@ -18,7 +18,7 @@
                extends="BaseResultMap">
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
         <result column="real_name" jdbcType="VARCHAR" property="realName"/>
-        <collection property="fertilizer" ofType="Fertilizer">
+        <collection property="fertilizer" ofType="com.moguying.plant.core.entity.fertilizer.Fertilizer">
             <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
         </collection>
     </resultMap>
