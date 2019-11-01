@@ -15,8 +15,12 @@ import java.util.List;
 @Repository
 public interface UserDAO extends BaseDAO<User> {
     IPage<User> selectSelective(Page<User> page, @Param("wq") User user);
+
     List<User> selectSelective(@Param("wq") User user);
+
     User userInfoById(Integer id);
+
     User userInfoByPhoneAndPassword(User user);
+
     User userInfoByInviteCodeAndId(@Param("userId") Integer userId, @Param("inviteCode") String inviteCode);
 }

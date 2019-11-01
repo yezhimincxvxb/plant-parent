@@ -75,6 +75,7 @@
 
   </update>
 
+  <!-- 持有可种植的菌包份数 -->
   <select id="sumSeedCountByUserId" resultType="int">
     select sum(buy_count - plant_count) from plant_seed_order
     where user_id = #{userId}

@@ -175,12 +175,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     @DS("write")
     public ResultData<User> saveUserInfo(Integer id, User user) {
         ResultData<User> resultData = new ResultData<>(MessageEnum.ERROR, null);
+
         if (userDAO.selectById(id) == null)
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
         user.setId(id);
+
         if (user.getPassword() != null && !StringUtils.isEmpty(user.getPassword()))
             user.setPassword(PasswordUtil.INSTANCE.encode(user.getPassword().getBytes()));
 
@@ -196,6 +199,7 @@ public class UserServiceImpl implements UserService {
             else
                 return resultData.setMessageEnum(MessageEnum.INVITE_USER_NOT_EXISTS);
         }
+
         if (user.getIdCard() != null && idCardExists(user.getIdCard()))
             return resultData.setMessageEnum(MessageEnum.IDCARD_EXISTS);
 
@@ -398,30 +402,41 @@ public class UserServiceImpl implements UserService {
     @Override
     @DS("read")
     public UserSummaryInfo userSummaryInfo(User user) {
+
         UserSummaryInfo summaryInfo = new UserSummaryInfo();
+        summaryInfo.setPhone(user.getPhone());
+        summaryInfo.setAvailableAmount(userMoneyDAO.selectById(user.getId()).getAvailableMoney());
+
+        // 持有可种植的菌包份数
         Integer sumSeedCount = seedOrderDAO.sumSeedCountByUserId(user.getId());
         if (null != sumSeedCount) {
             summaryInfo.setSeedCount(sumSeedCount);
         } else {
             summaryInfo.setSeedCount(0);
         }
-        summaryInfo.setAvailableAmount(userMoneyDAO.selectById(user.getId()).getAvailableMoney());
-        Integer blockCount = reapDAO.countBlockIdByUserId(user.getId());
-        if (null == blockCount)
-            summaryInfo.setBlockCount(0);
-        else
-            summaryInfo.setBlockCount(blockCount);
-        summaryInfo.setPhone(user.getPhone());
-        Integer count = userMessageDAO.countMessageByUserId(user.getId());
-        if (count > 0)
-            summaryInfo.setHasNewMessage(true);
-        else
-            summaryInfo.setHasNewMessage(false);
 
+        // 用户有种植的大棚个数
+        Integer blockCount = reapDAO.countBlockIdByUserId(user.getId());
+        if (null == blockCount) {
+            summaryInfo.setBlockCount(0);
+        } else {
+            summaryInfo.setBlockCount(blockCount);
+        }
+
+        // 是否有新消息
+        Integer count = userMessageDAO.countMessageByUserId(user.getId());
+        if (count > 0) {
+            summaryInfo.setHasNewMessage(true);
+        } else {
+            summaryInfo.setHasNewMessage(false);
+        }
+
+        // 是否设置了支付密码
         if (null == user.getPayPassword() || StringUtils.isBlank(user.getPayPassword())) {
             summaryInfo.setHasPayPassword(false);
-        } else
+        } else {
             summaryInfo.setHasPayPassword(true);
+        }
 
         return summaryInfo;
     }

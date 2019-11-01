@@ -12,6 +12,7 @@ import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.core.service.mall.MallProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,6 +109,25 @@ public class ABargainController {
                 .setMessage(MessageEnum.SUCCESS.getMessage())
                 .setState(MessageEnum.SUCCESS.getState())
                 .setData(bargain);
+    }
+
+    /**
+     * 砍价中的产品详情
+     */
+    @GetMapping("/product/one/{orderId}")
+    public ResponseData<BargainVo> productInfoByOrderId(@PathVariable("orderId") Integer orderId) {
+        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
+
+        BargainVo response = bargainDetailService.productInfoByOrderId(orderId);
+        if (Objects.isNull(response)) return responseData;
+
+        Integer productId = response.getProductId();
+        Integer number = bargainDetailService.getNumber(productId);
+        response.setSendNumber(number);
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData(response);
     }
 
     /**

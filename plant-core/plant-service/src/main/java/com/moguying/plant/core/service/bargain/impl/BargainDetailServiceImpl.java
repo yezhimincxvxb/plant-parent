@@ -7,6 +7,7 @@ import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.bargain.BargainDetailDao;
 import com.moguying.plant.core.dao.bargain.BargainLogDao;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
+import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -15,6 +16,7 @@ import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
+import com.moguying.plant.core.entity.mall.MallOrderDetail;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.mall.vo.BuyProduct;
 import com.moguying.plant.core.entity.user.User;
@@ -48,6 +50,9 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
     @Autowired
     private MallOrderDAO mallOrderDAO;
+
+    @Autowired
+    private MallOrderDetailDAO mallOrderDetailDAO;
 
     @Autowired
     private UserDAO userDAO;
@@ -178,6 +183,15 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             mallOrder.setAddTime(new Date());
             if (mallOrderDAO.insert(mallOrder) <= 0) return null;
 
+            // 生成订单详情
+            MallOrderDetail orderDetail = new MallOrderDetail();
+            orderDetail.setOrderId(mallOrder.getId());
+            orderDetail.setUserId(detail.getUserId());
+            orderDetail.setProductId(detail.getProductId());
+            orderDetail.setBuyCount(detail.getProductCount());
+            orderDetail.setBuyAmount(detail.getTotalAmount());
+            if (mallOrderDetailDAO.insert(orderDetail) <= 0) return null;
+
             // 关单
             update.setState(true);
             update.setOrderNumber(orderNumber);
@@ -231,15 +245,40 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("read")
     public PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId) {
-        IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(page, size), userId, null);
+        IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(page, size), userId);
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("read")
-    public BargainVo productInfo(Integer userId, Integer orderId) {
-        IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(1, 1), userId, orderId);
-        return pageResult.getTotal() > 0 ? pageResult.getRecords().get(0) : null;
+    public PageResult<BargainVo> successList(Integer page, Integer size, Integer userId) {
+        IPage<BargainVo> pageResult = bargainDetailDao.successList(new Page<>(page, size), userId);
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
+    }
+
+    @Override
+    @DS("read")
+    public BargainVo productInfoByOrderId(Integer orderId) {
+        BargainDetail detail = bargainDetailDao.selectById(orderId);
+        if (detail == null) return null;
+
+        MallProduct mallProduct = mallProductDAO.selectById(detail.getProductId());
+        if (mallProduct == null) return null;
+
+        BargainVo vo = new BargainVo();
+        vo.setOrderId(detail.getId());
+        vo.setProductName(mallProduct.getName());
+        vo.setBargainAmount(detail.getBargainAmount());
+        vo.setLeftAmount(detail.getLeftAmount());
+        vo.setProductInfo(mallProduct.getSummaryDesc());
+        vo.setPicUrl(mallProduct.getPicUrl());
+        vo.setBeginTime(DateUtil.INSTANCE.formatDateForPayment(detail.getAddTime()));
+        vo.setEndTime(DateUtil.INSTANCE.formatDateForPayment(detail.getCloseTime()));
+        vo.setRate(detail.getBargainAmount().divide(detail.getTotalAmount(), 2));
+        vo.setProductId(mallProduct.getId());
+        vo.setProductPrice(mallProduct.getPrice().multiply(new BigDecimal(mallProduct.getBargainNumber())));
+        vo.setUserId(detail.getUserId());
+        return vo;
     }
 
     @Override

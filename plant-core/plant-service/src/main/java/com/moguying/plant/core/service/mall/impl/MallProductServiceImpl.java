@@ -36,10 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -375,5 +372,17 @@ public class MallProductServiceImpl implements MallProductService {
     @DS("read")
     public BargainVo productInfo(Integer productId) {
         return mallProductDAO.productInfo(productId);
+    }
+
+    @Override
+    @DS("write")
+    public Integer updateProductToBargain(MallProduct mallProduct) {
+
+        if (Objects.isNull(mallProduct)) return 0;
+
+        // 商品不存在
+        if (Objects.isNull(mallProductDAO.selectById(mallProduct.getId()))) return 0;
+
+        return mallProductDAO.updateById(mallProduct) > 0 ? mallProduct.getId() : 0;
     }
 }
