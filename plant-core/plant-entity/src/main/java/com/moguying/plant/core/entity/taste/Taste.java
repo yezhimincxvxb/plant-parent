@@ -35,7 +35,7 @@ public class Taste {
      * 试吃份数
      */
     @JSONField(ordinal = 5)
-    private Integer tasteCount;
+    private Long tasteCount;
 
 
     /**

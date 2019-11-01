@@ -24,7 +24,7 @@ public class BTasteController {
      * @param search
      * @return
      */
-    @PostMapping("/list")
+    @PostMapping("/free/list")
     public PageResult<Taste> tasteList(@RequestBody PageSearch<Taste> search){
         return tasteService.tastePageResult(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -35,7 +35,7 @@ public class BTasteController {
      * 添加试吃内容
      * @return
      */
-    @PostMapping
+    @PostMapping("/free")
     public ResponseData<Taste> saveTasteItem(@RequestBody Taste taste) {
         ResultData<Boolean> resultData = tasteService.saveTaste(taste);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -47,7 +47,7 @@ public class BTasteController {
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/free/{id}")
     public ResponseData<Boolean> deleteTasteItem(@PathVariable String id){
         ResultData<Boolean> resultData = tasteService.deleteTaste(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -59,7 +59,7 @@ public class BTasteController {
      * @param id
      * @return
      */
-    @PutMapping("/{id}")
+    @PutMapping("/free/{id}")
     public ResponseData<Boolean> setItemShowState(@PathVariable String id){
         if(tasteService.setShowState(id))
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());

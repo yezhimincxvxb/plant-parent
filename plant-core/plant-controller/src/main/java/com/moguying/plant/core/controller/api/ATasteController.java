@@ -16,6 +16,8 @@ import com.moguying.plant.core.service.teste.TasteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/taste")
 public class ATasteController {
@@ -73,7 +75,7 @@ public class ATasteController {
     @NoLogin
     @PostMapping("/free/list")
     public PageResult<Taste> freeTasteList(@RequestBody PageSearch<Taste> search) {
-        return tasteService.tastePageResult(search.getPage(), search.getSize(), search.getWhere());
+      return freeTasteList(null,search);
     }
 
 
@@ -85,6 +87,10 @@ public class ATasteController {
      */
     @PostMapping("/free")
     public PageResult<Taste> freeTasteList(@LoginUserId Integer userId, @RequestBody PageSearch<Taste> search) {
+        Optional<Taste> optional = Optional.ofNullable(search.getWhere());
+        if(!optional.isPresent())
+            search.setWhere(new Taste());
+        search.getWhere().setIsShow(true);
         return tasteService.tastePageResult(search.getPage(),search.getSize(),search.getWhere(),userId);
     }
 
@@ -94,12 +100,11 @@ public class ATasteController {
      * @param search
      * @return
      */
+    @NoLogin
     @PostMapping("/free/apply/log")
     public PageResult<TasteApply> tasteApplyList(@RequestBody PageSearch<TasteApply> search){
         return tasteService.tasteApplyPageResult(search.getPage(),search.getSize(),search.getWhere());
     }
-
-
 
 
     /**
@@ -123,7 +128,7 @@ public class ATasteController {
      * @param taste
      * @return
      */
-    @GetMapping("/free/check")
+    @PostMapping("/free/check")
     public ResponseData<TasteApply> checkTasteApply(@LoginUserId Integer userId, @RequestBody Taste taste) {
         ResultData<TasteApply> tasteApplyResultData = tasteService.checkApply(userId, taste);
         ResponseData<TasteApply> responseData = new ResponseData<>(tasteApplyResultData.getMessageEnum().getMessage(), tasteApplyResultData.getMessageEnum().getState());

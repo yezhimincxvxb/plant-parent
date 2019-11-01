@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.ApiEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.ReapEnum;
+import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
@@ -13,6 +14,7 @@ import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.vo.BuyOrder;
@@ -20,6 +22,7 @@ import com.moguying.plant.core.entity.seed.vo.BuyOrderResponse;
 import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.entity.taste.vo.TasteReap;
+import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.teste.TasteService;
@@ -39,6 +42,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class TasteServiceImpl implements TasteService {
@@ -46,7 +50,6 @@ public class TasteServiceImpl implements TasteService {
 
     @Autowired
     private SeedDAO seedDAO;
-
 
     @Autowired
     private PlantOrderService plantOrderService;
@@ -65,6 +68,9 @@ public class TasteServiceImpl implements TasteService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private MallProductDAO mallProductDAO;
 
     @DS("write")
     @Override
@@ -119,6 +125,13 @@ public class TasteServiceImpl implements TasteService {
         Optional<Taste> optional = Optional.ofNullable(taste);
         if(!optional.isPresent())
             return resultData;
+        MallProduct product = mallProductDAO.selectById(taste.getProductId());
+        if(null == product)
+            return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
+        taste.setThumbPic(product.getThumbPicUrl());
+        taste.setPic(product.getPicUrl());
+        taste.setState(ApiEnum.TASTE_OPEN.getType());
+        taste.setIsShow(false);
         mongoTemplate.save(taste);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }
@@ -129,6 +142,8 @@ public class TasteServiceImpl implements TasteService {
         Query query = new Query().with(PageRequest.of(page-1,size, Sort.Direction.DESC,"tasteCount"));
         if(optional.map(Taste::getState).isPresent())
             query.addCriteria(Criteria.where("state").is(where.getState()));
+        if(optional.map(Taste::getIsShow).isPresent())
+            query.addCriteria(Criteria.where("isShow").is(where.getIsShow()));
         List<Taste> items = mongoTemplate.find(query,Taste.class);
         if(null != userId){
             items.forEach((taste)->{
@@ -171,9 +186,28 @@ public class TasteServiceImpl implements TasteService {
 
     @Override
     public ResultData<Boolean> addTasteApply(Integer userId,Taste taste) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        User user = userDAO.selectById(userId);
+        Optional<User> userOptional = Optional.ofNullable(user);
+        if(!userOptional.isPresent())
+            return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
         TasteApply apply = new TasteApply(userId,taste.getId(), ApiEnum.TASTE_APPLY.getType());
+
+        Taste tasteInfo = mongoTemplate.findOne(new Query(Criteria.where("id").is(taste.getId())), Taste.class);
+        Long count = Optional.ofNullable(tasteInfo).map(Taste::getTasteCount).orElse(0L);
+        AtomicLong atomicLong = new AtomicLong(count);
+        if(count <= 0)
+            return resultData.setMessageEnum(MessageEnum.TASTE_COUNT_NOT_ENOUGH);
+        boolean exist = mongoTemplate.exists(new Query(Criteria.where("userId").is(userId).and("tasteId").is(taste.getId())),TasteApply.class);
+        if(exist)
+            return resultData.setMessageEnum(MessageEnum.TASTE_HAS_APPLY);
+        MallProduct product = mallProductDAO.selectById(tasteInfo.getProductId());
+        apply.setPhone(userOptional.map(User::getPhone).orElse(""));
+        apply.setProductName(product.getName());
+        apply.setApplyTime(new Date());
         mongoTemplate.save(apply);
-        return new ResultData<>(MessageEnum.SUCCESS,true);
+        mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())),Update.update("tasteCount",atomicLong.decrementAndGet()),Taste.class);
+        return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }
 
     @Override
