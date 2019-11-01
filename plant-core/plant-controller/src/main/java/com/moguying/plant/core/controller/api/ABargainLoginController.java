@@ -92,6 +92,13 @@ public class ABargainLoginController {
         return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId);
     }
 
+    /**
+     * 已砍成功的产品列表
+     */
+    @PostMapping("/success/list")
+    public PageResult<BargainVo> successList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
+        return bargainDetailService.successList(pageSearch.getPage(), pageSearch.getSize(), userId);
+    }
 
     /**
      * 砍价

@@ -12,10 +12,10 @@ import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.core.service.mall.MallProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -117,18 +117,17 @@ public class ABargainController {
     @GetMapping("/product/one/{orderId}")
     public ResponseData<BargainVo> productInfoByOrderId(@PathVariable("orderId") Integer orderId) {
         ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
-        BargainVo response = bargainDetailService.productInfoByOrderId(orderId);
 
-        if (response != null) {
-            Integer productId = response.getProductId();
-            Integer number = bargainDetailService.getNumber(productId);
-            response.setSendNumber(number);
-            return responseData
-                    .setMessage(MessageEnum.SUCCESS.getMessage())
-                    .setState(MessageEnum.SUCCESS.getState())
-                    .setData(response);
-        }
-        return responseData;
+        BargainVo response = bargainDetailService.productInfoByOrderId(orderId);
+        if (Objects.isNull(response)) return responseData;
+
+        Integer productId = response.getProductId();
+        Integer number = bargainDetailService.getNumber(productId);
+        response.setSendNumber(number);
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData(response);
     }
 
     /**
@@ -153,11 +152,6 @@ public class ABargainController {
                 .setMessage(MessageEnum.SUCCESS.getMessage())
                 .setState(MessageEnum.SUCCESS.getState())
                 .setData("关单成功");
-    }
-
-    public static void main(String[] args) {
-        LocalDate localDate = LocalDate.now();
-
     }
 
 }

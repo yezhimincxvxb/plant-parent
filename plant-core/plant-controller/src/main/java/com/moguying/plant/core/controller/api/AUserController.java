@@ -42,14 +42,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.params.SetParams;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +60,6 @@ import java.util.*;
 @RequestMapping("/user")
 @Slf4j
 public class AUserController {
-
 
     @Autowired
     private UserService userService;
@@ -98,12 +94,12 @@ public class AUserController {
     @Autowired
     private StringRedisTemplate redisUtil;
 
+
     @Value("${user.invite.bg.image}")
     private String inviteBgImagePath;
 
     @Value("${user.invite.icon}")
     private String inviteIcon;
-
 
     @Value("${user.invite.url}")
     private String inviteUrl;
@@ -126,56 +122,67 @@ public class AUserController {
 
     /**
      * 首页信息
-     *
-     * @return
      */
     @GetMapping
     public ResponseData<UserSummaryInfo> index(@LoginUserId Integer userId) {
+
+        ResponseData<UserSummaryInfo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+
+        // 用户不存在
         User user = userService.userInfoById(userId);
         if (null == user)
-            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
+            return responseData
+                    .setMessage(MessageEnum.USER_NOT_EXISTS.getMessage())
+                    .setState(MessageEnum.USER_NOT_EXISTS.getState());
 
+        // 首页显示信息
         UserSummaryInfo summaryInfo = userService.userSummaryInfo(user);
-
         if (summaryInfo != null)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), summaryInfo);
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState())
+                    .setData(summaryInfo);
+
+        return responseData;
     }
 
     /**
      * PC端用户中心信息
-     *
-     * @param userId
-     * @return
      */
     @GetMapping("/info")
     public ResponseData<User> userInfo(@LoginUserId Integer userId) {
+
+        ResponseData<User> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+
+        // 用户不存在
         User user = userService.userInfoById(userId);
         if (null == user)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
-        //隐藏id
+
+        // 隐藏id
         user.setId(null);
         user.setPhone(user.getPhone().substring(0, 3).concat("***").concat(user.getPhone().substring(7, 11)));
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), user);
+        return responseData.setData(user);
     }
 
 
     /**
      * 修改支付密码
-     *
-     * @param payPassword
-     * @return
      */
     @PutMapping(value = "/pay/password")
     public ResponseData<Integer> setPayPassword(@RequestBody PayPassword payPassword, @LoginUserId Integer userId) {
+        // 用户不存在
         User userInfo = userService.userInfoById(userId);
+        if (null == userInfo)
+            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
 
-        //原支付密码未设置
+        // 首次设置密码
         if (StringUtils.isEmpty(userInfo.getPayPassword()) && payPassword.getOldPayPassword() != null
                 && StringUtils.isNotEmpty(payPassword.getOldPayPassword())) {
             return new ResponseData<>(MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getMessage(), MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getState());
         }
 
+        // 旧密码错误
         if (!StringUtils.isEmpty(userInfo.getPayPassword())) {
             if (null == payPassword.getOldPayPassword())
                 return new ResponseData<>(MessageEnum.PAY_PASSWORD_IS_EMPTY.getMessage(), MessageEnum.PAY_PASSWORD_IS_EMPTY.getState());
@@ -184,8 +191,11 @@ public class AUserController {
             if (!newPayPassword.equals(userInfo.getPayPassword()))
                 return new ResponseData<>(MessageEnum.OLD_PAY_PASSWORD_ERROR.getMessage(), MessageEnum.OLD_PAY_PASSWORD_ERROR.getState());
         }
+
+        // 短信验证
         if (messageService.validateMessage(userInfo.getPhone(), payPassword.getCode()) <= 0)
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
+
         User update = new User();
         update.setPayPassword(payPassword.getPayPassword());
         ResultData<User> resultData = userService.saveUserInfo(userId, update);
@@ -195,10 +205,6 @@ public class AUserController {
 
     /**
      * 忘记支付密码
-     *
-     * @param userId
-     * @param forgetPayPassword
-     * @return
      */
     @PutMapping("/forget/password")
     public ResponseData<Integer> forgetPassword(@LoginUserId Integer userId, @RequestBody ForgetPayPassword forgetPayPassword) {

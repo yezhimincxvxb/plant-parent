@@ -8,8 +8,9 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.service.mall.MallProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 
 @RestController
@@ -22,67 +23,85 @@ public class BMallProductController {
 
 
     @GetMapping("/{id}")
-    public ResponseData<MallProduct> productDetail(@PathVariable Integer id){
+    public ResponseData<MallProduct> productDetail(@PathVariable Integer id) {
         ResultData<MallProduct> resultData = productService.productDetail(id);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState()
-                ,resultData.getData());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState()
+                , resultData.getData());
     }
 
 
     /**
      * 添加商品
+     *
      * @param product
      * @return
      */
     @PostMapping
-    public ResponseData<Integer> addProduct(@RequestBody MallProduct product){
+    public ResponseData<Integer> addProduct(@RequestBody MallProduct product) {
         ResultData<Integer> resultData = productService.saveProduct(product);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
 
     /**
      * 更新商品
+     *
      * @param id
      * @return
      */
     @PutMapping("/{id}")
-    public ResponseData<Integer> updateProduct(@PathVariable Integer id, @RequestBody MallProduct product){
+    public ResponseData<Integer> updateProduct(@PathVariable Integer id, @RequestBody MallProduct product) {
         product.setId(id);
         ResultData<Integer> resultData = productService.saveProduct(product);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
 
     /**
      * 对商品上下架
+     *
      * @param id
      * @return
      */
     @PutMapping("/show/{id}")
-    public ResponseData<Integer> showProduct(@PathVariable Integer id){
-        if(productService.showProduct(id))
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+    public ResponseData<Integer> showProduct(@PathVariable Integer id) {
+        if (productService.showProduct(id))
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
 
     /**
      * 商品列表
+     *
      * @param search
      * @return
      */
     @PostMapping("/list")
-    public PageResult<MallProduct> productList(@RequestBody PageSearch<MallProduct> search){
-        return productService.productList(search.getPage(),search.getSize(),search.getWhere());
+    public PageResult<MallProduct> productList(@RequestBody PageSearch<MallProduct> search) {
+        return productService.productList(search.getPage(), search.getSize(), search.getWhere());
     }
 
+    /**
+     * 商品推送到砍价列表
+     */
+    @PostMapping("/toBargain/list")
+    public ResponseData<Integer> productToBargain(@RequestBody MallProduct product) {
 
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
+        // 参数错误
+        if (Objects.isNull(product) || Objects.isNull(product.getId()))
+            return responseData;
 
+        Integer result = productService.updateProductToBargain(product);
+        if (result > 0)
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState());
 
-
-
+        return responseData;
+    }
 
 }
 
