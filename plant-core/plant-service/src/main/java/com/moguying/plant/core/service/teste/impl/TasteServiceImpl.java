@@ -132,6 +132,8 @@ public class TasteServiceImpl implements TasteService {
         taste.setPic(product.getPicUrl());
         taste.setState(ApiEnum.TASTE_OPEN.getType());
         taste.setIsShow(false);
+        taste.setProductName(product.getName());
+        taste.setProductPrice(product.getPrice());
         mongoTemplate.save(taste);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }

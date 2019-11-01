@@ -1,8 +1,10 @@
 package com.moguying.plant.core.entity.taste;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -16,6 +18,20 @@ public class Taste {
      */
     @JSONField(ordinal = 2)
     private Integer productId;
+
+
+    /**
+     * 商品名
+     */
+    private String productName;
+
+
+    /**
+     * 商品价格
+     */
+    @JSONField(serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal productPrice;
+
 
     /**
      * 缩略图
