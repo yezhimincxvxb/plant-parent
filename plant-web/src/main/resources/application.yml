@@ -108,8 +108,8 @@ payment:
   version: 1.1
   signType: CFCA
   callback: https://api.zymoguying.com/payment/notify
-  pfxfile: Hyswkj2019.pfx
-  cerfile: sq_formal_encrypt.cer
+  pfxfile: classpath:Hyswkj2019.pfx
+  cerfile: classpath:sq_formal_encrypt.cer
   password: Hyswkj2019
   return:
     url:

@@ -100,7 +100,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
                 .filter((x) -> x.getId() < 4)
                 .forEach((x) -> types.add(x.getId()));
         condition.setTypes(types);
-        return userFertilizerDAO.userFertilizers(null,condition).getRecords();
+        return userFertilizerDAO.userFertilizers(condition);
     }
 
     @DS("read")
