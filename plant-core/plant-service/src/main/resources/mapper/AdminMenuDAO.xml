@@ -10,6 +10,7 @@
     <result column="redirect" jdbcType="VARCHAR" property="redirect" />
     <result column="hidden" jdbcType="INTEGER" property="hidden" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="parent_name" jdbcType="VARCHAR" property="parentName"/>
     <collection property="meta" ofType="com.moguying.plant.core.entity.admin.AdminMenuMeta">
       <result column="menu_id" property="menuId"/>
       <result column="title" property="title"/>
@@ -23,8 +24,9 @@
   </sql>
 
   <select id="selectSelective" resultMap="BaseResultMap">
-    select t1.*,t2.* from plant_admin_menu t1
+    select t1.*,t2.*,t3.title as parent_name from plant_admin_menu t1
     left join plant_admin_menu_meta t2 on t2.menu_id = t1.id
+    left join plant_admin_menu_meta t3 on t3.menu_id = t1.parent_id
     <where>
       <if test="wq.id != null">
         t1.id = #{wq.id}

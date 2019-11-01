@@ -14,12 +14,7 @@ import org.springframework.web.method.HandlerTypePredicate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-import org.thymeleaf.templatemode.TemplateMode;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

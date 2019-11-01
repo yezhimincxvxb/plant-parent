@@ -133,7 +133,7 @@ order:
 
 #上传host
 upload:
-  save-path: /moguying/upload
+  save-path: /pages/upload
   editor:
     host: 192.168.5.220
   host: 192.168.5.220
@@ -195,4 +195,6 @@ logging:
   level:
     com.moguying: debug
   file: ./logs/plant-web.log
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
 

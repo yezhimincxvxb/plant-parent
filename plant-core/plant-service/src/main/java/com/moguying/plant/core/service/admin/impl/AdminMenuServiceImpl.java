@@ -110,16 +110,16 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     @DS("read")
     public List<AdminMenu> menus(AdminMenu menu) {
-        return adminMenuDAO.selectList(new QueryWrapper<>(menu));
+        return adminMenuDAO.selectSelective(menu);
     }
 
     @DS("read")
     @Override
     public List<AdminMenu> generateMenuTree(List<AdminMenu> menus) {
         List<AdminMenu> parents = menus.stream().filter((menu) -> menu.getParentId() == 0).collect(Collectors.toList());
-        for(AdminMenu menu : parents){
+        parents.forEach((menu)->{
             menu.setChildren(menus.stream().filter((x)->x.getParentId().equals(menu.getId())).collect(Collectors.toList()));
-        }
+        });
         return parents;
     }
 }

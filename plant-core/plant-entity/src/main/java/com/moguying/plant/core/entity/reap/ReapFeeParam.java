@@ -39,4 +39,13 @@ public class ReapFeeParam implements Serializable {
     private Boolean isDelete;
 
 
+    @JSONField(ordinal = 6)
+    @TableField(exist = false)
+    private String phone;
+
+    @JSONField(ordinal = 7)
+    @TableField(exist = false)
+    private String seedTypeName;
+
+
 }

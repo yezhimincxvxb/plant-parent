@@ -82,4 +82,8 @@ public class AdminMenu implements Serializable {
     @TableField
     private String name;
 
+
+    @TableField(exist = false)
+    private String parentName;
+
 }

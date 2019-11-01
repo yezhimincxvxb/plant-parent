@@ -272,8 +272,8 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         vo.setLeftAmount(detail.getLeftAmount());
         vo.setProductInfo(mallProduct.getSummaryDesc());
         vo.setPicUrl(mallProduct.getPicUrl());
-        vo.setBeginTime(DateUtil.INSTANCE.formatDateForPayment(detail.getAddTime()));
-        vo.setEndTime(DateUtil.INSTANCE.formatDateForPayment(detail.getCloseTime()));
+        vo.setBeginTime(detail.getAddTime());
+        vo.setEndTime(detail.getCloseTime());
         vo.setRate(detail.getBargainAmount().divide(detail.getTotalAmount(), 2));
         vo.setProductId(mallProduct.getId());
         vo.setProductPrice(mallProduct.getPrice().multiply(new BigDecimal(mallProduct.getBargainNumber())));

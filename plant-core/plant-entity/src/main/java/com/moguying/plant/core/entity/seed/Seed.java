@@ -252,4 +252,8 @@ public class Seed implements Serializable {
     @Excel(name = "售罄时间",format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date fullTime;
+
+
+    @TableField
+    private Boolean isHot;
 }

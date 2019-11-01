@@ -1,7 +1,5 @@
 package com.moguying.plant.core.controller.back;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
@@ -11,13 +9,10 @@ import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.reap.ReapFee;
 import com.moguying.plant.core.entity.reap.ReapFeeParam;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
-import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.reap.ReapFeeParamService;
 import com.moguying.plant.core.service.reap.ReapFeeService;
-import com.moguying.plant.core.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,8 +102,7 @@ public class BReapFeeController {
      */
     @PostMapping("/param/list")
     public PageResult<ReapFeeParam> reapFeeParamList(@RequestBody PageSearch<ReapFeeParam> search){
-        IPage<ReapFeeParam> pageResult = reapFeeParamService.page(new Page<>(search.getPage(), search.getSize()));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+       return reapFeeParamService.reapFeeParamPageResult(search.getPage(),search.getSize(),search.getWhere());
     }
 
 
