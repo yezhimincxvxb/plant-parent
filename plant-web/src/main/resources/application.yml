@@ -107,8 +107,8 @@ farmer:
 user:
   invite:
     bg:
-      image: /images/user_private_invite_bg.jpg
-    icon: /images/invite_icon.png
+      image: classpath:/images/user_private_invite_bg.jpg
+    icon: classpath:/images/invite_icon.png
     url: https://m.zymoguying.com/index/promote/invitecode/
 #微信配置
 wx:

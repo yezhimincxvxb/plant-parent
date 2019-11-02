@@ -887,7 +887,6 @@ public class AUserController {
      * @param userId
      */
     @GetMapping("/invite/poster")
-    @SuppressWarnings("unchecked")
     public ResponseData<UserPoster> invitePosterImage(@LoginUserId Integer userId, HttpServletResponse response) {
         ClassPathResource resource = new ClassPathResource(inviteBgImagePath);
         ClassPathResource iconResource = new ClassPathResource(inviteIcon);
@@ -895,12 +894,10 @@ public class AUserController {
         ResponseData<UserPoster> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
         try {
             User user = userService.userInfoById(userId);
-            if (!resource.getFile().exists() || !iconResource.getFile().exists())
-                return responseData;
             //获取背景
-            BufferedImage bgImage = ImageIO.read(resource.getFile());
+            BufferedImage bgImage = ImageIO.read(resource.getInputStream());
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-            Map hints = new HashMap<>();
+            Map<EncodeHintType,Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hints.put(EncodeHintType.MARGIN, 1);
             int width = 142, height = 142;
@@ -912,7 +909,7 @@ public class AUserController {
                 }
             }
             //添加中间icon
-            BufferedImage iconImage = ImageIO.read(iconResource.getFile());
+            BufferedImage iconImage = ImageIO.read(iconResource.getInputStream());
             for (int x = 0; x < 30; x++) {
                 for (int y = 0; y < 30; y++) {
                     bgImage.setRGB(x + 166, y + 1003, iconImage.getRGB(x, y));
