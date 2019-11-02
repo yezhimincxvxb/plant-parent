@@ -60,8 +60,7 @@ public class BSeedPicController {
         byte[] bytes = new byte[1024*2]; //1M
         String fileName;
         String subFix = file.getOriginalFilename().split("\\.")[1];
-        String host = "";
-        if(null != uploadHost && !StringUtils.isEmpty(uploadHost))  host = request.getScheme() + "://" + uploadHost;
+        String host = uploadHost;
         try {
             file.getInputStream().read(bytes);
             fileName = PasswordUtil.INSTANCE.encode(bytes);

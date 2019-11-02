@@ -329,8 +329,9 @@ CREATE TABLE `plant_reap_fee_param` (
   `first_plant_rate` decimal(15,3) NOT NULL COMMENT '首种费用结算比率',
   `plant_rate` decimal(15,3) NOT NULL COMMENT '普种费用结算比率',
   `seed_type` int(11) NOT NULL COMMENT '菌包种类',
+  `is_delete` tinyint(1) NOT NULL COMMENT '1已删除，0未删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 /***砍价详情*****/
 CREATE TABLE `plant_bargain_detail` (
@@ -373,7 +374,7 @@ CREATE TABLE `plant_mall_product_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type_name` varchar(255) DEFAULT NULL COMMENT '分类名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 /***该产品砍价可得多少份*****/
 ALTER TABLE `moguying`.`plant_mall_product`
