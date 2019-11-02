@@ -68,9 +68,9 @@ meta:
 
 #第三方支付公司配置
 payment:
-  merNo: 0009500
-  version: 1.1
-  signType: CFCA
+  merNo: '0009500'
+  version: '1.1'
+  signType: 'CFCA'
   callback: https://api.zymoguying.com/payment/notify
   pfxfile: classpath:Hyswkj2019.pfx
   cerfile: classpath:sq_formal_encrypt.cer
