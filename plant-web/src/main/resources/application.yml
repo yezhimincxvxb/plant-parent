@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: pro
+    active: dev
   mvc:
     view:
       suffix: .html
@@ -141,6 +141,52 @@ bargain:
     rate: 20
   old:
     rate: 10
+
+---
+debug: true
+server:
+  port: 9000
+spring:
+  profiles: test
+  aop:
+    auto: true
+    proxy-target-class: true
+  datasource:
+    dynamic:
+      primary: write
+      datasource:
+        write:
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+        read:
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+      hikari:
+        max-pool-size: 100
+        min-idle: 20
+        idle-timeout: 1000
+  redis:
+    host: 192.168.5.220
+    port: 6869
+    password: AEnz2DF\Od,GWD#C*+
+    database: 0
+    timeout: 4000
+    lettuce:
+      pool:
+        min-idle: 20
+        max-idle: 120
+        max-wait: 2000
+
+#上传host
+upload:
+  save-path: /pages/upload
+  editor:
+    host: 192.168.5.220
+  host: 192.168.5.220
 
 ---
 debug: false

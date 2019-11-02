@@ -55,17 +55,17 @@ public class UserInviteServiceImpl implements UserInviteService {
     @Override
     //warning:这里返回的User为邀请人id,而不是初邀请人
     public ResultData<User> saveInviteInfo(UserInvite saveInfo) {
-        ResultData<User> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<User> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
-        if(saveInfo.getUserId() == null )
+        if (saveInfo.getUserId() == null)
             return resultData.setMessageEnum(MessageEnum.PARAMETER_ERROR);
 
         UserInvite userInvite = userInviteDAO.selectById(saveInfo.getUserId());
-        if(userInvite == null){
-            if(userInviteDAO.insert(saveInfo) > 0)
+        if (userInvite == null) {
+            if (userInviteDAO.insert(saveInfo) > 0)
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(new User(saveInfo.getInviteUserId()));
         } else {
-            if(userInviteDAO.incUserInviteInfo(saveInfo) > 0)
+            if (userInviteDAO.incUserInviteInfo(saveInfo) > 0)
                 return resultData.setMessageEnum(MessageEnum.UPDATE_INVITE_INFO_SUCCESS);
         }
 
@@ -77,8 +77,8 @@ public class UserInviteServiceImpl implements UserInviteService {
     public InviteStatistics inviteStatistics(Integer inviteUserId) {
         InviteStatistics statistics = new InviteStatistics();
         statistics.setInviteCount(userInviteDAO.countInvite(inviteUserId));
-        statistics.setInvitePlantAmount(userInviteDAO.sumInviteAmount(FieldEnum.PLANT_AMOUNT.getField(),inviteUserId));
-        statistics.setInviteAward(userInviteDAO.sumInviteAmount(FieldEnum.INVITE_AWARD.getField(),inviteUserId));
+        statistics.setInvitePlantAmount(userInviteDAO.sumInviteAmount(FieldEnum.PLANT_AMOUNT.getField(), inviteUserId));
+        statistics.setInviteAward(userInviteDAO.sumInviteAmount(FieldEnum.INVITE_AWARD.getField(), inviteUserId));
         User userInfo = userDAO.userInfoById(inviteUserId);
         statistics.setPhone(userInfo.getInviteCode());
         return statistics;
@@ -86,19 +86,19 @@ public class UserInviteServiceImpl implements UserInviteService {
 
     @Override
     @DS("read")
-    public PageResult<UserInvite> inviteList(Integer page, Integer size , Integer userId) {
+    public PageResult<UserInvite> inviteList(Integer page, Integer size, Integer userId) {
         IPage<UserInvite> pageResult = userInviteDAO.inviteList(new Page<>(page, size), userId);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @TriggerEvent(action = "invitedPlant")
     @Override
     @DS("write")
     public ResultData<TriggerEventResult<InnerMessage>> inviterPlanted(User plantedUser, Reap reap, User inviteUser) {
-        ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
         // 是否是渠道商
-        if(!inviteUser.getIsChannel()) {
+        if (!inviteUser.getIsChannel()) {
             // 用于在发站内信时使用
             UserInvite invite = new UserInvite();
             invite.setUserId(plantedUser.getId());
@@ -118,9 +118,7 @@ public class UserInviteServiceImpl implements UserInviteService {
             if (userMoneyService.updateAccount(awardOperator) == null) {
                 return resultData.setMessageEnum(MessageEnum.USER_MONEY_UPDATE_FAIL);
             }
-        }
-
-        if(inviteUser.getIsChannel()) {
+        } else {
             // 计算种植运营费用
             ReapFee reapFee = new ReapFee();
             reapFee.setInviteUid(plantedUser.getInviteUid());

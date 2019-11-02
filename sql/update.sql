@@ -344,7 +344,7 @@ CREATE TABLE `plant_bargain_detail` (
   `left_amount` decimal(15,2) NOT NULL COMMENT '剩余价格',
   `total_count` int(11) NOT NULL COMMENT '需砍总数',
   `bargain_count` int(11) NOT NULL COMMENT '已砍次数',
-  `state` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否关单[0 已关单；1 进行中]',
+  `state` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否关单[0 未关单；1 已关单]',
   `add_time` datetime NOT NULL COMMENT '生成时间',
   `bargain_time` datetime NOT NULL COMMENT '帮砍时间',
   `close_time` datetime NOT NULL COMMENT '关单时间',

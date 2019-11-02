@@ -122,6 +122,17 @@ public class BargainVo {
     @JSONField(ordinal = 19, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal rate;
 
+    /**
+     * 帮砍价格
+     */
+    @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal helpAmount;
+
+    /**
+     * 用户id
+     */
+    private Integer userId;
+
     public Integer getLeftNumber() {
         if (this.isLimit != null && this.isLimit == 0)
             this.leftNumber = null;
@@ -133,15 +144,4 @@ public class BargainVo {
             this.totalNumber = null;
         return totalNumber;
     }
-
-    /**
-     * 帮砍价格
-     */
-    @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
-    private BigDecimal helpAmount;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
 }

@@ -29,6 +29,7 @@ public class MoneyRecharge implements Serializable {
     private Integer userId;
 
     @JSONField(name = "user_name",deserialize = false)
+
     @TableField(exist = false)
     private String userName;
 
