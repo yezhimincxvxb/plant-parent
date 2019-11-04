@@ -2,9 +2,11 @@ package com.moguying.plant.core.entity.bargain.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.utils.BigDecimalSerialize;
+import com.moguying.plant.utils.IdCardSerialize;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 public class BargainVo {
@@ -21,7 +23,7 @@ public class BargainVo {
     /**
      * 用户名
      */
-    @JSONField(ordinal = 3)
+    @JSONField(ordinal = 3,serializeUsing = IdCardSerialize.class)
     private String phone;
 
     /**
@@ -105,20 +107,31 @@ public class BargainVo {
     /**
      * 开始时间
      */
-    @JSONField(ordinal = 17)
-    private String beginTime;
+    @JSONField(ordinal = 17,format = "yyyy-MM-dd HH:mm:ss")
+    private Date beginTime;
 
     /**
      * 结束时间
      */
-    @JSONField(ordinal = 18)
-    private String endTime;
+    @JSONField(ordinal = 18,format = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
 
     /**
      * 百分比
      */
     @JSONField(ordinal = 19, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal rate;
+
+    /**
+     * 帮砍价格
+     */
+    @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal helpAmount;
+
+    /**
+     * 用户id
+     */
+    private Integer userId;
 
     public Integer getLeftNumber() {
         if (this.isLimit != null && this.isLimit == 0)
@@ -131,10 +144,4 @@ public class BargainVo {
             this.totalNumber = null;
         return totalNumber;
     }
-
-    /**
-     * 帮砍价格
-     */
-    @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
-    private BigDecimal helpAmount;
 }

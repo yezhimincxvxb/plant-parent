@@ -41,27 +41,25 @@ import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.params.SetParams;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 
 @RestController
 @RequestMapping("/user")
 @Slf4j
 public class AUserController {
-
 
     @Autowired
     private UserService userService;
@@ -94,14 +92,14 @@ public class AUserController {
     private TemplateEngine templateEngine;
 
     @Autowired
-    private RedisUtil redisUtil;
+    private StringRedisTemplate redisUtil;
+
 
     @Value("${user.invite.bg.image}")
     private String inviteBgImagePath;
 
     @Value("${user.invite.icon}")
     private String inviteIcon;
-
 
     @Value("${user.invite.url}")
     private String inviteUrl;
@@ -124,56 +122,67 @@ public class AUserController {
 
     /**
      * 首页信息
-     *
-     * @return
      */
     @GetMapping
     public ResponseData<UserSummaryInfo> index(@LoginUserId Integer userId) {
+
+        ResponseData<UserSummaryInfo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+
+        // 用户不存在
         User user = userService.userInfoById(userId);
         if (null == user)
-            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
+            return responseData
+                    .setMessage(MessageEnum.USER_NOT_EXISTS.getMessage())
+                    .setState(MessageEnum.USER_NOT_EXISTS.getState());
 
+        // 首页显示信息
         UserSummaryInfo summaryInfo = userService.userSummaryInfo(user);
-
         if (summaryInfo != null)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), summaryInfo);
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState())
+                    .setData(summaryInfo);
+
+        return responseData;
     }
 
     /**
      * PC端用户中心信息
-     *
-     * @param userId
-     * @return
      */
     @GetMapping("/info")
     public ResponseData<User> userInfo(@LoginUserId Integer userId) {
+
+        ResponseData<User> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+
+        // 用户不存在
         User user = userService.userInfoById(userId);
         if (null == user)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
-        //隐藏id
+
+        // 隐藏id
         user.setId(null);
         user.setPhone(user.getPhone().substring(0, 3).concat("***").concat(user.getPhone().substring(7, 11)));
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), user);
+        return responseData.setData(user);
     }
 
 
     /**
      * 修改支付密码
-     *
-     * @param payPassword
-     * @return
      */
     @PutMapping(value = "/pay/password")
     public ResponseData<Integer> setPayPassword(@RequestBody PayPassword payPassword, @LoginUserId Integer userId) {
+        // 用户不存在
         User userInfo = userService.userInfoById(userId);
+        if (null == userInfo)
+            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
 
-        //原支付密码未设置
+        // 首次设置密码
         if (StringUtils.isEmpty(userInfo.getPayPassword()) && payPassword.getOldPayPassword() != null
                 && StringUtils.isNotEmpty(payPassword.getOldPayPassword())) {
             return new ResponseData<>(MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getMessage(), MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getState());
         }
 
+        // 旧密码错误
         if (!StringUtils.isEmpty(userInfo.getPayPassword())) {
             if (null == payPassword.getOldPayPassword())
                 return new ResponseData<>(MessageEnum.PAY_PASSWORD_IS_EMPTY.getMessage(), MessageEnum.PAY_PASSWORD_IS_EMPTY.getState());
@@ -182,8 +191,11 @@ public class AUserController {
             if (!newPayPassword.equals(userInfo.getPayPassword()))
                 return new ResponseData<>(MessageEnum.OLD_PAY_PASSWORD_ERROR.getMessage(), MessageEnum.OLD_PAY_PASSWORD_ERROR.getState());
         }
+
+        // 短信验证
         if (messageService.validateMessage(userInfo.getPhone(), payPassword.getCode()) <= 0)
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
+
         User update = new User();
         update.setPayPassword(payPassword.getPayPassword());
         ResultData<User> resultData = userService.saveUserInfo(userId, update);
@@ -193,10 +205,6 @@ public class AUserController {
 
     /**
      * 忘记支付密码
-     *
-     * @param userId
-     * @param forgetPayPassword
-     * @return
      */
     @PutMapping("/forget/password")
     public ResponseData<Integer> forgetPassword(@LoginUserId Integer userId, @RequestBody ForgetPayPassword forgetPayPassword) {
@@ -879,7 +887,6 @@ public class AUserController {
      * @param userId
      */
     @GetMapping("/invite/poster")
-    @SuppressWarnings("unchecked")
     public ResponseData<UserPoster> invitePosterImage(@LoginUserId Integer userId, HttpServletResponse response) {
         ClassPathResource resource = new ClassPathResource(inviteBgImagePath);
         ClassPathResource iconResource = new ClassPathResource(inviteIcon);
@@ -887,12 +894,10 @@ public class AUserController {
         ResponseData<UserPoster> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
         try {
             User user = userService.userInfoById(userId);
-            if (!resource.getFile().exists() || !iconResource.getFile().exists())
-                return responseData;
             //获取背景
-            BufferedImage bgImage = ImageIO.read(resource.getFile());
+            BufferedImage bgImage = ImageIO.read(resource.getInputStream());
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-            Map hints = new HashMap<>();
+            Map<EncodeHintType,Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hints.put(EncodeHintType.MARGIN, 1);
             int width = 142, height = 142;
@@ -904,7 +909,7 @@ public class AUserController {
                 }
             }
             //添加中间icon
-            BufferedImage iconImage = ImageIO.read(iconResource.getFile());
+            BufferedImage iconImage = ImageIO.read(iconResource.getInputStream());
             for (int x = 0; x < 30; x++) {
                 for (int y = 0; y < 30; y++) {
                     bgImage.setRGB(x + 166, y + 1003, iconImage.getRGB(x, y));
@@ -934,9 +939,8 @@ public class AUserController {
         if (null == userInfo)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
 
-        Jedis jedis = redisUtil.getJedis();
-        String accessToken = jedis.get("access_token");
-        String ticket = jedis.get("ticket");
+        String accessToken = redisUtil.opsForValue().get("access_token");
+        String ticket = redisUtil.opsForValue().get("ticket");
         if (null == accessToken) {
             Map<String, Object> params = new HashMap<>();
             params.put("appid", wxAppid);
@@ -947,11 +951,8 @@ public class AUserController {
             String accessTokenStr = CurlUtil.INSTANCE.httpRequest(tokenUrl, paramStr, "GET");
             JSONObject jsonObject = JSONObject.parseObject(accessTokenStr);
             if (null != jsonObject && jsonObject.getIntValue("errorCode") == 0) {
-                SetParams setParams = new SetParams();
-                setParams.nx();
-                setParams.ex(jsonObject.getIntValue("expires_in"));
                 accessToken = jsonObject.getString("access_token");
-                jedis.set("access_token", accessToken, setParams);
+                redisUtil.opsForValue().setIfAbsent("access_token", accessToken, Duration.ofSeconds(jsonObject.getLongValue("expires_in")));
             }
         }
 
@@ -963,11 +964,8 @@ public class AUserController {
             String ticketStr = CurlUtil.INSTANCE.httpRequest(ticketUrl, CFCARAUtil.joinMapValue(params, '&'), "GET");
             JSONObject jsonObject = JSONObject.parseObject(ticketStr);
             if (null != jsonObject && jsonObject.getIntValue("errorCode") == 0) {
-                SetParams setParams = new SetParams();
-                setParams.nx();
-                setParams.ex(jsonObject.getIntValue("expires_in"));
                 ticket = jsonObject.getString("ticket");
-                jedis.set("ticket", ticket, setParams);
+                redisUtil.opsForValue().setIfAbsent("ticket", ticket, Duration.ofSeconds(jsonObject.getLongValue("expires_in")));
             }
         }
 
@@ -978,7 +976,6 @@ public class AUserController {
         signParams.put("url", requestShare.getUrl());
         String sign = CommonUtil.INSTANCE.sha1Sign(CFCARAUtil.joinMapValue(signParams, '&'));
         WeChatShare share = new WeChatShare(signParams.get("timestamp").toString(), signParams.get("noncestr").toString(), sign);
-        redisUtil.releaseJedis(jedis);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), share);
     }
 

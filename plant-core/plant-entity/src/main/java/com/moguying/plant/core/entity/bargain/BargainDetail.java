@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * 砍价订单
  */
 @Data
+@TableName("plant_bargain_detail")
 public class BargainDetail implements Serializable {
 
     private static final long serialVersionUID = 6528830212742119899L;

@@ -3,10 +3,9 @@ package com.moguying.plant.core.scheduled.task;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.service.mall.MallOrderService;
+import com.moguying.plant.utils.ApplicationContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
 
 public class CloseMallPayOrder extends CloseOrderItem {
     private Logger log = LoggerFactory.getLogger(CloseSeedPayOrder.class);
@@ -22,8 +21,7 @@ public class CloseMallPayOrder extends CloseOrderItem {
     @Override
     public void run() {
         log.debug("close mall pay order:{}",toString());
-        WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
-        MallOrderService mallOrderService = context.getBean(MallOrderService.class);
+        MallOrderService mallOrderService = ApplicationContextUtil.getBean(MallOrderService.class);
         mallOrderService.cancelOrder(new CancelOrder(id, MessageEnum.MALL_ORDER_TIMEOUT_CLOSED.getMessage()),null);
     }
 }

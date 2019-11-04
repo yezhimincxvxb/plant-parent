@@ -93,7 +93,7 @@ public class BAdminMenuController {
     @GetMapping("/tree")
     public ResponseData<MenuTree> menuTree() {
         MenuTree tree = new MenuTree();
-        List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuService.menus(null));
+        List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuService.menus(new AdminMenu()));
         tree.setTree(menus);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),tree);
     }

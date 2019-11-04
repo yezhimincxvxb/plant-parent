@@ -183,12 +183,7 @@ public class BAdvController {
 
         String path = uploadSavePath.concat(pathMap.get(savePath));
         Map<String,String> result = new HashMap<>();
-        String host = "";
-
-        if(null != uploadHost && !StringUtils.isBlank(uploadHost))
-            host = request.getScheme() + "://" + uploadHost;
-        else if(savePath.equals("editor"))
-            host = "https://" + editorUploadHost;
+        String host = uploadHost;
 
         try {
             String subFix = "";

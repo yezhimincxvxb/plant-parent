@@ -163,7 +163,7 @@ public class ReapServiceImpl<T> implements ReapService {
         where.setUserId(userId);
         where.setState(ReapEnum.REAP_DONE.getState());
         where.setSeedType(seedType);
-        List<Reap> reapList = reapDAO.selectList(new QueryWrapper<>(where));
+        List<Reap> reapList = reapDAO.selectSelective(where);
         if (null == reapList)
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
         if (reapList.size() <= 0)

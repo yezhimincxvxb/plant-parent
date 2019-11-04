@@ -29,7 +29,9 @@ public interface BargainDetailService {
 
     PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId);
 
-    BargainVo productInfo(Integer userId, Integer orderId);
+    PageResult<BargainVo> successList(Integer page, Integer size, Integer userId);
+
+    BargainVo productInfoByOrderId(Integer orderId);
 
     PageResult<BargainVo> ownLog(Integer page, Integer size, Integer userId);
 

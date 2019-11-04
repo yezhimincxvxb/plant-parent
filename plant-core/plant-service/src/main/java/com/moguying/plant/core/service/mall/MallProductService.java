@@ -40,4 +40,6 @@ public interface MallProductService {
     PageResult<BargainVo> productList(Integer page, Integer size);
 
     BargainVo productInfo(Integer productId);
+
+    Integer updateProductToBargain(MallProduct mallProduct);
 }

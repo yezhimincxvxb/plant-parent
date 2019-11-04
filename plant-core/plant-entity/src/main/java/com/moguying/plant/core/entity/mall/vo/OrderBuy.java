@@ -1,7 +1,5 @@
 package com.moguying.plant.core.entity.mall.vo;
 
-import com.moguying.plant.core.entity.mall.vo.BuyProduct;
-
 import java.util.List;
 
 public class OrderBuy {

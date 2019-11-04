@@ -24,6 +24,8 @@ public interface UserFertilizerDAO extends BaseDAO<UserFertilizer> {
 
     IPage<UserFertilizerInfo> userFertilizers(Page<UserFertilizerInfo> page, @Param("wq") FertilizerUseCondition condition);
 
+    List<UserFertilizerInfo> userFertilizers(@Param("wq") FertilizerUseCondition condition);
+
     List<UserFertilizerInfo> selectByIds(@Param("idList") List<Integer> idList);
 
     Integer updateStateByIds(@Param("idList") List<Integer> idList, @Param("userFertilizer") UserFertilizer userFertilizer);

@@ -329,8 +329,9 @@ CREATE TABLE `plant_reap_fee_param` (
   `first_plant_rate` decimal(15,3) NOT NULL COMMENT '首种费用结算比率',
   `plant_rate` decimal(15,3) NOT NULL COMMENT '普种费用结算比率',
   `seed_type` int(11) NOT NULL COMMENT '菌包种类',
+  `is_delete` tinyint(1) NOT NULL COMMENT '1已删除，0未删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 /***砍价详情*****/
 CREATE TABLE `plant_bargain_detail` (
@@ -343,7 +344,7 @@ CREATE TABLE `plant_bargain_detail` (
   `left_amount` decimal(15,2) NOT NULL COMMENT '剩余价格',
   `total_count` int(11) NOT NULL COMMENT '需砍总数',
   `bargain_count` int(11) NOT NULL COMMENT '已砍次数',
-  `state` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否关单[0 已关单；1 进行中]',
+  `state` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否关单[0 未关单；1 已关单]',
   `add_time` datetime NOT NULL COMMENT '生成时间',
   `bargain_time` datetime NOT NULL COMMENT '帮砍时间',
   `close_time` datetime NOT NULL COMMENT '关单时间',
@@ -373,7 +374,7 @@ CREATE TABLE `plant_mall_product_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type_name` varchar(255) DEFAULT NULL COMMENT '分类名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 /***该产品砍价可得多少份*****/
 ALTER TABLE `moguying`.`plant_mall_product`

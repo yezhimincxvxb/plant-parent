@@ -254,6 +254,10 @@ public class Seed implements Serializable {
     private Date fullTime;
 
 
+    @TableField
+    private Boolean isHot;
+
+
     /**
      * 菌包分类信息
      */

@@ -141,6 +141,8 @@ public class BlockServiceImpl extends ServiceImpl<BlockDAO,Block> implements Blo
         blockDetails.forEach((x)->{
             BigDecimal interest = InterestUtil.INSTANCE.calInterest(x.getSeedPrice(), x.getInterestRates(), x.getSeedGrowDays());
             x.setSaleAmount(x.getSeedPrice().add(interest));
+            double percent = new Double(x.getHasCount()) / x.getTotalCount();
+            x.setPlantPercent((int) (percent * 100));
         });
         return blockDetails;
     }

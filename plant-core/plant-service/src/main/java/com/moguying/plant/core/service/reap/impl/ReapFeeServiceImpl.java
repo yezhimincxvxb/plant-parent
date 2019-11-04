@@ -57,7 +57,7 @@ public class ReapFeeServiceImpl implements ReapFeeService {
         if(null == reapFeeParam) return resultData;
         Integer isFirst = reapDAO.countByUserIdAndGrowUpDays(reapFee.getUserId(),reap.getSeedGrowDays());
         BigDecimal feeAmount;
-        if (isFirst == 1) {
+        if (isFirst == 1 && reapFeeParam.getFirstPlantRate().compareTo(BigDecimal.ZERO) > 0) {
             feeAmount = reap.getPreAmount().multiply(reapFeeParam.getFirstPlantRate());
             reapFee.setIsFirst(true);
         } else {

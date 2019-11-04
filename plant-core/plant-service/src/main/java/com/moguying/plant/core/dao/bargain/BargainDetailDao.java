@@ -23,7 +23,9 @@ public interface BargainDetailDao extends BaseMapper<BargainDetail> {
 
     List<SendNumberVo> sendNumber();
 
-    IPage<BargainVo> doingList(Page<BargainVo> page, @Param("userId") Integer userId, @Param("orderId") Integer orderId);
+    IPage<BargainVo> doingList(Page<BargainVo> page, @Param("userId") Integer userId);
+
+    IPage<BargainVo> successList(Page<BargainVo> page, @Param("userId") Integer userId);
 
     IPage<BargainVo> ownLog(Page<BargainVo> page, @Param("userId") Integer userId);
 

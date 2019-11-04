@@ -11,16 +11,16 @@
   </resultMap>
 
   <resultMap id="BaseResultInfo" type="com.moguying.plant.core.entity.reap.ReapFee" extends="BaseResultMap">
-    <collection property="user" ofType="User">
+    <collection property="user" ofType="com.moguying.plant.core.entity.user.User">
       <result column="phone" property="phone"/>
       <result column="real_name" property="realName"/>
       <result column="reg_time" property="regTime"/>
     </collection>
-    <collection property="inviteUser" ofType="User">
+    <collection property="inviteUser" ofType="com.moguying.plant.core.entity.user.User">
       <result column="invite_phone" property="phone"/>
       <result column="invite_real_name" property="realName"/>
     </collection>
-    <collection property="reap" ofType="Reap">
+    <collection property="reap" ofType="com.moguying.plant.core.entity.reap.Reap">
       <result column="seed_grow_days" property="seedGrowDays"/>
       <result column="add_time" property="addTime"/>
       <result column="plant_count" property="plantCount"/>

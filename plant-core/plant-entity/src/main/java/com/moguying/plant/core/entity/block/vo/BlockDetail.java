@@ -56,4 +56,10 @@ public class BlockDetail implements Serializable {
     @JSONField(serialize = false)
     private BigDecimal interestRates;
 
+    @JSONField
+    private Integer totalCount;
+
+    @JSONField
+    private Integer hasCount;
+
 }

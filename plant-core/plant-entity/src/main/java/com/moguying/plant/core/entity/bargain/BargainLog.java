@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@TableName("plant_bargain_log")
 public class BargainLog implements Serializable {
 
     private static final long serialVersionUID = 2324954044983949274L;

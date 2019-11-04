@@ -11,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -51,8 +52,8 @@ public class CFCARAUtil {
      *
      */
     public static String signMessageByP1(String message, String pfxPath, String passWord) throws Exception{
-        File file = new ClassPathResource(pfxPath).getFile();
-        PrivateKey userPriKey = KeyUtil.getPrivateKeyFromPFX(new FileInputStream(file), passWord);
+        InputStream inputStream = new ClassPathResource(pfxPath).getInputStream();
+        PrivateKey userPriKey = KeyUtil.getPrivateKeyFromPFX(inputStream, passWord);
         Signature signature = new Signature();
         byte[] base64P7SignedData = signature.p1SignMessage(Mechanism.SHA256_RSA, message.getBytes("UTF-8"), userPriKey, session);
         return new String(base64P7SignedData);
@@ -67,8 +68,8 @@ public class CFCARAUtil {
      * @throws Exception
      */
     public static boolean verifyMessageByP1(String beforeSignedData, String afterSignedData, String certPath) throws Exception{
-        File file = new ClassPathResource(certPath).getFile();
-        X509Cert cert = new X509Cert(new FileInputStream(file));
+        InputStream file = new ClassPathResource(certPath).getInputStream();
+        X509Cert cert = new X509Cert(file);
         PublicKey publicKey = cert.getPublicKey();
         Signature signature = new Signature();
         return signature.p1VerifyMessage(Mechanism.SHA256_RSA, beforeSignedData.getBytes("UTF-8"), afterSignedData.getBytes("UTF-8"), publicKey, session);
@@ -111,8 +112,8 @@ public class CFCARAUtil {
      * @throws Exception
      */
     public static String encryptMessageByRSA_PKCS(String message, String certPath) throws Exception{
-        File file = new ClassPathResource(certPath).getFile();
-        X509Cert cert = new X509Cert(new FileInputStream(file));
+        InputStream file = new ClassPathResource(certPath).getInputStream();
+        X509Cert cert = new X509Cert(file);
         PublicKey userPubKey = cert.getPublicKey();
         Mechanism mechanism = new Mechanism(Mechanism.RSA_PKCS);
         byte[] encryptedData = EncryptUtil.encrypt(mechanism, userPubKey, message.getBytes("UTF-8"), session);
@@ -146,8 +147,8 @@ public class CFCARAUtil {
      * @throws Exception
      */
     public static String decryptMessageByRSA_PKCS(String message, String pfxPath, String passWord) throws Exception{
-        File file = new ClassPathResource(pfxPath).getFile();
-        PrivateKey userPriKey = KeyUtil.getPrivateKeyFromPFX(new FileInputStream(file), passWord);
+        InputStream file = new ClassPathResource(pfxPath).getInputStream();
+        PrivateKey userPriKey = KeyUtil.getPrivateKeyFromPFX(file, passWord);
         Mechanism mechanism = new Mechanism(Mechanism.RSA_PKCS);
         byte[] dataBytes = message.getBytes("UTF-8");
         byte[] encryptedData = EncryptUtil.decrypt(mechanism, userPriKey, dataBytes, session);

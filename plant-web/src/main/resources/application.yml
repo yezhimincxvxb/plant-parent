@@ -1,34 +1,6 @@
 spring:
   profiles:
     active: dev
-
----
-debug: false
-server:
-  port: 9000
-spring:
-  profiles: dev
-  aop:
-    auto: true
-    proxy-target-class: true
-  datasource:
-    dynamic:
-      primary: write
-      datasource:
-        write:
-          username: root
-          password: 123456
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.108:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
-        read:
-          username: root
-          password: 123456
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.108:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
-      hikari:
-        max-pool-size: 100
-        min-idle: 20
-        idle-timeout: 1000
   mvc:
     view:
       suffix: .html
@@ -36,39 +8,21 @@ spring:
     pathmatch:
       use-suffix-pattern: true
   http:
-    encoding:
-      charset: UTF-8
-      force: true
+      encoding:
+        charset: UTF-8
+        force: true
   thymeleaf:
-    encoding: UTF-8
-    prefix: classpath:/views/
-    mode: HTML
-    servlet:
-      content-type: text/html
-    cache: false
-  redis:
-    host: 192.168.5.220
-    port: 6869
-    password: AEnz2DF\Od,GWD#C*+
-    database: 0
-    timeout: 4000
-    lettuce:
-      pool:
-        min-idle: 20
-        max-idle: 120
-        max-wait: 2000
+      encoding: UTF-8
+      prefix: classpath:/views/
+      mode: HTML
+      servlet:
+        content-type: text/html
+      cache: false
   servlet:
     multipart:
       enabled: true
       max-file-size: 100MB
       max-request-size: 100MB
-  data:
-    mongodb:
-      database: activity
-      host: 192.168.5.220
-      port: 27017
-
-
 mybatis-plus:
   global-config:
     db-config:
@@ -78,9 +32,15 @@ mybatis-plus:
   type-aliases-package: com.moguying.plant.core.entity
   configuration:
     map-underscore-to-camel-case: true
-
 cache:
   default-ttl: 300 #默认缓存时长
+
+logging:
+  level:
+    com.moguying: debug
+  file: ./logs/plant-web.log
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
 
 #短信相关
 message:
@@ -101,7 +61,6 @@ message:
     send: 【蘑菇营】您在商城购买产品已发货，详情可登录app查看或咨询客服400-669-0808！
   fertilizer:
     send: 【蘑菇营】恭喜您注册成功！蘑菇营为答谢您的支持，特奉上16元满减券，券已发放至你的账户中，请登录查收，开启趣味种植之旅~
-
 #富文本添加图片自适应
 meta:
   content:
@@ -109,12 +68,12 @@ meta:
 
 #第三方支付公司配置
 payment:
-  merNo: 0009500
-  version: 1.1
-  signType: CFCA
+  merNo: '0009500'
+  version: '1.1'
+  signType: 'CFCA'
   callback: https://api.zymoguying.com/payment/notify
-  pfxfile: Hyswkj2019.pfx
-  cerfile: sq_formal_encrypt.cer
+  pfxfile: classpath:Hyswkj2019.pfx
+  cerfile: classpath:sq_formal_encrypt.cer
   password: Hyswkj2019
   return:
     url:
@@ -136,16 +95,6 @@ order:
   expire:
     time: 300
 
-#上传host
-upload:
-  save-path: /moguying/upload
-  editor:
-    host: 192.168.5.220
-  host: 192.168.5.220
-
-
-
-
 #田园种植
 farmer:
   energy:
@@ -154,15 +103,13 @@ farmer:
       min: 84600
       max: 127800
     lose: 129600
-
 #邀请设置
 user:
   invite:
     bg:
-      image: /images/user_private_invite_bg.jpg
-    icon: /images/invite_icon.png
+      image: classpath:/images/user_private_invite_bg.jpg
+    icon: classpath:/images/invite_icon.png
     url: https://m.zymoguying.com/index/promote/invitecode/
-
 #微信配置
 wx:
   appid: wx6bc272547276f111
@@ -195,9 +142,139 @@ bargain:
   old:
     rate: 10
 
+---
+debug: true
+server:
+  port: 9000
+spring:
+  profiles: test
+  aop:
+    auto: true
+    proxy-target-class: true
+  datasource:
+    dynamic:
+      primary: write
+      datasource:
+        write:
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+        read:
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+      hikari:
+        max-pool-size: 100
+        min-idle: 20
+        idle-timeout: 1000
+  redis:
+    host: 192.168.5.220
+    port: 6869
+    password: AEnz2DF\Od,GWD#C*+
+    database: 0
+    timeout: 4000
+    lettuce:
+      pool:
+        min-idle: 20
+        max-idle: 120
+        max-wait: 2000
 
-logging:
-  level:
-    com.moguying: debug
-  file: ./logs/plant-web.log
+#上传host
+upload:
+  save-path: /pages/upload
+  editor:
+    host: 192.168.5.220
+  host: 192.168.5.220
+
+---
+debug: false
+server:
+  port: 9000
+spring:
+  profiles: dev
+  aop:
+    auto: true
+    proxy-target-class: true
+  datasource:
+    dynamic:
+      primary: write
+      datasource:
+        write:
+          username: write
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+        read:
+          username: write
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+      hikari:
+        max-pool-size: 100
+        min-idle: 20
+        idle-timeout: 1000
+  redis:
+    host: 192.168.5.220
+    port: 6869
+    password: AEnz2DF\Od,GWD#C*+
+    database: 0
+    timeout: 4000
+    lettuce:
+      pool:
+        min-idle: 20
+        max-idle: 120
+        max-wait: 2000
+#上传host
+upload:
+  save-path: /pages/upload
+  editor:
+    host: 192.168.5.220
+  host: 192.168.5.220
+
+---
+debug: false
+server:
+  port: 9000
+spring:
+  profiles: pro
+  aop:
+    auto: true
+    proxy-target-class: true
+  datasource:
+    dynamic:
+      primary: write
+      datasource:
+        write:
+          username: dbManager
+          password: Ld1*7@&13Ai+ab
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.18.146.179:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+        read:
+          username: dbManager
+          password: Ld1*7@&13Ai+ab
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.18.146.178:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+      hikari:
+        max-pool-size: 100
+        min-idle: 20
+        idle-timeout: 1000
+  redis:
+    host: 172.18.146.177
+    port: 6869
+    password: AEnz2DF\Od,GWD#C*+
+    database: 0
+    timeout: 4000
+    lettuce:
+      pool:
+        min-idle: 20
+        max-idle: 120
+        max-wait: 2000
+#上传host
+upload:
+  save-path: /pages/upload
+  editor:
+    host: http://image.zymoguying.com
+  host: http://image.zymoguying.com
 
