@@ -226,6 +226,11 @@ spring:
         min-idle: 20
         max-idle: 120
         max-wait: 2000
+  data:
+    mongodb:
+      database: activity
+      host: 192.168.5.220
+      port: 27017
 #上传host
 upload:
   save-path: /pages/upload
