@@ -83,6 +83,8 @@ public class TasteServiceImpl implements TasteService {
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
         if(!seed.getTypeInfo().getIsForNew())
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_FOR_TASTE);
+        if(1 != buyOrder.getCount())
+            return resultData.setMessageEnum(MessageEnum.TASTE_BUY_SEED_COUNT_ERROR);
         //TODO 是否已参于过
         ResultData<BuyOrderResponse> buyResult = plantOrderService.plantOrder(buyOrder, userId, true);
         if(!buyResult.getMessageEnum().equals(MessageEnum.SUCCESS))
