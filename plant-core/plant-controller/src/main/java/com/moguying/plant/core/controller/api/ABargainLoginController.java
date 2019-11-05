@@ -106,7 +106,7 @@ public class ABargainLoginController {
      */
     @PostMapping("/help/chop")
     public ResponseData<BargainVo> helpChop(@LoginUserId Integer userId, @RequestBody BargainDetail bargainDetail) {
-        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), null);
+        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
 
         // 参数
         if (bargainDetail == null || bargainDetail.getId() == null || bargainDetail.getUserId() == null)
@@ -142,7 +142,7 @@ public class ABargainLoginController {
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());
 
         // 砍价口令
-        if (Objects.nonNull(bargainDetail.getSymbol()) && bargainDetail.getSymbol().equals(detail.getSymbol()))
+        if (!Objects.equals(bargainDetail.getSymbol(), detail.getSymbol()))
             return responseData
                     .setMessage(MessageEnum.SYMBOL_ERROR.getMessage())
                     .setState(MessageEnum.SYMBOL_ERROR.getState());
