@@ -74,7 +74,7 @@ public class BTasteController {
     @PostMapping("/free/state")
     public ResponseData<Boolean> setTaste(@RequestBody Taste taste){
         if (Objects.isNull(taste) || Objects.isNull(taste.getId()) || Objects.isNull(taste.getState()))
-            new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+            new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
 
         if(tasteService.setState(taste))
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());

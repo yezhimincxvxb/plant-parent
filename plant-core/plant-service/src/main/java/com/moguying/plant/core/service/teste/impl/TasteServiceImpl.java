@@ -188,9 +188,9 @@ public class TasteServiceImpl implements TasteService {
     @Override
     public Boolean setState(Taste taste) {
         Query query = new Query(Criteria.where("id").is(taste.getId()));
-        Taste one = mongoTemplate.findOne(query,Taste.class);
-        if(null != one && one.getState() == 0) {
-            UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("state", taste.getState()), Taste.class);
+        TasteApply one = mongoTemplate.findOne(query,TasteApply.class);
+        if(null != one) {
+            UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("state", taste.getState()), TasteApply.class);
             return updateResult.getModifiedCount() > 0;
         }
         return false;
