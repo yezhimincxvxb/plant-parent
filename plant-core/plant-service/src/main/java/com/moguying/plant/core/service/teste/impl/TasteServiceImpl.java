@@ -12,7 +12,6 @@ import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.reap.Reap;
@@ -23,7 +22,6 @@ import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.entity.taste.vo.TasteReap;
 import com.moguying.plant.core.entity.user.User;
-import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.teste.TasteService;
 import com.moguying.plant.utils.DateUtil;
@@ -31,7 +29,6 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -41,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -182,8 +180,18 @@ public class TasteServiceImpl implements TasteService {
         Taste taste = mongoTemplate.findOne(query,Taste.class);
         if(null != taste) {
             UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("isShow", !taste.getIsShow()), Taste.class);
-            if(updateResult.getModifiedCount() > 0)
-                return true;
+            return updateResult.getModifiedCount() > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean setState(Taste taste) {
+        Query query = new Query(Criteria.where("id").is(taste.getId()));
+        Taste one = mongoTemplate.findOne(query,Taste.class);
+        if(null != one && one.getState() == 0) {
+            UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("state", taste.getState()), Taste.class);
+            return updateResult.getModifiedCount() > 0;
         }
         return false;
     }
@@ -195,17 +203,21 @@ public class TasteServiceImpl implements TasteService {
         Optional<User> userOptional = Optional.ofNullable(user);
         if(!userOptional.isPresent())
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
-        TasteApply apply = new TasteApply(userId,taste.getId(), ApiEnum.TASTE_APPLY.getType());
 
+        TasteApply apply = new TasteApply(userId,taste.getId(), ApiEnum.TASTE_APPLY.getType());
         Taste tasteInfo = mongoTemplate.findOne(new Query(Criteria.where("id").is(taste.getId())), Taste.class);
         Long count = Optional.ofNullable(tasteInfo).map(Taste::getTasteCount).orElse(0L);
         AtomicLong atomicLong = new AtomicLong(count);
         if(count <= 0)
             return resultData.setMessageEnum(MessageEnum.TASTE_COUNT_NOT_ENOUGH);
+
         boolean exist = mongoTemplate.exists(new Query(Criteria.where("userId").is(userId).and("tasteId").is(taste.getId())),TasteApply.class);
         if(exist)
             return resultData.setMessageEnum(MessageEnum.TASTE_HAS_APPLY);
+
         MallProduct product = mallProductDAO.selectById(tasteInfo.getProductId());
+        if (Objects.isNull(product)) return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
+
         apply.setPhone(userOptional.map(User::getPhone).orElse(""));
         apply.setProductName(product.getName());
         apply.setApplyTime(new Date());

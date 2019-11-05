@@ -10,6 +10,8 @@ import com.moguying.plant.core.service.teste.TasteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/taste")
 public class BTasteController {
@@ -66,5 +68,18 @@ public class BTasteController {
         return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
     }
 
+    /**
+     * 设置是否申请通过
+     */
+    @PostMapping("/free/state")
+    public ResponseData<Boolean> setTaste(@RequestBody Taste taste){
+        if (Objects.isNull(taste) || Objects.isNull(taste.getId()) || Objects.isNull(taste.getState()))
+            new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+
+        if(tasteService.setState(taste))
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+    }
 
 }

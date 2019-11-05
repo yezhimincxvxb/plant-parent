@@ -17,13 +17,14 @@
         <result column="add_time" property="addTime"/>
         <result column="bargain_time" property="bargainTime"/>
         <result column="close_time" property="closeTime"/>
+        <result column="symbol" property="symbol"/>
         <result column="order_number" property="orderNumber"/>
     </resultMap>
 
     <!-- 基本查询字段 -->
     <sql id="BaseColumnList">
    id, user_id, product_id, product_count, total_amount, bargain_amount, left_amount,
-   total_count, bargain_count, state, add_time, bargain_time, close_time, order_number
+   total_count, bargain_count, state, add_time, bargain_time, close_time, symbol, order_number
   </sql>
 
     <!-- 用户砍价详情 -->

@@ -4,11 +4,13 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import com.moguying.plant.utils.IdCardSerialize;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@Accessors(chain = true)
 public class BargainVo {
 
     @JSONField(ordinal = 1)
@@ -127,6 +129,12 @@ public class BargainVo {
      */
     @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal helpAmount;
+
+    /**
+     * 砍价口令
+     */
+    @JSONField(ordinal = 21)
+    private String symbol;
 
     /**
      * 用户id

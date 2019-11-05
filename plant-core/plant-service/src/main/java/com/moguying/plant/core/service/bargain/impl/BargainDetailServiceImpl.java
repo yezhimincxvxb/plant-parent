@@ -15,6 +15,7 @@ import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
+import com.moguying.plant.core.entity.bargain.vo.ShareVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallOrderDetail;
 import com.moguying.plant.core.entity.mall.MallProduct;
@@ -24,6 +25,7 @@ import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -96,7 +98,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("write")
     @Transactional
-    public BargainDetail shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
+    public ShareVo shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
 
         if (buyProduct == null || product == null) return null;
 
@@ -112,7 +114,11 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             // 只获取第一单
             BargainDetail detail = details.get(0);
             detail.setMessage("分享成功");
-            return detail;
+            return new ShareVo()
+                    .setOrderId(detail.getId())
+                    .setUserId(detail.getUserId())
+                    .setSymbol(detail.getSymbol())
+                    .setMessage("分享成功");
         }
 
         // 总价、第一刀砍了多少
@@ -129,6 +135,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         add.setLeftAmount(totalAmount.subtract(bargainAmount));
         add.setTotalCount(product.getBargainCount());
         add.setBargainCount(1);
+        add.setSymbol(RandomStringUtils.random(12, true, true));
         add.setAddTime(new Date());
         add.setBargainTime(new Date());
         add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
@@ -143,8 +150,11 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         log.setHelpAmount(bargainAmount);
         log.setHelpTime(new Date());
         if (bargainLogDao.insert(log) > 0) {
-            add.setMessage("首次分享");
-            return add;
+            return new ShareVo()
+                    .setOrderId(add.getId())
+                    .setUserId(add.getUserId())
+                    .setSymbol(add.getSymbol())
+                    .setMessage("首次分享");
         }
         return null;
     }
@@ -169,7 +179,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         update = new BargainDetail();
 
         // 帮砍价格
-        BigDecimal helpAmount = BigDecimal.ZERO;
+        BigDecimal helpAmount;
         // 最后一刀
         if (detail.getBargainCount() + 1 == detail.getTotalCount()) {
             // 订单流水号

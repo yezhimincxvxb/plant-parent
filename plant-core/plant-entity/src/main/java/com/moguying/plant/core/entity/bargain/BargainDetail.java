@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.Date;
  */
 @Data
 @TableName("plant_bargain_detail")
+@Accessors(chain = true)
 public class BargainDetail implements Serializable {
 
     private static final long serialVersionUID = 6528830212742119899L;
@@ -113,10 +115,17 @@ public class BargainDetail implements Serializable {
     private Date closeTime;
 
     /**
-     * 订单号
+     * 砍价口令
      */
     @TableField
     @JSONField(ordinal = 14)
+    private String symbol;
+
+    /**
+     * 订单号
+     */
+    @TableField
+    @JSONField(ordinal = 15)
     private String orderNumber;
 
 
