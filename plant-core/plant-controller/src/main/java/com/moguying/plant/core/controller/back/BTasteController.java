@@ -5,7 +5,9 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.taste.PopMessage;
 import com.moguying.plant.core.entity.taste.Taste;
+import com.moguying.plant.core.service.teste.PopMessageService;
 import com.moguying.plant.core.service.teste.TasteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,63 @@ public class BTasteController {
 
     @Autowired
     private TasteService tasteService;
+
+    @Autowired
+    private PopMessageService popMessageService;
+
+
+    /**
+     * 添加弹幕信息
+     * @param message
+     * @return
+     */
+    @PostMapping("/pop")
+    public ResponseData<PopMessage> savePopMessage(@RequestBody PopMessage message) {
+        ResultData<Boolean> resultData = popMessageService.savePopMessage(message);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    }
+
+    /**
+     * 删除弹幕信息
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/pop/{id}")
+    public ResponseData<Boolean> deletePopMessage(@PathVariable String id){
+        ResultData<Boolean> b = popMessageService.deletePopMessage(id);
+        return new ResponseData<>(b.getMessageEnum().getMessage(),b.getMessageEnum().getState());
+    }
+
+    /**
+     * 设置弹幕使用状态
+     * @param id
+     * @return
+     */
+    @PostMapping("/pop/{id}")
+    public ResponseData<Boolean> setUseState(@PathVariable String id){
+        ResultData<Boolean> resultData = popMessageService.setUseState(id);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    }
+
+
+    /**
+     * 查询弹幕列表
+     * @param search
+     * @return
+     */
+    @PostMapping("/pop/list")
+    public PageResult<PopMessage> popMessagePageResult(@RequestBody PageSearch<PopMessage> search){
+        return popMessageService.popMessagePageResult(search.getPage(),search.getSize(),search.getWhere());
+    }
+
+
+
+
+
+
+
+
+
 
 
     /**

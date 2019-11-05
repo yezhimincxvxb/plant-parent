@@ -160,7 +160,8 @@ public enum  MessageEnum {
     TASTE_APPLY_NOT_EXIST("试吃申请记录未查找到",10154),
     TASTE_HAS_APPLY("已申请试吃，请耐心等待结果",10155),
     TASTE_COUNT_NOT_ENOUGH("试吃份数不足，请尝试其他商品",10156),
-    TASTE_BUY_SEED_COUNT_ERROR("体验购买份数只能1份",10157);
+    TASTE_BUY_SEED_COUNT_ERROR("体验购买份数只能1份",10157),
+    POP_MESSAGE_ICON_EMPTY("弹幕ICON不能为空",10158);
 
 
 

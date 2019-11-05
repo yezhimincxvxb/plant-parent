@@ -8,10 +8,12 @@ import com.moguying.plant.core.entity.seed.vo.BuyOrder;
 import com.moguying.plant.core.entity.seed.vo.BuyOrderResponse;
 import com.moguying.plant.core.entity.seed.vo.PlantOrder;
 import com.moguying.plant.core.entity.seed.vo.PlantOrderResponse;
+import com.moguying.plant.core.entity.taste.PopMessage;
 import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.entity.taste.vo.TasteReap;
 import com.moguying.plant.core.service.order.PlantOrderService;
+import com.moguying.plant.core.service.teste.PopMessageService;
 import com.moguying.plant.core.service.teste.TasteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,8 @@ public class ATasteController {
     @Autowired
     private PlantOrderService plantOrderService;
 
+    @Autowired
+    private PopMessageService popMessageService;
 
     /**
      * 购买体验
@@ -65,6 +69,19 @@ public class ATasteController {
         ResultData<TasteReap> resultData = tasteService.reap(userId, orderId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
+
+
+    /**
+     * 获取使用的弹幕
+     * @return
+     */
+    @GetMapping("/pop")
+    @NoLogin
+    public ResponseData<PopMessage> popMessage(){
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),popMessageService.usedPopMessage());
+    }
+
+
 
 
     /**
