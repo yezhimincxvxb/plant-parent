@@ -402,3 +402,15 @@ ADD COLUMN `per_weigh` decimal(15, 2) NOT NULL COMMENT '每份产量重' AFTER `
 
 ALTER TABLE `moguying`.`plant_reap`
 ADD COLUMN `plant_weigh` decimal(15, 2) NOT NULL COMMENT '出菇量(单位g)' AFTER `exchange_time`;
+
+/** 砍价详情表，新增砍价口令 **/
+ALTER TABLE `moguying`.`plant_bargain_detail`
+ADD COLUMN `symbol` varchar(50) NOT NULL COMMENT '砍价口令' AFTER `close_time`;
+
+/***帮砍日志*****/
+CREATE TABLE `plant_bargain_rate` (
+  `product_id` int(11) NOT NULL COMMENT '用户id',
+  `own_rate` int(11) NOT NULL COMMENT '本人砍价系数',
+  `new_rate` int(11) NOT NULL COMMENT '新用户系数',
+  `old_rate` int(11) NOT NULL COMMENT '老用户系数'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -4,6 +4,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SeedEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.annotation.ValidateUser;
+import com.moguying.plant.core.dao.reap.SaleCoinDao;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
@@ -76,6 +77,9 @@ public class ASeedController {
 
     @Autowired
     private SaleCoinService saleCoinService;
+
+    @Autowired
+    private SaleCoinDao saleCoinDao;
 
     @Autowired
     private MallOrderService mallOrderService;
@@ -417,8 +421,12 @@ public class ASeedController {
     @GetMapping("/getUserCoin")
     public ResponseData<Integer> getUserCoin(@LoginUserId Integer userId) {
         SaleCoin saleCoin = saleCoinService.findById(userId);
-        if (saleCoin == null)
-            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState(), 0);
+        if (saleCoin == null) {
+            saleCoin = new SaleCoin();
+            saleCoin.setUserId(userId);
+            saleCoin.setCoinCount(0);
+            saleCoinDao.insert(saleCoin);
+        }
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), saleCoin.getCoinCount());
     }
 }

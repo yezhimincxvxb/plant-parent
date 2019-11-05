@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.bargain.BargainDetailDao;
 import com.moguying.plant.core.dao.bargain.BargainLogDao;
+import com.moguying.plant.core.dao.bargain.BargainRateDao;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
@@ -13,8 +14,10 @@ import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
+import com.moguying.plant.core.entity.bargain.BargainRate;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
+import com.moguying.plant.core.entity.bargain.vo.ShareVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallOrderDetail;
 import com.moguying.plant.core.entity.mall.MallProduct;
@@ -24,8 +27,8 @@ import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -33,6 +36,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
@@ -57,23 +61,8 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Autowired
     private UserDAO userDAO;
 
-    /**
-     * 用户本人砍价比率 [50,60]
-     */
-    @Value("${bargain.own.rate}")
-    private Integer userRate;
-
-    /**
-     * 新用户砍价比率 [20,30]
-     */
-    @Value("${bargain.new.rate}")
-    private Integer newUserRate;
-
-    /**
-     * 老用户砍价比率 [10,20]
-     */
-    @Value("${bargain.old.rate}")
-    private Integer oldUserRate;
+    @Autowired
+    private BargainRateDao bargainRateDao;
 
     /**
      * 获取比率
@@ -96,7 +85,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("write")
     @Transactional
-    public BargainDetail shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
+    public ShareVo shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
 
         if (buyProduct == null || product == null) return null;
 
@@ -112,12 +101,19 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             // 只获取第一单
             BargainDetail detail = details.get(0);
             detail.setMessage("分享成功");
-            return detail;
+            return new ShareVo()
+                    .setOrderId(detail.getId())
+                    .setUserId(detail.getUserId())
+                    .setSymbol(detail.getSymbol())
+                    .setMessage("分享成功");
         }
+
+        BargainRate bargainRate = bargainRateDao.selectById(product.getId());
+        if (Objects.isNull(bargainRate)) return null;
 
         // 总价、第一刀砍了多少
         BigDecimal totalAmount = product.getPrice().multiply(new BigDecimal(product.getBargainNumber()));
-        BigDecimal bargainAmount = totalAmount.multiply(getRate(userRate));
+        BigDecimal bargainAmount = totalAmount.multiply(getRate(bargainRate.getOwnRate()));
 
         // 首次分享，生成砍价详情
         BargainDetail add = new BargainDetail();
@@ -129,6 +125,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         add.setLeftAmount(totalAmount.subtract(bargainAmount));
         add.setTotalCount(product.getBargainCount());
         add.setBargainCount(1);
+        add.setSymbol(RandomStringUtils.random(12, true, true));
         add.setAddTime(new Date());
         add.setBargainTime(new Date());
         add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
@@ -143,8 +140,11 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         log.setHelpAmount(bargainAmount);
         log.setHelpTime(new Date());
         if (bargainLogDao.insert(log) > 0) {
-            add.setMessage("首次分享");
-            return add;
+            return new ShareVo()
+                    .setOrderId(add.getId())
+                    .setUserId(add.getUserId())
+                    .setSymbol(add.getSymbol())
+                    .setMessage("首次分享");
         }
         return null;
     }
@@ -169,7 +169,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         update = new BargainDetail();
 
         // 帮砍价格
-        BigDecimal helpAmount = BigDecimal.ZERO;
+        BigDecimal helpAmount;
         // 最后一刀
         if (detail.getBargainCount() + 1 == detail.getTotalCount()) {
             // 订单流水号
@@ -199,14 +199,19 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             // 全部砍完
             helpAmount = detail.getLeftAmount();
         } else {
+            // 砍价系数
+            BargainRate bargainRate = bargainRateDao.selectById(detail.getProductId());
+            if (Objects.isNull(bargainRate)) return null;
+
+            // 注册时间
             User user = userDAO.selectById(userId);
-            if (user == null) return null;
+            if (Objects.isNull(user)) return null;
 
             //  注册时间在砍价详情生成之后，默认为新用户
             if (user.getRegTime().after(detail.getAddTime())) {
-                helpAmount = detail.getLeftAmount().multiply(getRate(newUserRate));
+                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getNewRate()));
             } else {
-                helpAmount = detail.getLeftAmount().multiply(getRate(oldUserRate));
+                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getOwnRate()));
             }
         }
 

@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
+import com.moguying.plant.core.dao.bargain.BargainRateDao;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.bargain.BargainRate;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
@@ -60,6 +62,9 @@ public class MallProductServiceImpl implements MallProductService {
 
     @Autowired
     private SaleCoinService saleCoinService;
+
+    @Autowired
+    private BargainRateDao bargainRateDao;
 
     @Value("${order.expire.time}")
     private Long expireTime;
@@ -376,6 +381,7 @@ public class MallProductServiceImpl implements MallProductService {
 
     @Override
     @DS("write")
+    @Transactional
     public Integer updateProductToBargain(MallProduct mallProduct) {
 
         if (Objects.isNull(mallProduct)) return 0;
@@ -383,6 +389,26 @@ public class MallProductServiceImpl implements MallProductService {
         // 商品不存在
         if (Objects.isNull(mallProductDAO.selectById(mallProduct.getId()))) return 0;
 
+        // 默认值
+        Integer ownRate = Optional.ofNullable(mallProduct.getOwnRate()).orElse(50);
+        Integer newRate = Optional.ofNullable(mallProduct.getNewRate()).orElse(20);
+        Integer oldRate = Optional.ofNullable(mallProduct.getOldRate()).orElse(10);
+
+        // 设置砍价系数
+        BargainRate bargainRate = bargainRateDao.selectById(mallProduct.getId());
+        if (Objects.isNull(bargainRate)) {
+            bargainRate = new BargainRate();
+            bargainRate.setProductId(mallProduct.getId())
+                    .setOwnRate(ownRate)
+                    .setNewRate(newRate)
+                    .setOldRate(oldRate);
+            if (bargainRateDao.insert(bargainRate) <= 0 ) return 0;
+        } else {
+            bargainRate.setOwnRate(ownRate)
+                    .setNewRate(newRate)
+                    .setOldRate(oldRate);
+            if (bargainRateDao.updateById(bargainRate) <= 0) return 0;
+        }
         return mallProductDAO.updateById(mallProduct) > 0 ? mallProduct.getId() : 0;
     }
 }

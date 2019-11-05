@@ -164,4 +164,22 @@ public class MallProduct implements Serializable {
     @TableField
     private Boolean isHot;
 
+    /**
+     * 本人砍价系数
+     */
+    @TableField(exist = false)
+    private Integer ownRate;
+
+    /**
+     * 新用户砍价系数
+     */
+    @TableField(exist = false)
+    private Integer newRate;
+
+    /**
+     * 老用户砍价系数
+     */
+    @TableField(exist = false)
+    private Integer oldRate;
+
 }

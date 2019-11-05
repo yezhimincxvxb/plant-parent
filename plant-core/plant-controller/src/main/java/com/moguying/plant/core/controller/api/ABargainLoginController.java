@@ -23,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/login/bargain")
 @Slf4j
@@ -46,8 +48,7 @@ public class ABargainLoginController {
     @PostMapping("/share")
     public ResponseData<ShareVo> share(@LoginUserId Integer userId, @RequestBody BuyProduct buyProduct) {
 
-        ShareVo result = new ShareVo().setUserId(null).setMessage("分享失败");
-        ResponseData<ShareVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
+        ResponseData<ShareVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
 
         // 参数错误
         if (userId == null || buyProduct == null || buyProduct.getProductId() == null)
@@ -75,9 +76,9 @@ public class ABargainLoginController {
                     .setState(MessageEnum.MAX_LIMIT.getState());
 
         // 首次分享
-        BargainDetail detail = bargainDetailService.shareSuccess(userId, buyProduct, product);
-        if (detail != null)
-            return responseData.setData(result.setOrderId(detail.getId()).setUserId(userId).setMessage(detail.getMessage()));
+        ShareVo result = bargainDetailService.shareSuccess(userId, buyProduct, product);
+        if (result != null)
+            return responseData.setData(result);
 
         return responseData
                 .setMessage(MessageEnum.ERROR.getMessage())
@@ -105,7 +106,7 @@ public class ABargainLoginController {
      */
     @PostMapping("/help/chop")
     public ResponseData<BargainVo> helpChop(@LoginUserId Integer userId, @RequestBody BargainDetail bargainDetail) {
-        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), null);
+        ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
 
         // 参数
         if (bargainDetail == null || bargainDetail.getId() == null || bargainDetail.getUserId() == null)
@@ -139,6 +140,12 @@ public class ABargainLoginController {
             return responseData
                     .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());
+
+        // 砍价口令
+        if (!Objects.equals(bargainDetail.getSymbol(), detail.getSymbol()))
+            return responseData
+                    .setMessage(MessageEnum.SYMBOL_ERROR.getMessage())
+                    .setState(MessageEnum.SYMBOL_ERROR.getState());
 
         // 帮砍
         detail.setMessage(bargainDetail.getMessage());

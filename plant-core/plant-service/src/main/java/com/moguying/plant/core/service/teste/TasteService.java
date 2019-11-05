@@ -63,6 +63,8 @@ public interface TasteService {
      */
     Boolean setShowState(String id);
 
+    Boolean setState(Taste taste);
+
 
     /**
      * 添加试吃申请
