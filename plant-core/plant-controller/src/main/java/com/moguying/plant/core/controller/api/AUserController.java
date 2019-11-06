@@ -902,7 +902,7 @@ public class AUserController {
             hints.put(EncodeHintType.MARGIN, 1);
             int width = 142, height = 142;
             //生成二维码
-            BitMatrix bitMatrix = multiFormatWriter.encode(inviteUrl + user.getPhone(), BarcodeFormat.QR_CODE, width, height, hints);
+            BitMatrix bitMatrix = multiFormatWriter.encode(inviteUrl + user.getInviteCode(), BarcodeFormat.QR_CODE, width, height, hints);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     bgImage.setRGB(x + 109, y + 946, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
