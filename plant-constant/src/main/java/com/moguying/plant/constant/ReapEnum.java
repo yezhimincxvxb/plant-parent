@@ -4,7 +4,8 @@ public enum ReapEnum {
     WAITING_REAP(0,"待采摘"),
     REAP_DONE(1,"已采摘"),
     SALE_ING(2,"售卖中"),
-    SALE_DONE(3,"已售卖");
+    SALE_DONE(3,"已售卖"),
+    EXCHANGE_DONE(4,"已兑换");
     private Integer state;
 
     private String stateName;

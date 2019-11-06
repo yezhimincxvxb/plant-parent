@@ -10,6 +10,7 @@ import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
+import com.moguying.plant.core.dao.reap.ReapWeighDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.dao.user.UserBankDAO;
@@ -17,6 +18,7 @@ import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.dao.user.UserMessageDAO;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
+import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
@@ -66,6 +68,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMessageDAO userMessageDAO;
+
+    @Autowired
+    private ReapWeighDAO reapWeighDAO;
 
     @Value("${excel.download.dir}")
     private String downloadDir;
@@ -118,9 +123,15 @@ public class UserServiceImpl implements UserService {
 
             // 初始化用户账户
             userMoneyDAO.insert(new UserMoney(user.getId()));
+
+            // 初始化用户产量信息
+            reapWeighDAO.insert(new ReapWeigh(user.getId()));
+
             InnerMessage message = new InnerMessage();
             message.setUserId(user.getId());
             message.setPhone(user.getPhone());
+
+
             return resultData.setMessageEnum(MessageEnum.SUCCESS).
                     setData(new TriggerEventResult<InnerMessage>().setData(message).setUserId(user.getId()));
         }

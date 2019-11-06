@@ -12,6 +12,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @TableName("plant_reap")
 @Data
@@ -225,5 +226,19 @@ public class Reap implements Serializable {
     @JSONField(ordinal = 29)
     @TableField(exist = false)
     private Boolean isForNew;
+
+    /**
+     * 菌包类型分组查询字段
+     */
+    @JSONField(serialize = false)
+    @TableField(exist = false)
+    private Integer groupId;
+
+    /**
+     * 根据多种状态查询
+     */
+    @JSONField(serialize = false)
+    @TableField(exist = false)
+    private List<Integer> states;
 
 }

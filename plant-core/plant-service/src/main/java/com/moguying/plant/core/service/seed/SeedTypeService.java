@@ -3,7 +3,10 @@ package com.moguying.plant.core.service.seed;
 
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.seed.SeedGroup;
 import com.moguying.plant.core.entity.seed.SeedType;
+
+import java.util.List;
 
 public interface SeedTypeService {
 
@@ -18,5 +21,10 @@ public interface SeedTypeService {
 
     
     SeedType seedType(Integer id);
+
+
+    List<SeedGroup> seedGroupList();
+
+    ResultData<Boolean> saveSeedGroup(SeedGroup seedGroup);
 
 }

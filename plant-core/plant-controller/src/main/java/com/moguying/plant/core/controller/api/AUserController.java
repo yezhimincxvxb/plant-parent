@@ -10,6 +10,7 @@ import com.google.zxing.common.BitMatrix;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.vo.BlockDetail;
@@ -19,13 +20,16 @@ import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.payment.request.*;
 import com.moguying.plant.core.entity.payment.response.*;
 import com.moguying.plant.core.entity.reap.Reap;
+import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.reap.vo.ReapSearch;
+import com.moguying.plant.core.entity.seed.SeedGroup;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.*;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.reap.ReapService;
+import com.moguying.plant.core.service.reap.ReapWeighService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.seed.SeedOrderService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
@@ -87,6 +91,9 @@ public class AUserController {
 
     @Autowired
     private UserFertilizerService userFertilizerService;
+
+    @Autowired
+    private ReapWeighService reapWeighService;
 
     @Autowired
     private TemplateEngine templateEngine;
@@ -638,11 +645,32 @@ public class AUserController {
      *
      * @return
      */
-    @GetMapping(value = "/product")
-    public ResponseData<List<Reap>> productList(@LoginUserId Integer userId) {
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
-                reapService.reapListByUserId(userId));
+    @PostMapping(value = "/product")
+    public PageResult<Reap> productList(@LoginUserId Integer userId, @RequestBody PageSearch<Reap> search) {
+        Reap where = new Reap();
+        where.setUserId(userId);
+        where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(),ReapEnum.SALE_DONE.getState(),ReapEnum.EXCHANGE_DONE.getState()));
+        if(null != search.getWhere().getGroupId())
+            where.setGroupId(search.getWhere().getGroupId());
+
+        return reapService.userReapList(search.getPage(), search.getSize(),where);
     }
+
+
+    /**
+     * 用户个人种植产量信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/product/weigh")
+    public ResponseData<ReapWeigh> userReapWeigh(@LoginUserId Integer userId){
+        ResultData<ReapWeigh> resultData = reapWeighService.userReapWeighInfo(userId);
+        ResponseData<ReapWeigh> responseData =  new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+            responseData.setData(responseData.getData());
+        return  responseData;
+    }
+
 
 
     /**

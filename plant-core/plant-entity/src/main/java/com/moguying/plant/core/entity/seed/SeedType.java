@@ -109,11 +109,45 @@ public class SeedType implements Serializable {
      * 是否新手体验
      */
     @JSONField(ordinal = 14)
+    @TableField
     private Boolean isForNew;
 
     /**
      * 每份产量
      */
     @JSONField(ordinal = 15)
+    @TableField
     private BigDecimal perWeigh;
+
+
+    /**
+     * 分组id
+     */
+    @JSONField(ordinal = 16)
+    @TableField
+    private Integer groupId;
+
+
+    /**
+     * 分组名
+     */
+    @TableField(exist = false)
+    @JSONField(ordinal =  17)
+    private String groupName;
+
+
+    /**
+     * 类型可兑换的商城商品id
+     */
+    @JSONField(ordinal = 18)
+    @TableField
+    private Integer exMallProduct;
+
+
+    /**
+     * 类型可兑换的商城商品名
+     */
+    @JSONField(ordinal = 19)
+    @TableField(exist = false)
+    private String exMallProductName;
 }

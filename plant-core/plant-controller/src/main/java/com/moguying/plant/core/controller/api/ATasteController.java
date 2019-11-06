@@ -4,6 +4,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.*;
+import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.seed.vo.BuyOrder;
 import com.moguying.plant.core.entity.seed.vo.BuyOrderResponse;
 import com.moguying.plant.core.entity.seed.vo.PlantOrder;
@@ -18,6 +19,7 @@ import com.moguying.plant.core.service.teste.TasteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -64,9 +66,9 @@ public class ATasteController {
      *
      * @return
      */
-    @PostMapping("/{orderId}")
-    public ResponseData<Boolean> reapAndSale(@LoginUserId Integer userId, @PathVariable Integer orderId) {
-        ResultData<TasteReap> resultData = tasteService.reap(userId, orderId);
+    @PostMapping("/reap/{reapId}")
+    public ResponseData<Boolean> reapAndSale(@LoginUserId Integer userId, @PathVariable Integer reapId) {
+        ResultData<TasteReap> resultData = tasteService.reap(userId, reapId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
@@ -79,6 +81,29 @@ public class ATasteController {
     @NoLogin
     public ResponseData<PopMessage> popMessage(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),popMessageService.usedPopMessage());
+    }
+
+
+    /**
+     *  新手体验券礼包
+     * @return
+     */
+    @GetMapping("/gift")
+    @NoLogin
+    public ResponseData<List<Fertilizer>> giftList(){
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),
+                tasteService.tasteGiftList());
+    }
+
+    /**
+     * 领取新手礼包
+     * @param userId
+     * @return
+     */
+    @PostMapping("/gift")
+    public ResponseData<Boolean> pickUpGift(@LoginUserId Integer userId){
+        ResultData<Integer> pickUpGift = tasteService.pickUpGift(userId);
+        return new ResponseData<>(pickUpGift.getMessageEnum().getMessage(),pickUpGift.getMessageEnum().getState());
     }
 
 
@@ -133,7 +158,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/free/apply")
-    public ResponseData<Boolean> applyFreeTaste(@LoginUserId Integer userId, @RequestBody Taste taste) {
+    public ResponseData<Boolean> applyFreeTaste(@LoginUserId Integer userId, @RequestBody(required = false) Taste taste) {
         ResultData<Boolean> resultData = tasteService.addTasteApply(userId, taste);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }

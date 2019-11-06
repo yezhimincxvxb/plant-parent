@@ -45,4 +45,31 @@ public class PlantOrderResponse {
     @JSONField(serialize = false)
     private Integer seedTypeId;
 
+    /**
+     * 种植菌包类型名
+     */
+    @JSONField
+    private String seedTypeName;
+
+
+    /**
+     * 种植类型生长周期
+     */
+    @JSONField
+    private Integer growDays;
+
+    /**
+     * 种植类型产出量
+     */
+    @JSONField(serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal perWeigh;
+
+
+    /**
+     * 种植id
+     */
+    @JSONField
+    private Integer reapId;
+
+
 }

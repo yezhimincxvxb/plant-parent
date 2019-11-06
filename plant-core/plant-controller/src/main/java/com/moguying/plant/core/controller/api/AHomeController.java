@@ -25,6 +25,7 @@ import com.moguying.plant.core.service.content.BannerService;
 import com.moguying.plant.core.service.device.DeviceService;
 import com.moguying.plant.core.service.mall.MallProductService;
 import com.moguying.plant.core.service.mall.MallProductTypeService;
+import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.seed.SeedService;
 import com.moguying.plant.core.service.system.ApkService;
 import com.moguying.plant.utils.InterestUtil;
@@ -68,6 +69,21 @@ public class AHomeController {
 
     @Autowired
     private MallProductTypeService mallProductTypeService;
+
+    @Autowired
+    private ReapService reapService;
+
+
+    /**
+     * 更新用户产量信息
+     * 仅用一次
+     * @return
+     */
+    @PostMapping("/reap/weigh")
+    public ResponseData<Boolean> updateReapWeighInfo(){
+        reapService.updatePlantWeigh();
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+    }
 
 
     /**

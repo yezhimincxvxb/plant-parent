@@ -45,22 +45,25 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.seed.SeedType" resultMap="BaseResultMap">
+    <select id="selectSelective" parameterType="SeedType" resultType="SeedType">
         select
-        <include refid="Base_Column_List"/>
-        from plant_seed_type
+        t1.id, class_name, grow_days, per_price, interest_rates, order_number, is_delete, plant_type,
+        reap_type,pic_url,thumb_pic_url,exchange_num,group_id,group_name,is_for_new,ex_mall_product,t3.name as ex_mall_product_name
+        from plant_seed_type t1
+        left join plant_seed_group t2 on t1.group_id = t2.id
+        left join plant_mall_product t3 on t1.ex_mall_product = t3.id
         <where>
-            <if test="id != null">
-                id = #{id}
+            <if test="wq.id != null">
+                id = #{wq.id}
             </if>
-            <if test="className != null">
-                AND class_name = #{className}
+            <if test="wq.className != null">
+                AND class_name = #{wq.className}
             </if>
-            <if test="orderNumber != null">
-                AND order_number = #{orderNumber}
+            <if test="wq.orderNumber != null">
+                AND order_number = #{wq.orderNumber}
             </if>
-            <if test="isDelete != null">
-                AND is_delete = #{isDelete}
+            <if test="wq.isDelete != null">
+                AND is_delete = #{wq.isDelete}
             </if>
         </where>
         order by order_number desc

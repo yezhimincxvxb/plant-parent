@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SaleRequest {
-    private Integer seedType;
+    private Integer reapId;
 
 }

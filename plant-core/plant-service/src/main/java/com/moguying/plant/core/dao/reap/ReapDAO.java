@@ -23,6 +23,9 @@ public interface ReapDAO extends BaseDAO<Reap> {
 
     IPage<Reap> selectSelective(Page<Reap> page, @Param("wq") Reap reap);
 
+    IPage<Reap> userReapList(Page<Reap> page, @Param("wq") Reap reap);
+
+
     List<Reap> selectSelective(@Param("wq") Reap reap);
 
     Integer updateStateByRange(@Param("idList") List<Integer> idList, @Param("reap") Reap update);
@@ -65,4 +68,7 @@ public interface ReapDAO extends BaseDAO<Reap> {
     int updateState(@Param("idList") List<Integer> idList);
 
     IPage<ExchangeInfo> showReapLog(Page<ExchangeInfo> page, @Param("userId") Integer userId);
+
+    BigDecimal sumPlantWeighByUserId(@Param("userId") Integer userId,@Param("states") List<Integer> states);
+    BigDecimal sumProfitByUserId(@Param("userId") Integer userId,@Param("states") List<Integer> states);
 }

@@ -10,6 +10,8 @@ import com.moguying.plant.constant.ReapEnum;
 import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.reap.ReapDAO;
+import com.moguying.plant.core.dao.reap.ReapWeighDAO;
+import com.moguying.plant.core.dao.seed.SeedTypeDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
@@ -19,6 +21,8 @@ import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.reap.Reap;
+import com.moguying.plant.core.entity.reap.ReapWeigh;
+import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
@@ -41,6 +45,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -79,6 +84,12 @@ public class ReapServiceImpl<T> implements ReapService {
     @Autowired
     private UserFertilizerService userFertilizerService;
 
+    @Autowired
+    private SeedTypeDAO seedTypeDAO;
+
+    @Autowired
+    private ReapWeighDAO reapWeighDAO;
+
     @Override
     @DS("read")
     public PageResult<Reap> reapList(Integer page, Integer size, Reap where) {
@@ -87,10 +98,23 @@ public class ReapServiceImpl<T> implements ReapService {
     }
 
     @Override
+    @DS("read")
+    public PageResult<Reap> c(Integer page, Integer size, Reap where) {
+        IPage<Reap> pageResult = reapDAO.userReapList(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+    }
+
+    @Override
     @DS("write")
     public Integer updateReapState(List<Integer> idList, Reap where) {
         //发送短信
         if (reapDAO.updateStateByRange(idList, where) > 0) {
+            List<Reap> reaps = reapDAO.selectReapInRange(idList, null);
+            reaps.forEach(reap -> {
+                BigDecimal availableProfit = reap.getPreAmount().add(reap.getPreProfit());
+                reapWeighDAO.incField(new ReapWeigh(reap.getUserId()).setAvailableProfit(availableProfit));
+            });
+
             List<InnerMessage> messages = reapDAO.selectPhoneByRange(idList);
             for (InnerMessage message : messages) {
                 phoneMessageService.sendOtherMessage(message, SystemEnum.PHONE_MESSAGE_SEED_REAP_TYPE.getState());
@@ -156,59 +180,59 @@ public class ReapServiceImpl<T> implements ReapService {
     @Transactional
     @Override
     @DS("write")
-    public ResultData<TriggerEventResult<InnerMessage>> saleReap(Integer seedType, Integer userId) {
+    public ResultData<TriggerEventResult<InnerMessage>> saleReap(Integer reapId, Integer userId) {
         ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, null);
         User userInfo = userDAO.userInfoById(userId);
         Reap where = new Reap();
         where.setUserId(userId);
         where.setState(ReapEnum.REAP_DONE.getState());
-        where.setSeedType(seedType);
-        List<Reap> reapList = reapDAO.selectSelective(where);
-        if (null == reapList)
+        where.setId(reapId);
+        Reap reap = reapDAO.selectOne(new QueryWrapper<>(where));
+        if (null == reap)
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
-        if (reapList.size() <= 0)
-            return resultData.setMessageEnum(MessageEnum.SEED_REAP_CAN_NOT_SALE);
+
         BigDecimal totalAmount = BigDecimal.ZERO;
         InnerMessage message = new InnerMessage();
         message.setUserId(userId);
         message.setPhone(userInfo.getPhone());
-        for (Reap reap : reapList) {
-            //更新成品状态
-            Reap updateReap = new Reap();
-            updateReap.setId(reap.getId());
-            updateReap.setRecAmount(reap.getPreAmount());
-            updateReap.setRecProfit(reap.getPreProfit());
-            updateReap.setSaleTime(new Date());
-            updateReap.setState(ReapEnum.SALE_DONE.getState());
-            if (reapDAO.updateById(updateReap) <= 0) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return resultData.setMessageEnum(MessageEnum.SEED_REAP_SALE_ERROR);
-            }
-            //更新用户本金
-            UserMoneyOperator capitalOperator = new UserMoneyOperator();
-            capitalOperator.setOpType(MoneyOpEnum.SALE_REAP_SEED);
-            capitalOperator.setOperationId(reap.getOrderNumber());
-            UserMoney capital = new UserMoney(userId);
-            capital.setAvailableMoney(reap.getPreAmount());
-            capital.setCollectCapital(reap.getPreAmount().negate());
-            capitalOperator.setUserMoney(capital);
-            if (moneyService.updateAccount(capitalOperator) == null)
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
-            //更新用户收益
-            UserMoney profit = new UserMoney(userId);
-            UserMoneyOperator profitOperator = new UserMoneyOperator();
-            profitOperator.setOperationId(reap.getOrderNumber());
-            profitOperator.setOpType(MoneyOpEnum.SALE_REAP_SEED_PROFIT);
-            profit.setAvailableMoney(reap.getPreProfit());
-            profit.setCollectInterest(reap.getPreProfit().negate());
-            profitOperator.setUserMoney(profit);
-            if (moneyService.updateAccount(profitOperator) == null)
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
-            totalAmount = totalAmount.add(reap.getPreAmount()).add(reap.getPreProfit());
-            message.setSeedTypeName(reap.getSeedTypeName());
+        //更新成品状态
+        Reap updateReap = new Reap();
+        updateReap.setId(reap.getId());
+        updateReap.setRecAmount(reap.getPreAmount());
+        updateReap.setRecProfit(reap.getPreProfit());
+        updateReap.setSaleTime(new Date());
+        updateReap.setState(ReapEnum.SALE_DONE.getState());
+        if (reapDAO.updateById(updateReap) <= 0) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return resultData.setMessageEnum(MessageEnum.SEED_REAP_SALE_ERROR);
         }
+        //更新用户本金
+        UserMoneyOperator capitalOperator = new UserMoneyOperator();
+        capitalOperator.setOpType(MoneyOpEnum.SALE_REAP_SEED);
+        capitalOperator.setOperationId(reap.getOrderNumber());
+        UserMoney capital = new UserMoney(userId);
+        capital.setAvailableMoney(reap.getPreAmount());
+        capital.setCollectCapital(reap.getPreAmount().negate());
+        capitalOperator.setUserMoney(capital);
+        if (moneyService.updateAccount(capitalOperator) == null)
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+        //更新用户收益
+        UserMoney profit = new UserMoney(userId);
+        UserMoneyOperator profitOperator = new UserMoneyOperator();
+        profitOperator.setOperationId(reap.getOrderNumber());
+        profitOperator.setOpType(MoneyOpEnum.SALE_REAP_SEED_PROFIT);
+        profit.setAvailableMoney(reap.getPreProfit());
+        profit.setCollectInterest(reap.getPreProfit().negate());
+        profitOperator.setUserMoney(profit);
+        if (moneyService.updateAccount(profitOperator) == null)
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+        totalAmount = totalAmount.add(reap.getPreAmount()).add(reap.getPreProfit());
+        //更新已领取收益
+        reapWeighDAO.incField(new ReapWeigh(userId).setHasProfit(totalAmount));
+        message.setSeedTypeName(reap.getSeedTypeName());
         message.setAmount(totalAmount.toString());
 
         return resultData.setMessageEnum(MessageEnum.SUCCESS).
@@ -363,5 +387,35 @@ public class ReapServiceImpl<T> implements ReapService {
         userSaleCoin.setAffectType(3);
         userSaleCoin.setAffectDetailId(userFertilizer.getId().toString());
         return saleCoinService.updateSaleCoin(userSaleCoin) != null;
+    }
+
+
+    @Override
+    public Boolean updatePlantWeigh() {
+        List<Reap> reaps = reapDAO.selectList(new QueryWrapper<>());
+        reaps.forEach(reap -> {
+            SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());
+            Reap update = new Reap();
+            update.setId(reap.getId());
+            update.setPlantWeigh(seedType.getPerWeigh().multiply(new BigDecimal(reap.getPlantCount())));
+            reapDAO.updateById(update);
+        });
+
+        List<User> users = userDAO.selectList(new QueryWrapper<>());
+        users.forEach(user -> {
+            BigDecimal totalWeigh = reapDAO.sumPlantWeighByUserId(user.getId(), null);
+
+            BigDecimal hasProfit = reapDAO.sumProfitByUserId(user.getId(), Arrays.asList(ReapEnum.SALE_DONE.getState()));
+            BigDecimal availableProfit = reapDAO.sumProfitByUserId(user.getId(), Arrays.asList(ReapEnum.REAP_DONE.getState()));
+            ReapWeigh reapWeigh = new ReapWeigh(user.getId());
+            reapWeigh.setTotalWeigh(totalWeigh);
+            reapWeigh.setHasProfit(hasProfit);
+            reapWeigh.setAvailableProfit(availableProfit);
+            reapWeighDAO.insert(reapWeigh);
+
+        });
+
+
+        return true;
     }
 }

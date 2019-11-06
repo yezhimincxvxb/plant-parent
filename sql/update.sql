@@ -414,3 +414,27 @@ CREATE TABLE `plant_bargain_rate` (
   `new_rate` int(11) NOT NULL COMMENT '新用户系数',
   `old_rate` int(11) NOT NULL COMMENT '老用户系数'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `moguying`.`plant_seed_type`
+ADD COLUMN `group_id` int(0) NOT NULL COMMENT '种类分组' AFTER `class_name`;
+
+CREATE TABLE `plant_seed_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '分组名',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `moguying`.`plant_seed_type`
+MODIFY COLUMN `is_for_new` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否新手体验' AFTER `exchange_num`,
+ADD COLUMN `ex_mall_product` int(11) NULL COMMENT '菌包成品可兑换的商城物品id' AFTER `is_for_new`;
+
+CREATE TABLE `plant_reap_weigh` (
+  `user_id` int(11) NOT NULL COMMENT '用户Id',
+  `total_weigh` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '总产量',
+  `has_ex_weigh` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '已兑换产量',
+  `available_weigh` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '可兑换产量',
+  `has_profit` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '已领取收益',
+  `available_profit` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '可领取收益',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

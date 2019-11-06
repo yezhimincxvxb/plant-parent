@@ -2,6 +2,7 @@ package com.moguying.plant.core.service.teste;
 
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.seed.vo.BuyOrder;
 import com.moguying.plant.core.entity.seed.vo.BuyOrderResponse;
 import com.moguying.plant.core.entity.taste.Taste;
@@ -10,6 +11,8 @@ import com.moguying.plant.core.entity.taste.vo.TasteReap;
 import com.moguying.plant.core.entity.user.UserAddress;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+
+import java.util.List;
 
 public interface TasteService {
 
@@ -91,5 +94,20 @@ public interface TasteService {
      * @return
      */
     PageResult<TasteApply> tasteApplyPageResult(Integer page,Integer size,TasteApply where);
+
+
+    /**
+     * 新手体验礼包券
+     * @return
+     */
+    List<Fertilizer> tasteGiftList();
+
+    /**
+     *  领取礼包
+     * @param userId
+     * @return
+     */
+    ResultData<Integer> pickUpGift(java.lang.Integer userId);
+
 
 }

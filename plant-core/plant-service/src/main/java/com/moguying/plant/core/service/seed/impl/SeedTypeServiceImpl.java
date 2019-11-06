@@ -6,15 +6,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.seed.SeedContentDAO;
+import com.moguying.plant.core.dao.seed.SeedGroupDAO;
 import com.moguying.plant.core.dao.seed.SeedTypeDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.seed.SeedGroup;
 import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.service.seed.SeedTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -28,6 +32,9 @@ public class SeedTypeServiceImpl implements SeedTypeService {
 
     @Autowired
     private SeedContentDAO seedContentDAO;
+
+    @Autowired
+    private SeedGroupDAO seedGroupDAO;
 
     @Override
     @DS("write")
@@ -61,7 +68,7 @@ public class SeedTypeServiceImpl implements SeedTypeService {
     @Override
     @DS("read")
     public PageResult<SeedType> seedTypeList(Integer page, Integer size, SeedType seedClass) {
-        IPage<SeedType> pageResult = seedTypeDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(seedClass));
+        IPage<SeedType> pageResult = seedTypeDAO.selectSelective(new Page<>(page, size), seedClass);
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
@@ -82,4 +89,25 @@ public class SeedTypeServiceImpl implements SeedTypeService {
         return seedTypeDAO.selectByPrimaryKeyWithBLOB(id);
     }
 
+    @Override
+    @DS("read")
+    public List<SeedGroup> seedGroupList() {
+        return seedGroupDAO.selectList(new QueryWrapper<>());
+    }
+
+    @Override
+    @DS("write")
+    public ResultData<Boolean> saveSeedGroup(SeedGroup seedGroup) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        boolean success = false;
+        if(null != seedGroup.getId())
+            success = seedGroupDAO.updateById(seedGroup) > 0;
+        else
+            success = seedGroupDAO.insert(seedGroup) > 0;
+
+        if(success)
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
+        return resultData;
+
+    }
 }

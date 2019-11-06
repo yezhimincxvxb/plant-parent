@@ -25,7 +25,8 @@ public enum MoneyOpEnum {
     PANT_SEED_FERTILIZER(16,"种植券到账"), //收入
 
     MUSHROOM_COIN(18,"兑换蘑菇币"),
-    RED_PACKAGE(19,"现金红包"); // 收入
+    RED_PACKAGE(19,"现金红包"), // 收入
+    EXCHANGE_REAP(20,"兑换实物");
 
 
     MoneyOpEnum(Integer type, String typeStr) {

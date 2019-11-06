@@ -2,11 +2,13 @@ package com.moguying.plant.core.entity.seed.vo;
 
 import com.moguying.plant.core.entity.mall.vo.BuyProduct;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
+@Accessors(chain = true)
 public class SubmitOrder implements Serializable {
 
     private Integer addressId;

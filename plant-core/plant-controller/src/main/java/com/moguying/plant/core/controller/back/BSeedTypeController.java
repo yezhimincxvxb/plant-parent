@@ -2,8 +2,10 @@ package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.seed.SeedGroup;
 import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.service.seed.SeedTypeService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/seedType")
 @Slf4j
@@ -19,7 +23,8 @@ public class BSeedTypeController {
 
 
     @Autowired
-    SeedTypeService seedTypeService;
+    private SeedTypeService seedTypeService;
+
 
     /**
      * 种子分类列表
@@ -94,6 +99,30 @@ public class BSeedTypeController {
         SeedType seedClass = seedTypeService.seedType(id);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),seedClass);
     }
+
+
+    /**
+     * 类型分组列表
+     * @return
+     */
+    @GetMapping("/group/list")
+    public ResponseData<List<SeedGroup>> seedGroupPageResult() {
+        return  new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),seedTypeService.seedGroupList());
+    }
+
+
+    /**
+     * 添加分组
+     * @param seedGroup
+     * @return
+     */
+    @PostMapping("/group")
+    public ResponseData<Boolean> saveSeedGroup(@RequestBody SeedGroup seedGroup){
+        ResultData<Boolean> resultData = seedTypeService.saveSeedGroup(seedGroup);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    }
+
+
 
 
 }

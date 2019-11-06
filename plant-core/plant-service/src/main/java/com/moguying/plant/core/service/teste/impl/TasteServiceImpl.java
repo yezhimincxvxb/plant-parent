@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.ApiEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.ReapEnum;
+import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
@@ -13,6 +14,8 @@ import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.farmer.FarmerInfo;
+import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.seed.Seed;
@@ -22,6 +25,7 @@ import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.entity.taste.vo.TasteReap;
 import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.teste.TasteService;
 import com.moguying.plant.utils.DateUtil;
@@ -41,6 +45,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class TasteServiceImpl implements TasteService {
@@ -69,6 +74,12 @@ public class TasteServiceImpl implements TasteService {
 
     @Autowired
     private MallProductDAO mallProductDAO;
+
+    @Autowired
+    private FertilizerDAO fertilizerDAO;
+
+    @Autowired
+    private FertilizerService fertilizerService;
 
     @DS("write")
     @Override
@@ -152,7 +163,7 @@ public class TasteServiceImpl implements TasteService {
                 boolean exists = mongoTemplate.exists(new Query(Criteria.where("userId").is(userId).and("tasteId").is(taste.getId())), TasteApply.class);
                 taste.setHasApply(exists);
                 if(taste.getEndTime().compareTo(new Date()) <= 0){
-                    mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())),Update.update("state",ApiEnum.TASTE_OPEN.getType()),Taste.class);
+                    mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())),Update.update("state",ApiEnum.TASTE_CLOSE.getType()),Taste.class);
                 }
                 taste.setApplyCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId())),TasteApply.class));
             });
@@ -203,6 +214,11 @@ public class TasteServiceImpl implements TasteService {
         Optional<User> userOptional = Optional.ofNullable(user);
         if(!userOptional.isPresent())
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
+        taste =  Optional.ofNullable(taste).orElseGet(() -> mongoTemplate.findOne(new Query(Criteria.where("isShow")
+                .is(true).and("endTime").gt(new Date()).and("tasteCount").gt(0)),Taste.class));
+        //没有进行中免费申请活动
+        if(null == taste)
+            return resultData;
 
         TasteApply apply = new TasteApply(userId,taste.getId(), ApiEnum.TASTE_APPLY.getType());
         Taste tasteInfo = mongoTemplate.findOne(new Query(Criteria.where("id").is(taste.getId())), Taste.class);
@@ -250,5 +266,18 @@ public class TasteServiceImpl implements TasteService {
         List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
         long count = mongoTemplate.count(query, TasteApply.class);
         return new PageResult<>(count,tasteApplies);
+    }
+
+
+    @Override
+    public List<Fertilizer> tasteGiftList() {
+        Fertilizer where = new Fertilizer();
+        where.setTriggerGetEvent("taste");
+        return fertilizerDAO.selectList(new QueryWrapper<>(where));
+    }
+
+    @Override
+    public ResultData<Integer> pickUpGift(Integer userId) {
+        return  fertilizerService.distributeFertilizer("taste",userId);
     }
 }

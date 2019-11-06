@@ -22,6 +22,8 @@ public interface ReapService {
 
     PageResult<Reap> reapList(Integer page, Integer size, Reap where);
 
+    PageResult<Reap> userReapList(Integer page, Integer size, Reap where);
+
     Integer updateReapState(List<Integer> idList, Reap update);
 
     Integer reapDone(List<Integer> idList);
@@ -34,7 +36,7 @@ public interface ReapService {
 
     Integer reapStatistics(Integer userId, ReapEnum reapEnum, Boolean isEqual);
 
-    ResultData<TriggerEventResult<InnerMessage>> saleReap(Integer seedType, Integer userId);
+    ResultData<TriggerEventResult<InnerMessage>> saleReap(Integer reapId, Integer userId);
 
     Reap reapInfoByIdAndUserId(Integer id, Integer userId);
 
@@ -76,5 +78,8 @@ public interface ReapService {
      * 兑换券
      */
     Boolean exchangeFertilizer(Integer userId, Integer fertilizerId, SaleCoin saleCoin, Fertilizer fertilizer);
+
+
+    Boolean updatePlantWeigh();
 
 }

@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: dev
+  aop:
+    proxy-target-class: true
+    auto: true
   mvc:
     view:
       suffix: .html
@@ -142,15 +145,16 @@ bargain:
   old:
     rate: 10
 
+reap:
+  exchange:
+    weigh: 1800
+
 ---
 debug: true
 server:
   port: 9000
 spring:
   profiles: test
-  aop:
-    auto: true
-    proxy-target-class: true
   datasource:
     dynamic:
       primary: write
@@ -194,9 +198,6 @@ server:
   port: 9000
 spring:
   profiles: dev
-  aop:
-    auto: true
-    proxy-target-class: true
   datasource:
     dynamic:
       primary: write
@@ -244,9 +245,6 @@ server:
   port: 9000
 spring:
   profiles: pro
-  aop:
-    auto: true
-    proxy-target-class: true
   datasource:
     dynamic:
       primary: write

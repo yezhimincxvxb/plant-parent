@@ -3,6 +3,7 @@ package com.moguying.plant.core.controller.api;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SeedEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.annotation.ValidateUser;
 import com.moguying.plant.core.dao.reap.SaleCoinDao;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
@@ -22,6 +23,7 @@ import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.vo.SaleRequest;
 import com.moguying.plant.core.entity.reap.vo.SaleResponse;
+import com.moguying.plant.core.entity.seed.SeedGroup;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.*;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
@@ -35,6 +37,7 @@ import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
+import com.moguying.plant.core.service.seed.SeedTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +89,9 @@ public class ASeedController {
 
     @Autowired
     private UserAddressDAO userAddressDAO;
+
+    @Autowired
+    private SeedTypeService seedTypeService;
 
     /**
      * 提交菌包订单
@@ -231,16 +237,13 @@ public class ASeedController {
 
 
     /**
-     * 采摘兑换实物
+     * 兑换实物
      *
-     * @param reapId
-     * @param excReap
      * @return
      */
-    @PostMapping(value = "/exc/{reapId}")
-    public ResponseData<Integer> exchangeReap(@PathVariable Integer reapId,
-                                              @RequestBody ExcReap excReap) {
-        ResultData<Integer> resultData = plantOrderService.plantReapExchange(reapId, excReap);
+    @PostMapping(value = "/reap/exchange")
+    public ResponseData<Integer> exchangeReap(@RequestBody ExcReap excReap) {
+        ResultData<Integer> resultData = plantOrderService.plantReapExchange(excReap);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
@@ -254,9 +257,9 @@ public class ASeedController {
     @ValidateUser
     @PostMapping(value = "/sale")
     public ResponseData<SaleResponse> saleSeed(@LoginUserId Integer userId, @RequestBody SaleRequest saleRequest) {
-        if (null == saleRequest.getSeedType())
+        if (null == saleRequest.getReapId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
-        ResultData<TriggerEventResult<InnerMessage>> resultData = reapService.saleReap(saleRequest.getSeedType(), userId);
+        ResultData<TriggerEventResult<InnerMessage>> resultData = reapService.saleReap(saleRequest.getReapId(), userId);
         SaleResponse saleResponse = new SaleResponse();
         if (null != resultData.getData())
             saleResponse.setSaleAmount(new BigDecimal(resultData.getData().getData().getAmount()));
@@ -428,5 +431,16 @@ public class ASeedController {
             saleCoinDao.insert(saleCoin);
         }
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), saleCoin.getCoinCount());
+    }
+
+
+    /**
+     * 获取菌包分组信息
+     * @return
+     */
+    @GetMapping("/group/list")
+    @NoLogin
+    public ResponseData<List<SeedGroup>> seedGroupList(){
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),seedTypeService.seedGroupList());
     }
 }
