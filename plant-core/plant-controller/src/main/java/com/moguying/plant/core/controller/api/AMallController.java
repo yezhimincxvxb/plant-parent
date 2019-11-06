@@ -6,18 +6,17 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.annotation.ValidateUser;
 import com.moguying.plant.core.entity.PageResult;
-import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
 import com.moguying.plant.core.entity.mall.MallCompany;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.*;
+import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
 import com.moguying.plant.core.entity.seed.vo.SubmitOrder;
 import com.moguying.plant.core.entity.user.UserAddress;
-import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.user.vo.UserMallOrder;
 import com.moguying.plant.core.service.mall.MallCompanyService;
 import com.moguying.plant.core.service.mall.MallOrderDetailService;
@@ -28,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -126,6 +124,7 @@ public class AMallController {
     public ResponseData<OrderBuyResponse> orderBuy(@LoginUserId Integer userId, @RequestBody OrderBuy orderBuy) {
         if (null == orderBuy || null == orderBuy.getProducts() || orderBuy.getProducts().size() == 0)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+
         ResultData<OrderBuyResponse> responseResultData = mallProductService.orderBuy(userId, orderBuy);
         return new ResponseData<>(responseResultData.getMessageEnum().getMessage(), responseResultData.getMessageEnum().getState(), responseResultData.getData());
     }
@@ -140,7 +139,7 @@ public class AMallController {
     @ValidateUser
     @PostMapping("/sum")
     public ResponseData<OrderSum> sumOrder(@LoginUserId Integer userId, @RequestBody SubmitOrder submitOrder) {
-        ResultData<OrderSum> resultData = mallProductService.sumOrder(submitOrder);
+        ResultData<OrderSum> resultData = mallProductService.sumOrder(userId, submitOrder);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
@@ -212,8 +211,10 @@ public class AMallController {
         MallOrder order = mallOrderService.selectOrderById(cancelOrder.getId());
         if (null == order)
             return new ResponseData<>(MessageEnum.MALL_ORDER_NOT_EXISTS.getMessage(), MessageEnum.MALL_ORDER_NOT_EXISTS.getState());
+
         if (StringUtils.isEmpty(cancelOrder.getCancelReason()))
             return new ResponseData<>(MessageEnum.MALL_CANCEL_REASON_EMPTY.getMessage(), MessageEnum.MALL_CANCEL_REASON_EMPTY.getState());
+
         ResultData<Integer> resultData = mallOrderService.cancelOrder(cancelOrder, userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }

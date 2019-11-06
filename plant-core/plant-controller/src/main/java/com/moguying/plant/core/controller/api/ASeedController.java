@@ -124,8 +124,10 @@ public class ASeedController {
     public ResponseData<SendPayOrderResponse> sendPayOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getIsCheck())
             return new ResponseData<>(MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getMessage(), MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getState());
+
         if (null == payOrder.getOrderId())
             return new ResponseData<>(MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getMessage(), MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getState());
+
         ResultData<SendPayOrderResponse> resultData = plantOrderService.checkPayOrder(payOrder, userId);
         if (resultData.getMessageEnum().equals(MessageEnum.ERROR))
             return new ResponseData<>(resultData.getData().getErrorMsg(), resultData.getMessageEnum().getState());
@@ -146,10 +148,11 @@ public class ASeedController {
         if ((null != payOrder.getPayMsgCode() && null != payOrder.getPayPassword()) ||
                 (null == payOrder.getPayPassword() && null == payOrder.getPayMsgCode()))
             return new ResponseData<>(MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getMessage(), MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getState());
+
         if (null != payOrder.getPayMsgCode() && null == payOrder.getSeqNo())
             return new ResponseData<>(MessageEnum.MESSAGE_SERIAL_NO_EMPTY.getMessage(), MessageEnum.MESSAGE_SERIAL_NO_EMPTY.getState());
-        ResultData<PaymentResponse> resultData = plantOrderService.payOrder(payOrder, userId);
 
+        ResultData<PaymentResponse> resultData = plantOrderService.payOrder(payOrder, userId);
         if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             SeedOrderDetail seedOrderDetail = seedOrderDetailService.orderDetailByIdAndUserId(payOrder.getOrderId(), userId);
             Block block = blockService.findBlockBySeedType(seedOrderDetail.getSeedTypeId());
@@ -175,6 +178,7 @@ public class ASeedController {
     public ResponseData<BuyOrderResponse> orderPay(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getOrderId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+
         SeedOrderDetail detail = seedOrderDetailService.orderDetailByIdAndUserId(payOrder.getOrderId(), userId);
         if (null == detail)
             return new ResponseData<>(MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getMessage(), MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getState());

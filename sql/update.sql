@@ -438,3 +438,8 @@ CREATE TABLE `plant_reap_weigh` (
   `available_profit` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '可领取收益',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+/** 商城订单表，新增券id **/
+ALTER TABLE `moguying`.`plant_mall_order`
+ADD COLUMN `fertilizer_id` int(11) DEFAULT NULL COMMENT '使用券id' AFTER `state`;

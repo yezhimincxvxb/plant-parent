@@ -26,19 +26,19 @@ public class OrderBuyResponse {
     /**
      * 商品总价
      */
-    @JSONField(ordinal = 3,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 3, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal productAmount;
 
     /**
      * 运费
      */
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal expressFee;
 
     /**
      * 订单总价
      */
-    @JSONField(ordinal = 5,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal totalAmount;
 
     /**
@@ -52,5 +52,11 @@ public class OrderBuyResponse {
      */
     @JSONField(ordinal = 7)
     private Integer totalCoins;
+
+    /**
+     * 使用券金额
+     */
+    @JSONField(ordinal = 8, serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal fertilizerAmount;
 
 }

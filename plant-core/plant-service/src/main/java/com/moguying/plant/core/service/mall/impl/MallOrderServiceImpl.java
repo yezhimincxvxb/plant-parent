@@ -9,6 +9,7 @@ import com.moguying.plant.constant.MallEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.SystemEnum;
+import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.mall.MallCarDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
@@ -20,6 +21,7 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
+import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
@@ -36,7 +38,6 @@ import com.moguying.plant.core.service.account.UserMoneyService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.payment.PaymentApiService;
 import com.moguying.plant.core.service.payment.PaymentService;
-import com.moguying.plant.core.service.reap.SaleCoinLogService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.core.service.user.UserMessageService;
 import com.moguying.plant.utils.CFCARAUtil;
@@ -52,10 +53,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MallOrderServiceImpl implements MallOrderService {
@@ -111,14 +109,13 @@ public class MallOrderServiceImpl implements MallOrderService {
     private SaleCoinService saleCoinService;
 
     @Autowired
-    private SaleCoinLogService saleCoinLogService;
-
+    private UserFertilizerDAO userFertilizerDAO;
 
     @Override
     @DS("read")
     public PageResult<MallOrder> mallOrderList(Integer page, Integer size, MallOrderSearch where) {
         IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -143,7 +140,7 @@ public class MallOrderServiceImpl implements MallOrderService {
     @DS("read")
     public PageResult<UserMallOrder> userMallOrderListByState(Integer page, Integer size, Integer userId, Integer state) {
         IPage<UserMallOrder> pageResult = mallOrderDAO.userOrderListByState(new Page<>(page, size), userId, state);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -213,7 +210,7 @@ public class MallOrderServiceImpl implements MallOrderService {
     @DS(value = "write")
     public ResultData<Integer> cancelOrder(CancelOrder cancelOrder, Integer userId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
-        //更状态
+        // 更状态
         MallOrder mallOrder = mallOrderDAO.selectById(cancelOrder.getId());
         if (null == mallOrder || !mallOrder.getState().equals(MallEnum.ORDER_NEED_PAY.getState()))
             return resultData.setMessageEnum(MessageEnum.MALL_ORDER_NOT_EXISTS);
@@ -222,7 +219,7 @@ public class MallOrderServiceImpl implements MallOrderService {
         if (null == orderItems || orderItems.size() == 0)
             return resultData.setMessageEnum(MessageEnum.MALL_ORDER_ITEM_EMPTY);
         for (OrderItem item : orderItems) {
-            //返库存
+            // 返库存
             mallProductDAO.updateProductHasCountById(-item.getBuyCount(), item.getProductId());
         }
         MallOrder update = new MallOrder();
@@ -248,6 +245,17 @@ public class MallOrderServiceImpl implements MallOrderService {
             return resultData.setMessageEnum(MessageEnum.MALL_ORDER_NOT_EXISTS);
         if (!order.getState().equals(MallEnum.ORDER_HAS_PAY.getState()))
             return resultData.setMessageEnum(MessageEnum.MALL_ORDER_CAN_NOT_REFUND);
+
+        // 返券
+        if (Objects.nonNull(order.getFertilizerId())) {
+            UserFertilizer userFertilizer = userFertilizerDAO.selectById(order.getFertilizerId());
+            if (Objects.nonNull(userFertilizer)) {
+                userFertilizer.setState(0);
+                if (userFertilizerDAO.updateById(userFertilizer) < 0)
+                    return resultData.setMessageEnum(MessageEnum.RETURN_FERTILIZER_ERROR);
+            }
+        }
+
         // 退库存
         List<OrderItem> orderItems = mallOrderDetailDAO.selectDetailListByOrderId(orderId, userId);
         for (OrderItem item : orderItems) {
@@ -256,7 +264,7 @@ public class MallOrderServiceImpl implements MallOrderService {
         }
 
         // 退款
-        if (order.getBuyAmount() != null && order.getBuyAmount().compareTo(BigDecimal.ZERO) > 0 ) {
+        if (order.getBuyAmount() != null && order.getBuyAmount().compareTo(BigDecimal.ZERO) > 0) {
             BigDecimal payAmount = order.getCarPayAmount().add(order.getAccountPayAmount());
             UserMoneyOperator operator = new UserMoneyOperator();
             operator.setOpType(MoneyOpEnum.BUY_CANCEL);
@@ -323,7 +331,7 @@ public class MallOrderServiceImpl implements MallOrderService {
      * 实时查询快递单号
      */
     @Override
-    public String  synQueryData(TraceInfoParam traceInfoParam) {
+    public String synQueryData(TraceInfoParam traceInfoParam) {
 
         // 公司编号、授权key
         String customer = "BFF7093E590DC639EC851CE58070B80C";

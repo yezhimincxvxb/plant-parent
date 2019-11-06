@@ -13,7 +13,8 @@ import com.moguying.plant.core.entity.user.User;
 public interface PlantOrderService {
 
     ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId);
-    ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId,boolean isTaste);
+
+    ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId, boolean isTaste);
 
     ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId);
 
@@ -23,7 +24,7 @@ public interface PlantOrderService {
 
     ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder);
 
-    ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder,boolean isTaste);
+    ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder, boolean isTaste);
 
     ResultData<Integer> plantReapExchange(ExcReap excReap);
 
