@@ -39,7 +39,6 @@ import com.moguying.plant.core.service.payment.PaymentApiService;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.seed.SeedOrderService;
-import com.moguying.plant.core.service.seed.SeedService;
 import com.moguying.plant.core.service.user.UserInviteService;
 import com.moguying.plant.core.service.user.UserMessageService;
 import com.moguying.plant.utils.DateUtil;
@@ -83,9 +82,6 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
     @Autowired
     private SeedOrderDetailDAO seedOrderDetailDAO;
-
-    @Autowired
-    private SeedService seedService;
 
     @Autowired
     private UserMoneyService userMoneyService;
@@ -134,33 +130,39 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      */
     @Override
     @DS("write")
+    @Transactional
     public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId,boolean isTaste) {
-        User user = userDAO.selectById(userId);
         ResultData<BuyOrderResponse> result = new ResultData<>(MessageEnum.ERROR, null);
+
+        User user = userDAO.selectById(userId);
         if (null == user)
             return result.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
 
         Seed seed = seedDAO.seedInfoWithTypeById(order.getSeedId());
-        //菌包是否存在，是否在售
+        // 菌包是否存在，是否在售
         if (null == seed || !seed.getState().equals(SeedEnum.REVIEWED.getState()) || !seed.getIsShow())
             return result.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
-        //是否在售买时间
+
+        // 是否在售买时间
         if (seed.getOpenTime().getTime() > System.currentTimeMillis() || seed.getCloseTime().getTime() < System.currentTimeMillis())
             return result.setMessageEnum(MessageEnum.SEED_NOT_IN_TIME);
-        //是否售罄
+
+        // 是否售罄
         if (seed.getLeftCount() == 0)
             return result.setMessageEnum(MessageEnum.SEED_IS_FULL);
-        //是否超出购买份数
+
+        // 是否超出购买份数
         order.setCount(Math.min(seed.getLeftCount(), order.getCount()));
 
+        // 购买总价
         BigDecimal buyAmount = InterestUtil.INSTANCE.calAmount(order.getCount(), seed.getPerPrice());
 
-        //减少库存
+        // 减少库存
         if (seedDAO.decrSeedLeftCount(order.getCount(), order.getSeedId()) <= 0) {
             return result.setMessageEnum(MessageEnum.SEED_LEFT_COUNT_NOT_ENOUGH);
         }
 
-        //生成订单
+        // 生成订单
         SeedOrderDetail seedOrderDetail = new SeedOrderDetail();
         seedOrderDetail.setUserId(userId);
         seedOrderDetail.setSeedId(order.getSeedId());
@@ -179,14 +181,14 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             orderResponse.setOrderId(seedOrderDetail.getId());
             orderResponse.setOrderNumber(seedOrderDetail.getOrderNumber());
             orderResponse.setPerWeigh(seed.getTypeInfo().getPerWeigh());
-            //非体验需加入关单队列
+            // 非体验需加入关单队列
             if(!isTaste) {
                 UserMoney userMoney = moneyDAO.selectById(userId);
                 orderResponse.setAvailableMoney(userMoney.getAvailableMoney());
-                //默认订单180秒关单
+                // 默认订单180秒关单
                 orderResponse.setLeftSecond(expireTime.intValue());
 
-                //添加至关单队列
+                // 添加至关单队列
                 closeOrderScheduled.addCloseItem(new CloseSeedPayOrder(seedOrderDetail.getId(), expireTime));
             }
             result.setMessageEnum(MessageEnum.SUCCESS).setData(orderResponse);
@@ -224,6 +226,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (null == orderDetail || null != orderDetail.getPayTime())
             return resultData.setMessageEnum(MessageEnum.SEED_ORDER_DETAIL_HAS_PAY);
+
         User userInfo = userDAO.selectById(userId);
         resultData = paymentApiService.payOrder(payOrder, orderDetail, userInfo);
         if (!resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {

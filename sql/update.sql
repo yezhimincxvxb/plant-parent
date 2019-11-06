@@ -414,3 +414,8 @@ CREATE TABLE `plant_bargain_rate` (
   `new_rate` int(11) NOT NULL COMMENT '新用户系数',
   `old_rate` int(11) NOT NULL COMMENT '老用户系数'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+/** 商城订单表，新增券id **/
+ALTER TABLE `moguying`.`plant_mall_order`
+ADD COLUMN `fertilizer_id` int(11) DEFAULT NULL COMMENT '使用券id' AFTER `state`;

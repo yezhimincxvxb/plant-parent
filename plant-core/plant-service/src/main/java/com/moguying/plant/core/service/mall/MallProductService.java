@@ -27,7 +27,7 @@ public interface MallProductService {
 
     ResultData<MallProduct> productDetail(Integer id);
 
-    ResultData<OrderSum> sumOrder(SubmitOrder submitOrder);
+    ResultData<OrderSum> sumOrder(Integer userId, SubmitOrder submitOrder);
 
     PageResult<HomeProduct> productListForHome(Integer page, Integer size, HomeProduct search);
 

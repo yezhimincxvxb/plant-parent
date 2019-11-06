@@ -74,19 +74,29 @@ public class TasteServiceImpl implements TasteService {
     @Override
     public ResultData<BuyOrderResponse> buy(BuyOrder buyOrder,Integer userId) {
         ResultData<BuyOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
+
+        // 菌包不存在
         Seed seed = seedDAO.seedInfoWithTypeById(buyOrder.getSeedId());
         if(null == seed)
             return resultData.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
+
+        // 菌包类型
         if(null == seed.getTypeInfo())
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
+
+        // 非新手类型
         if(!seed.getTypeInfo().getIsForNew())
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_FOR_TASTE);
+
+        // 固定一份
         if(1 != buyOrder.getCount())
             return resultData.setMessageEnum(MessageEnum.TASTE_BUY_SEED_COUNT_ERROR);
+
         //TODO 是否已参于过
         ResultData<BuyOrderResponse> buyResult = plantOrderService.plantOrder(buyOrder, userId, true);
         if(!buyResult.getMessageEnum().equals(MessageEnum.SUCCESS))
             return resultData.setMessageEnum(buyResult.getMessageEnum());
+
         ResultData<Integer> payResult =
                 plantOrderService.payOrderSuccess(seedOrderDetailDAO.selectById(buyResult.getData().getOrderId()),
                         userDAO.selectById(userId));

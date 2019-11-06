@@ -1,16 +1,22 @@
 package com.moguying.plant.core.entity.mall.vo;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
+
 import java.util.List;
 
+@Data
+@Accessors(chain = true)
 public class OrderBuy {
 
-    List<BuyProduct> products;
+    /**
+     * 商品集合
+     */
+    private List<BuyProduct> products;
 
-    public List<BuyProduct> getProducts() {
-        return products;
-    }
+    /**
+     * 券id
+     */
+    private Integer fertilizerId;
 
-    public void setProducts(List<BuyProduct> products) {
-        this.products = products;
-    }
 }

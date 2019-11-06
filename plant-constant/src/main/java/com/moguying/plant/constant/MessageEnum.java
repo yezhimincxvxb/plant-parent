@@ -142,6 +142,7 @@ public enum  MessageEnum {
     USER_INFO_ERROR("用户信息不匹配",10136),
     FARMER_LEVEL_UP_GIFT_FALSE("未到达等级，无法领取礼包",10137),
     FERTILIZER_NOT_FOUND("券不存在",10138),
+    FERTILIZER_TYPE_FALSE("券类型错误",10138),
     ADMIN_MENU_NOT_EXIST("路由菜单不存在",10139),
     USER_OUT_OF_AGE("用户已超年龄，请更换实名信息",10140),
     COINS_NOT_ENOUGH("蘑菇币不足，无法兑换",10141),
@@ -159,9 +160,12 @@ public enum  MessageEnum {
     SEED_REAP_NOT_IN_TIME("成品未到采摘时间",10153),
     TASTE_APPLY_NOT_EXIST("试吃申请记录未查找到",10154),
     TASTE_HAS_APPLY("已申请试吃，请耐心等待结果",10155),
+    FERTILIZER_NOT("为满足满减券使用条件",10158),
+    RETURN_FERTILIZER_ERROR("返券失败",10162),
     TASTE_COUNT_NOT_ENOUGH("试吃份数不足，请尝试其他商品",10156),
-    TASTE_BUY_SEED_COUNT_ERROR("体验购买份数只能1份",10157),
-    POP_MESSAGE_ICON_EMPTY("弹幕ICON不能为空",10158);
+    TASTE_BUY_SEED_COUNT_ERROR("体验购买份数只能1份",10160),
+    SYMBOL_ERROR("砍价口令",10161),
+    POP_MESSAGE_ICON_EMPTY("弹幕ICON不能为空",10163);
 
 
 

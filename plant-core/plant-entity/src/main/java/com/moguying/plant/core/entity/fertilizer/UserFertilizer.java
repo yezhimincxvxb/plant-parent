@@ -46,17 +46,24 @@ public class UserFertilizer implements Serializable {
     private Integer fertilizerId;
 
     /**
+     * 券金额
+     */
+    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @TableField
+    private BigDecimal fertilizerAmount;
+
+    /**
      * [0未使用，1已使用，2已过期]
      */
     @Excel(name = "状态",replace = {"未使用_0","已使用_1","已过期_2"},orderNum = "1")
-    @JSONField(ordinal = 4)
+    @JSONField(ordinal = 5)
     @TableField
     private Integer state;
 
     /**
      * 使用对应的流水号
      */
-    @JSONField(ordinal = 5)
+    @JSONField(ordinal = 6)
     @Excel(name = "使用详细流水",orderNum = "2")
     @TableField
     private String useOrderNumber;
@@ -65,7 +72,7 @@ public class UserFertilizer implements Serializable {
      * 添加时间
      */
     @Excel(name = "添加时间",orderNum = "3",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 6)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 7)
     @TableField
     private Date addTime;
 
@@ -73,7 +80,7 @@ public class UserFertilizer implements Serializable {
      * 券有效时间
      */
     @Excel(name = "有效时间",orderNum = "4",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 7)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 8)
     @TableField
     private Date startTime;
 
@@ -81,7 +88,7 @@ public class UserFertilizer implements Serializable {
      * 券失效时间
      */
     @Excel(name = "失效时间",orderNum = "5",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 8)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 9)
     @TableField
     private Date endTime;
 
@@ -89,7 +96,7 @@ public class UserFertilizer implements Serializable {
      * 券
      */
     @Excel(name = "券",orderNum = "6")
-    @JSONField(ordinal = 9)
+    @JSONField(ordinal = 10)
     @TableField(exist = false)
     private Fertilizer fertilizer;
 
@@ -98,7 +105,7 @@ public class UserFertilizer implements Serializable {
      * 手机号
      */
     @Excel(name = "手机号",orderNum = "7")
-    @JSONField(ordinal = 10)
+    @JSONField(ordinal = 11)
     @TableField(exist = false)
     private String phone;
 
@@ -106,14 +113,8 @@ public class UserFertilizer implements Serializable {
      * 真实姓名
      */
     @Excel(name = "真实姓名",orderNum = "8")
-    @JSONField(ordinal = 11)
+    @JSONField(ordinal = 12)
     @TableField(exist = false)
     private String realName;
 
-    /**
-     * 券金额
-     */
-    @JSONField(ordinal = 12,serializeUsing = BigDecimalSerialize.class)
-    @TableField
-    private BigDecimal fertilizerAmount;
 }
