@@ -442,4 +442,7 @@ CREATE TABLE `plant_reap_weigh` (
 
 /** 出菇量 **/
 ALTER TABLE `moguying`.`plant_reap`
-ADD COLUMN `plant_weigh` decimal(15,2) NOT NULL COMMENT '出菇量';
+ADD COLUMN `plant_weigh` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '出菇量';
+
+ALTER TABLE `moguying`.`plant_seed_type`
+ADD COLUMN `per_weigh` decimal(15, 2) NOT NULL DEFAULT '0.00' AFTER `ex_mall_product`;
