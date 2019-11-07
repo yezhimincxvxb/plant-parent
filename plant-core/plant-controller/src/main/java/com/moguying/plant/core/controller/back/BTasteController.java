@@ -7,6 +7,7 @@ import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.taste.PopMessage;
 import com.moguying.plant.core.entity.taste.Taste;
+import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.service.teste.PopMessageService;
 import com.moguying.plant.core.service.teste.TasteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +140,19 @@ public class BTasteController {
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
 
         return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+    }
+
+    /**
+     * 试吃申请记录
+     * @param search
+     * @return
+     */
+    @PostMapping("/free/apply/list")
+    public PageResult<TasteApply> applyPageResult(@RequestBody PageSearch<TasteApply> search) {
+        if(null == search.getWhere()){
+            search.setWhere(new TasteApply());
+        }
+        return tasteService.tasteApplyPageResult(search.getPage(),search.getSize(),search.getWhere());
     }
 
 }
