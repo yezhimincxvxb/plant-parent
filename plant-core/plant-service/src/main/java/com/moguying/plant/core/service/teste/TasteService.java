@@ -8,13 +8,12 @@ import com.moguying.plant.core.entity.seed.vo.BuyOrderResponse;
 import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.entity.taste.vo.TasteReap;
-import com.moguying.plant.core.entity.user.UserAddress;
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 
 import java.util.List;
 
 public interface TasteService {
+
+    Boolean isNew(Integer userId);
 
     /**
      * 购买体验包

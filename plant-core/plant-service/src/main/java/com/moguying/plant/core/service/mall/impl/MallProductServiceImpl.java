@@ -3,6 +3,7 @@ package com.moguying.plant.core.service.mall.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.bargain.BargainRateDao;
@@ -315,7 +316,7 @@ public class MallProductServiceImpl implements MallProductService {
             fertilizerAmount = fertilizer.getFertilizerAmount();
 
             // 使用后，更新状态
-            userFertilizer.setState(1);
+            userFertilizer.setState(FertilizerEnum.FERTILIZER_USED.getState());
             if (userFertilizerDAO.updateById(userFertilizer) <= 0)
                 return resultData.setMessageEnum(MessageEnum.MALL_ORDER_UPDATE_ERROR);
         }

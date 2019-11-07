@@ -131,7 +131,7 @@ public class User implements Serializable {
     /**
      * 注册邀请码
      */
-    @JSONField(serialize =  false,deserialize =  false,ordinal = 13)
+    @JSONField(ordinal = 13)
     @TableField
     private String inviteCode;
 

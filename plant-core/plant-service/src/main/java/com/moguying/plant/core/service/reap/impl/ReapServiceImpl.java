@@ -99,7 +99,7 @@ public class ReapServiceImpl<T> implements ReapService {
 
     @Override
     @DS("read")
-    public PageResult<Reap> c(Integer page, Integer size, Reap where) {
+    public PageResult<Reap> userReapList(Integer page, Integer size, Reap where) {
         IPage<Reap> pageResult = reapDAO.userReapList(new Page<>(page, size), where);
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }

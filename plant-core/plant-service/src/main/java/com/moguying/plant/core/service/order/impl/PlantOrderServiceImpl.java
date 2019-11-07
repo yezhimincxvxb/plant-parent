@@ -65,7 +65,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
@@ -202,7 +201,12 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         seedOrderDetail.setSeedId(order.getSeedId());
         seedOrderDetail.setBuyCount(order.getCount());
         seedOrderDetail.setBuyAmount(buyAmount);
-        seedOrderDetail.setOrderNumber(OrderPrefixEnum.SEED_ORDER_DETAIL.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
+        // 体验订单
+        if (isTaste) {
+            seedOrderDetail.setOrderNumber(OrderPrefixEnum.TI_YAN_BUY.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
+        } else {
+            seedOrderDetail.setOrderNumber(OrderPrefixEnum.SEED_ORDER_DETAIL.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
+        }
         seedOrderDetail.setAddTime(new Date());
 
         if (seedOrderDetailDAO.insert(seedOrderDetail) > 0) {
@@ -303,7 +307,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
         // 是否设置了支付密码
         User user = userDAO.userInfoById(userId);
-        //非体验时校验
+        // 非体验时校验
         if(!isTaste) {
             if (null == user || StringUtils.isEmpty(user.getPayPassword()))
                 return resultData.setMessageEnum(MessageEnum.NEED_PAY_PASSWORD);
@@ -577,18 +581,18 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         update.setId(orderDetail.getId());
         update.setPayTime(new Date());
         update.setState(SeedEnum.SEED_ORDER_DETAIL_HAS_PAY.getState());
-        //更新seedDetail
+        // 更新seedDetail
         if (seedOrderDetailDAO.updateById(update) <= 0)
             return resultData;
 
         if (!seedOrderService.incrSeedOrder(orderDetail)) {
             return resultData;
         }
-        //成功购买菌包数量
+        // 成功购买菌包数量
         Integer successCount =
                 seedOrderDetailDAO.sumOrderCountBySeedId(orderDetail.getSeedId(), SeedEnum.SEED_ORDER_DETAIL_HAS_PAY.getState());
         Seed seed = seedDAO.selectById(orderDetail.getSeedId());
-        //是否已售罄
+        // 是否已售罄
         if (seed.getTotalCount().equals(successCount)) {
             Seed seedHasFull = new Seed();
             seedHasFull.setId(seed.getId());

@@ -1,6 +1,5 @@
 package com.moguying.plant.core.dao.seed;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.BaseDAO;
@@ -17,6 +16,7 @@ import java.util.List;
 public interface SeedTypeDAO extends BaseDAO<SeedType> {
     IPage<SeedType> selectSelective(Page<SeedType> page, @Param("wq") SeedType where);
     List<SeedType> selectSelective(SeedType where);
+
     SeedType selectByPrimaryKeyWithBLOB(Integer id);
 
 }

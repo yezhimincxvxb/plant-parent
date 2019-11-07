@@ -503,5 +503,13 @@ public class UserServiceImpl implements UserService {
     public User userInfo(User where) {
         return userDAO.selectOne(new QueryWrapper<>(where));
     }
+
+    @Override
+    @DS("write")
+    public List<User> inviteUser(Date startTime, Integer inviteId) {
+        List<User> users = userDAO.inviteUser(startTime, inviteId);
+
+        return users;
+    }
 }
 

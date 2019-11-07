@@ -167,7 +167,8 @@ public enum  MessageEnum {
     REAP_EXCHANGE_WEIGH_ERROR("成品需大于1800g才可兑换实物",10160),
     SYMBOL_ERROR("砍价口令",10161),
     RETURN_FERTILIZER_ERROR("返券失败",10162),
-    FERTILIZER_NOT("未满足满减券使用条件",10163);
+    FERTILIZER_NOT("未满足满减券使用条件",10163),
+    YI_TI_YAN("已体验，无须重复体验",10164);
 
 
 

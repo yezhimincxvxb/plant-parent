@@ -19,6 +19,7 @@ import com.moguying.plant.core.service.teste.TasteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,21 @@ public class ATasteController {
 
     @Autowired
     private PopMessageService popMessageService;
+
+    /**
+     * 用户是否新手
+     */
+    @GetMapping("/is/new")
+    public ResponseData<Boolean> isNew(@LoginUserId Integer userId) {
+        ResponseData<Boolean> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+
+        if (Objects.isNull(userId))
+            return responseData
+                    .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
+                    .setState(MessageEnum.PARAMETER_ERROR.getState());
+
+       return responseData.setData(tasteService.isNew(userId));
+    }
 
     /**
      * 购买体验

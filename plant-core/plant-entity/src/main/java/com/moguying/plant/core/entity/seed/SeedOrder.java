@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
  */
 @TableName("plant_seed_order")
 @Data
+@Accessors(chain = true)
 public class SeedOrder implements Serializable {
 
     private static final long serialVersionUID = 43019283648714030L;

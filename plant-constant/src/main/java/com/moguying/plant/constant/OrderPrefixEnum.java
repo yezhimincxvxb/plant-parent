@@ -9,6 +9,7 @@ public enum  OrderPrefixEnum {
     MALL_PRODUCT_ORDER("MP"),
     PAYMENT_BIND_CARD_ORDER("PBC"),
     KAN_JIA("KJ"),
+    TI_YAN_BUY("TYB"),
     RED_PACKAGE("RP");
 
 

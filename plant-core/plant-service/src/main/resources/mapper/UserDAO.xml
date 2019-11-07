@@ -106,5 +106,18 @@
         where id = #{userId} and invite_code = #{inviteCode}
     </select>
 
+    <select id="inviteUser" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from plant_user
+        <where>
+            <if test="inviteId != null">
+                invite_uid = #{inviteId}
+            </if>
+            <if test="startTime != null" >
+                AND UNIX_TIMESTAMP(#{startTime}) &lt; UNIX_TIMESTAMP(reg_time)
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

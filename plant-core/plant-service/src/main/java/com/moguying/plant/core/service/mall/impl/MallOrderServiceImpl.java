@@ -5,10 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moguying.plant.constant.MallEnum;
-import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.constant.MoneyOpEnum;
-import com.moguying.plant.constant.SystemEnum;
+import com.moguying.plant.constant.*;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.mall.MallCarDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
@@ -250,7 +247,7 @@ public class MallOrderServiceImpl implements MallOrderService {
         if (Objects.nonNull(order.getFertilizerId())) {
             UserFertilizer userFertilizer = userFertilizerDAO.selectById(order.getFertilizerId());
             if (Objects.nonNull(userFertilizer)) {
-                userFertilizer.setState(0);
+                userFertilizer.setState(FertilizerEnum.FERTILIZER_NO_USE.getState());
                 if (userFertilizerDAO.updateById(userFertilizer) < 0)
                     return resultData.setMessageEnum(MessageEnum.RETURN_FERTILIZER_ERROR);
             }

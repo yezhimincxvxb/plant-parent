@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
+
 @Service
 @Slf4j
 public class SeedTypeServiceImpl implements SeedTypeService {
@@ -89,6 +93,17 @@ public class SeedTypeServiceImpl implements SeedTypeService {
         return seedTypeDAO.selectByPrimaryKeyWithBLOB(id);
     }
 
+    @Override
+    @DS("read")
+    public SeedType getFreeSeed(String name, BigDecimal price, Boolean isDelete) {
+        SeedType seedType = new SeedType();
+        seedType.setClassName(name);
+        seedType.setPerPrice(price);
+        seedType.setIsDelete(isDelete);
+        List<SeedType> seedTypes = seedTypeDAO.selectSelective(seedType);
+        if (Objects.nonNull(seedTypes) && seedTypes.size() == 1) return seedTypes.get(0);
+        return null;
+    }
     @Override
     @DS("read")
     public List<SeedGroup> seedGroupList() {

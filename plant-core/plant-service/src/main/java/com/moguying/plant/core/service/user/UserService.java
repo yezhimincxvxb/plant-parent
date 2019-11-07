@@ -14,6 +14,7 @@ import com.moguying.plant.core.entity.user.vo.LoginResponse;
 import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 public interface UserService {
@@ -70,4 +71,5 @@ public interface UserService {
 
     User userInfo(User where);
 
+    List<User> inviteUser(Date startTime, Integer inviteId);
 }

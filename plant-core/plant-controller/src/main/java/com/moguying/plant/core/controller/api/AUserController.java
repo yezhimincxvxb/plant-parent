@@ -23,7 +23,9 @@ import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.reap.vo.ReapSearch;
 import com.moguying.plant.core.entity.seed.SeedGroup;
+import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.*;
@@ -32,6 +34,7 @@ import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.ReapWeighService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.seed.SeedOrderService;
+import com.moguying.plant.core.service.seed.SeedTypeService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserFertilizerService;
 import com.moguying.plant.core.service.user.UserInviteService;
@@ -57,6 +60,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
 
@@ -100,6 +106,9 @@ public class AUserController {
 
     @Autowired
     private StringRedisTemplate redisUtil;
+
+    @Autowired
+    private SeedTypeService seedTypeService;
 
 
     @Value("${user.invite.bg.image}")
@@ -925,7 +934,7 @@ public class AUserController {
             //获取背景
             BufferedImage bgImage = ImageIO.read(resource.getInputStream());
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-            Map<EncodeHintType,Object> hints = new HashMap<>();
+            Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hints.put(EncodeHintType.MARGIN, 1);
             int width = 142, height = 142;
@@ -1005,6 +1014,69 @@ public class AUserController {
         String sign = CommonUtil.INSTANCE.sha1Sign(CFCARAUtil.joinMapValue(signParams, '&'));
         WeChatShare share = new WeChatShare(signParams.get("timestamp").toString(), signParams.get("noncestr").toString(), sign);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), share);
+    }
+
+    /**
+     * 品宣活动-点击免费领取30天菌包
+     */
+    @GetMapping("/free/seed")
+    public ResponseData<Integer> freeSeed(@LoginUserId Integer userId) {
+
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+
+        // 获取价值12.50元的30天菌包
+        SeedType seedType = seedTypeService.getFreeSeed("30天菌包", new BigDecimal("12.50"), false);
+        if (Objects.isNull(seedType)) return responseData;
+
+        // 发送菌包
+        SeedOrder seedOrder = new SeedOrder();
+        seedOrder.setUserId(userId);
+        seedOrder.setSeedType(seedType.getId());
+        Boolean sendSeedSuccess = seedOrderService.sendSeedSuccess(seedOrder, seedType.getPerPrice());
+        if (sendSeedSuccess)
+            return responseData.setMessage(MessageEnum.SUCCESS.getMessage()).setState(MessageEnum.SUCCESS.getState());
+
+        return responseData;
+    }
+
+    /**
+     * 好友分享，获取邀请码
+     */
+    @GetMapping("/friend/sharing")
+    public ResponseData<User> friendSharing(@LoginUserId Integer userId) {
+
+        ResponseData<User> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+
+        User user = userService.userInfoById(userId);
+        if (Objects.isNull(user)) return responseData;
+
+        User user1 = new User();
+        user1.setInviteCode(user.getInviteCode());
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData(user1);
+    }
+
+    /**
+     * 邀请成功记录
+     */
+    @GetMapping("/invite/log")
+    public ResponseData<List<User>> inviteLog(@LoginUserId Integer userId) throws ParseException {
+
+        ResponseData<List<User>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+
+        User user = userService.userInfoById(userId);
+        if (Objects.isNull(user)) return responseData;
+
+        // 活动开启时间
+        String dateStr = "2019-11-01 00:00:00";
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
+
+        // 发奖
+        List<User> users = userService.inviteUser(startDate, userId);
+
+        return responseData.setData(users);
     }
 
 }

@@ -4,11 +4,13 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.ApiEnum;
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.constant.ReapEnum;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
+import com.moguying.plant.core.dao.seed.SeedOrderDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
@@ -19,6 +21,8 @@ import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.seed.Seed;
+import com.moguying.plant.core.entity.seed.SeedOrder;
+import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.BuyOrder;
 import com.moguying.plant.core.entity.seed.vo.BuyOrderResponse;
 import com.moguying.plant.core.entity.taste.Taste;
@@ -39,6 +43,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -81,10 +86,28 @@ public class TasteServiceImpl implements TasteService {
     @Autowired
     private FertilizerService fertilizerService;
 
+    @Autowired
+    private SeedOrderDAO seedOrderDAO;
+
+    @Override
+    @DS("read")
+    public Boolean isNew(Integer userId) {
+        Integer count = seedOrderDAO.selectCount(new QueryWrapper<>(new SeedOrder().setUserId(userId)));
+        return count > 0;
+    }
+
     @DS("write")
     @Override
+    @Transactional
     public ResultData<BuyOrderResponse> buy(BuyOrder buyOrder,Integer userId) {
         ResultData<BuyOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
+
+        // 体验购买只有一次机会
+        QueryWrapper<SeedOrderDetail> wrapper = new QueryWrapper<SeedOrderDetail>()
+                .and(i -> i.eq("user_id", userId).likeRight("order_number", OrderPrefixEnum.TI_YAN_BUY.getPreFix()));
+        List<SeedOrderDetail> details = seedOrderDetailDAO.selectList(wrapper);
+        if (Objects.nonNull(details) && details.size() > 0)
+            return resultData.setMessageEnum(MessageEnum.YI_TI_YAN);
 
         // 菌包不存在
         Seed seed = seedDAO.seedInfoWithTypeById(buyOrder.getSeedId());
@@ -123,11 +146,14 @@ public class TasteServiceImpl implements TasteService {
         Reap where = new Reap();
         where.setUserId(userId);
         where.setOrderId(orderId);
+
         Reap reap = reapDAO.selectOne(new QueryWrapper<>(where));
         if (null == reap)
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
+
         if (reap.getPreReapTime().getTime() != DateUtil.INSTANCE.todayEnd().getTime())
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_IN_TIME);
+
         Reap update = new Reap();
         update.setId(reap.getId());
         update.setState(ReapEnum.REAP_DONE.getState());

@@ -27,28 +27,29 @@
 
 
     <sql id="Base_Column_List">
-    id, class_name, grow_days, per_price, interest_rates, order_number, is_delete, plant_type, 
-    reap_type,pic_url,thumb_pic_url,exchange_num
-  </sql>
+        id, class_name, grow_days, per_price, interest_rates, order_number, is_delete, plant_type,
+        reap_type,pic_url,thumb_pic_url,exchange_num
+    </sql>
 
     <select id="selectByPrimaryKeyWithBLOB" resultMap="SeedTypeWithContent" parameterType="int">
-    select
-    t1.*,t2.*
-    from plant_seed_type t1
-    left join plant_seed_content t2 on t2.seed_type = t1.id
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+        select
+        t1.*,t2.*
+        from plant_seed_type t1
+        left join plant_seed_content t2 on t2.seed_type = t1.id
+        where id = #{id,jdbcType=INTEGER}
+    </select>
 
     <update id="deleteById" parameterType="java.lang.Integer">
-    update plant_seed_type
-    set is_delete = 1
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+        update plant_seed_type
+        set is_delete = 1
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
     <select id="selectSelective" parameterType="SeedType" resultType="SeedType">
         select
         t1.id, class_name, grow_days, per_price, interest_rates, order_number, is_delete, plant_type,
-        reap_type,pic_url,thumb_pic_url,exchange_num,group_id,group_name,is_for_new,ex_mall_product,t3.name as ex_mall_product_name
+        reap_type,pic_url,thumb_pic_url,exchange_num,group_id,group_name,is_for_new,ex_mall_product,t3.name as
+        ex_mall_product_name
         from plant_seed_type t1
         left join plant_seed_group t2 on t1.group_id = t2.id
         left join plant_mall_product t3 on t1.ex_mall_product = t3.id
@@ -58,6 +59,12 @@
             </if>
             <if test="wq.className != null">
                 AND class_name = #{wq.className}
+            </if>
+            <if test="wq.orderNumber != null">
+            AND order_number = #{wq.orderNumber}
+            </if>
+            <if test="wq.perPrice != null">
+                AND per_price = #{wq.perPrice}
             </if>
             <if test="wq.orderNumber != null">
                 AND order_number = #{wq.orderNumber}

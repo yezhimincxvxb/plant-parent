@@ -7,6 +7,7 @@ import com.moguying.plant.core.entity.user.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,4 +24,6 @@ public interface UserDAO extends BaseDAO<User> {
     User userInfoByPhoneAndPassword(User user);
 
     User userInfoByInviteCodeAndId(@Param("userId") Integer userId, @Param("inviteCode") String inviteCode);
+
+    List<User> inviteUser(@Param("startTime") Date startTime, @Param("inviteId") Integer inviteId);
 }
