@@ -22,7 +22,6 @@ import com.moguying.plant.core.entity.payment.response.*;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.reap.vo.ReapSearch;
-import com.moguying.plant.core.entity.seed.SeedGroup;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.SeedType;
@@ -659,7 +658,7 @@ public class AUserController {
         Reap where = new Reap();
         where.setUserId(userId);
         where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(),ReapEnum.SALE_DONE.getState(),ReapEnum.EXCHANGE_DONE.getState()));
-        if(null != search.getWhere().getGroupId())
+        if(search.getWhere() != null && null != search.getWhere().getGroupId())
             where.setGroupId(search.getWhere().getGroupId());
 
         return reapService.userReapList(search.getPage(), search.getSize(),where);

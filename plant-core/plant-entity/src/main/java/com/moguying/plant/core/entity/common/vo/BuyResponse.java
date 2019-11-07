@@ -35,7 +35,4 @@ public class BuyResponse implements Serializable {
     @JSONField(ordinal = 6)
     private Integer totalCoins;
 
-    @JSONField(ordinal = 7,serializeUsing = BigDecimalSerialize.class)
-    private BigDecimal fertilizerAmount;
-
 }

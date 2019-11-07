@@ -6,23 +6,26 @@ import com.moguying.plant.constant.ApiEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.constant.ReapEnum;
+import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
+import com.moguying.plant.core.dao.seed.SeedTypeDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.farmer.FarmerInfo;
+import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.seed.vo.BuyOrder;
 import com.moguying.plant.core.entity.seed.vo.BuyOrderResponse;
 import com.moguying.plant.core.entity.taste.Taste;
@@ -50,7 +53,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class TasteServiceImpl implements TasteService {
@@ -89,11 +91,18 @@ public class TasteServiceImpl implements TasteService {
     @Autowired
     private SeedOrderDAO seedOrderDAO;
 
+    @Autowired
+    private BlockDAO blockDAO;
+
+    @Autowired
+    private SeedTypeDAO seedTypeDAO;
+
+
     @Override
     @DS("read")
     public Boolean isNew(Integer userId) {
         Integer count = seedOrderDAO.selectCount(new QueryWrapper<>(new SeedOrder().setUserId(userId)));
-        return count > 0;
+        return count <= 0;
     }
 
     @DS("write")
@@ -134,31 +143,46 @@ public class TasteServiceImpl implements TasteService {
         ResultData<Integer> payResult =
                 plantOrderService.payOrderSuccess(seedOrderDetailDAO.selectById(buyResult.getData().getOrderId()),
                         userDAO.selectById(userId));
-        if(payResult.getMessageEnum().equals(MessageEnum.SUCCESS))
+        if(payResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+            // 返回订单id，而不是订单详情id
+            buyResult.getData().setOrderId(payResult.getData());
             return buyResult;
+        }
         return resultData;
     }
 
     @Override
     @DS("write")
-    public ResultData<TasteReap> reap(Integer userId, Integer orderId) {
+    public ResultData<TasteReap> reap(Integer userId, Integer reapId) {
         ResultData<TasteReap> resultData = new ResultData<>(MessageEnum.ERROR, null);
         Reap where = new Reap();
         where.setUserId(userId);
-        where.setOrderId(orderId);
+        where.setId(reapId);
 
         Reap reap = reapDAO.selectOne(new QueryWrapper<>(where));
-        if (null == reap)
+        if (Objects.isNull(reap))
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
 
         if (reap.getPreReapTime().getTime() != DateUtil.INSTANCE.todayEnd().getTime())
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_IN_TIME);
+
+        Block block = blockDAO.selectById(reap.getBlockId());
+        if (Objects.isNull(block))
+            return  resultData.setMessageEnum(MessageEnum.BLOCK_NOT_EXISTS);
+
+        SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());
+        if (Objects.isNull(seedType))
+            return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
 
         Reap update = new Reap();
         update.setId(reap.getId());
         update.setState(ReapEnum.REAP_DONE.getState());
         if(reapDAO.updateById(update) > 0) {
             TasteReap tasteReap = new TasteReap();
+            tasteReap.setSeedTypeName(seedType.getClassName());
+            tasteReap.setBlockNumber(block.getNumber());
+            tasteReap.setGrowDays(seedType.getGrowDays());
+            tasteReap.setPlantCount(reap.getPlantCount());
             tasteReap.setPlantWeigh(reap.getPlantWeigh());
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(tasteReap);
         }

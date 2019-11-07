@@ -440,10 +440,6 @@ CREATE TABLE `plant_reap_weigh` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-/** 商城订单表，新增券id **/
-ALTER TABLE `moguying`.`plant_mall_order`
-ADD COLUMN `fertilizer_id` int(11) DEFAULT NULL COMMENT '使用券id' AFTER `state`;
-
 /** 出菇量 **/
 ALTER TABLE `moguying`.`plant_reap`
 ADD COLUMN `plant_weigh` decimal(15,2) NOT NULL COMMENT '出菇量';

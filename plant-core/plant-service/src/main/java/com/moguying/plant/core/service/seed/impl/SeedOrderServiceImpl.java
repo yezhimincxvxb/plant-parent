@@ -57,12 +57,11 @@ public class SeedOrderServiceImpl implements SeedOrderService {
 
     @Override
     @DS("write")
-    public synchronized Boolean incrSeedOrder(SeedOrderDetail seedOrderDetail) {
+    public synchronized Integer incrSeedOrder(SeedOrderDetail seedOrderDetail) {
 
         // 查找菌包
         Seed seed = seedDAO.selectById(seedOrderDetail.getSeedId());
-        if (null == seed)
-            return false;
+        if (null == seed) return 0;
         //个人一种seedType只有一条记录
         SeedOrder where = new SeedOrder();
         where.setUserId(seedOrderDetail.getUserId());
@@ -75,14 +74,14 @@ public class SeedOrderServiceImpl implements SeedOrderService {
             add.setBuyCount(seedOrderDetail.getBuyCount());
             add.setSeedType(seed.getSeedType());
             add.setUserId(seedOrderDetail.getUserId());
-            return seedOrderDAO.insert(add) > 0;
+            return seedOrderDAO.insert(add) > 0 ? add.getId() : 0;
         } else {
             SeedOrder incr = new SeedOrder();
             incr.setBuyCount(seedOrderDetail.getBuyCount());
             incr.setBuyAmount(seedOrderDetail.getBuyAmount());
             incr.setSeedType(seed.getSeedType());
             incr.setUserId(seedOrderDetail.getUserId());
-            return seedOrderDAO.incrSeedOrder(incr) > 0;
+            return seedOrderDAO.incrSeedOrder(incr) > 0 ? seedOrders.get(0).getId() : 0;
         }
     }
 

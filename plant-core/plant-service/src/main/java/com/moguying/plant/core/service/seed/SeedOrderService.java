@@ -15,7 +15,7 @@ public interface SeedOrderService {
 
     PageResult<SeedOrder> seedOrderList(Integer page, Integer size, SeedOrder where);
 
-    Boolean incrSeedOrder(SeedOrderDetail seedOrderDetail);
+    Integer incrSeedOrder(SeedOrderDetail seedOrderDetail);
 
     CanPlantOrder sumUserSeedByBlockId(Integer blockId, Integer userId);
 

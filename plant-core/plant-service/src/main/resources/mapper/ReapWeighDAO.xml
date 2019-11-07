@@ -3,7 +3,7 @@
 <mapper namespace="com.moguying.plant.core.dao.reap.ReapWeighDAO">
 
     <update id="incField">
-        update plant_reap_weight
+        update plant_reap_weigh
         <set>
             <if test="totalWeigh != null">
                 total_weigh = total_weigh + #{totalWeigh},

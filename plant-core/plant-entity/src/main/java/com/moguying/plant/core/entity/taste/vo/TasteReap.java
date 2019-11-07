@@ -20,6 +20,12 @@ public class TasteReap {
     @JSONField(ordinal = 4)
     private BigDecimal plantWeigh;
 
-    @JSONField(ordinal = 5)
+    @JSONField(ordinal = 5, format = "yyyy-MM-dd HH:mm:ss")
     private Date reapTime;
+
+    @JSONField(ordinal = 6)
+    private String seedTypeName;
+
+    @JSONField(ordinal = 7)
+    private String blockNumber;
 }

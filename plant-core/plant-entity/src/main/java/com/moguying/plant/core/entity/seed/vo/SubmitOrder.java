@@ -27,8 +27,4 @@ public class SubmitOrder implements Serializable {
      */
     private Integer productId;
 
-    /**
-     * 券id
-     */
-    private Integer fertilizerId;
 }

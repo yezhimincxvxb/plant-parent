@@ -127,32 +127,10 @@ public class MallProductServiceImpl implements MallProductService {
             totalCoins += mallProduct.getConsumeCoins() * buyProduct.getBuyCount();
         }
 
-        // 优惠券
-        BigDecimal fertilizerAmount = BigDecimal.ZERO;
-        if (Objects.nonNull(orderBuy.getFertilizerId())) {
-            // 券不存在
-            UserFertilizer userFertilizer = userFertilizerDAO.findByIdAndUserId(userId, orderBuy.getFertilizerId());
-            if (Objects.isNull(userFertilizer) )
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_NOT_FOUND);
-
-            // 是否满减券
-            Fertilizer fertilizer = fertilizerDAO.selectById(userFertilizer.getFertilizerId());
-            if (Objects.isNull(fertilizer) || !Objects.equals(fertilizer.getTypeId(), 2))
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_TYPE_FALSE);
-
-            // 商品总价是否满足券的使用条件
-            if (Objects.isNull(fertilizer.getAmountMin()) || fertilizer.getAmountMin().compareTo(BigDecimal.ZERO) <= 0
-                    || fertilizer.getAmountMin().compareTo(productAmount) > 0) {
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_NOT);
-            }
-            fertilizerAmount = fertilizer.getFertilizerAmount();
-        }
-
         buyOrderResponse.setOrderItems(orderItems);
         buyOrderResponse.setExpressFee(expressFee);
         buyOrderResponse.setProductAmount(productAmount);
-        buyOrderResponse.setFertilizerAmount(fertilizerAmount);
-        buyOrderResponse.setTotalAmount(productAmount.add(expressFee).subtract(fertilizerAmount));
+        buyOrderResponse.setTotalAmount(productAmount.add(expressFee));
         buyOrderResponse.setTotalCoins(totalCoins);
         buyOrderResponse.setItemCount(orderItems.size());
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(buyOrderResponse);
@@ -238,7 +216,6 @@ public class MallProductServiceImpl implements MallProductService {
         MallOrder order = new MallOrder();
         order.setUserId(userId);
         order.setOrderNumber(orderNumber);
-        order.setFertilizerId(submitOrder.getFertilizerId());
         order.setAddressId(address.getId());
         order.setBuyMark(submitOrder.getMark());
         order.setAddTime(new Date());
@@ -294,35 +271,8 @@ public class MallProductServiceImpl implements MallProductService {
             feeAmount = feeAmount.compareTo(product.getFee()) >= 0 ? feeAmount : product.getFee();
         }
 
-        // 优惠券
-        BigDecimal fertilizerAmount = BigDecimal.ZERO;
-        if (submitOrder.getState() != null && submitOrder.getState() == 1 && Objects.nonNull(submitOrder.getFertilizerId())) {
-            // 券不存在
-            UserFertilizer userFertilizer = userFertilizerDAO.findByIdAndUserId(userId, submitOrder.getFertilizerId());
-            if (Objects.isNull(userFertilizer))
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_NOT_FOUND);
-
-            // 是否满减券
-            Fertilizer fertilizer = fertilizerDAO.selectById(userFertilizer.getFertilizerId());
-            if (Objects.isNull(fertilizer) || !Objects.equals(fertilizer.getTypeId(), 2))
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_TYPE_FALSE);
-
-            // 商品总价是否满足券的使用条件
-            if (Objects.isNull(fertilizer.getAmountMin()) || fertilizer.getAmountMin().compareTo(BigDecimal.ZERO) <= 0
-                    || fertilizer.getAmountMin().compareTo(totalAmount) > 0) {
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_NOT);
-            }
-
-            fertilizerAmount = fertilizer.getFertilizerAmount();
-
-            // 使用后，更新状态
-            userFertilizer.setState(FertilizerEnum.FERTILIZER_USED.getState());
-            if (userFertilizerDAO.updateById(userFertilizer) <= 0)
-                return resultData.setMessageEnum(MessageEnum.MALL_ORDER_UPDATE_ERROR);
-        }
-
         order.setFeeAmount(feeAmount);
-        order.setBuyAmount(totalAmount.subtract(fertilizerAmount));
+        order.setBuyAmount(totalAmount);
         if (submitOrder.getState() != null && submitOrder.getState() == 2) {
             // 蘑菇币是否足够
             SaleCoin saleCoin = saleCoinService.findById(userId);
@@ -347,8 +297,7 @@ public class MallProductServiceImpl implements MallProductService {
         closeOrderScheduled.addCloseItem(new CloseMallPayOrder(order.getId(), expireTime));
         response.setOrderId(order.getId());
         response.setOrderNumber(order.getOrderNumber());
-        response.setFertilizerAmount(fertilizerAmount);
-        response.setTotalAmount(totalAmount.add(feeAmount).subtract(fertilizerAmount));
+        response.setTotalAmount(totalAmount.add(feeAmount));
         response.setTotalCoins(totalCoins);
         response.setLeftSecond(expireTime.intValue());
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(response);
@@ -392,32 +341,10 @@ public class MallProductServiceImpl implements MallProductService {
             buyCount.getAndAdd(buyProduct.getBuyCount());
         }
 
-        // 优惠券
-        BigDecimal fertilizerAmount = BigDecimal.ZERO;
-        if (Objects.nonNull(submitOrder.getFertilizerId())) {
-            // 券不存在
-            UserFertilizer userFertilizer = userFertilizerDAO.findByIdAndUserId(userId, submitOrder.getFertilizerId());
-            if (Objects.isNull(userFertilizer))
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_NOT_FOUND);
-
-            // 是否满减券
-            Fertilizer fertilizer = fertilizerDAO.selectById(userFertilizer.getFertilizerId());
-            if (Objects.isNull(fertilizer) || !Objects.equals(fertilizer.getTypeId(), 2))
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_TYPE_FALSE);
-
-            // 商品总价是否满足券的使用条件
-            if (Objects.isNull(fertilizer.getAmountMin()) || fertilizer.getAmountMin().compareTo(BigDecimal.ZERO) <= 0
-                    || fertilizer.getAmountMin().compareTo(productAmount) > 0) {
-                return resultData.setMessageEnum(MessageEnum.FERTILIZER_NOT);
-            }
-            fertilizerAmount = fertilizer.getFertilizerAmount();
-        }
-
         OrderSum orderSum = new OrderSum();
         orderSum.setProductAmount(productAmount);
         orderSum.setExpressFee(feeAmount);
-        orderSum.setFertilizerAmount(fertilizerAmount);
-        orderSum.setTotalAmount(productAmount.add(feeAmount).subtract(fertilizerAmount));
+        orderSum.setTotalAmount(productAmount.add(feeAmount));
         orderSum.setTotalCoins(totalCoins);
         orderSum.setBuyCount(buyCount.get());
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(orderSum);

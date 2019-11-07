@@ -209,12 +209,6 @@ public class MallOrder implements Serializable, PayOrder {
     @TableField(exist = false)
     private List<OrderItem> details;
 
-    /**
-     * 下单时使用券
-     */
-    @JSONField(ordinal = 27)
-    @TableField
-    private Integer fertilizerId;
 
     @Override
     public MoneyOpEnum getOpType() {

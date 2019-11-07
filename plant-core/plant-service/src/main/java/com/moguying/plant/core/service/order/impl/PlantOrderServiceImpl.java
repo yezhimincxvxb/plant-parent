@@ -585,7 +585,8 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         if (seedOrderDetailDAO.updateById(update) <= 0)
             return resultData;
 
-        if (!seedOrderService.incrSeedOrder(orderDetail)) {
+        Integer orderId = seedOrderService.incrSeedOrder(orderDetail);
+        if (orderId <= 0) {
             return resultData;
         }
         // 成功购买菌包数量
@@ -617,6 +618,6 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         if (userMessageService.addMessage(message, SystemEnum.PHONE_MESSAGE_SEED_BUY_TYPE.getStateName()) <= 0) {
             return resultData;
         }
-        return resultData.setMessageEnum(MessageEnum.SUCCESS);
+        return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(orderId);
     }
 }

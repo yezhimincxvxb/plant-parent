@@ -25,11 +25,8 @@ public interface TasteService {
 
     /**
      * 体验包采摘
-     * @param userId
-     * @param orderId
-     * @return
      */
-    ResultData<TasteReap> reap(Integer userId, Integer orderId);
+    ResultData<TasteReap> reap(Integer userId, Integer reapId);
 
     /**
      * 添加免费试吃项

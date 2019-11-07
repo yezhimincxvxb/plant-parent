@@ -11,7 +11,6 @@
         <result column="buy_mark" jdbcType="VARCHAR" property="buyMark"/>
         <result column="fee_amount" jdbcType="DECIMAL" property="feeAmount"/>
         <result column="state" jdbcType="TINYINT" property="state"/>
-        <result column="fertilizer_id" jdbcType="INTEGER" property="fertilizerId"/>
         <result column="address_id" jdbcType="INTEGER" property="addressId"/>
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
         <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
@@ -48,7 +47,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, order_number, user_id, buy_amount, total_coins, buy_mark, fee_amount, `state`, fertilizer_id, address_id,
+    id, order_number, user_id, buy_amount, total_coins, buy_mark, fee_amount, `state`, address_id,
     add_time, pay_time, close_time, send_time, is_notice, confirm_time, express_order_number, express_com_code,
     cancel_reason, seq_no,car_pay_amount,account_pay_amount,reduce_pay_amount,notice_time
   </sql>

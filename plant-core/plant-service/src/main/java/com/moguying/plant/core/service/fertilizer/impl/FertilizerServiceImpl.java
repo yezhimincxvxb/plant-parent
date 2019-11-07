@@ -178,7 +178,7 @@ public class FertilizerServiceImpl implements FertilizerService {
         Fertilizer where = new Fertilizer();
         where.setTriggerGetEvent(triggerGetEvent);
         if (!Objects.isNull(fertilizerId)) where.setId(fertilizerId);
-        where.setStartTime(new Date());
+        // where.setStartTime(new Date());
 
         // 获取可发放的所有券
         List<Fertilizer> fertilizers = fertilizerDAO.selectList(new QueryWrapper<>(where));
@@ -189,13 +189,12 @@ public class FertilizerServiceImpl implements FertilizerService {
 
             // 是否只能领取一次
             if (fertilizer.getIsSingleTrigger()) {
-                // 用户已经拥有不做处理
+                // 有发过，则不重复发
                 Integer count = userFertilizerDAO.hasFertilizer(triggerEventResult.getUserId(), fertilizer.getId());
-                if (null != count && count >= fertilizer.getPerCount()) continue;
+                if (count > 0) continue;
             }
 
             // 每次触发发送多少张
-
             for (int i = 1; i <= fertilizer.getPerCount(); i++) {
 
                 UserFertilizer userFertilizer = new UserFertilizer();
@@ -226,6 +225,7 @@ public class FertilizerServiceImpl implements FertilizerService {
                         // 固定金额
                         userFertilizer.setFertilizerAmount(fertilizer.getFertilizerAmount());
                     }
+
                 } else {
                     userFertilizer.setFertilizerAmount(fertilizer.getFertilizerAmount());
                 }

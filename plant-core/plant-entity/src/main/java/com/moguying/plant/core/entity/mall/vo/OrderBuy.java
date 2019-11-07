@@ -14,9 +14,4 @@ public class OrderBuy {
      */
     private List<BuyProduct> products;
 
-    /**
-     * 券id
-     */
-    private Integer fertilizerId;
-
 }

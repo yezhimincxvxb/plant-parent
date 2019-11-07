@@ -53,10 +53,5 @@ public class OrderBuyResponse {
     @JSONField(ordinal = 7)
     private Integer totalCoins;
 
-    /**
-     * 使用券金额
-     */
-    @JSONField(ordinal = 8, serializeUsing = BigDecimalSerialize.class)
-    private BigDecimal fertilizerAmount;
 
 }

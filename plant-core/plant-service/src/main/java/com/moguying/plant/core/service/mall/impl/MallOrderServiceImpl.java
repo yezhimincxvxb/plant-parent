@@ -243,16 +243,6 @@ public class MallOrderServiceImpl implements MallOrderService {
         if (!order.getState().equals(MallEnum.ORDER_HAS_PAY.getState()))
             return resultData.setMessageEnum(MessageEnum.MALL_ORDER_CAN_NOT_REFUND);
 
-        // 返券
-        if (Objects.nonNull(order.getFertilizerId())) {
-            UserFertilizer userFertilizer = userFertilizerDAO.selectById(order.getFertilizerId());
-            if (Objects.nonNull(userFertilizer)) {
-                userFertilizer.setState(FertilizerEnum.FERTILIZER_NO_USE.getState());
-                if (userFertilizerDAO.updateById(userFertilizer) < 0)
-                    return resultData.setMessageEnum(MessageEnum.RETURN_FERTILIZER_ERROR);
-            }
-        }
-
         // 退库存
         List<OrderItem> orderItems = mallOrderDetailDAO.selectDetailListByOrderId(orderId, userId);
         for (OrderItem item : orderItems) {

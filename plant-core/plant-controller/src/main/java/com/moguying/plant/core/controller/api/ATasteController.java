@@ -73,7 +73,7 @@ public class ATasteController {
     @PostMapping("/plant")
     public ResponseData<PlantOrderResponse> plant(@LoginUserId Integer userId, @RequestBody PlantOrder plantOrder) {
         ResultData<TriggerEventResult<PlantOrderResponse>> resultData = plantOrderService.plantSeed(userId, plantOrder, true);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),resultData.getData() == null ? null : resultData.getData().getData());
     }
 
 
@@ -83,9 +83,9 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/reap/{reapId}")
-    public ResponseData<Boolean> reapAndSale(@LoginUserId Integer userId, @PathVariable Integer reapId) {
+    public ResponseData<TasteReap> reapAndSale(@LoginUserId Integer userId, @PathVariable Integer reapId) {
         ResultData<TasteReap> resultData = tasteService.reap(userId, reapId);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
 
