@@ -446,4 +446,7 @@ ADD COLUMN `fertilizer_id` int(11) DEFAULT NULL COMMENT '使用券id' AFTER `sta
 
 /** 出菇量 **/
 ALTER TABLE `moguying`.`plant_reap`
-ADD COLUMN `plant_weigh` decimal(15,2) NOT NULL COMMENT '出菇量';
+ADD COLUMN `plant_weigh` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '出菇量';
+
+ALTER TABLE `moguying`.`plant_seed_type`
+ADD COLUMN `per_weigh` decimal(15, 2) NOT NULL DEFAULT '0.00' AFTER `ex_mall_product`;
