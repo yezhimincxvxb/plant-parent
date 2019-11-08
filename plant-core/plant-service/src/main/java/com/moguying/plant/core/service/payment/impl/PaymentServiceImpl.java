@@ -1002,6 +1002,8 @@ public class PaymentServiceImpl implements PaymentService {
             PayOrder orderDetail = (PayOrder) dao.selectById(payOrder.getOrderId());
             if(null == orderDetail)
                 return resultData.setMessageEnum(MessageEnum.PAY_ORDER_NOT_EXISTS);
+
+            // 不是可支付状态
             if(null != orderDetail.getPayTime() || !orderDetail.getState().equals(PaymentStateEnum.ORDER_NEED_PAY.getState()))
                 return resultData.setMessageEnum(MessageEnum.PAY_ORDER_CAN_NOT_PAY);
 
@@ -1011,15 +1013,21 @@ public class PaymentServiceImpl implements PaymentService {
                 FertilizerUseCondition condition = new FertilizerUseCondition();
                 condition.setUserId(userId);
                 condition.setAmount(orderDetail.getBuyAmount());
+
+                // 菌包使用券
                 if(orderDetail.getOpType().equals(MoneyOpEnum.BUY_SEED_ORDER)){
                     condition.setSeedOrderId(orderDetail.getId());
                 }
+
+                // 商品使用券
                 if(orderDetail.getOpType().equals(MoneyOpEnum.BUY_MALL_PRODUCT)){
                     condition.setProductId(orderDetail.getId());
                 }
-                //使用券
+
+                // 使用券
                 ResultData<BigDecimal> fertilizerResult =
                         fertilizerService.useFertilizers(condition,payOrder.getFertilizerIds(),orderDetail.getOrderNumber());
+
                 if(fertilizerResult.getMessageEnum().equals(MessageEnum.SUCCESS))
                     reductAmount = fertilizerResult.getData();
                 else

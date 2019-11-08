@@ -102,11 +102,14 @@ public class ASeedController {
     @ValidateUser
     @PostMapping(value = "/buy")
     public ResponseData<BuyOrderResponse> buySeed(@LoginUserId Integer userId, @RequestBody BuyOrder buyOrder) {
+        // 菌包数量错误
         if (null == buyOrder.getCount() || buyOrder.getCount() <= 0)
             return new ResponseData<>(MessageEnum.SEED_COUNT_NOT_RIGHT.getMessage(), MessageEnum.SEED_COUNT_NOT_RIGHT.getState());
 
+        // 菌包不存在
         if (null == buyOrder.getSeedId() || buyOrder.getSeedId() <= 0)
             return new ResponseData<>(MessageEnum.SEED_NOT_EXISTS.getMessage(), MessageEnum.SEED_NOT_EXISTS.getState());
+
 
         ResultData<BuyOrderResponse> resultData = plantOrderService.plantOrder(buyOrder, userId);
 

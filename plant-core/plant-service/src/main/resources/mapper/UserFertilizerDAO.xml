@@ -48,8 +48,6 @@
   </sql>
 
 
-
-
     <select id="selectSelective" parameterType="com.moguying.plant.core.entity.fertilizer.UserFertilizer"
             resultMap="UserFertilizerList">
         select t1.id, t1.user_id, t1.fertilizer_id, t1.`state`,
@@ -92,13 +90,11 @@
   </select>
 
     <select id="userFertilizers" resultMap="UserFertilizerInfoMap">
-        select t1.id,t1.state,t2.type_id,t2.amount_min,t2.amount_max,t1.start_time,t1.fertilizer_amount,
-        t1.end_time as expire_time,t2.use_no_limit,t4.number as use_in_block_number ,t5.name as use_in_product_name,
-        t6.class_name as use_in_seed_type_name,t3.type_name,
-        t2.use_in_product as use_in_single_product,
-        t2.use_in_seed_type as use_in_single_seed,
-        t2.use_in_block as use_in_single_block,
-        t1.fertilizer_id
+        select t1.id, t1.fertilizer_id, t2.type_id, t3.type_name, t1.fertilizer_amount, t2.amount_min,
+        t2.amount_max, t1.start_time, t1.end_time as expire_time, t1.state,
+        t2.use_in_block as use_in_single_block, t4.number as use_in_block_number,
+        t2.use_in_product as use_in_single_product, t5.name as use_in_product_name,
+        t2.use_in_seed_type as use_in_single_seed, t6.class_name as use_in_seed_type_name
         from plant_user_fertilizer t1
         left join plant_fertilizer t2 on t1.fertilizer_id = t2.id
         left join plant_fertilizer_type t3 on t2.type_id = t3.id
@@ -109,30 +105,50 @@
             <if test="wq.userId != null">
                 t1.user_id = #{wq.userId}
             </if>
-            <if test="wq.productId != null">
-                AND (t2.use_in_product = #{wq.productId} OR t2.use_in_product = 0)
-            </if>
-            <if test="wq.blockId != null">
-                AND (t2.use_in_block = #{wq.blockId} OR t2.use_in_block = 0)
-            </if>
-            <if test="wq.seedTypeId != null">
-                AND (t2.use_in_seed_type = #{wq.seedTypeId} OR t2.use_in_seed_type = 0)
-            </if>
+            <!-- 是否指定商品 -->
+            <choose>
+                <when test="wq.productId != null">
+                    and (t2.use_in_product = #{wq.productId} or t2.use_in_product = 0)
+                </when>
+                <otherwise>
+                    and t2.use_in_product = 0
+                </otherwise>
+            </choose>
+            <!-- 是否指定大棚 -->
+            <choose>
+                <when test="wq.blockId != null">
+                    and (t2.use_in_block = #{wq.blockId} or t2.use_in_block = 0)
+                </when>
+                <otherwise>
+                    and t2.use_in_block = 0
+                </otherwise>
+            </choose>
+            <!-- 是否指定菌包 -->
+            <choose>
+                <when test="wq.seedTypeId != null">
+                    and (t2.use_in_seed_type = #{wq.seedTypeId} or t2.use_in_seed_type = 0)
+                </when>
+                <otherwise>
+                    and t2.use_in_seed_type = 0
+                </otherwise>
+            </choose>
+            <!-- 金额是否满足券的上下限 -->
             <if test="wq.amount != null">
-                <![CDATA[
-        AND
-        (
-        (#{wq.amount} >= t2.amount_min AND #{wq.amount} <= t2.amount_max AND t2.amount_max is not null)
-        OR
-        (#{wq.amount} >= t2.amount_min AND t2.amount_max is null)
-        )
-      ]]>
+                and (
+                (
+                (t2.amount_max is not null)
+                and (#{wq.amount} between t2.amount_min and t2.amount_max)
+                )
+                or (
+                (t2.amount_max is null)
+                and (t2.amount_min &lt; #{wq.amount})
+                )
+                )
             </if>
+            <!-- 有效期 -->
             <if test="wq.expireTime != null">
-                <![CDATA[
-        AND UNIX_TIMESTAMP(t2.start_time) <= UNIX_TIMESTAMP(#{wq.expireTime})
-        AND UNIX_TIMESTAMP(t2.expire_time) >= UNIX_TIMESTAMP(#{wq.expireTime})
-      ]]>
+                and UNIX_TIMESTAMP(t2.start_time) &lt;= UNIX_TIMESTAMP(#{wq.expireTime})
+                and UNIX_TIMESTAMP(t2.expire_time) &gt;= UNIX_TIMESTAMP(#{wq.expireTime})
             </if>
             <if test="wq.state != null">
                 AND t1.state = #{wq.state}
@@ -140,15 +156,15 @@
             <if test="wq.type != null">
                 AND t2.type_id = #{wq.type}
             </if>
+            <!-- 券类型 -->
             <if test="wq.types != null">
                 AND t2.type_id in
                 <foreach collection="wq.types" item="item" separator="," close=")" open="(">
                     #{item}
                 </foreach>
             </if>
-
         </where>
-        order by t1.state,t1.id desc
+        order by t1.state, t1.id desc
     </select>
 
     <select id="selectByIds" resultMap="UserFertilizerInfoMap">

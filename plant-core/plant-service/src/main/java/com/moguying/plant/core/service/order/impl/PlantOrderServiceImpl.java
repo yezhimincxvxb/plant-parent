@@ -167,12 +167,13 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId,boolean isTaste) {
         ResultData<BuyOrderResponse> result = new ResultData<>(MessageEnum.ERROR, null);
 
+        // 用户不存在
         User user = userDAO.selectById(userId);
         if (null == user)
             return result.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
 
+        // 菌包是否存在，是否在售，是否上架
         Seed seed = seedDAO.seedInfoWithTypeById(order.getSeedId());
-        // 菌包是否存在，是否在售
         if (null == seed || !seed.getState().equals(SeedEnum.REVIEWED.getState()) || !seed.getIsShow())
             return result.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
 
@@ -191,9 +192,8 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         BigDecimal buyAmount = InterestUtil.INSTANCE.calAmount(order.getCount(), seed.getPerPrice());
 
         // 减少库存
-        if (seedDAO.decrSeedLeftCount(order.getCount(), order.getSeedId()) <= 0) {
+        if (seedDAO.decrSeedLeftCount(order.getCount(), order.getSeedId()) <= 0)
             return result.setMessageEnum(MessageEnum.SEED_LEFT_COUNT_NOT_ENOUGH);
-        }
 
         // 生成订单
         SeedOrderDetail seedOrderDetail = new SeedOrderDetail();

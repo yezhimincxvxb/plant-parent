@@ -9,6 +9,7 @@
     <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount" />
     <result column="plant_count" jdbcType="INTEGER" property="plantCount" />
   </resultMap>
+
   <resultMap id="SeedOrderInfo" type="com.moguying.plant.core.entity.seed.SeedOrder" extends="BaseResultMap">
     <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />

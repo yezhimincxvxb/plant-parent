@@ -11,6 +11,12 @@
         <result column="is_delete" jdbcType="BIT" property="isDelete"/>
         <result column="plant_type" jdbcType="INTEGER" property="plantType"/>
         <result column="reap_type" jdbcType="INTEGER" property="reapType"/>
+        <result column="per_weigh" property="perWeigh"/>
+        <result column="group_id" property="groupId"/>
+        <result column="ex_mall_product" property="exMallProduct"/>
+        <result column="name" property="exMallProductName"/>
+        <result column="group_name" property="groupName"/>
+        <result column="is_for_new" property="isForNew"/>
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
         <result column="exchange_num" jdbcType="INTEGER" property="exchangeNum"/>
@@ -33,10 +39,11 @@
 
     <select id="selectByPrimaryKeyWithBLOB" resultMap="SeedTypeWithContent" parameterType="int">
         select
-        t1.*,t2.*
+        t1.*,t2.*,t3.*
         from plant_seed_type t1
         left join plant_seed_content t2 on t2.seed_type = t1.id
-        where id = #{id,jdbcType=INTEGER}
+        left join plant_mall_product t3 on t1.ex_mall_product = t3.id
+        where t1.id = #{id,jdbcType=INTEGER} and is_delete = 0
     </select>
 
     <update id="deleteById" parameterType="java.lang.Integer">
@@ -45,11 +52,12 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="selectSelective" parameterType="SeedType" resultType="SeedType">
+    <select id="selectSelective"  resultType="com.moguying.plant.core.entity.seed.SeedType">
         select
         t1.id, class_name, grow_days, per_price, interest_rates, order_number, is_delete, plant_type,
         reap_type,t1.pic_url,t1.thumb_pic_url,exchange_num,group_id,group_name,is_for_new,ex_mall_product,t3.name as
-        ex_mall_product_name
+        ex_mall_product_name, t1.per_weigh `perWeigh`, t2.id `groupId`, t2.group_name `groupName`, t1.is_for_new `isForNew`,
+        t3.id `exMallProduct`, t3.name `exMallProductName`
         from plant_seed_type t1
         left join plant_seed_group t2 on t1.group_id = t2.id
         left join plant_mall_product t3 on t1.ex_mall_product = t3.id

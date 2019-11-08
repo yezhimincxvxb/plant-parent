@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.user.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.FertilizerEnum;
@@ -9,6 +10,7 @@ import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.fertilizer.FertilizerTypeDAO;
 import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
+import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
@@ -17,6 +19,7 @@ import com.moguying.plant.core.entity.fertilizer.FertilizerType;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerSearch;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
+import com.moguying.plant.core.entity.mall.MallOrderDetail;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.user.vo.UserFertilizerInfo;
@@ -57,6 +60,9 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     @Autowired
     private UserMoneyService userMoneyService;
 
+    @Autowired
+    private MallOrderDetailDAO mallOrderDetailDAO;
+
     @Value("${excel.download.dir}")
     private String downloadDir;
 
@@ -71,12 +77,14 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         IPage<UserFertilizerInfo> pageResult = userFertilizerDAO.userFertilizers(new Page<>(page, size), condition);
         //查询即置过期
         userFertilizerDAO.updateOutTimeFertilizer(userId);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("read")
     public List<UserFertilizerInfo> canUseFertilizers(FertilizerUseCondition condition) {
+
+        // 指定菌包
         if (null != condition.getSeedOrderId()) {
             //查询匹配对应菌包类型
             SeedOrderDetail orderDetail =
@@ -84,17 +92,29 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
             condition.setSeedTypeId(orderDetail.getSeedTypeId());
         }
 
-        /*//由于需要将券与种植的类型匹配，而不是与棚的id相匹配
-        //将前端传入的棚id转为在棚区中种植的菌包类型id
+        /**
+        // 由于需要将券与种植的类型匹配，而不是与棚的id相匹配
+        // 将前端传入的棚id转为在棚区中种植的菌包类型id
         if (null != condition.getBlockId()) {
             Block block = blockDAO.selectById(condition.getBlockId());
             condition.setBlockId(block.getSeedType());
         }*/
 
+        // 指定商品(该订单只有一个商品时才有效)
+        if (Objects.nonNull(condition.getMallOrderId())) {
+            MallOrderDetail detail = new MallOrderDetail();
+            detail.setUserId(condition.getUserId());
+            detail.setOrderId(condition.getMallOrderId());
+            List<MallOrderDetail> details = mallOrderDetailDAO.selectList(new QueryWrapper<>(detail));
+            if (Objects.nonNull(details) && details.size() == 1) {
+                condition.setProductId(details.get(0).getProductId());
+            }
+        }
+
         condition.setExpireTime(new Date());
         condition.setState(FertilizerEnum.FERTILIZER_NO_USE.getState());
+        // 过滤为只显示非现金红包
         List<Integer> types = new ArrayList<>();
-        //过滤为只显示非现金红包
         fertilizerTypeDAO.selectSelective(new FertilizerType())
                 .stream()
                 .filter((x) -> x.getId() < 4)
@@ -107,7 +127,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     @Override
     public PageResult<UserFertilizer> userFertilizerList(Integer page, Integer size, UserFertilizer where) {
         IPage<UserFertilizer> pageResult = userFertilizerDAO.selectSelective(new Page(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -154,7 +174,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         UserMoney money = new UserMoney(userFertilizer.getUserId());
         money.setAvailableMoney(userFertilizer.getFertilizerAmount());
         operator.setUserMoney(money);
-        if( userMoneyService.updateAccount(operator) == null) return false;
+        if (userMoneyService.updateAccount(operator) == null) return false;
 
         // 更新券状态
         userFertilizer.setState(1);
