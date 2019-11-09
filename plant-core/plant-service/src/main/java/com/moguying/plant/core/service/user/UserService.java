@@ -6,10 +6,7 @@ import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
-import com.moguying.plant.core.entity.user.User;
-import com.moguying.plant.core.entity.user.UserAddress;
-import com.moguying.plant.core.entity.user.UserBank;
-import com.moguying.plant.core.entity.user.UserMessage;
+import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
 import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 
@@ -71,5 +68,5 @@ public interface UserService {
 
     User userInfo(User where);
 
-    List<User> inviteUser(Date startTime, Integer inviteId);
+    List<UserActivityLog> inviteUser(Date startTime, Integer userId);
 }

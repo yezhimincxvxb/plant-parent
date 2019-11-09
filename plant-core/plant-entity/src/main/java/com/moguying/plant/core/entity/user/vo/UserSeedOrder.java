@@ -21,4 +21,7 @@ public class UserSeedOrder {
     @JSONField(ordinal = 5)
     private Integer seedTypeId;
 
+    @JSONField(ordinal = 6)
+    private Boolean isForNew;
+
 }

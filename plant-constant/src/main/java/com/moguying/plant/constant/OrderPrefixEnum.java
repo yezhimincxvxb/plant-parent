@@ -10,7 +10,10 @@ public enum  OrderPrefixEnum {
     PAYMENT_BIND_CARD_ORDER("PBC"),
     KAN_JIA("KJ"),
     TI_YAN_BUY("TYB"),
+    FREE_JUN_BAO("FJB"),
+    INVITE_REWARD("IR"),
     RED_PACKAGE("RP");
+
 
 
     private String preFix;

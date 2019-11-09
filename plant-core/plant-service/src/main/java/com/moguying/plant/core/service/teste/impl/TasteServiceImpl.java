@@ -8,6 +8,7 @@ import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.constant.ReapEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
+import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
@@ -96,6 +97,9 @@ public class TasteServiceImpl implements TasteService {
 
     @Autowired
     private SeedTypeDAO seedTypeDAO;
+
+    @Autowired
+    private UserFertilizerDAO userFertilizerDAO;
 
 
     @Override
@@ -338,6 +342,11 @@ public class TasteServiceImpl implements TasteService {
 
     @Override
     public ResultData<Integer> pickUpGift(Integer userId) {
+        // 新手礼包只能领取一次
+        Integer count = userFertilizerDAO.countByTriggerEvent(userId, "taste");
+        if (count > 0)
+            return new ResultData<>(MessageEnum.ERROR, 1);
+
         return  fertilizerService.distributeFertilizer("taste",userId);
     }
 }

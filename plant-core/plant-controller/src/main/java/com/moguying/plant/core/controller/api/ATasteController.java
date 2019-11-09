@@ -117,9 +117,9 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/gift")
-    public ResponseData<Boolean> pickUpGift(@LoginUserId Integer userId){
+    public ResponseData<Integer> pickUpGift(@LoginUserId Integer userId){
         ResultData<Integer> pickUpGift = tasteService.pickUpGift(userId);
-        return new ResponseData<>(pickUpGift.getMessageEnum().getMessage(),pickUpGift.getMessageEnum().getState());
+        return new ResponseData<>(pickUpGift.getMessageEnum().getMessage(),pickUpGift.getMessageEnum().getState(), pickUpGift.getData());
     }
 
 

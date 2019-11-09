@@ -1,6 +1,5 @@
 package com.moguying.plant.core.dao.user;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.user.UserAddress;
 import org.apache.ibatis.annotations.Param;

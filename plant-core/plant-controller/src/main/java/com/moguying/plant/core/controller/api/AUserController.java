@@ -2,6 +2,7 @@ package com.moguying.plant.core.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -9,6 +10,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.LoginUserId;
+import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -22,9 +24,7 @@ import com.moguying.plant.core.entity.payment.response.*;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.reap.vo.ReapSearch;
-import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
-import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.*;
@@ -33,7 +33,6 @@ import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.ReapWeighService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.seed.SeedOrderService;
-import com.moguying.plant.core.service.seed.SeedTypeService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserFertilizerService;
 import com.moguying.plant.core.service.user.UserInviteService;
@@ -59,7 +58,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -107,7 +105,7 @@ public class AUserController {
     private StringRedisTemplate redisUtil;
 
     @Autowired
-    private SeedTypeService seedTypeService;
+    private UserActivityLogDAO userActivityLogDAO;
 
 
     @Value("${user.invite.bg.image}")
@@ -1019,21 +1017,20 @@ public class AUserController {
      * 品宣活动-点击免费领取30天菌包
      */
     @GetMapping("/free/seed")
-    public ResponseData<Integer> freeSeed(@LoginUserId Integer userId) {
+    public ResponseData<String> freeSeed(@LoginUserId Integer userId) {
 
-        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
 
-        // 获取价值12.50元的30天菌包
-        SeedType seedType = seedTypeService.getFreeSeed("30天菌包", new BigDecimal("12.50"), false);
-        if (Objects.isNull(seedType)) return responseData;
+        // 奖励只发送一次
+        QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
+                .and(i -> i.eq("user_id", userId).likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix()));
+        List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
+        if (Objects.nonNull(logs) && logs.size() > 0)
+            return responseData.setData("已领取");
 
-        // 发送菌包
-        SeedOrder seedOrder = new SeedOrder();
-        seedOrder.setUserId(userId);
-        seedOrder.setSeedType(seedType.getId());
-        Boolean sendSeedSuccess = seedOrderService.sendSeedSuccess(seedOrder, seedType.getPerPrice());
+        Boolean sendSeedSuccess = seedOrderService.sendSeedSuccess(userId);
         if (sendSeedSuccess)
-            return responseData.setMessage(MessageEnum.SUCCESS.getMessage()).setState(MessageEnum.SUCCESS.getState());
+            return responseData.setMessage(MessageEnum.SUCCESS.getMessage()).setState(MessageEnum.SUCCESS.getState()).setData("首次领取成功");
 
         return responseData;
     }
@@ -1061,9 +1058,9 @@ public class AUserController {
      * 邀请成功记录
      */
     @GetMapping("/invite/log")
-    public ResponseData<List<User>> inviteLog(@LoginUserId Integer userId) throws ParseException {
+    public ResponseData<List<UserActivityLog>> inviteLog(@LoginUserId Integer userId) throws ParseException {
 
-        ResponseData<List<User>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        ResponseData<List<UserActivityLog>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
 
         User user = userService.userInfoById(userId);
         if (Objects.isNull(user)) return responseData;
@@ -1073,9 +1070,13 @@ public class AUserController {
         Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
 
         // 发奖
-        List<User> users = userService.inviteUser(startDate, userId);
+        List<UserActivityLog> logs = userService.inviteUser(startDate, userId);
+        if (Objects.isNull(logs)) return responseData;
 
-        return responseData.setData(users);
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData(logs);
     }
 
 }

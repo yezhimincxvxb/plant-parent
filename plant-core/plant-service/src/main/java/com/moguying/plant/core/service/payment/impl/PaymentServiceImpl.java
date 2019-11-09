@@ -1037,7 +1037,7 @@ public class PaymentServiceImpl implements PaymentService {
             SendPayOrderResponse payOrderResponse = new SendPayOrderResponse();
             PayOrder updateDetail = classs.newInstance();
             updateDetail.setId(orderDetail.getId());
-            updateDetail.setReducePayAmount(reductAmount);
+                updateDetail.setReducePayAmount(reductAmount);
 
             BigDecimal payAmount = orderDetail.getBuyAmount().add(orderDetail.getFeeAmount()).subtract(reductAmount);
             //卡支付部份

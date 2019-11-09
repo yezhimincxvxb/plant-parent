@@ -22,6 +22,7 @@
     <result column="count" jdbcType="INTEGER" property="count" />
     <result column="pic_url" jdbcType="INTEGER" property="picUrl" />
     <result column="seed_type_id" jdbcType="INTEGER" property="seedTypeId" />
+    <result column="is_for_new" property="isForNew" />
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -101,7 +102,8 @@
   </select>
   
   <select id="userSeedOrderStatistics" resultMap="UserSeedOrderStatistic">
-    select t1.id,(t1.buy_count - t1.plant_count) as count,t2.class_name as seed_type_name ,t2.pic_url,t1.seed_type as seed_type_id
+    select t1.id,(t1.buy_count - t1.plant_count) as count,t2.class_name as seed_type_name ,
+    t2.pic_url,t1.seed_type as seed_type_id, t2.is_for_new
     from plant_seed_order t1
     left join plant_seed_type t2 on t1.seed_type = t2.id
     where t1.user_id = #{userId}

@@ -41,4 +41,5 @@ public interface UserFertilizerDAO extends BaseDAO<UserFertilizer> {
     UserFertilizer findByIdAndUserId(@Param("userId") Integer userId, @Param("fertilizerId") Integer fertilizerId);
 
     UserFertilizer getUserFertilizer(@Param("userId") Integer userId, @Param("id") Integer id, @Param("type") Integer type);
+
 }

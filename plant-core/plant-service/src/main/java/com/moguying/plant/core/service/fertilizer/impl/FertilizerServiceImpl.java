@@ -16,7 +16,6 @@ import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
-import com.moguying.plant.core.entity.coin.SaleCoinLog;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.FertilizerType;
@@ -135,7 +134,7 @@ public class FertilizerServiceImpl implements FertilizerService {
                 condition.setProductId(0);
         }
 
-        List<UserFertilizerInfo> fertilizerInfos = userFertilizerDAO.userFertilizers(null,condition).getRecords();
+        List<UserFertilizerInfo> fertilizerInfos = userFertilizerDAO.userFertilizers(condition);
         // 用户使用的券
         List<UserFertilizerInfo> userFertilizerInfos = userFertilizerDAO.selectByIds(fertilizers);
         if (!fertilizerInfos.containsAll(userFertilizerInfos))

@@ -446,3 +446,18 @@ ADD COLUMN `plant_weigh` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '出菇�
 
 ALTER TABLE `moguying`.`plant_seed_type`
 ADD COLUMN `per_weigh` decimal(15, 2) NOT NULL DEFAULT '0.00' AFTER `ex_mall_product`;
+
+/** 活动发送奖励记录 **/
+CREATE TABLE `plant_user_activity_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `number` varchar(225) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0' COMMENT '流水号',
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '名称',
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `friend_id` int(11) NOT NULL DEFAULT '0' COMMENT '好友id',
+  `product_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
+  `seed_type_id` int(11) NOT NULL DEFAULT '0' COMMENT '菌包id',
+  `fertilizer_id` int(11) NOT NULL DEFAULT '0' COMMENT '券id',
+  `state` tinyint(2) NOT NULL DEFAULT '0' COMMENT '发奖状态[0-已发奖，1-未发奖]',
+  `add_time` datetime DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

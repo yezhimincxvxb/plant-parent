@@ -117,6 +117,7 @@
                 AND UNIX_TIMESTAMP(#{startTime}) &lt; UNIX_TIMESTAMP(reg_time)
             </if>
         </where>
+        order by reg_time asc
     </select>
 
 

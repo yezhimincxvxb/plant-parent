@@ -4,31 +4,27 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moguying.plant.constant.ApiEnum;
-import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.constant.UserEnum;
+import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapWeighDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
-import com.moguying.plant.core.dao.user.UserAddressDAO;
-import com.moguying.plant.core.dao.user.UserBankDAO;
-import com.moguying.plant.core.dao.user.UserDAO;
-import com.moguying.plant.core.dao.user.UserMessageDAO;
+import com.moguying.plant.core.dao.user.*;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
+import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
-import com.moguying.plant.core.entity.user.User;
-import com.moguying.plant.core.entity.user.UserAddress;
-import com.moguying.plant.core.entity.user.UserBank;
-import com.moguying.plant.core.entity.user.UserMessage;
+import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
 import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 import com.moguying.plant.core.service.common.DownloadService;
+import com.moguying.plant.core.service.fertilizer.FertilizerService;
+import com.moguying.plant.core.service.seed.SeedOrderService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.CommonUtil;
+import com.moguying.plant.utils.DateUtil;
 import com.moguying.plant.utils.PasswordUtil;
 import com.moguying.plant.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -39,10 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -71,6 +64,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ReapWeighDAO reapWeighDAO;
+
+    @Autowired
+    private UserActivityLogDAO userActivityLogDAO;
+
+    @Autowired
+    private FertilizerService fertilizerService;
+
+    @Autowired
+    private SeedOrderService seedOrderService;
 
     @Value("${excel.download.dir}")
     private String downloadDir;
@@ -506,10 +508,64 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @DS("write")
-    public List<User> inviteUser(Date startTime, Integer inviteId) {
-        List<User> users = userDAO.inviteUser(startTime, inviteId);
+    @Transactional
+    public List<UserActivityLog> inviteUser(Date startTime, Integer userId) {
 
-        return users;
+        // 邀请记录
+        QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
+                .eq("user_id", userId)
+                .likeRight("number", OrderPrefixEnum.INVITE_REWARD.getPreFix())
+                .orderByAsc("add_time");
+        List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
+
+        // 发奖
+        List<User> users = userDAO.inviteUser(startTime, userId);
+        if (Objects.isNull(users) || users.size() == 0) return null;
+        for (int i = logs.size(); i < users.size(); i++) {
+            User user = users.get(i);
+            UserActivityLog log = new UserActivityLog();
+            log.setUserId(userId);
+            log.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
+            log.setFriendId(user.getId());
+            switch (i) {
+                case 0:
+                    // 一份12.5的菌包
+                    SeedType seedType = seedOrderService.getSeedType(userId);
+                    if (Objects.isNull(seedType)) return null;
+                    log.setSeedTypeId(seedType.getId());
+                    log.setName(seedType.getClassName());
+                    break;
+                case 1:
+                    // 5折酒水满减券
+                    ResultData<Integer> resultData = fertilizerService.distributeFertilizer("activity",
+                            new TriggerEventResult().setUserId(userId), FertilizerEnum.WINE_FERTILIZER.getState());
+                    if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return null;
+                    log.setFertilizerId(FertilizerEnum.WINE_FERTILIZER.getState());
+                    log.setName(FertilizerEnum.WINE_FERTILIZER.getStateName());
+                    break;
+                case 2:
+                    // 商城食品满减券
+                    ResultData<Integer> result = fertilizerService.distributeFertilizer("activity",
+                            new TriggerEventResult().setUserId(userId), FertilizerEnum.MALL_FOOL_FERTILIZER.getState());
+                    if (result.getMessageEnum().equals(MessageEnum.ERROR)) return null;
+                    log.setFertilizerId(FertilizerEnum.MALL_FOOL_FERTILIZER.getState());
+                    log.setName(FertilizerEnum.MALL_FOOL_FERTILIZER.getStateName());
+                    break;
+                default:
+                    break;
+            }
+            log.setAddTime(new Date());
+            if (userActivityLogDAO.insert(log) <= 0) return null;
+            logs.add(log);
+        }
+
+        // 填充手机号
+        users.forEach(user ->
+                logs.stream()
+                        .filter(log -> Objects.equals(user.getId(), log.getFriendId()))
+                        .forEach(log -> log.setPhone(user.getPhone())));
+
+        return logs;
     }
 }
 

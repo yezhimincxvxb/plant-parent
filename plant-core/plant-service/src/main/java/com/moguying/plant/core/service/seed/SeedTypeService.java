@@ -8,8 +8,6 @@ import com.moguying.plant.core.entity.seed.SeedType;
 
 import java.util.List;
 
-import java.math.BigDecimal;
-
 public interface SeedTypeService {
 
     ResultData<Integer> seedTypeSave(SeedType seedClass);
@@ -23,7 +21,5 @@ public interface SeedTypeService {
     List<SeedGroup> seedGroupList();
 
     ResultData<Boolean> saveSeedGroup(SeedGroup seedGroup);
-
-    SeedType getFreeSeed(String name, BigDecimal price, Boolean isDelete);
 
 }

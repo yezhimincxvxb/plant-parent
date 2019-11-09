@@ -4,10 +4,12 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
-import com.moguying.plant.core.dao.user.UserDAO;
+import com.moguying.plant.core.dao.seed.SeedTypeDAO;
+import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
@@ -15,17 +17,22 @@ import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
+import com.moguying.plant.core.entity.user.UserActivityLog;
 import com.moguying.plant.core.entity.user.vo.UserSeedOrder;
 import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.seed.SeedOrderService;
+import com.moguying.plant.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,10 +47,13 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     private BlockDAO blockDAO;
 
     @Autowired
-    private UserDAO userDAO;
+    private SeedDAO seedDAO;
 
     @Autowired
-    private SeedDAO seedDAO;
+    private SeedTypeDAO seedTypeDAO;
+
+    @Autowired
+    private UserActivityLogDAO userActivityLogDAO;
 
     @Value("${excel.download.dir}")
     private String downloadDir;
@@ -109,8 +119,31 @@ public class SeedOrderServiceImpl implements SeedOrderService {
 
     @Override
     @DS("write")
-    public Boolean sendSeedSuccess(SeedOrder seedOrder, BigDecimal price) {
-        if (Objects.isNull(seedOrder)) return false;
+    @Transactional
+    public Boolean sendSeedSuccess(Integer userId) {
+
+        SeedType seedType = getSeedType(userId);
+        if (Objects.isNull(seedType)) return false;
+
+        // 添加活动奖励记录
+        UserActivityLog log = new UserActivityLog()
+                .setNumber(OrderPrefixEnum.FREE_JUN_BAO.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate())
+                .setUserId(userId)
+                .setSeedTypeId(seedType.getId())
+                .setAddTime(new Date());
+        return userActivityLogDAO.insert(log) > 0;
+    }
+
+    @Override
+    public SeedType getSeedType(Integer userId) {
+        // 获取价值12.50元的30天菌包
+        SeedType seedType = seedTypeDAO.selectById(12);
+        if (Objects.isNull(seedType)) return null;
+
+        // 发送菌包
+        SeedOrder seedOrder = new SeedOrder();
+        seedOrder.setUserId(userId);
+        seedOrder.setSeedType(seedType.getId());
 
         // 是否购买过同类型的菌包
         List<SeedOrder> seedOrders = seedOrderDAO.selectSelective(seedOrder);
@@ -119,14 +152,14 @@ public class SeedOrderServiceImpl implements SeedOrderService {
             order.setSeedType(seedOrder.getSeedType());
             order.setUserId(seedOrder.getUserId());
             order.setBuyCount(1);
-            order.setBuyAmount(price);
-            return seedOrderDAO.insert(order) > 0;
+            order.setBuyAmount(seedType.getPerPrice());
+            if (seedOrderDAO.insert(order) <= 0) return null;
         } else if (seedOrders.size() == 1) {
             SeedOrder order = seedOrders.get(0);
             order.setBuyCount(order.getBuyCount() + 1);
-            order.setBuyAmount(new BigDecimal(order.getBuyCount()).multiply(price));
-            return seedOrderDAO.updateById(order) > 0;
+            order.setBuyAmount(new BigDecimal(order.getBuyCount()).multiply(seedType.getPerPrice()));
+            if (seedOrderDAO.updateById(order) <= 0) return null;
         }
-        return false;
+        return seedType;
     }
 }
