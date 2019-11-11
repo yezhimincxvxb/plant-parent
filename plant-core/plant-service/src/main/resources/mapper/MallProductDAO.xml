@@ -143,12 +143,13 @@
     <!-- 砍价商品列表 -->
     <select id="productList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
         select id `productId`, `name` `productName`, pic_url `picUrl`, summary_desc `productInfo`, is_limit `isLimit`,
-        bargain_limit `totalNumber`, bargain_number `productCount`
+        bargain_limit `totalNumber`, bargain_number `productCount`, IFNULL(sum(price * bargain_number),0) `productPrice`
         from plant_mall_product
         where is_show = 1
         and bargain_count &gt; 0
         and bargain_number &gt; 0
         and left_count &gt; 0
+        group by id
     </select>
 
     <!-- 砍价商品详情 -->
