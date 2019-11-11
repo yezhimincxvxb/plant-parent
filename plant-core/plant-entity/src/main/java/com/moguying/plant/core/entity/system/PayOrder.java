@@ -20,6 +20,8 @@ public interface PayOrder {
 
     BigDecimal getBuyAmount();
 
+    void setBuyAmount(BigDecimal buyAmount);
+
     BigDecimal getFeeAmount();
 
     String getOrderNumber();

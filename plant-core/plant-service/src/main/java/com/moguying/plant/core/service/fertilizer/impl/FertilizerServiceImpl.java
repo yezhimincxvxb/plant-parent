@@ -108,12 +108,14 @@ public class FertilizerServiceImpl implements FertilizerService {
      */
     @Override
     @DS("write")
+    @Transactional
     public ResultData<BigDecimal> useFertilizers(FertilizerUseCondition condition, List<Integer> fertilizers, String orderNumber) {
         ResultData<BigDecimal> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
         if (null == condition.getUserId() || null == condition.getAmount() || null == fertilizers || fertilizers.size() == 0)
             return resultData.setMessageEnum(MessageEnum.PARAMETER_ERROR);
 
+        // 指定菌包
         if (null != condition.getSeedOrderId()) {
             SeedOrderDetail orderDetail = seedOrderDetailDAO.selectByIdAndUserIdWithSeedTypeInfo(condition.getSeedOrderId(), condition.getUserId());
             condition.setSeedTypeId(orderDetail.getSeedTypeId());
@@ -126,6 +128,7 @@ public class FertilizerServiceImpl implements FertilizerService {
             condition.setBlockId(block.getSeedType());
         }*/
 
+       // 指定商城
         if (null != condition.getMallOrderId()) {
             List<OrderItem> mallOrderDetail = mallOrderDetailDAO.selectDetailListByOrderId(condition.getMallOrderId(), condition.getUserId());
             if (mallOrderDetail.size() == 1)
@@ -134,14 +137,17 @@ public class FertilizerServiceImpl implements FertilizerService {
                 condition.setProductId(0);
         }
 
+        // 该订单可使用的券列表
         List<UserFertilizerInfo> fertilizerInfos = userFertilizerDAO.userFertilizers(condition);
+
         // 用户使用的券
         List<UserFertilizerInfo> userFertilizerInfos = userFertilizerDAO.selectByIds(fertilizers);
         if (!fertilizerInfos.containsAll(userFertilizerInfos))
             return resultData.setMessageEnum(MessageEnum.FERTILIZER_USER_ERROR);
 
+        // 更新券的使用状态
         UserFertilizer update = new UserFertilizer();
-        update.setState(FertilizerEnum.FERTILIZER_NO_USE.getState());
+        update.setState(FertilizerEnum.FERTILIZER_USED.getState());
         update.setUseOrderNumber(orderNumber);
         if (userFertilizerDAO.updateStateByIds(fertilizers, update) > 0) {
             BigDecimal affectAmount = BigDecimal.ZERO;
