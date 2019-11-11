@@ -54,7 +54,7 @@ message:
     account: M6652821
   password: ABUt0xrFv3ad35
   time: 60000
-  code: 【蘑菇营】您的验证码是code。如非本人操作，请致电客服：400-669-0808
+  code: 【蘑菇营】您正在登录帐号，验证码code，1分钟内有效，为了您的帐号安全，请勿泄露给他人。如非本人操作，请致电客服：400-669-0808
   seed:
     reap: 【蘑菇营】亲爱的phone，您count份菌包已成长，已采摘完毕，可以去出售啦！
   withdraw:
@@ -135,15 +135,6 @@ device:
     url: http://iot.klha.net:8080/services/iotDataService?wsdl
     user: tanv
     password: tanv666
-
-#砍价相关
-bargain:
-  own:
-    rate: 50
-  new:
-    rate: 20
-  old:
-    rate: 10
 
 reap:
   exchange:

@@ -106,32 +106,17 @@
                 t1.user_id = #{wq.userId}
             </if>
             <!-- 是否指定商品 -->
-            <choose>
-                <when test="wq.productId != null">
-                    and (t2.use_in_product = #{wq.productId} or t2.use_in_product = 0)
-                </when>
-                <otherwise>
-                    and t2.use_in_product = 0
-                </otherwise>
-            </choose>
+            <if test="wq.productId != null">
+                and (t2.use_in_product = #{wq.productId} or t2.use_in_product = 0)
+            </if>
             <!-- 是否指定大棚 -->
-            <choose>
-                <when test="wq.blockId != null">
-                    and (t2.use_in_block = #{wq.blockId} or t2.use_in_block = 0)
-                </when>
-                <otherwise>
-                    and t2.use_in_block = 0
-                </otherwise>
-            </choose>
+            <if test="wq.blockId != null">
+                and (t2.use_in_block = #{wq.blockId} or t2.use_in_block = 0)
+            </if>
             <!-- 是否指定菌包 -->
-            <choose>
-                <when test="wq.seedTypeId != null">
-                    and (t2.use_in_seed_type = #{wq.seedTypeId} or t2.use_in_seed_type = 0)
-                </when>
-                <otherwise>
-                    and t2.use_in_seed_type = 0
-                </otherwise>
-            </choose>
+            <if test="wq.seedTypeId != null">
+                and (t2.use_in_seed_type = #{wq.seedTypeId} or t2.use_in_seed_type = 0)
+            </if>
             <!-- 金额是否满足券的上下限 -->
             <if test="wq.amount != null">
                 and (

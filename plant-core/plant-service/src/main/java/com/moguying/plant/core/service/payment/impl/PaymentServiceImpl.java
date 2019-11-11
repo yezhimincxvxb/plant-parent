@@ -101,6 +101,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 发送快捷注册短信
+     *
      * @param sendRegSmsCodeRequest
      * @return
      */
@@ -118,27 +119,28 @@ public class PaymentServiceImpl implements PaymentService {
             //com（公司）per（个人）pcy（个体工商户）目前只支持个人
             sendRegSmsCodeRequest.setMerType("per");
             //单独加密
-            sendRegSmsCodeRequest.setPhone(CFCARAUtil.encryptMessageByRSA_PKCS(sendRegSmsCodeRequest.getPhone(),cerfile));
-            sendRegSmsCodeRequest.setIdNo(CFCARAUtil.encryptMessageByRSA_PKCS(sendRegSmsCodeRequest.getIdNo(),cerfile));
+            sendRegSmsCodeRequest.setPhone(CFCARAUtil.encryptMessageByRSA_PKCS(sendRegSmsCodeRequest.getPhone(), cerfile));
+            sendRegSmsCodeRequest.setIdNo(CFCARAUtil.encryptMessageByRSA_PKCS(sendRegSmsCodeRequest.getIdNo(), cerfile));
             paymentRequest.setApiContent(sendRegSmsCodeRequest);
             paymentRequest.setSignType(signType);
-            String signData = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
+            String signData = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
                     Feature.OrderedField), '&');
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
-            paymentRequest.setSign(URLEncoder.encode(sign,"UTF-8"));
+            paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
             //签名后再进行UrlEncode
-            sendRegSmsCodeRequest.setPhone(URLEncoder.encode(sendRegSmsCodeRequest.getPhone(),"UTF-8"));
-            sendRegSmsCodeRequest.setIdNo(URLEncoder.encode(sendRegSmsCodeRequest.getIdNo(),"UTF-8"));
+            sendRegSmsCodeRequest.setPhone(URLEncoder.encode(sendRegSmsCodeRequest.getPhone(), "UTF-8"));
+            sendRegSmsCodeRequest.setIdNo(URLEncoder.encode(sendRegSmsCodeRequest.getIdNo(), "UTF-8"));
             paymentRequest.setApiContent(sendRegSmsCodeRequest);
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.REGISTER_SEND_SMS.getUrl(),
-                    requestParam,"POST");
+                    requestParam, "POST");
 
             PaymentResponse<SendRegSmsCodeResponse> SendRegSmsCodeResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<SendRegSmsCodeResponse>>(){});
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<SendRegSmsCodeResponse>>() {
+                    });
             SendRegSmsCodeResponse.setData(JSON.parseObject(SendRegSmsCodeResponse.getResponseParameters(), SendRegSmsCodeResponse.class));
-            addLog(paymentRequest,PaymentRequestUrlEnum.REGISTER_SEND_SMS.getUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.REGISTER_SEND_SMS.getUrl(), signData, responseStr, null);
             return SendRegSmsCodeResponse;
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,23 +149,22 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
-    private void addLog(PaymentRequest request,String actionUrl,String signData,String responseStr,String orderNumber){
+    private void addLog(PaymentRequest request, String actionUrl, String signData, String responseStr, String orderNumber) {
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setPaymentRequest(JSON.toJSONString(request));
         paymentInfo.setRequestAction(actionUrl);
         paymentInfo.setSignData(signData);
         paymentInfo.setPaymentResponse(responseStr);
-        if(null != orderNumber)
+        if (null != orderNumber)
             paymentInfo.setOrderNumber(orderNumber);
         paymentInfo.setAddTime(new Date());
         paymentInfoDAO.insert(paymentInfo);
     }
 
 
-
-
     /**
      * 用户注册信息
+     *
      * @param registerRequest
      * @return
      */
@@ -179,27 +180,28 @@ public class PaymentServiceImpl implements PaymentService {
             paymentRequest.setNotifyUrl("");
             paymentRequest.setTimestamp(DateUtil.INSTANCE.formatDateForPayment(new Date()));
             //单独加密
-            registerRequest.setPhone(CFCARAUtil.encryptMessageByRSA_PKCS(registerRequest.getPhone(),cerfile));
-            registerRequest.setIdNo(CFCARAUtil.encryptMessageByRSA_PKCS(registerRequest.getIdNo(),cerfile));
+            registerRequest.setPhone(CFCARAUtil.encryptMessageByRSA_PKCS(registerRequest.getPhone(), cerfile));
+            registerRequest.setIdNo(CFCARAUtil.encryptMessageByRSA_PKCS(registerRequest.getIdNo(), cerfile));
             paymentRequest.setApiContent(registerRequest);
             paymentRequest.setSignType(signType);
-            String signData = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
+            String signData = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
                     Feature.OrderedField), '&');
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
-            paymentRequest.setSign(URLEncoder.encode(sign,"UTF-8"));
+            paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
             //签名后再进行UrlEncode
-            registerRequest.setPhone(URLEncoder.encode(registerRequest.getPhone(),"UTF-8"));
-            registerRequest.setIdNo(URLEncoder.encode(registerRequest.getIdNo(),"UTF-8"));
+            registerRequest.setPhone(URLEncoder.encode(registerRequest.getPhone(), "UTF-8"));
+            registerRequest.setIdNo(URLEncoder.encode(registerRequest.getIdNo(), "UTF-8"));
             paymentRequest.setApiContent(registerRequest);
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.REGISTER_URL.getUrl(),
-                    requestParam,"POST");
+                    requestParam, "POST");
             PaymentResponse<RegisterSyncResponse> registerResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<RegisterSyncResponse>>(){});
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<RegisterSyncResponse>>() {
+                    });
             registerResponse.setData(JSON.parseObject(registerResponse.getResponseParameters(), RegisterSyncResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.REGISTER_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.REGISTER_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return registerResponse;
         } catch (Exception e) {
@@ -211,6 +213,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 对响应验签
+     *
      * @return
      */
     private boolean checkResponseSign(PaymentResponse response) throws Exception {
@@ -222,6 +225,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 用户实名认证
+     *
      * @param realnameRequest
      * @return
      */
@@ -245,15 +249,16 @@ public class PaymentServiceImpl implements PaymentService {
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
 
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.REALNAME_URL.getUrl(),
-                    requestParam,"POST");
+                    requestParam, "POST");
             PaymentResponse<RealnameSyncResponse> realnameResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<RealnameSyncResponse>>(){});
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<RealnameSyncResponse>>() {
+                    });
             realnameResponse.setData(JSON.parseObject(realnameResponse.getResponseParameters(), RealnameSyncResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.REALNAME_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.REALNAME_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return realnameResponse;
         } catch (Exception e) {
@@ -265,6 +270,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 用户绑定银行卡
+     *
      * @param bindCardRequest
      * @return
      */
@@ -288,15 +294,16 @@ public class PaymentServiceImpl implements PaymentService {
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
 
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.BIND_CARD_URL.getUrl(),
-                    requestParam,"POST");
+                    requestParam, "POST");
             PaymentResponse<BindCardResponse> bindCardResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<BindCardResponse>>(){});
-            bindCardResponse.setData(JSON.parseObject(bindCardResponse.getResponseParameters(),BindCardResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<BindCardResponse>>() {
+                    });
+            bindCardResponse.setData(JSON.parseObject(bindCardResponse.getResponseParameters(), BindCardResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.BIND_CARD_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.BIND_CARD_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return bindCardResponse;
         } catch (Exception e) {
@@ -307,6 +314,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 查询银行卡信息
+     *
      * @param queryBankCardBinRequest
      * @return
      */
@@ -329,19 +337,20 @@ public class PaymentServiceImpl implements PaymentService {
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
 
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.QUERY_BANK_CARD_BIN.getUrlWithoutBaseUrl(),
-                    requestParam,"POST");
-            PaymentResponse<QueryBankCardBinResponse> queryBankCardResponse  =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<QueryBankCardBinResponse>>(){});
-            if(queryBankCardResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
+                    requestParam, "POST");
+            PaymentResponse<QueryBankCardBinResponse> queryBankCardResponse =
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<QueryBankCardBinResponse>>() {
+                    });
+            if (queryBankCardResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
                 List<QueryBankCardBinResponse> bankList = JSON.parseArray(queryBankCardResponse.getResponseParameters(),
                         QueryBankCardBinResponse.class);
                 queryBankCardResponse.setData(bankList.get(0));
             }
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.QUERY_BANK_CARD_BIN.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.QUERY_BANK_CARD_BIN.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return queryBankCardResponse;
         } catch (Exception e) {
@@ -352,6 +361,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 删除银行卡
+     *
      * @param deleteBankCardRequest
      * @return
      */
@@ -366,7 +376,7 @@ public class PaymentServiceImpl implements PaymentService {
             //选填
             paymentRequest.setNotifyUrl("");
             paymentRequest.setTimestamp(DateUtil.INSTANCE.formatDateForPayment(new Date()));
-            deleteBankCardRequest.setCardNo(CFCARAUtil.encryptMessageByRSA_PKCS(deleteBankCardRequest.getCardNo(),cerfile));
+            deleteBankCardRequest.setCardNo(CFCARAUtil.encryptMessageByRSA_PKCS(deleteBankCardRequest.getCardNo(), cerfile));
             paymentRequest.setApiContent(deleteBankCardRequest);
             paymentRequest.setSignType(signType);
 
@@ -375,18 +385,19 @@ public class PaymentServiceImpl implements PaymentService {
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
             //签名后再urlencode
-            deleteBankCardRequest.setCardNo(URLEncoder.encode(deleteBankCardRequest.getCardNo(),"UTF-8"));
+            deleteBankCardRequest.setCardNo(URLEncoder.encode(deleteBankCardRequest.getCardNo(), "UTF-8"));
             paymentRequest.setApiContent(deleteBankCardRequest);
 
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.BIND_CARD_DELETE_URL.getUrl(),
-                    requestParam,"POST");
+                    requestParam, "POST");
             PaymentResponse<DeleteBankCardResponse> deleteBankCardResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<DeleteBankCardResponse>>(){});
-            deleteBankCardResponse.setData(JSON.parseObject(deleteBankCardResponse.getResponseParameters(),DeleteBankCardResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<DeleteBankCardResponse>>() {
+                    });
+            deleteBankCardResponse.setData(JSON.parseObject(deleteBankCardResponse.getResponseParameters(), DeleteBankCardResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.BIND_CARD_DELETE_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.BIND_CARD_DELETE_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return deleteBankCardResponse;
         } catch (Exception e) {
@@ -398,6 +409,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 签约查询
+     *
      * @param paySignQueryRequest
      * @return
      */
@@ -421,15 +433,16 @@ public class PaymentServiceImpl implements PaymentService {
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
 
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.PAY_SIGN_QUERY_URL.getUrl(),
-                    requestParam,"POST");
+                    requestParam, "POST");
             PaymentResponse<PaySignQueryResponse> bindCardResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<PaySignQueryResponse>>(){});
-            bindCardResponse.setData(JSON.parseObject(bindCardResponse.getResponseParameters(),PaySignQueryResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<PaySignQueryResponse>>() {
+                    });
+            bindCardResponse.setData(JSON.parseObject(bindCardResponse.getResponseParameters(), PaySignQueryResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.PAY_SIGN_QUERY_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.PAY_SIGN_QUERY_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return bindCardResponse;
         } catch (Exception e) {
@@ -440,6 +453,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 签约认证
+     *
      * @param bankCardRequest
      * @return
      */
@@ -470,14 +484,15 @@ public class PaymentServiceImpl implements PaymentService {
                     requestParam, "POST");
 
             PaymentResponse<PayAuthAndSignResponse> payauthAndsignResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<PayAuthAndSignResponse>>(){});
-            payauthAndsignResponse.setData(JSON.parseObject(payauthAndsignResponse.getResponseParameters(),PayAuthAndSignResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<PayAuthAndSignResponse>>() {
+                    });
+            payauthAndsignResponse.setData(JSON.parseObject(payauthAndsignResponse.getResponseParameters(), PayAuthAndSignResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.AUTH_AND_SIGN_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.AUTH_AND_SIGN_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return payauthAndsignResponse;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -487,6 +502,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 发送支付短信
+     *
      * @param sendPaySmsCodeRequest
      * @return
      */
@@ -515,13 +531,14 @@ public class PaymentServiceImpl implements PaymentService {
                     requestParam, "POST");
 
             PaymentResponse<SendPaySmsCodeResponse> sendPaySmsCodeResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<SendPaySmsCodeResponse>>(){});
-            sendPaySmsCodeResponse.setData(JSON.parseObject(sendPaySmsCodeResponse.getResponseParameters(),SendPaySmsCodeResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<SendPaySmsCodeResponse>>() {
+                    });
+            sendPaySmsCodeResponse.setData(JSON.parseObject(sendPaySmsCodeResponse.getResponseParameters(), SendPaySmsCodeResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.SEND_PAY_SMS_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.SEND_PAY_SMS_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
             return sendPaySmsCodeResponse;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -530,6 +547,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 支付
+     *
      * @param payRequest
      * @return
      */
@@ -538,13 +556,13 @@ public class PaymentServiceImpl implements PaymentService {
     @DS("write")
     public ResultData<PaymentResponse> pay(PayRequestInfo payRequestInfo) {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
-        UserBank bank = userService.bankCard(payRequestInfo.getUserId(),payRequestInfo.getBankId());
-        ResultData resultData = new ResultData(MessageEnum.ERROR,null);
-        ResultData<PaymentResponse> validateResult = payBeforeValidate(userInfo,bank);
-        if(!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
+        UserBank bank = userService.bankCard(payRequestInfo.getUserId(), payRequestInfo.getBankId());
+        ResultData resultData = new ResultData(MessageEnum.ERROR, null);
+        ResultData<PaymentResponse> validateResult = payBeforeValidate(userInfo, bank);
+        if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
             return validateResult;
 
-        if(null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()) )
+        if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
 
         PayRequest payRequest = new PayRequest();
@@ -581,27 +599,29 @@ public class PaymentServiceImpl implements PaymentService {
                     requestParam, "POST");
 
             PaymentResponse<PayResponse> payResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<PayResponse>>(){});
-            payResponse.setData(JSON.parseObject(payResponse.getResponseParameters(),PayResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<PayResponse>>() {
+                    });
+            payResponse.setData(JSON.parseObject(payResponse.getResponseParameters(), PayResponse.class));
 
-            
-            if(null != payResponse && payResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo()))
+
+            if (null != payResponse && payResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo()))
                 resultData.setMessageEnum(MessageEnum.SUCCESS).setData(payResponse);
-            else if(null != payResponse) {
+            else if (null != payResponse) {
                 resultData.setMessageEnum(MessageEnum.ERROR).setData(payResponse);
             }
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.PAY_URL.getUrlWithoutBaseUrl(),signData,responseStr,payRequest.getMerOrderNo());
+            addLog(paymentRequest, PaymentRequestUrlEnum.PAY_URL.getUrlWithoutBaseUrl(), signData, responseStr, payRequest.getMerOrderNo());
 
             return resultData;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return  resultData;
+            return resultData;
         }
     }
 
     /**
      * 转账
+     *
      * @param transferRequest
      * @return
      */
@@ -630,14 +650,15 @@ public class PaymentServiceImpl implements PaymentService {
                     requestParam, "POST");
 
             PaymentResponse<TransferResponse> transferResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<TransferResponse>>(){});
-            transferResponse.setData(JSON.parseObject(transferResponse.getResponseParameters(),TransferResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<TransferResponse>>() {
+                    });
+            transferResponse.setData(JSON.parseObject(transferResponse.getResponseParameters(), TransferResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.TRANSFER_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.TRANSFER_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return transferResponse;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -647,6 +668,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 发送提现手机短信
+     *
      * @param smsCodeRequest
      * @return
      */
@@ -675,13 +697,14 @@ public class PaymentServiceImpl implements PaymentService {
                     requestParam, "POST");
 
             PaymentResponse<SendWithdrawSmsCodeResponse> sendSmsResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<SendWithdrawSmsCodeResponse>>(){});
-            sendSmsResponse.setData(JSON.parseObject(sendSmsResponse.getResponseParameters(),SendWithdrawSmsCodeResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<SendWithdrawSmsCodeResponse>>() {
+                    });
+            sendSmsResponse.setData(JSON.parseObject(sendSmsResponse.getResponseParameters(), SendWithdrawSmsCodeResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.SEND_WITHDRAW_SMS_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.SEND_WITHDRAW_SMS_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
             return sendSmsResponse;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -713,13 +736,14 @@ public class PaymentServiceImpl implements PaymentService {
                     requestParam, "POST");
 
             PaymentResponse<WithdrawMoneyResponse> withdrawResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<WithdrawMoneyResponse>>(){});
-            withdrawResponse.setData(JSON.parseObject(withdrawResponse.getResponseParameters(),WithdrawMoneyResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<WithdrawMoneyResponse>>() {
+                    });
+            withdrawResponse.setData(JSON.parseObject(withdrawResponse.getResponseParameters(), WithdrawMoneyResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.WITHDRAW_MONEY_TO_ACCOUNT.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.WITHDRAW_MONEY_TO_ACCOUNT.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return withdrawResponse;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -747,7 +771,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             return paymentRequest;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -775,7 +799,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             return paymentRequest;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -783,6 +807,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 图片上传
+     *
      * @param imageUploadRequest
      * @return
      */
@@ -805,7 +830,7 @@ public class PaymentServiceImpl implements PaymentService {
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
 
-            imageUploadRequest.setImage(URLEncoder.encode(imageUploadRequest.getImage(),"UTF-8"));
+            imageUploadRequest.setImage(URLEncoder.encode(imageUploadRequest.getImage(), "UTF-8"));
             paymentRequest.setApiContent(imageUploadRequest);
 
             String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
@@ -814,14 +839,15 @@ public class PaymentServiceImpl implements PaymentService {
                     requestParam, "POST");
 
             PaymentResponse<ImageUploadResponse> paymentResponse = JSON.parseObject(responseStr,
-                    new TypeReference<PaymentResponse<ImageUploadResponse>>(){});
-            paymentResponse.setData(JSON.parseObject(paymentResponse.getResponseParameters(),ImageUploadResponse.class));
+                    new TypeReference<PaymentResponse<ImageUploadResponse>>() {
+                    });
+            paymentResponse.setData(JSON.parseObject(paymentResponse.getResponseParameters(), ImageUploadResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.IMAGE_UPLOAD_URL.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.IMAGE_UPLOAD_URL.getUrlWithoutBaseUrl(), signData, responseStr, null);
 
             return paymentResponse;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -831,6 +857,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 发送绑卡短信
+     *
      * @param bindCardSmsCodeRequest
      * @return
      */
@@ -854,15 +881,16 @@ public class PaymentServiceImpl implements PaymentService {
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(URLEncoder.encode(sign, "UTF-8"));
 
-            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest,SerializerFeature.SortField),
-                    Feature.OrderedField),'&');
+            String requestParam = CFCARAUtil.joinMapValue(JSON.parseObject(JSON.toJSONString(paymentRequest, SerializerFeature.SortField),
+                    Feature.OrderedField), '&');
             String responseStr = CurlUtil.INSTANCE.httpRequest(PaymentRequestUrlEnum.SEND_BIND_CARD_SMS.getUrl(),
-                    requestParam,"POST");
+                    requestParam, "POST");
             PaymentResponse<SendSmsCodeResponse> realnameResponse =
-                    JSON.parseObject(responseStr,new TypeReference<PaymentResponse<SendSmsCodeResponse>>(){});
-            realnameResponse.setData(JSON.parseObject(realnameResponse.getResponseParameters(),SendSmsCodeResponse.class));
+                    JSON.parseObject(responseStr, new TypeReference<PaymentResponse<SendSmsCodeResponse>>() {
+                    });
+            realnameResponse.setData(JSON.parseObject(realnameResponse.getResponseParameters(), SendSmsCodeResponse.class));
 
-            addLog(paymentRequest,PaymentRequestUrlEnum.SEND_BIND_CARD_SMS.getUrlWithoutBaseUrl(),signData,responseStr,null);
+            addLog(paymentRequest, PaymentRequestUrlEnum.SEND_BIND_CARD_SMS.getUrlWithoutBaseUrl(), signData, responseStr, null);
             return realnameResponse;
         } catch (Exception e) {
             e.printStackTrace();
@@ -872,18 +900,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @DS("write")
-    public ResultData<PaymentResponse> sendPayInfo(PayRequestInfo payRequestInfo,String authMsg) {
+    public ResultData<PaymentResponse> sendPayInfo(PayRequestInfo payRequestInfo, String authMsg) {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
-        UserBank bank = userService.bankCard(payRequestInfo.getUserId(),payRequestInfo.getBankId());
-        ResultData resultData = new ResultData(MessageEnum.ERROR,0);
-        ResultData<PaymentResponse> validateResult = payBeforeValidate(userInfo,bank);
-        if(!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
+        UserBank bank = userService.bankCard(payRequestInfo.getUserId(), payRequestInfo.getBankId());
+        ResultData resultData = new ResultData(MessageEnum.ERROR, 0);
+        ResultData<PaymentResponse> validateResult = payBeforeValidate(userInfo, bank);
+        if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
             return validateResult;
 
-        if(null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()) )
+        if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
 
-        //查询签约情况
+        // 查询签约情况
         PaySignQueryRequest paySignQueryRequest = new PaySignQueryRequest();
         paySignQueryRequest.setCardNo(bank.getBankNumber());
         paySignQueryRequest.setCustName(userInfo.getRealName());
@@ -892,12 +920,12 @@ public class PaymentServiceImpl implements PaymentService {
         paySignQueryRequest.setMerOrderNo(payRequestInfo.getMerOrderNo());
         paySignQueryRequest.setPayAmount(payRequestInfo.getMoney());
 
-        resultData = authAndSignPayment(paySignQueryRequest,authMsg);
+        resultData = authAndSignPayment(paySignQueryRequest, authMsg);
 
-        if(resultData.getMessageEnum().equals(MessageEnum.PAYMENT_AUTH_SUCCESS))
+        if (resultData.getMessageEnum().equals(MessageEnum.PAYMENT_AUTH_SUCCESS))
             return resultData.setMessageEnum(MessageEnum.PAYMENT_NEED_SIGN);
 
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)){
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             //发送支付短信
             SendPaySmsCodeRequest paySmsCodeRequest = new SendPaySmsCodeRequest();
             paySmsCodeRequest.setCardNo(paySignQueryRequest.getCardNo());
@@ -912,10 +940,10 @@ public class PaymentServiceImpl implements PaymentService {
             PaymentResponse<SendPaySmsCodeResponse> paySmsCodeResponse = sendPaySmsCode(paySmsCodeRequest);
             if (null != paySmsCodeResponse && paySmsCodeResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(paySmsCodeResponse);
-            } else if(null != paySmsCodeResponse){
+            } else if (null != paySmsCodeResponse) {
                 return resultData.setMessageEnum(MessageEnum.ERROR).setData(paySmsCodeResponse);
             }
-        } else if(null != resultData.getData()){
+        } else if (null != resultData.getData()) {
             return resultData.setMessageEnum(MessageEnum.ERROR);
         }
 
@@ -925,28 +953,32 @@ public class PaymentServiceImpl implements PaymentService {
 
     /**
      * 支付前较验
+     *
      * @param userInfo
      * @param bank
      * @return
      */
-    private ResultData<PaymentResponse> payBeforeValidate(User userInfo,UserBank bank){
-        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        if(null == userInfo)
+    private ResultData<PaymentResponse> payBeforeValidate(User userInfo, UserBank bank) {
+        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
+        if (null == userInfo)
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
 
-        if(!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
+        // 未实名
+        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
             return resultData.setMessageEnum(MessageEnum.USER_NEED_REAL_NAME);
 
-        if(!userInfo.getIsBindCard())
+        // 未绑卡
+        if (!userInfo.getIsBindCard())
             return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);
 
-        if(!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState()))
+        // 未注册第三方支付
+        if (!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState()))
             return resultData.setMessageEnum(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT);
 
-        if(null == userInfo.getPaymentAccount() || StringUtils.isEmpty(userInfo.getPaymentAccount()))
+        if (null == userInfo.getPaymentAccount() || StringUtils.isEmpty(userInfo.getPaymentAccount()))
             return resultData.setMessageEnum(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT);
 
-        if(null == bank)
+        if (null == bank)
             return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);
         return resultData.setMessageEnum(MessageEnum.SUCCESS);
     }
@@ -955,11 +987,11 @@ public class PaymentServiceImpl implements PaymentService {
     /**
      * 查询及认证
      */
-    private ResultData<PaymentResponse> authAndSignPayment(PaySignQueryRequest paySignQueryRequest,String authMsg){
-        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
+    private ResultData<PaymentResponse> authAndSignPayment(PaySignQueryRequest paySignQueryRequest, String authMsg) {
+        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
         //已签约
         PaymentResponse<PaySignQueryResponse> paymentResponse = paySignQuery(paySignQueryRequest);
-        if(null != paymentResponse && paymentResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())){
+        if (null != paymentResponse && paymentResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         }
         //构造参数
@@ -969,24 +1001,24 @@ public class PaymentServiceImpl implements PaymentService {
         payAuthAndSignRequest.setPhone(paySignQueryRequest.getPhone());
         payAuthAndSignRequest.setIdNo(paySignQueryRequest.getIdNo());
         payAuthAndSignRequest.setMerOrderNo(paySignQueryRequest.getMerOrderNo());
-        if(null == authMsg || StringUtils.isEmpty(authMsg)) {
+        if (null == authMsg || StringUtils.isEmpty(authMsg)) {
             payAuthAndSignRequest.setCustType(PaymentStateEnum.PAY_AUTH_TYPE.getStateInfo());
             payAuthAndSignRequest.setAuthMsg("");
             //先认证
             PaymentResponse<PayAuthAndSignResponse> authResponse = authAndSignPayment(payAuthAndSignRequest);
-            if(null != authResponse && authResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())){
+            if (null != authResponse && authResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
                 return resultData.setMessageEnum(MessageEnum.PAYMENT_AUTH_SUCCESS);
-            } else if(null != authResponse)
+            } else if (null != authResponse)
                 return resultData.setData(authResponse);
-            else  return resultData;
-        } else if(null != authMsg && StringUtils.isNotEmpty(authMsg)){
+            else return resultData;
+        } else if (null != authMsg && StringUtils.isNotEmpty(authMsg)) {
             payAuthAndSignRequest.setCustType(PaymentStateEnum.PAY_SIGN_TYPE.getStateInfo());
             payAuthAndSignRequest.setAuthMsg(authMsg);
             //再签约
             PaymentResponse<PayAuthAndSignResponse> signResponse = authAndSignPayment(payAuthAndSignRequest);
-            if(null != signResponse && signResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())){
+            if (null != signResponse && signResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
                 return resultData.setMessageEnum(MessageEnum.SUCCESS);
-            } else if(null != signResponse)
+            } else if (null != signResponse)
                 return resultData.setData(signResponse);
         }
         return resultData;
@@ -997,38 +1029,40 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @DS("write")
     public ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId, BaseMapper dao, Class<? extends PayOrder> classs) {
-        ResultData<SendPayOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<SendPayOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
         try {
+            // 订单不存在
             PayOrder orderDetail = (PayOrder) dao.selectById(payOrder.getOrderId());
-            if(null == orderDetail)
+            if (null == orderDetail)
                 return resultData.setMessageEnum(MessageEnum.PAY_ORDER_NOT_EXISTS);
 
             // 不是可支付状态
-            if(null != orderDetail.getPayTime() || !orderDetail.getState().equals(PaymentStateEnum.ORDER_NEED_PAY.getState()))
+            if (null != orderDetail.getPayTime() || !orderDetail.getState().equals(PaymentStateEnum.ORDER_NEED_PAY.getState()))
                 return resultData.setMessageEnum(MessageEnum.PAY_ORDER_CAN_NOT_PAY);
 
-            BigDecimal reductAmount = BigDecimal.ZERO;
             // 在非支付验签时使用券
-            if(null != payOrder.getFertilizerIds() &&  !payOrder.getFertilizerIds().isEmpty()){
+            BigDecimal reductAmount = BigDecimal.ZERO;
+            if (null != payOrder.getFertilizerIds() && !payOrder.getFertilizerIds().isEmpty()) {
                 FertilizerUseCondition condition = new FertilizerUseCondition();
                 condition.setUserId(userId);
                 condition.setAmount(orderDetail.getBuyAmount());
 
                 // 菌包使用券
-                if(orderDetail.getOpType().equals(MoneyOpEnum.BUY_SEED_ORDER)){
+                if (orderDetail.getOpType().equals(MoneyOpEnum.BUY_SEED_ORDER)) {
                     condition.setSeedOrderId(orderDetail.getId());
                 }
 
                 // 商品使用券
-                if(orderDetail.getOpType().equals(MoneyOpEnum.BUY_MALL_PRODUCT)){
-                    condition.setProductId(orderDetail.getId());
+                if (orderDetail.getOpType().equals(MoneyOpEnum.BUY_MALL_PRODUCT)) {
+                    condition.setMallOrderId(orderDetail.getId());
                 }
 
                 // 使用券
                 ResultData<BigDecimal> fertilizerResult =
-                        fertilizerService.useFertilizers(condition,payOrder.getFertilizerIds(),orderDetail.getOrderNumber());
+                        fertilizerService.useFertilizers(condition, payOrder.getFertilizerIds(), orderDetail.getOrderNumber());
 
-                if(fertilizerResult.getMessageEnum().equals(MessageEnum.SUCCESS))
+                // 使用的券总金额
+                if (fertilizerResult.getMessageEnum().equals(MessageEnum.SUCCESS))
                     reductAmount = fertilizerResult.getData();
                 else
                     return resultData.setMessageEnum(fertilizerResult.getMessageEnum());
@@ -1037,23 +1071,27 @@ public class PaymentServiceImpl implements PaymentService {
             SendPayOrderResponse payOrderResponse = new SendPayOrderResponse();
             PayOrder updateDetail = classs.newInstance();
             updateDetail.setId(orderDetail.getId());
-                updateDetail.setReducePayAmount(reductAmount);
+            updateDetail.setReducePayAmount(reductAmount);
 
+            // 实际购买价格：初始购买价 - 券金额
+            updateDetail.setBuyAmount(orderDetail.getBuyAmount().subtract(reductAmount));
+            // 实际支付金额
             BigDecimal payAmount = orderDetail.getBuyAmount().add(orderDetail.getFeeAmount()).subtract(reductAmount);
-            //卡支付部份
-            BigDecimal carPayMoney ;
-            //勾选余额支付
-            if(payOrder.getIsCheck()){
+
+            // 卡支付部份
+            BigDecimal carPayMoney;
+            // 勾选余额支付
+            if (payOrder.getIsCheck()) {
                 UserMoney userMoney = moneyDAO.selectById(userId);
-                //余额充足
-                if(userMoney.getAvailableMoney().compareTo(payAmount) >= 0) {
+                // 余额充足
+                if (userMoney.getAvailableMoney().compareTo(payAmount) >= 0) {
                     payOrderResponse.setNeedPassword(true);
                     updateDetail.setCarPayAmount(BigDecimal.ZERO);
                     updateDetail.setAccountPayAmount(payAmount);
                     dao.updateById(updateDetail);
                     return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(payOrderResponse);
                 } else {
-                    //卡支付的部分
+                    // 卡支付的部分
                     carPayMoney = payAmount.subtract(userMoney.getAvailableMoney());
                     updateDetail.setAccountPayAmount(userMoney.getAvailableMoney());
                 }
@@ -1061,18 +1099,21 @@ public class PaymentServiceImpl implements PaymentService {
                 updateDetail.setAccountPayAmount(BigDecimal.ZERO);
                 carPayMoney = payAmount;
             }
-            //非全余额支付
+
+            // 非全余额支付
             payOrderResponse.setNeedPassword(false);
-            //银行卡支付
+
+            // 银行卡支付
             PayRequestInfo payRequestInfo = new PayRequestInfo();
             payRequestInfo.setUserId(userId);
             payRequestInfo.setMoney(carPayMoney.toString());
             payRequestInfo.setMerOrderNo(orderDetail.getOrderNumber());
             payRequestInfo.setOrderSubject(orderDetail.getOpType().getTypeStr() + orderDetail.getOrderNumber());
             payRequestInfo.setBankId(payOrder.getBankId());
-            ResultData<PaymentResponse> payResult  = this.sendPayInfo(payRequestInfo,payOrder.getAuthMsg());
-            if(null != payResult && payResult.getMessageEnum().equals(MessageEnum.SUCCESS)){
-                if(payResult.getData().getData() instanceof SendPaySmsCodeResponse) {
+
+            ResultData<PaymentResponse> payResult = this.sendPayInfo(payRequestInfo, payOrder.getAuthMsg());
+            if (null != payResult && payResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+                if (payResult.getData().getData() instanceof SendPaySmsCodeResponse) {
                     SendPaySmsCodeResponse smsCodeResponse = (SendPaySmsCodeResponse) payResult.getData().getData();
                     updateDetail.setSeqNo(smsCodeResponse.getSeqNo());
                     updateDetail.setCarPayAmount(carPayMoney);
@@ -1080,8 +1121,8 @@ public class PaymentServiceImpl implements PaymentService {
                     payOrderResponse.setSeqNo(smsCodeResponse.getSeqNo());
                     return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(payOrderResponse);
                 }
-            } else if(null != payResult) {
-                if(null != payResult.getData())
+            } else if (null != payResult) {
+                if (null != payResult.getData())
                     payOrderResponse.setErrorMsg(payResult.getData().getMsg());
                 resultData.setMessageEnum(payResult.getMessageEnum()).setData(payOrderResponse);
             }

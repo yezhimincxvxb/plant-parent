@@ -186,7 +186,6 @@ public class FarmerServiceImpl implements FarmerService {
         return resultData;
     }
 
-
     @Override
     @DS("write")
     public PageResult<FarmerNotice> farmerNoticeList(Integer page , Integer size, FarmerNotice where) {
@@ -208,17 +207,24 @@ public class FarmerServiceImpl implements FarmerService {
     @DS("write")
     public ResultData<Integer> pickUpEnergy(FarmerEnergy energy) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        //更新能量信息
+        // 更新能量信息
         FarmerEnergy farmerEnergy = farmerEnergyDAO.selectByIdAndUserId(energy);
         if(null == farmerEnergy)
             return resultData.setMessageEnum(MessageEnum.FARMER_ENERGY_NO_EXIST);
+
+        // 已采摘
         if(farmerEnergy.getState().equals(FarmerEnum.ENERGY_HAS_GET.getState()))
             return resultData.setMessageEnum(MessageEnum.FARMER_ENERGY_HAS_PICK);
+
+        // 已失效
         if(farmerEnergy.getState().equals(FarmerEnum.ENERGY_OUT_TIME.getState()))
             return resultData.setMessageEnum(MessageEnum.FARMER_ENERGY_HAS_LOSE);
+
+        // 已成熟
         long leftSecond = (new Date().getTime()  - farmerEnergy.getAddTime().getTime()) / 1000;
         if(!energyStateByLeftSecond(leftSecond).equals(FarmerEnum.ENERGY_HAS_GROW.getState()))
             return resultData.setMessageEnum(MessageEnum.FARMER_ENERGY_CAN_NOT_GET);
+
         FarmerEnergy update = new FarmerEnergy();
         update.setId(farmerEnergy.getId());
         update.setState(FarmerEnum.ENERGY_HAS_GET.getState());
@@ -245,6 +251,7 @@ public class FarmerServiceImpl implements FarmerService {
             return resultData;
         if(farmerInfo.getLevelGift())
             return resultData.setMessageEnum(MessageEnum.FARMER_LEVEL_UP_GIFT_TRUE);
+
         ResultData<Integer> giftResult = fertilizerService.distributeFertilizer("farmerLevel"+farmerInfo.getFarmerLevel(),userId);
         if(giftResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             FarmerInfo update = new FarmerInfo();

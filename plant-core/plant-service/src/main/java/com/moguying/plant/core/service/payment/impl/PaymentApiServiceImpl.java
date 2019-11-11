@@ -36,7 +36,7 @@ public class PaymentApiServiceImpl implements PaymentApiService {
     @DS("write")
     public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, PayOrder orderDetail, User userInfo) {
         ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        //仅全额由余额支付时校验支付密码
+        // 仅全额由余额支付时校验支付密码
         if(orderDetail.getAccountPayAmount().add(orderDetail.getReducePayAmount())
                 .compareTo(orderDetail.getBuyAmount().add(orderDetail.getFeeAmount())) == 0){
             if(null == userInfo.getPayPassword() || StringUtils.isEmpty(userInfo.getPayPassword()))
@@ -45,9 +45,9 @@ public class PaymentApiServiceImpl implements PaymentApiService {
                 return resultData.setMessageEnum(MessageEnum.PAY_PASSWORD_ERROR);
         }
 
-        //余额支付
+        // 余额支付
         if(orderDetail.getAccountPayAmount().compareTo(new BigDecimal("0")) > 0){
-            //资金操作
+            // 资金操作
             UserMoneyOperator operator = new UserMoneyOperator();
             operator.setOpType(orderDetail.getOpType());
             UserMoney money = new UserMoney(userInfo.getId());
@@ -59,7 +59,7 @@ public class PaymentApiServiceImpl implements PaymentApiService {
             }
         }
 
-        //卡支付
+        // 卡支付
         if(orderDetail.getCarPayAmount().compareTo(new BigDecimal("0")) > 0) {
 
             PayRequestInfo payRequestInfo = new PayRequestInfo();

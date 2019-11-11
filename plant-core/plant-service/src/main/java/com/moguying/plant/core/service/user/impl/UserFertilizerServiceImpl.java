@@ -90,6 +90,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
             SeedOrderDetail orderDetail =
                     seedOrderDetailDAO.selectByIdAndUserIdWithSeedTypeInfo(condition.getSeedOrderId(), condition.getUserId());
             condition.setSeedTypeId(orderDetail.getSeedTypeId());
+            condition.setType(FertilizerEnum.FULL_FERTILIZER.getState());
         }
 
         /**
@@ -98,6 +99,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         if (null != condition.getBlockId()) {
             Block block = blockDAO.selectById(condition.getBlockId());
             condition.setBlockId(block.getSeedType());
+            condition.setType(FertilizerEnum.PLANT_FERTILIZER.getState());
         }*/
 
         // 指定商品(该订单只有一个商品时才有效)
@@ -109,6 +111,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
             if (Objects.nonNull(details) && details.size() == 1) {
                 condition.setProductId(details.get(0).getProductId());
             }
+            condition.setType(FertilizerEnum.FULL_FERTILIZER.getState());
         }
 
         condition.setExpireTime(new Date());

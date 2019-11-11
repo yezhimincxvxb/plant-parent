@@ -5,6 +5,10 @@ public enum FertilizerEnum {
     FERTILIZER_USED(1,"已使用"),
     FERTILIZER_OUT_TO_EXPIRE(2,"已过期"),
 
+    COUPON_FERTILIZER(1,"优卖券"),
+    FULL_FERTILIZER(2,"满减券"),
+    PLANT_FERTILIZER(3,"种植券"),
+
     WINE_FERTILIZER(77,"5折酒水满减券"),
     MALL_FOOL_FERTILIZER(78,"商城食品满减券");
 

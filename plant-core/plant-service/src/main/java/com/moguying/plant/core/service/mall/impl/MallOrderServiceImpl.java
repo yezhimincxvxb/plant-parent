@@ -5,8 +5,10 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moguying.plant.constant.*;
-import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
+import com.moguying.plant.constant.MallEnum;
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.MoneyOpEnum;
+import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.dao.mall.MallCarDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
@@ -18,7 +20,6 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
-import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
@@ -50,7 +51,10 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MallOrderServiceImpl implements MallOrderService {
@@ -104,9 +108,6 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Autowired
     private SaleCoinService saleCoinService;
-
-    @Autowired
-    private UserFertilizerDAO userFertilizerDAO;
 
     @Override
     @DS("read")
@@ -162,9 +163,11 @@ public class MallOrderServiceImpl implements MallOrderService {
     @DS("write")
     public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, Integer userId) {
         ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
+
         MallOrder mallOrder = mallOrderDAO.selectById(payOrder.getOrderId());
         if (null == mallOrder || null != mallOrder.getPayTime())
             return resultData.setMessageEnum(MessageEnum.MALL_ORDER_NOT_EXISTS);
+
         User userInfo = userDAO.userInfoById(userId);
         MallOrder update = new MallOrder();
         update.setId(payOrder.getOrderId());
