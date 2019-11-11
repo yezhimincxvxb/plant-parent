@@ -132,7 +132,7 @@ public class BTasteController {
      * 设置是否申请通过
      */
     @PostMapping("/free/state")
-    public ResponseData<Boolean> setTaste(@RequestBody Taste taste){
+    public ResponseData<Boolean> setTaste(@RequestBody TasteApply taste){
         if (Objects.isNull(taste) || Objects.isNull(taste.getId()) || Objects.isNull(taste.getState()))
             new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
 

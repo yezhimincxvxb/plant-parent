@@ -229,7 +229,7 @@ public class TasteServiceImpl implements TasteService {
                 if(taste.getEndTime().compareTo(new Date()) <= 0){
                     mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())),Update.update("state",ApiEnum.TASTE_CLOSE.getType()),Taste.class);
                 }
-                taste.setApplyCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId())),TasteApply.class));
+                taste.setApplyCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId()).and("state").is(ApiEnum.TASTE_APPLY_SUCCESS.getType())),TasteApply.class));
             });
         }
         long count = mongoTemplate.count(query,Taste.class);
@@ -261,11 +261,18 @@ public class TasteServiceImpl implements TasteService {
     }
 
     @Override
-    public Boolean setState(Taste taste) {
-        Query query = new Query(Criteria.where("id").is(taste.getId()));
-        TasteApply one = mongoTemplate.findOne(query,TasteApply.class);
-        if(null != one) {
-            UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("state", taste.getState()), TasteApply.class);
+    public Boolean setState(TasteApply where) {
+        Query query = new Query(Criteria.where("id").is(where.getId()));
+        TasteApply apply = mongoTemplate.findOne(query,TasteApply.class);
+        if(null != apply) {
+            UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("state", where.getState()), TasteApply.class);
+            if(ApiEnum.TASTE_APPLY_SUCCESS.getType().equals(where.getState())) {
+                Taste taste = mongoTemplate.findOne(new Query(Criteria.where("id").is(apply.getTasteId())),Taste.class);
+                Long count = Optional.ofNullable(taste).map(Taste::getTasteCount).orElse(0L);
+                AtomicLong atomicLong = new AtomicLong(count);
+                if(count <= 0) return false;
+                mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())), Update.update("tasteCount", atomicLong.decrementAndGet()), Taste.class);
+            }
             return updateResult.getModifiedCount() > 0;
         }
         return false;
@@ -287,7 +294,6 @@ public class TasteServiceImpl implements TasteService {
         TasteApply apply = new TasteApply(userId,taste.getId(), ApiEnum.TASTE_APPLY.getType());
         Taste tasteInfo = mongoTemplate.findOne(new Query(Criteria.where("id").is(taste.getId())), Taste.class);
         Long count = Optional.ofNullable(tasteInfo).map(Taste::getTasteCount).orElse(0L);
-        AtomicLong atomicLong = new AtomicLong(count);
         if(count <= 0)
             return resultData.setMessageEnum(MessageEnum.TASTE_COUNT_NOT_ENOUGH);
 
@@ -302,7 +308,6 @@ public class TasteServiceImpl implements TasteService {
         apply.setProductName(product.getName());
         apply.setApplyTime(new Date());
         mongoTemplate.save(apply);
-        mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())),Update.update("tasteCount",atomicLong.decrementAndGet()),Taste.class);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }
 
@@ -327,6 +332,8 @@ public class TasteServiceImpl implements TasteService {
         Optional<TasteApply> optional = Optional.ofNullable(where);
         if(optional.map(TasteApply::getTasteId).isPresent())
             query.addCriteria(Criteria.where("tasteId").is(where.getTasteId()));
+        if(optional.map(TasteApply::getState).isPresent())
+            query.addCriteria(Criteria.where("state").is(where.getState()));
         List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
         long count = mongoTemplate.count(query, TasteApply.class);
         return new PageResult<>(count,tasteApplies);

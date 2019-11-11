@@ -236,8 +236,8 @@ spring:
 upload:
   save-path: /pages/upload
   editor:
-    host: 192.168.5.220
-  host: 192.168.5.220
+    host: http://192.168.5.220
+  host: http://192.168.5.220
 
 ---
 debug: false

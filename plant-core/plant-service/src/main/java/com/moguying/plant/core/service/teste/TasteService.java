@@ -62,7 +62,7 @@ public interface TasteService {
      */
     Boolean setShowState(String id);
 
-    Boolean setState(Taste taste);
+    Boolean setState(TasteApply apply);
 
 
     /**
