@@ -114,11 +114,14 @@ public class ABargainController {
     /**
      * 砍价中的产品详情
      */
-    @GetMapping("/product/one/{orderId}")
-    public ResponseData<BargainVo> productInfoByOrderId(@PathVariable("orderId") Integer orderId) {
+    @PostMapping("/product/one")
+    public ResponseData<BargainVo> productInfoByOrderId(@RequestBody BargainVo bargainVo) {
         ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
 
-        BargainVo response = bargainDetailService.productInfoByOrderId(orderId);
+        if (Objects.isNull(bargainVo) || (Objects.isNull(bargainVo.getOrderId()) && Objects.isNull(bargainVo.getSymbol())))
+            return responseData;
+
+        BargainVo response = bargainDetailService.productInfoByOrderId(bargainVo);
         if (Objects.isNull(response)) return responseData;
 
         Integer productId = response.getProductId();

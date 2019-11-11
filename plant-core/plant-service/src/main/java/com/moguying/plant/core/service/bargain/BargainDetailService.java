@@ -32,7 +32,7 @@ public interface BargainDetailService {
 
     PageResult<BargainVo> successList(Integer page, Integer size, Integer userId);
 
-    BargainVo productInfoByOrderId(Integer orderId);
+    BargainVo productInfoByOrderId(BargainVo bargainVo);
 
     PageResult<BargainVo> ownLog(Integer page, Integer size, Integer userId);
 

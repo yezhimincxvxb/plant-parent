@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.bargain.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.OrderPrefixEnum;
@@ -263,27 +264,41 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
     @Override
     @DS("read")
-    public BargainVo productInfoByOrderId(Integer orderId) {
-        BargainDetail detail = bargainDetailDao.selectById(orderId);
-        if (detail == null) return null;
+    public BargainVo productInfoByOrderId(BargainVo bargainVo) {
+
+        BargainDetail detail = new BargainDetail();
+
+        // 根据订单id
+        if (Objects.nonNull(bargainVo.getOrderId())) {
+            detail = bargainDetailDao.selectById(bargainVo.getOrderId());
+            if (detail == null) return null;
+        }
+
+        // 根据口令
+        if (Objects.nonNull(bargainVo.getSymbol())) {
+            QueryWrapper<BargainDetail> queryWrapper = new QueryWrapper<BargainDetail>().eq("symbol", bargainVo.getSymbol());
+            List<BargainDetail> details = bargainDetailDao.selectList(queryWrapper);
+            if (details == null || details.size() != 1) return null;
+            detail = details.get(0);
+        }
 
         MallProduct mallProduct = mallProductDAO.selectById(detail.getProductId());
         if (mallProduct == null) return null;
 
-        BargainVo vo = new BargainVo();
-        vo.setOrderId(detail.getId());
-        vo.setProductName(mallProduct.getName());
-        vo.setBargainAmount(detail.getBargainAmount());
-        vo.setLeftAmount(detail.getLeftAmount());
-        vo.setProductInfo(mallProduct.getSummaryDesc());
-        vo.setPicUrl(mallProduct.getPicUrl());
-        vo.setBeginTime(detail.getAddTime());
-        vo.setEndTime(detail.getCloseTime());
-        vo.setRate(detail.getBargainAmount().divide(detail.getTotalAmount(), 2));
-        vo.setProductId(mallProduct.getId());
-        vo.setProductPrice(mallProduct.getPrice().multiply(new BigDecimal(mallProduct.getBargainNumber())));
-        vo.setUserId(detail.getUserId());
-        return vo;
+        return new BargainVo()
+                .setOrderId(detail.getId())
+                .setProductName(mallProduct.getName())
+                .setBargainAmount(detail.getBargainAmount())
+                .setLeftAmount(detail.getLeftAmount())
+                .setProductInfo(mallProduct.getSummaryDesc())
+                .setPicUrl(mallProduct.getPicUrl())
+                .setBeginTime(detail.getAddTime())
+                .setEndTime(detail.getCloseTime())
+                .setRate(detail.getBargainAmount().divide(detail.getTotalAmount(), 2))
+                .setProductId(mallProduct.getId())
+                .setProductPrice(mallProduct.getPrice().multiply(new BigDecimal(mallProduct.getBargainNumber())))
+                .setUserId(detail.getUserId())
+                .setSymbol(detail.getSymbol());
     }
 
     @Override
