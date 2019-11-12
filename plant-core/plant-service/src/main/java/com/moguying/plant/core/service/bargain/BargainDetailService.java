@@ -4,6 +4,7 @@ package com.moguying.plant.core.service.bargain;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
+import com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.bargain.vo.ShareVo;
@@ -41,4 +42,6 @@ public interface BargainDetailService {
     Boolean submitSuccess(Integer userId, MallProduct product, UserAddress address, BargainDetail detail, MallOrder order);
 
     Integer getNumber(Integer productId);
+
+    PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size);
 }

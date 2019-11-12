@@ -8,6 +8,8 @@ import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface BargainLogDao extends BaseMapper<BargainLog> {
 
@@ -16,4 +18,6 @@ public interface BargainLogDao extends BaseMapper<BargainLog> {
     Integer getBargainCountToday(@Param("userId") Integer userId);
 
     IPage<BargainVo> helpLog(Page<BargainVo> page, @Param("shareId") Integer shareId, @Param("orderId") Integer orderId);
+
+    List<BargainVo> getAllUserInfo(@Param("idList") List<Integer> idList);
 }
