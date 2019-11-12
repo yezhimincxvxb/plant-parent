@@ -16,6 +16,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.BargainRate;
+import com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.bargain.vo.ShareVo;
@@ -35,10 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -79,6 +78,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     }
 
     @Override
+    @DS("read")
     public BargainDetail getOneById(Integer id) {
         return bargainDetailDao.selectById(id);
     }
@@ -391,7 +391,29 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     }
 
     @Override
+    @DS("read")
     public Integer getNumber(Integer productId) {
         return bargainDetailDao.getNumber(productId);
+    }
+
+    @Override
+    @DS("read")
+    public PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size) {
+        IPage<BackBargainDetailVo> iPage = bargainDetailDao.bargainList(new Page<>(page, size));
+        List<BackBargainDetailVo> records = iPage.getRecords();
+
+        List<Integer> idList = records.stream().map(BackBargainDetailVo::getOrderId).collect(Collectors.toList());
+        if (!idList.isEmpty()) {
+            List<BargainVo> users = bargainLogDao.getAllUserInfo(idList);
+            records.forEach(record -> {
+                List<BargainVo> vos = Collections.synchronizedList(new ArrayList<>());
+                users.stream()
+                        .filter(user -> record.getOrderId().equals(user.getOrderId()))
+                        .forEach(vos::add);
+                record.setUsers(vos);
+            });
+        }
+
+        return new PageResult<>(iPage.getTotal(), records);
     }
 }

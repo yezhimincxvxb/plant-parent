@@ -146,6 +146,27 @@ public enum DateUtil {
         return calendar.getTime();
     }
 
+    /**
+     * 毫秒值转时分秒
+     */
+    public String longToString(long millis) {
+        int ss = 1000;
+        int mi = ss * 60;
+        int hh = mi * 60;
+
+        long hour = millis / hh;
+        long minute = (millis - hour * hh) / mi;
+        long second = (millis - hour * hh - mi * minute) / ss;
+
+        return getString(hour) + ":" + getString(minute) + ":" + getString(second);
+    }
+
+    public String getString(long val) {
+        return val > 9 ? "" + val : "0" + val;
+    }
+
+
+
     public static void main(String[] args) {
         System.out.println(DateUtil.INSTANCE.todayEnd(DateUtil.INSTANCE.lastDayOfNextMonth()));
     }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
+import com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
@@ -38,5 +39,7 @@ public interface BargainDetailDao extends BaseMapper<BargainDetail> {
     Integer setState(@Param("idList") List<Integer> idList);
 
     Integer getNumber(@Param("productId") Integer productId);
+
+    IPage<BackBargainDetailVo> bargainList(Page<BackBargainDetailVo> page);
 
 }

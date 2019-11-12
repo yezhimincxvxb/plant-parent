@@ -63,4 +63,19 @@
         order by t1.help_time desc
     </select>
 
+    <select id="getAllUserInfo" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
+        select t1.detail_id `orderId`, t2.phone `phone`, t1.help_amount `helpAmount`, t1.help_time `beginTime`
+        from plant_bargain_log t1
+        left join plant_user t2 on t1.user_id = t2.id
+        <where>
+            <if test="idList != null and idList.size() > 0">
+                t1.detail_id in
+                <foreach collection="idList" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        order by t1.help_time desc
+    </select>
+
 </mapper>
