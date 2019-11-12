@@ -461,3 +461,11 @@ CREATE TABLE `plant_user_activity_log` (
   `add_time` datetime DEFAULT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `moguying`.`plant_seed_type`
+ADD COLUMN `ex_mall_weigh` varchar(255) NULL AFTER `ex_mall_product`;
+
+ALTER TABLE `moguying`.`plant_seed_type`
+MODIFY COLUMN `ex_mall_weigh` decimal(15, 2) NULL DEFAULT NULL COMMENT '每份商品兑换重量' AFTER `ex_mall_product`,
+ADD COLUMN `ex_mall_default` tinyint(1) NULL COMMENT '默认兑换记录' AFTER `ex_mall_weigh`;

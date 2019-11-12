@@ -10,6 +10,8 @@ import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.CommonUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping
 @Slf4j
+@Api(tags = "公共接口")
 public class FIndexController {
 
 
@@ -35,6 +38,7 @@ public class FIndexController {
 
     @PostMapping(value = "/send/message")
     @ResponseBody
+    @ApiOperation("发送短信")
     public ResponseData<SendMessage> seedMessage(@RequestBody SendMessage sendMessage, HttpServletRequest request){
 
         if(null == sendMessage.getPhone() || !CommonUtil.INSTANCE.isPhone(sendMessage.getPhone()))

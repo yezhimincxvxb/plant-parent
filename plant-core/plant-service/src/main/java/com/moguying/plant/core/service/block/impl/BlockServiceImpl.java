@@ -154,7 +154,7 @@ public class BlockServiceImpl extends ServiceImpl<BlockDAO,Block> implements Blo
         where.setSeedType(seedTypeId);
         where.setIsShow(true);
         where.setState(BlockStateEnum.OPEN.getState());
-        List<Block> blocks = blockDAO.selectList(new QueryWrapper<>(where));
+        List<Block> blocks = blockDAO.selectSelective(where);
         if(null == blocks || blocks.isEmpty())
             return where;
         if(blocks.size() == 1)

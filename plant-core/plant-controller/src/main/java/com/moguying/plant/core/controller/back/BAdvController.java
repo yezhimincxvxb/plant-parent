@@ -8,6 +8,8 @@ import com.moguying.plant.core.entity.content.AdvType;
 import com.moguying.plant.core.service.content.AdvService;
 import com.moguying.plant.core.service.content.AdvTypeService;
 import com.moguying.plant.utils.PasswordUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +27,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j
+@Api(tags = "内容管理")
 public class BAdvController {
 
 
@@ -64,6 +67,7 @@ public class BAdvController {
      * @return
      */
     @PostMapping(value = "/adv/type")
+    @ApiOperation("添加广告位置")
     public ResponseData<Integer> addAdvType(@RequestBody AdvType advType){
         if(advTypeService.addAdvType(advType) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),advType.getId());
@@ -78,6 +82,7 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/type/list")
+    @ApiOperation("获取广告位置列表")
     public PageResult<AdvType> advTypeList(@RequestParam("page") Integer page, @RequestParam("size") Integer size){
         return advTypeService.advTypeList(page,size,null);
     }
@@ -89,6 +94,7 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/type/{id}")
+    @ApiOperation("获取单个广告位置信息")
     public ResponseData<AdvType> getAdvType(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(), advTypeService.advType(id));
     }
@@ -100,6 +106,7 @@ public class BAdvController {
      * @return
      */
     @PutMapping(value = "/adv/type/{id}")
+    @ApiOperation("更新指定id的广告位置信息")
     public ResponseData<Integer> updateAdvType(@PathVariable Integer id, @RequestBody AdvType advType){
         Integer result = advTypeService.updateAdvType(id,advType);
         if(result > 0)
@@ -114,6 +121,7 @@ public class BAdvController {
      * @return
      */
     @PostMapping(value = "/adv")
+    @ApiOperation("添加广告信息")
     public ResponseData<Integer> addAdv(@RequestBody Adv adv){
         if(advService.addAdv(adv) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),adv.getId());
@@ -128,6 +136,7 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/list")
+    @ApiOperation("获取广告信息列表")
     public PageResult<Adv> advList(@RequestParam(value = "page",defaultValue = "1" ,required = false) Integer page,
                                    @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
         return advService.advList(page,size,null);
@@ -140,6 +149,7 @@ public class BAdvController {
      * @return
      */
     @DeleteMapping(value = "/adv/{id}")
+    @ApiOperation("删除广告信息")
     public ResponseData<Integer> deleteAdv(@PathVariable Integer id){
         Integer result =  advService.deleteAdv(id);
         if(result > 0)
@@ -154,6 +164,7 @@ public class BAdvController {
      * @return
      */
     @GetMapping(value = "/adv/{id}")
+    @ApiOperation("获取指定id的广告信息")
     public ResponseData<Adv> getAdv(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),advService.adv(id));
     }
@@ -166,6 +177,7 @@ public class BAdvController {
      * @return
      */
     @PutMapping(value = "/adv/{id}")
+    @ApiOperation("更新一个广告信息")
     public ResponseData<Integer> updateAdv(@PathVariable Integer id, @RequestBody Adv adv){
         if(null == adv)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
@@ -177,6 +189,7 @@ public class BAdvController {
 
 
     @PostMapping(value = "/upload/{savePath}")
+    @ApiOperation("上传")
     public ResponseData<Map> uploadAdvPic(@PathVariable String savePath, @RequestParam("file") MultipartFile file, HttpServletRequest request){
         if(!pathMap.containsKey(savePath))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());

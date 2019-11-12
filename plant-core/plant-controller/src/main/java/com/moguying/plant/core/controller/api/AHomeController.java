@@ -29,6 +29,8 @@ import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.seed.SeedService;
 import com.moguying.plant.core.service.system.ApkService;
 import com.moguying.plant.utils.InterestUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +42,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
+@Api(tags = "首页接口")
 public class AHomeController {
 
 
@@ -79,6 +82,7 @@ public class AHomeController {
      * 仅用一次
      * @return
      */
+    @ApiOperation("更新用户产量信息")
     @PostMapping("/reap/weigh")
     public ResponseData<Boolean> updateReapWeighInfo(){
         reapService.updatePlantWeigh();
@@ -91,6 +95,7 @@ public class AHomeController {
      *
      * @return
      */
+    @ApiOperation("首页banner列表")
     @GetMapping(value = "/banner")
     public ResponseData<List<Banner>> bannerList() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -103,6 +108,7 @@ public class AHomeController {
      *
      * @return
      */
+    @ApiOperation("由参数获取不同Banner")
     @GetMapping("/banner/{typeName}")
     public ResponseData<List<Banner>> mallBannerList(@PathVariable String typeName) {
 
@@ -117,6 +123,7 @@ public class AHomeController {
      *
      * @return
      */
+    @ApiOperation("活动页列表")
     @GetMapping("/activity")
     public PageResult<Activity> activityList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) {
@@ -131,12 +138,14 @@ public class AHomeController {
      * @param id
      * @return
      */
+    @ApiOperation("活动详情")
     @GetMapping("/activity/{id}")
     public ResponseData<Activity> activityDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.activityDetail(id));
     }
 
 
+    @ApiOperation("最新活动")
     @GetMapping("/newest/activity")
     public ResponseData<List<Activity>> newestActivity() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.newestActivity());
@@ -148,6 +157,7 @@ public class AHomeController {
      *
      * @return
      */
+    @ApiOperation("公告列表")
     @GetMapping(value = "/annotation")
     public ResponseData<List<Article>> annotationList() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -160,6 +170,7 @@ public class AHomeController {
      *
      * @return
      */
+    @ApiOperation("推荐棚区列表")
     @GetMapping(value = "/block")
     public ResponseData<List<BlockDetail>> recommendBlock() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -169,6 +180,7 @@ public class AHomeController {
     /**
      * 所有棚区
      */
+    @ApiOperation("所有棚区")
     @PostMapping(value = "/block/list")
     public PageResult<Block> blockList(@RequestBody PageSearch<Block> search) {
         //必须是上架的大棚
@@ -189,6 +201,7 @@ public class AHomeController {
      * @param id
      * @return
      */
+    @ApiOperation("棚区详情")
     @GetMapping("/block/{id}")
     public ResponseData<BlockDetail> blockDetail(@PathVariable Integer id) {
         ResultData<Block> resultData = blockService.blockInfo(id);
@@ -220,6 +233,7 @@ public class AHomeController {
      *
      * @return
      */
+    @ApiOperation("菌包市场")
     @PostMapping(value = "/index/seed")
     public PageResult<HomeSeed> seedList(@RequestBody PageSearch<HomeSeed> search) {
         if(null == search.getWhere())  search.setWhere(new HomeSeed());
@@ -244,7 +258,8 @@ public class AHomeController {
      * @param id
      * @return
      */
-    @RequestMapping("/index/seed/{id}")
+    @ApiOperation("菌包详情")
+    @GetMapping("/index/seed/{id}")
     public ResponseData<SeedDetail> seedDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), seedService.seedDetail(id));
     }
@@ -256,6 +271,7 @@ public class AHomeController {
      * @param search
      * @return
      */
+    @ApiOperation("商城商品列表")
     @PostMapping("/index/mall")
     public PageResult<HomeProduct> productList(@RequestBody HomeProduct search) {
         return mallProductService.productListForHome(search.getPage(), search.getSize(), search);
@@ -266,6 +282,7 @@ public class AHomeController {
      * 商品类型列表
      * @return
      */
+    @ApiOperation("商品类型列表")
     @GetMapping("/index/mall/types")
     public ResponseData<List<MallProductType>> productTypeList(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),mallProductTypeService.typeList(null));
@@ -279,6 +296,7 @@ public class AHomeController {
      * @param id
      * @return
      */
+    @ApiOperation("商城商品详情")
     @GetMapping("/product/{id}")
     public ResponseData<HomeProductDetail> productDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -290,6 +308,7 @@ public class AHomeController {
      *
      * @return
      */
+    @ApiOperation("apk最新版本信息")
     @GetMapping("/apk/info")
     public ResponseData<Apk> newestApkInfo() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -303,6 +322,7 @@ public class AHomeController {
      * @param seedTypeInBlock
      * @return
      */
+    @ApiOperation("查询菌包种类可种大棚")
     @PostMapping("/plant/block")
     public ResponseData<Block> findSeedTypeInBlock(@RequestBody SeedTypeInBlock seedTypeInBlock) {
         Block block = blockService.findBlockBySeedType(seedTypeInBlock.getSeedTypeId());
@@ -315,6 +335,7 @@ public class AHomeController {
     /**
      * 获取推荐菌包
      */
+    @ApiOperation("获取推荐菌包")
     @GetMapping("/recommend/seed")
     public ResponseData<List<HomeSeed>> recommendSeed() {
         List<HomeSeed> recommendSeed = seedService.recommendSeed();
@@ -332,6 +353,7 @@ public class AHomeController {
      * @param calculation
      * @return
      */
+    @ApiOperation("计算金额")
     @PostMapping("/calculation")
     public ResponseData<Calculation> calculation(@RequestBody Calculation calculation) {
         if (null != calculation.getCount() && null != calculation.getPrice()) {
@@ -351,6 +373,7 @@ public class AHomeController {
      * @param pageSearch
      * @return
      */
+    @ApiOperation("设备列表")
     @PostMapping("/device/gateway")
     public PageResult<DeviceGateway> gatewayList(@RequestBody PageSearch<DeviceGateway> pageSearch){
         return deviceService.deviceGatewayList(pageSearch.getPage(),pageSearch.getSize(),pageSearch.getWhere());
@@ -362,6 +385,7 @@ public class AHomeController {
      * @param where
      * @return
      */
+    @ApiOperation("指定设备信息")
     @PostMapping("/device/data")
     public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where){
         ResultData<List<DeviceGatewayData>> resultData = deviceService.gatewayData(where.getGatewayLogo());

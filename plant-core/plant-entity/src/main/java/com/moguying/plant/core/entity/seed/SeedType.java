@@ -150,4 +150,20 @@ public class SeedType implements Serializable {
     @JSONField(ordinal = 19)
     @TableField(exist = false)
     private String exMallProductName;
+
+
+    /**
+     * 兑换的每份商品值多少重量
+     */
+    @JSONField(ordinal = 20,serializeUsing = BigDecimalSerialize.class)
+    @TableField
+    private BigDecimal exMallWeigh;
+
+
+    /**
+     * 默认兑换数据
+     */
+    @JSONField(ordinal = 21)
+    @TableField
+    private Boolean exMallDefault;
 }

@@ -11,6 +11,8 @@ import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.core.service.mall.MallProductService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/bargain")
 @Slf4j
+@Api(tags = "砍价活动-非登录")
 public class ABargainController {
 
     @Autowired
@@ -40,6 +43,7 @@ public class ABargainController {
      * 砍价成功记录(所有用户)
      */
     @PostMapping("/success/logs")
+    @ApiOperation("砍价成功记录(所有用户)")
     public PageResult<BargainVo> successLogs(@RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.successLogs(pageSearch.getPage(), pageSearch.getSize());
     }
@@ -48,6 +52,7 @@ public class ABargainController {
      * 砍价产品列表
      */
     @PostMapping("/product/list")
+    @ApiOperation("砍价产品列表")
     public PageResult<BargainVo> productList(@RequestBody PageSearch<?> pageSearch) {
 
         PageResult<BargainVo> pageResult = mallProductService.productList(pageSearch.getPage(), pageSearch.getSize());
@@ -94,6 +99,7 @@ public class ABargainController {
      * 砍价产品详情
      */
     @GetMapping("/product/info/{productId}")
+    @ApiOperation("砍价产品详情")
     public ResponseData<BargainVo> productInfo(@PathVariable("productId") Integer productId) {
 
         ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
@@ -115,6 +121,7 @@ public class ABargainController {
      * 砍价中的产品详情
      */
     @PostMapping("/product/one")
+    @ApiOperation("砍价中的产品详情")
     public ResponseData<BargainVo> productInfoByOrderId(@RequestBody BargainVo bargainVo) {
         ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
 
@@ -137,6 +144,7 @@ public class ABargainController {
      * 超时关单
      */
     @GetMapping("/time/out/{orderId}")
+    @ApiOperation("超时关单")
     public ResponseData<String> closeByTimeOut(@PathVariable("orderId") Integer orderId) {
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
 

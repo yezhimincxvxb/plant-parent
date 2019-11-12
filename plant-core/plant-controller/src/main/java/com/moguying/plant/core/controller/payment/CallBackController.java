@@ -19,6 +19,8 @@ import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.user.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,7 @@ import java.math.BigDecimal;
 @Slf4j
 @Controller
 @RequestMapping("/payment/notify")
+@Api(tags = "支付回调")
 public class CallBackController {
 
     private static final String TYPE_WITHDRAW = "3";
@@ -61,6 +64,7 @@ public class CallBackController {
      */
     @PostMapping("/pay")
     @ResponseBody
+    @ApiOperation("支付异步处理")
     public CallBackResponseToPayment payCallback(HttpServletRequest request, PaymentResponse paymentResponse){
         CallBackResponseToPayment responseToPayment = new CallBackResponseToPayment("000000", "success");
         //TODO 验签
@@ -103,6 +107,7 @@ public class CallBackController {
      */
     @PostMapping("/withdraw")
     @ResponseBody
+    @ApiOperation("提现异步处理")
     public CallBackResponseToPayment withdrawCallback(HttpServletRequest request, PaymentResponse paymentResponse) {
         if (TYPE_WITHDRAW.equals(paymentResponse.getResponseType()) &&
                 PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo().equals(paymentResponse.getCode())) {
@@ -141,6 +146,7 @@ public class CallBackController {
      */
     @PostMapping("/bind/card")
     @ResponseBody
+    @ApiOperation("绑卡回调")
     public CallBackResponseToPayment bindCardCallback(HttpServletRequest request, PaymentResponse paymentResponse){
         if (TYPE_BIND_CARD.equals(paymentResponse.getResponseType()) &&
                 PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo().equals(paymentResponse.getCode())) {

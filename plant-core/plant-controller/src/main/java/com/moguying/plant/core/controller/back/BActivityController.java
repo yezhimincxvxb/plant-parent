@@ -6,11 +6,14 @@ import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.service.content.ActivityService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/activity")
+@Api(tags = "活动管理")
 public class BActivityController {
 
     @Autowired
@@ -22,6 +25,7 @@ public class BActivityController {
      * @return
      */
     @PostMapping("/list")
+    @ApiOperation("活动列表")
     public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search){
         return activityService.activityList(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -33,6 +37,7 @@ public class BActivityController {
      * @return
      */
     @GetMapping("/{id}")
+    @ApiOperation("活动详情")
     public ResponseData<Activity> activityDetail(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),activityService.activityDetail(id));
     }
@@ -44,6 +49,7 @@ public class BActivityController {
      * @return
      */
     @PostMapping
+    @ApiOperation("添加活动")
     public ResponseData<Integer> addActivity(@RequestBody Activity addActivity){
         Integer id = activityService.addActivity(addActivity);
         if(id > 0)
@@ -57,6 +63,7 @@ public class BActivityController {
      * @return
      */
     @PutMapping("/{id}")
+    @ApiOperation("编辑活动")
     public ResponseData<Integer> updateActivity(@RequestBody Activity updateActivity, @PathVariable Integer id){
         updateActivity.setId(id);
         Integer rows = activityService.updateActivity(updateActivity);
@@ -75,6 +82,7 @@ public class BActivityController {
      * @return
      */
     @DeleteMapping("/{id}")
+    @ApiOperation("删除活动")
     public ResponseData<Integer> deleteActivity(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),activityService.deleteActivityById(id));
     }

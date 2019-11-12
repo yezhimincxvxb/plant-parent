@@ -21,6 +21,7 @@ import com.moguying.plant.core.entity.payment.request.PaymentRequest;
 import com.moguying.plant.core.entity.payment.request.WebHtmlPayRequest;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.reap.Reap;
+import com.moguying.plant.core.entity.reap.ReapExcLog;
 import com.moguying.plant.core.entity.reap.vo.SaleRequest;
 import com.moguying.plant.core.entity.reap.vo.SaleResponse;
 import com.moguying.plant.core.entity.seed.SeedGroup;
@@ -34,10 +35,13 @@ import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.mall.MallProductService;
 import com.moguying.plant.core.service.order.PlantOrderService;
+import com.moguying.plant.core.service.reap.ReapExcLogService;
 import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.seed.SeedTypeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +55,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/seed")
 @Slf4j
+@Api(tags = "菌包相关")
 public class ASeedController {
 
 
@@ -93,6 +98,9 @@ public class ASeedController {
     @Autowired
     private SeedTypeService seedTypeService;
 
+    @Autowired
+    private ReapExcLogService reapExcLogService;
+
     /**
      * 提交菌包订单
      *
@@ -101,6 +109,7 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping(value = "/buy")
+    @ApiOperation("提交菌包订单")
     public ResponseData<BuyOrderResponse> buySeed(@LoginUserId Integer userId, @RequestBody BuyOrder buyOrder) {
         // 菌包数量错误
         if (null == buyOrder.getCount() || buyOrder.getCount() <= 0)
@@ -124,6 +133,7 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping("/pay")
+    @ApiOperation("提交菌包支付订单")
     public ResponseData<SendPayOrderResponse> sendPayOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getIsCheck())
             return new ResponseData<>(MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getMessage(), MessageEnum.SEED_ORDER_PAY_TYPE_ERROR.getState());
@@ -147,6 +157,7 @@ public class ASeedController {
      */
     @ValidateUser
     @PutMapping("/pay")
+    @ApiOperation("支付订单")
     public ResponseData<PayOrderResponse> payOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if ((null != payOrder.getPayMsgCode() && null != payOrder.getPayPassword()) ||
                 (null == payOrder.getPayPassword() && null == payOrder.getPayMsgCode()))
@@ -178,6 +189,7 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping("/order/pay")
+    @ApiOperation("订单付款")
     public ResponseData<BuyOrderResponse> orderPay(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getOrderId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -218,6 +230,7 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping("/order/cancel")
+    @ApiOperation("取消订单")
     public ResponseData<Integer> orderCancel(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getOrderId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -233,6 +246,7 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping(value = "/plant")
+    @ApiOperation("用户种植菌包")
     public ResponseData<PlantOrderResponse> plantSeed(@LoginUserId Integer userId, @RequestBody PlantOrder plantOrder) {
         ResultData<TriggerEventResult<PlantOrderResponse>> resultData = plantOrderService.plantSeed(userId, plantOrder);
         ResponseData<PlantOrderResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
@@ -249,9 +263,26 @@ public class ASeedController {
      * @return
      */
     @PostMapping(value = "/reap/exchange")
-    public ResponseData<Integer> exchangeReap(@RequestBody ExcReap excReap) {
-        ResultData<Integer> resultData = plantOrderService.plantReapExchange(excReap);
+    @ApiOperation("兑换实物")
+    public ResponseData<Integer> exchangeReap(@LoginUserId Integer userId,@RequestBody ExcReap excReap) {
+        ResultData<Integer> resultData = plantOrderService.plantReapExchange(userId,excReap);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
+    }
+
+
+    /**
+     * 用户实物兑换记录
+     * @param userId
+     * @param search
+     * @return
+     */
+    @PostMapping("/reap/exc/log")
+    @ApiOperation("用户实物兑换记录")
+    public PageResult<ReapExcLog> reapExchangeLog(@LoginUserId Integer userId,@RequestBody PageSearch<ReapExcLog> search) {
+        if(null == search.getWhere())
+            search.setWhere(new ReapExcLog());
+        search.getWhere().setUserId(userId);
+        return reapExcLogService.reapExcLogPageResult(search.getPage(),search.getSize(),search.getWhere());
     }
 
 
@@ -263,6 +294,7 @@ public class ASeedController {
      */
     @ValidateUser
     @PostMapping(value = "/sale")
+    @ApiOperation("出售产品")
     public ResponseData<SaleResponse> saleSeed(@LoginUserId Integer userId, @RequestBody SaleRequest saleRequest) {
         if (null == saleRequest.getReapId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -282,6 +314,7 @@ public class ASeedController {
      */
     @ValidateUser
     @GetMapping("/pay/data/{orderId}")
+    @ApiOperation("PC端支付参数")
     public ResponseData<PaymentRequest<WebHtmlPayRequest>> payData(@LoginUserId Integer userId, @PathVariable Integer orderId) {
         SeedOrderDetail orderDetail = seedOrderDetailService.orderDetailByIdAndUserId(orderId, userId);
         if (null == orderDetail || !orderDetail.getState().equals(SeedEnum.SEED_ORDER_DETAIL_NEED_PAY.getState()))
@@ -294,6 +327,7 @@ public class ASeedController {
      * 兑换列表 (需要用户登录)
      */
     @PostMapping("/exchangeListByUser")
+    @ApiOperation("兑换列表 (需要用户登录)")
     public PageResult<ExchangeInfo> exchangeListByUser(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
         Integer page = pageSearch.getPage();
         Integer size = pageSearch.getSize();
@@ -305,6 +339,7 @@ public class ASeedController {
      * 兑换蘑菇币
      */
     @PostMapping("/exchangeMGB")
+    @ApiOperation("兑换蘑菇币")
     public ResponseData<String> exchangeMGB(@LoginUserId Integer userId, @RequestBody PageSearch<String> pageSearch) {
 
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "兑换失败");
@@ -334,6 +369,7 @@ public class ASeedController {
      * 蘑菇币支付
      */
     @PostMapping("/paymentMGB")
+    @ApiOperation("蘑菇币支付")
     public ResponseData<String> paymentMGB(@LoginUserId Integer userId, @RequestBody MallOrder mallOrder) {
 
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "支付失败");
@@ -378,6 +414,7 @@ public class ASeedController {
      * 兑换券
      */
     @PostMapping("/exchangeQ")
+    @ApiOperation("兑换券")
     public ResponseData<String> exchangeQ(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
 
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "兑换失败");
@@ -409,6 +446,7 @@ public class ASeedController {
      * 兑换记录
      */
     @PostMapping("/exchangeLog")
+    @ApiOperation("兑换记录")
     public PageResult<ExchangeInfo> exchangeLog(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
         Integer page = pageSearch.getPage();
         Integer size = pageSearch.getSize();
@@ -429,6 +467,7 @@ public class ASeedController {
      * 用户蘑菇币
      */
     @GetMapping("/getUserCoin")
+    @ApiOperation("用户蘑菇币")
     public ResponseData<Integer> getUserCoin(@LoginUserId Integer userId) {
         SaleCoin saleCoin = saleCoinService.findById(userId);
         if (saleCoin == null) {
@@ -447,6 +486,7 @@ public class ASeedController {
      */
     @GetMapping("/group/list")
     @NoLogin
+    @ApiOperation("获取菌包分组信息")
     public ResponseData<List<SeedGroup>> seedGroupList(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),seedTypeService.seedGroupList());
     }

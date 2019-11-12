@@ -16,6 +16,8 @@ import com.moguying.plant.core.entity.taste.vo.TasteReap;
 import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.teste.PopMessageService;
 import com.moguying.plant.core.service.teste.TasteService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/taste")
+@Api(tags = "免费试吃")
 public class ATasteController {
 
     @Autowired
@@ -40,6 +43,7 @@ public class ATasteController {
      * 用户是否新手
      */
     @GetMapping("/is/new")
+    @ApiOperation("用户是否新手")
     public ResponseData<Boolean> isNew(@LoginUserId Integer userId) {
         ResponseData<Boolean> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
 
@@ -59,6 +63,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/buy")
+    @ApiOperation("购买体验")
     public ResponseData<BuyOrderResponse> buy(@LoginUserId Integer userId, @RequestBody BuyOrder buyOrder) {
         ResultData<BuyOrderResponse> buyResult = tasteService.buy(buyOrder, userId);
         return new ResponseData<>(buyResult.getMessageEnum().getMessage(), buyResult.getMessageEnum().getState(), buyResult.getData());
@@ -71,6 +76,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/plant")
+    @ApiOperation("种植体验")
     public ResponseData<PlantOrderResponse> plant(@LoginUserId Integer userId, @RequestBody PlantOrder plantOrder) {
         ResultData<TriggerEventResult<PlantOrderResponse>> resultData = plantOrderService.plantSeed(userId, plantOrder, true);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),resultData.getData() == null ? null : resultData.getData().getData());
@@ -83,6 +89,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/reap/{reapId}")
+    @ApiOperation("采摘并出售")
     public ResponseData<TasteReap> reapAndSale(@LoginUserId Integer userId, @PathVariable Integer reapId) {
         ResultData<TasteReap> resultData = tasteService.reap(userId, reapId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
@@ -94,6 +101,7 @@ public class ATasteController {
      * @return
      */
     @GetMapping("/pop")
+    @ApiOperation("获取使用的弹幕")
     @NoLogin
     public ResponseData<PopMessage> popMessage(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),popMessageService.usedPopMessage());
@@ -105,6 +113,7 @@ public class ATasteController {
      * @return
      */
     @GetMapping("/gift")
+    @ApiOperation("新手体验券礼包")
     @NoLogin
     public ResponseData<List<Fertilizer>> giftList(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),
@@ -117,6 +126,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/gift")
+    @ApiOperation("领取新手礼包")
     public ResponseData<Integer> pickUpGift(@LoginUserId Integer userId){
         ResultData<Integer> pickUpGift = tasteService.pickUpGift(userId);
         return new ResponseData<>(pickUpGift.getMessageEnum().getMessage(),pickUpGift.getMessageEnum().getState(), pickUpGift.getData());
@@ -133,6 +143,7 @@ public class ATasteController {
      */
     @NoLogin
     @PostMapping("/free/list")
+    @ApiOperation("首页免费试吃表列")
     public PageResult<Taste> freeTasteList(@RequestBody PageSearch<Taste> search) {
       return freeTasteList(null,search);
     }
@@ -145,6 +156,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/free")
+    @ApiOperation("用户登录查询的试吃列表")
     public PageResult<Taste> freeTasteList(@LoginUserId Integer userId, @RequestBody PageSearch<Taste> search) {
         Optional<Taste> optional = Optional.ofNullable(search.getWhere());
         if(!optional.isPresent())
@@ -161,6 +173,7 @@ public class ATasteController {
      */
     @NoLogin
     @PostMapping("/free/apply/log")
+    @ApiOperation("查询申请记录")
     public PageResult<TasteApply> tasteApplyList(@RequestBody PageSearch<TasteApply> search){
         return tasteService.tasteApplyPageResult(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -174,6 +187,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/free/apply")
+    @ApiOperation("申请免费资格")
     public ResponseData<Boolean> applyFreeTaste(@LoginUserId Integer userId, @RequestBody(required = false) Taste taste) {
         ResultData<Boolean> resultData = tasteService.addTasteApply(userId, taste);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
@@ -188,6 +202,7 @@ public class ATasteController {
      * @return
      */
     @PostMapping("/free/check")
+    @ApiOperation("查询个人申请资格通过情况")
     public ResponseData<TasteApply> checkTasteApply(@LoginUserId Integer userId, @RequestBody Taste taste) {
         ResultData<TasteApply> tasteApplyResultData = tasteService.checkApply(userId, taste);
         ResponseData<TasteApply> responseData = new ResponseData<>(tasteApplyResultData.getMessageEnum().getMessage(), tasteApplyResultData.getMessageEnum().getState());

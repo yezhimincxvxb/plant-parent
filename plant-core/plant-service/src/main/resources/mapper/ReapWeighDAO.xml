@@ -24,4 +24,26 @@
         where  user_id = #{userId}
     </update>
 
+    <update id="decField">
+        update plant_reap_weigh
+        <set>
+            <if test="totalWeigh != null">
+                total_weigh = total_weigh - #{totalWeigh},
+            </if>
+            <if test="hasExWeigh != null">
+                has_ex_weigh = has_ex_weigh - #{hasExWeigh},
+            </if>
+            <if test="availableWeigh != null">
+                available_weigh = available_weigh - #{availableWeigh},
+            </if>
+            <if test="hasProfit != null">
+                has_profit = has_profit - #{hasProfit},
+            </if>
+            <if test="availableProfit != null">
+                available_profit = available_profit - #{availableProfit},
+            </if>
+        </set>
+        where  user_id = #{userId}
+    </update>
+
 </mapper>

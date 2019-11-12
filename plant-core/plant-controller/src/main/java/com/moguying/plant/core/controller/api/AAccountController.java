@@ -41,6 +41,8 @@ import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.DateUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,6 +55,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/account")
+@Api(tags = "用户帐户")
 public class AAccountController {
 
 
@@ -90,6 +93,7 @@ public class AAccountController {
      * @return
      */
     @GetMapping
+    @ApiOperation("首页数据")
     public ResponseData<AccountInfo> accountInfo(@LoginUserId Integer userId) {
         UserMoney userMoney = moneyService.userMoneyInfo(userId);
         Date firstDayOfMonth = DateUtil.INSTANCE.firstDayOfMonth();
@@ -117,6 +121,7 @@ public class AAccountController {
      * @return
      */
     @GetMapping("/withdraw")
+    @ApiOperation("提现列表")
     public PageResult<MoneyWithdraw> withdrawList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                   @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                   @LoginUserId Integer userId) {
@@ -136,6 +141,7 @@ public class AAccountController {
      * @return
      */
     @GetMapping("/withdraw/review")
+    @ApiOperation("提现审核记录")
     public PageResult<MoneyWithdraw> withdrawReviewList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                         @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                         @LoginUserId Integer userId) {
@@ -160,6 +166,7 @@ public class AAccountController {
      */
     @ValidateUser
     @PostMapping("/withdraw")
+    @ApiOperation("提交提现")
     public ResponseData<Integer> withdraw(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getBankId())
             return new ResponseData<>(MessageEnum.BANK_CARD_ID_EMPTY.getMessage(), MessageEnum.BANK_CARD_ID_EMPTY.getState());
@@ -191,6 +198,7 @@ public class AAccountController {
      */
     @ValidateUser
     @PostMapping("/withdraw/sms")
+    @ApiOperation("提现发送第三方提现短信")
     public ResponseData<SendWithdrawSmsCodeResponse> sendWithdrawSms(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getWithdrawId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -216,6 +224,7 @@ public class AAccountController {
      */
     @ValidateUser
     @PutMapping("/withdraw")
+    @ApiOperation("提现到账-纯接口")
     public ResponseData<Integer> withdrawToAccount(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getWithdrawId() || null == withdrawRequest.getSeqNo() || null == withdrawRequest.getSmsCode())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -238,6 +247,7 @@ public class AAccountController {
      */
     @ValidateUser
     @PostMapping("/to/account")
+    @ApiOperation("提现到账-页面")
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> toAccountPage(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
 
@@ -276,6 +286,7 @@ public class AAccountController {
      *
      * @return
      */
+    @ApiOperation("利润统计")
     @GetMapping(value = "/profit")
     public ResponseData<Profit> profitStatistics(@RequestParam("type") Integer type, @LoginUserId Integer userId) {
         if (type.equals(1)) {
@@ -402,9 +413,8 @@ public class AAccountController {
      * 用户资金明细
      */
     @PostMapping("/capital/detail")
-    public PageResult<?> capitalDetail(
-            @LoginUserId Integer userId,
-            @RequestBody PageSearch<String> pageSearch) {
+    @ApiOperation("用户资金明细")
+    public PageResult<?> capitalDetail(@LoginUserId Integer userId, @RequestBody PageSearch<String> pageSearch) {
 
         // 请求参数
         Integer page = pageSearch.getPage();
@@ -469,6 +479,7 @@ public class AAccountController {
      * 资金详情
      */
     @GetMapping("/capital/info/{id}")
+    @ApiOperation("资金详情")
     public ResponseData<DetailInfo> capitalInfo(@PathVariable("id") Integer id) {
 
         UserMoneyDetail userMoney = userMoneyService.findUserMoneyById(id);
@@ -500,6 +511,7 @@ public class AAccountController {
      * 收入/支出
      */
     @GetMapping("/getTotal")
+    @ApiOperation("收入/支出")
     public ResponseData<InAndOutMoney> getTotal(
             @LoginUserId Integer userId,
             @RequestParam("dateTime") String dateTime) {

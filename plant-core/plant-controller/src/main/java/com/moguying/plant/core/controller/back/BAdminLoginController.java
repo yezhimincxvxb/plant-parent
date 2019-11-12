@@ -8,6 +8,8 @@ import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.admin.AdminUserService;
 import com.moguying.plant.utils.PasswordUtil;
 import com.wf.captcha.utils.CaptchaUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.io.IOException;
 
 @RestController
 @Slf4j
+@Api(tags = "后台登录")
 public class BAdminLoginController {
 
 
@@ -28,12 +31,14 @@ public class BAdminLoginController {
 
     @GetMapping(value = "/image/captcha")
     @NoLogin
+    @ApiOperation("图形验证码")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
         CaptchaUtil.out(5,request,response);
     }
 
     @PostMapping(value = "/login")
     @NoLogin
+    @ApiOperation("登录")
     public ResponseData<String> login(@RequestBody AdminUser adminUser, HttpServletRequest request){
 
 
@@ -57,6 +62,7 @@ public class BAdminLoginController {
 
 
     @PostMapping(value = "/logout")
+    @ApiOperation("退出")
     public ResponseData<String> logout(HttpServletRequest request){
         request.setAttribute(SessionAdminUser.sessionKey,null);
 

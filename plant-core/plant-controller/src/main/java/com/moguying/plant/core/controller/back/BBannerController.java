@@ -7,11 +7,14 @@ import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.content.Banner;
 import com.moguying.plant.core.service.content.BannerService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/banner")
+@Api(tags = "Banner管理")
 public class BBannerController {
 
 
@@ -25,6 +28,7 @@ public class BBannerController {
      * @return
      */
     @PostMapping("/list")
+    @ApiOperation("banner列表")
     public PageResult<Banner> bannerList(@RequestBody PageSearch<Banner> search){
         if(null == search.getWhere())
             search.setWhere(new Banner());
@@ -39,6 +43,7 @@ public class BBannerController {
      */
 
     @PostMapping
+    @ApiOperation("添加banner")
     public ResponseData<Integer> addBanner(@RequestBody Banner banner){
         ResultData<Integer> resultData = bannerService.addBanner(banner);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -50,6 +55,7 @@ public class BBannerController {
      * @return
      */
     @PutMapping(value = "/{id}")
+    @ApiOperation("更新banner")
     public ResponseData<Integer> updateBanner(@RequestBody Banner banner, @PathVariable Integer id){
         ResultData<Integer> resultData = bannerService.updateBanner(id,banner);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -62,6 +68,7 @@ public class BBannerController {
      * @return
      */
     @PostMapping(value = "/{id}")
+    @ApiOperation("置banner是否显示")
     public ResponseData<String> isShow(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),bannerService.setBannerShowState(id).toString());
     }
@@ -73,6 +80,7 @@ public class BBannerController {
      * @return
      */
     @DeleteMapping(value = "/{id}")
+    @ApiOperation("删除banner")
     public ResponseData<Integer> deleteBanner(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),bannerService.deleteBanner(id));
     }

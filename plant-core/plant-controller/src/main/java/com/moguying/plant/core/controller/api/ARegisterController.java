@@ -21,6 +21,8 @@ import com.moguying.plant.utils.CommonUtil;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.base.Captcha;
 import com.wf.captcha.utils.CaptchaUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.util.Date;
 
 @Controller
+@Api(tags = "登录/注册")
 public class ARegisterController {
 
     @Autowired
@@ -55,6 +58,7 @@ public class ARegisterController {
      */
     @PostMapping(value = "/register")
     @ResponseBody
+    @ApiOperation("注册")
     public ResponseData<LoginResponse> register(@RequestBody Register register){
         // 校验手机号格式
         if (!CommonUtil.INSTANCE.isPhone(register.getPhone()))
@@ -117,6 +121,7 @@ public class ARegisterController {
      */
     @PostMapping(value = "/login")
     @ResponseBody
+    @ApiOperation("登录")
     public ResponseData<LoginResponse> login(@RequestBody Login login, HttpServletRequest request){
         if(null != request.getSession().getAttribute("user"))
             return new ResponseData<>(MessageEnum.USER_HAS_LOGIN.getMessage(),MessageEnum.USER_HAS_LOGIN.getState());
@@ -159,6 +164,7 @@ public class ARegisterController {
      */
     @PutMapping(value = "/forget")
     @ResponseBody
+    @ApiOperation("忘记密码")
     public ResponseData<Integer> forgetPassword(@RequestBody ForgetPassword forgetPassword){
         if(!CommonUtil.INSTANCE.isPhone(forgetPassword.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(),MessageEnum.PHONE_ERROR.getState());
@@ -180,6 +186,7 @@ public class ARegisterController {
      * @throws IOException
      */
     @GetMapping(value = "/image/captcha")
+    @ApiOperation("图形验证码")
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
         try {
             // 设置请求头为输出图片类型

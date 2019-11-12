@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.reap.ReapExcLogDAO">
+
+  <select id="selectSelective" resultType="ReapExcLog">
+    select t1.id,user_id,product_id,reap_id,exc_weigh,t1.add_time,exc_count,t2.name as product_name
+    from plant_reap_exc_log t1
+    left join plant_mall_product t2 on t1.product_id = t2.id
+    <where>
+      <if test="wq.userId != null">
+        user_id = #{wq.userId}
+      </if>
+    </where>
+    order by t1.add_time desc
+  </select>
+  
+  
+  
+</mapper>

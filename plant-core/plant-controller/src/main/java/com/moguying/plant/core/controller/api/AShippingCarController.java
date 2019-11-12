@@ -9,6 +9,8 @@ import com.moguying.plant.core.entity.common.vo.ModifyItemResponse;
 import com.moguying.plant.core.entity.mall.MallCar;
 import com.moguying.plant.core.entity.mall.vo.*;
 import com.moguying.plant.core.service.mall.MallCarService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/mall/car")
+@Api(tags = "商城购物车")
 public class AShippingCarController {
 
 
@@ -29,6 +32,7 @@ public class AShippingCarController {
      * 添加入购物车
      */
     @PostMapping
+    @ApiOperation("添加入购物车")
     public ResponseData<Integer> addToCar(@RequestBody BuyProduct itemToCar, @LoginUserId Integer userId){
         MallCar mallCar = new MallCar();
         mallCar.setUserId(userId);
@@ -43,6 +47,7 @@ public class AShippingCarController {
      * 购物车列表
      */
     @GetMapping
+    @ApiOperation("购物车列表")
     public ResponseData<CarItemList> carItems(@LoginUserId Integer userId, @RequestParam(value = "page",defaultValue = "1") Integer page,
                                               @RequestParam(value = "size",defaultValue = "10") Integer size
                                          ){
@@ -61,6 +66,7 @@ public class AShippingCarController {
      * 删除购物车中的商品
      */
     @PostMapping("/delete")
+    @ApiOperation("删除购物车中的商品")
     public ResponseData<ModifyItemResponse> deleteItems(@LoginUserId Integer userId, @RequestBody List<OrderItem> ids){
         ResultData<Boolean> resultData = mallCarService.removeItemFromCar(ids,userId);
         ResponseData<ModifyItemResponse> responseData = new ResponseData<>();
@@ -78,6 +84,7 @@ public class AShippingCarController {
      * 修改购物车数量
      */
     @PostMapping("/count")
+    @ApiOperation("修改购物车数量")
     public ResponseData<ModifyItemResponse> plushItemCount(@LoginUserId Integer userId,@RequestBody OrderItem orderItem){
         ResultData<Integer> resultData = mallCarService.modifyItemCount(orderItem);
         ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -95,6 +102,7 @@ public class AShippingCarController {
      * @return
      */
     @PostMapping("/check")
+    @ApiOperation("勾选")
     public ResponseData<ModifyItemResponse> checkItem(@LoginUserId Integer userId,@RequestBody CheckItems checkItems){
         ResultData<Integer> resultData = mallCarService.checkItems(checkItems.getItems(),userId,checkItems.getCheck());
         ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());

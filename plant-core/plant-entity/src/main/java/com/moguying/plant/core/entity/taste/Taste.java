@@ -88,9 +88,15 @@ public class Taste {
     private Boolean hasApply;
 
     /**
-     * 申请人数
+     * 申请成功人数
      */
     @JSONField(ordinal = 11)
+    private long applySuccessCount;
+
+    /**
+     * 申请人数
+     */
+    @JSONField(ordinal = 12)
     private long applyCount;
 
 }

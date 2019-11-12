@@ -48,7 +48,7 @@
         number = #{wq.number}
       </if>
       <if test="wq.seedType !=null">
-        AND seed_type = #{seedType}
+        AND seed_type = #{wq.seedType}
       </if>
       <if test="wq.level != null ">
         AND level = #{wq.level}

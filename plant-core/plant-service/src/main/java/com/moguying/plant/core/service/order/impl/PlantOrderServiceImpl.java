@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.order.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.FarmerTrigger;
 import com.moguying.plant.core.annotation.TriggerEvent;
@@ -9,6 +10,7 @@ import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
+import com.moguying.plant.core.dao.reap.ReapExcLogDAO;
 import com.moguying.plant.core.dao.reap.ReapWeighDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
@@ -30,6 +32,7 @@ import com.moguying.plant.core.entity.payment.request.PaymentRequest;
 import com.moguying.plant.core.entity.payment.request.WebHtmlPayRequest;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.reap.Reap;
+import com.moguying.plant.core.entity.reap.ReapExcLog;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrder;
@@ -148,6 +151,11 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
     @Value("${reap.exchange.weigh}")
     private BigDecimal exWeigh;
+
+
+    @Autowired
+    private ReapExcLogDAO reapExcLogDAO;
+
 
     @Override
     @DS("write")
@@ -492,19 +500,81 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @Override
     @DS("write")
     @Transactional
-    public ResultData<Integer> plantReapExchange(ExcReap excReap) {
+    public ResultData<Integer> plantReapExchange(Integer userId,ExcReap excReap) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
-        Reap reap = reapDAO.selectById(excReap.getReapId());
-        Optional<Reap> reapOptional = Optional.ofNullable(reap);
-        if(!reapOptional.isPresent())
-            return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
-        if(reap.getPlantWeigh().compareTo(exWeigh) < 0)
-            return resultData.setMessageEnum(MessageEnum.REAP_EXCHANGE_WEIGH_ERROR);
+        //兑换单个采摘或兑换剩余产量，但不能同时
+        if(null != excReap.getReapId() && null != excReap.getExcWeigh())
+            return resultData.setMessageEnum(MessageEnum.PARAMETER_ERROR);
 
         UserAddress userAddress = userAddressDAO.selectById(excReap.getAddressId());
         Optional<UserAddress> addressOptional = Optional.ofNullable(userAddress);
         if(!addressOptional.isPresent())
             return resultData.setMessageEnum(MessageEnum.USER_ADDRESS_NO_EXISTS);
+        SeedType seedType = null;
+        BigDecimal excWeigh = BigDecimal.ZERO;
+        if(null != excReap.getReapId()) {
+            Reap reap = reapDAO.selectById(excReap.getReapId());
+            Optional<Reap> reapOptional = Optional.ofNullable(reap);
+            if(!reapOptional.isPresent())
+                return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
+            if(reap.getPlantWeigh().compareTo(exWeigh) < 0)
+                return resultData.setMessageEnum(MessageEnum.REAP_EXCHANGE_WEIGH_ERROR);
+            ResultData<Integer> excReapItem = excReapItem(reap);
+            if(!excReapItem.getMessageEnum().equals(MessageEnum.SUCCESS))
+                return resultData;
+            //添加商城订单
+            seedType = seedTypeDAO.selectById(reap.getSeedType());
+            excWeigh = reap.getPlantWeigh();
+        } else if( null != excReap.getExcWeigh()){
+            seedType = seedTypeDAO.selectOne(new QueryWrapper<SeedType>().lambda().eq(SeedType::getExMallDefault,true));
+            excWeigh = excReap.getExcWeigh();
+        }
+
+        Optional<SeedType> seedTypeOptional = Optional.ofNullable(seedType);
+        if(!seedTypeOptional.isPresent())
+            return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
+        Optional<Integer> integer = seedTypeOptional.map(SeedType::getExMallProduct);
+        MallProduct mallProduct = mallProductDAO.selectById(integer.orElse(0));
+        if(null == mallProduct)
+            return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
+
+        BigDecimal[] bigDecimals = excWeigh.divideAndRemainder(seedType.getExMallWeigh());
+        BuyProduct buyProduct = new BuyProduct();
+        buyProduct.setProductId(mallProduct.getId());
+        buyProduct.setBuyCount(bigDecimals[0].intValue());
+        SubmitOrder submitOrder = new SubmitOrder().setAddressId(excReap.getAddressId()).setMark("成品兑换实物")
+                .setProducts(Collections.singletonList(buyProduct));
+        ResultData<BuyResponse> buyResponseResultData = mallProductService.submitOrder(submitOrder, userId);
+        if(buyResponseResultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+            MallOrder mallOrder = new MallOrder();
+            mallOrder.setId(buyResponseResultData.getData().getOrderId());
+            mallOrder.setPayTime(new Date());
+            mallOrder.setState(MallEnum.ORDER_HAS_PAY.getState());
+            mallOrder.setAccountPayAmount(BigDecimal.ZERO);
+            mallOrder.setCarPayAmount(BigDecimal.ZERO);
+            if(mallOrderDAO.updateById(mallOrder) <= 0) return resultData;
+            ReapExcLog log = new ReapExcLog();
+            if(null != excReap.getReapId()) {
+                log.setReapId(excReap.getReapId());
+                reapWeighDAO.incField(new ReapWeigh(userId).setAvailableWeigh(bigDecimals[1]));
+            } else {
+                reapWeighDAO.decField(new ReapWeigh(userId).setAvailableWeigh(excWeigh.subtract(bigDecimals[1])));
+            }
+            log.setUserId(userId);
+            log.setProductId(mallProduct.getId());
+            log.setExcCount(bigDecimals[0].intValue());
+            log.setExcWeigh(excWeigh);
+            log.setAddTime(new Date());
+            reapExcLogDAO.insert(log);
+
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+        }
+        return resultData;
+    }
+
+
+    private ResultData<Integer> excReapItem(Reap reap){
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         //置reap状态
         Reap update = new Reap();
         update.setId(reap.getId());
@@ -529,38 +599,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             collectProfitOperator.setUserMoney(collectProfit);
             if (userMoneyService.updateAccount(collectProfitOperator) == null)
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
-            //添加商城订单
-            SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());
-            Optional<SeedType> seedTypeOptional = Optional.ofNullable(seedType);
-            if(!seedTypeOptional.isPresent())
-                return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
-            Optional<Integer> integer = seedTypeOptional.map(SeedType::getExMallProduct);
-            MallProduct mallProduct = mallProductDAO.selectById(integer.orElse(0));
-            if(null == mallProduct)
-                return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
-
-            BigDecimal[] bigDecimals = reap.getPlantWeigh().divideAndRemainder(exWeigh);
-            BuyProduct buyProduct = new BuyProduct();
-            buyProduct.setProductId(mallProduct.getId());
-            buyProduct.setBuyCount(bigDecimals[0].intValue());
-            reapWeighDAO.incField(new ReapWeigh(reap.getUserId()).setAvailableWeigh(bigDecimals[1]));
-
-            SubmitOrder submitOrder = new SubmitOrder().setAddressId(excReap.getAddressId()).setMark("成品兑换实物")
-                    .setProducts(Collections.singletonList(buyProduct));
-            ResultData<BuyResponse> buyResponseResultData = mallProductService.submitOrder(submitOrder, reap.getUserId());
-            if(buyResponseResultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
-                MallOrder mallOrder = new MallOrder();
-                mallOrder.setId(buyResponseResultData.getData().getOrderId());
-                mallOrder.setPayTime(new Date());
-                mallOrder.setState(MallEnum.ORDER_HAS_PAY.getState());
-                mallOrder.setAccountPayAmount(BigDecimal.ZERO);
-                mallOrder.setCarPayAmount(BigDecimal.ZERO);
-                if(mallOrderDAO.updateById(mallOrder) <= 0) return resultData;
-                return resultData.setMessageEnum(MessageEnum.SUCCESS);
-            }
-
-            return resultData.setMessageEnum(buyResponseResultData.getMessageEnum());
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
         }
         return resultData;
     }

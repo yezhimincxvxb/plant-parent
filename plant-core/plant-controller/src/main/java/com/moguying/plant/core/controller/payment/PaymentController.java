@@ -6,6 +6,8 @@ import com.moguying.plant.core.entity.payment.request.ImageUploadRequest;
 import com.moguying.plant.core.entity.payment.response.ImageUploadResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.service.payment.PaymentService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.net.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/payment")
+@Api(tags = "支付相关")
 public class PaymentController {
 
     private Logger log = LoggerFactory.getLogger(PaymentController.class);
@@ -34,6 +37,7 @@ public class PaymentController {
 
     @RequestMapping("/upload/image/{id}")
     @ResponseBody
+    @ApiOperation("实名上传照片")
     public ResponseData<String> uploadImage(HttpServletRequest request, @PathVariable String id){
         String path = request.getServletContext().getRealPath("/upload/default1.jpg");
         try {

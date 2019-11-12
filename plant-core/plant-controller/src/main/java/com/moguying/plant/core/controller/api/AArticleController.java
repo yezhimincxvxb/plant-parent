@@ -8,6 +8,8 @@ import com.moguying.plant.core.entity.content.Article;
 import com.moguying.plant.core.entity.content.ArticleType;
 import com.moguying.plant.core.service.content.ArticleService;
 import com.moguying.plant.core.service.content.ArticleTypeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/article")
+@Api(tags = "文章内容")
 public class AArticleController {
 
     @Autowired
@@ -25,6 +28,7 @@ public class AArticleController {
     private ArticleService articleService;
 
     @GetMapping("/types")
+    @ApiOperation("文章分类")
     public ResponseData<List<ArticleType>> articleTypes(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleTypeService.articleTypeList());
     }
@@ -32,6 +36,7 @@ public class AArticleController {
 
 
     @PostMapping("/{urlName}")
+    @ApiOperation("对应分类文章列表")
     public PageResult<Article> articleList(@RequestBody PageSearch<Article> search, @PathVariable String urlName){
         PageResult<Article> list = new PageResult<>();
         ArticleType type = articleTypeService.selectTypeByUrlName(urlName);
@@ -48,6 +53,7 @@ public class AArticleController {
 
 
     @GetMapping("/{urlName}/{id}")
+    @ApiOperation("文章详情")
     public ResponseData<Article> articleDetail(@PathVariable String urlName, @PathVariable Integer id){
         ResponseData<Article> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
         ArticleType type = articleTypeService.selectTypeByUrlName(urlName);

@@ -140,6 +140,8 @@ reap:
   exchange:
     weigh: 1800
 
+
+
 ---
 debug: true
 server:
@@ -230,6 +232,32 @@ upload:
     host: http://192.168.5.220
   host: http://192.168.5.220
 
+swagger:
+  enabled: true
+  title: moguying-plant
+  description: 蘑菇营项目api
+  version: 0.0.1-SNAPSHOT
+  base-package: com.moguying.plant
+  docket:
+    frontApi:
+      title: frontApi
+      description: 对外接口
+      base-path: /api/**
+    backEndApi:
+      title: backEndApi
+      description: 后台管理接口
+      base-path: /backEnd/**
+    paymentApi:
+      title: paymentAPi
+      description: 支付相关接口
+      base-path: /payment/**
+  global-operation-parameters[0]:
+    name: Auth-Token
+    modelRef: string
+    parameterType: header
+    require: true
+
+
 ---
 debug: false
 server:
@@ -265,10 +293,16 @@ spring:
         min-idle: 20
         max-idle: 120
         max-wait: 2000
+  data:
+    mongodb:
+      host: 172.18.146.177
+      port: 27589
+      database: activity
+
 #上传host
 upload:
   save-path: /pages/upload
   editor:
-    host: http://image.zymoguying.com
-  host: http://image.zymoguying.com
+    host: https://image.zymoguying.com
+  host: https://image.zymoguying.com
 

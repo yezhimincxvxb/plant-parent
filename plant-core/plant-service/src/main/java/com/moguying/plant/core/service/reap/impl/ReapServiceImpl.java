@@ -232,7 +232,8 @@ public class ReapServiceImpl<T> implements ReapService {
         totalAmount = totalAmount.add(reap.getPreAmount()).add(reap.getPreProfit());
         //更新已领取收益
         reapWeighDAO.incField(new ReapWeigh(userId).setHasProfit(totalAmount));
-        message.setSeedTypeName(reap.getSeedTypeName());
+        SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());
+        message.setSeedTypeName(seedType.getClassName());
         message.setAmount(totalAmount.toString());
 
         return resultData.setMessageEnum(MessageEnum.SUCCESS).

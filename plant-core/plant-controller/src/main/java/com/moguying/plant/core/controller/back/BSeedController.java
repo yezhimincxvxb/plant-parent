@@ -13,6 +13,8 @@ import com.moguying.plant.core.entity.seed.vo.SeedReview;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.seed.SeedPicService;
 import com.moguying.plant.core.service.seed.SeedService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/seed")
 @Slf4j
+@Api(tags = "菌包管理")
 public class BSeedController {
 
 
@@ -41,6 +44,7 @@ public class BSeedController {
      * @return
      */
     @PostMapping(value = "/reviewed/list")
+    @ApiOperation("已审通过的菌包列表")
     public PageResult<Seed> seedReviewedList(@RequestBody PageSearch<Seed> search){
 
         Seed where;
@@ -59,6 +63,7 @@ public class BSeedController {
      * @return
      */
     @PostMapping(value = "/add")
+    @ApiOperation("添加菌包")
     public ResponseData<Integer> seedAdd(@RequestBody Seed addSeed, @SessionAttribute(SessionAdminUser.sessionKey) AdminUser user){
         addSeed.setAddUid(user.getId());
         ResultData<Integer> resultData = seedService.seedSave(addSeed,true);
@@ -72,6 +77,7 @@ public class BSeedController {
      * @return
      */
     @GetMapping(value = "/{id}")
+    @ApiOperation("获取菌包详情")
     public ResponseData<Seed> seedDetail(@PathVariable Integer id){
         if(id == 0 || id < 0){
             return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
@@ -88,6 +94,7 @@ public class BSeedController {
      */
 
     @PutMapping("/edit/{id}")
+    @ApiOperation("编辑菌包")
     public ResponseData<Integer> seedEdit(@PathVariable Integer id, @RequestBody Seed seed){
         seed.setId(id);
         ResultData<Integer> resultData = seedService.seedSave(seed, false);
@@ -100,6 +107,7 @@ public class BSeedController {
      * @return
      */
     @PutMapping(value = "/review/{id}")
+    @ApiOperation("审核菌包")
     public ResponseData<Integer> seedReview(@PathVariable Integer id, @RequestBody SeedReview seedReview, @SessionAttribute(SessionAdminUser.sessionKey) AdminUser user){
         if (id < 0 || id == 0)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -115,6 +123,7 @@ public class BSeedController {
      * @deprecated
      */
     @PutMapping(value = "/cancel/{id}")
+    @ApiOperation("撤销菌包")
     public ResponseData<Integer> seedCancel(@PathVariable Integer id){
         ResultData<Integer> resultData = seedService.seedCancel(id);
         if(!resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
@@ -132,6 +141,7 @@ public class BSeedController {
      * @return
      */
     @PostMapping(value = "/review/list")
+    @ApiOperation("待审菌包列表")
     public PageResult<Seed> seedReviewList(@RequestBody PageSearch<Seed> search){
         Seed where = null;
         if(null != search.getWhere())
@@ -149,6 +159,7 @@ public class BSeedController {
      * @return
      */
     @PostMapping(value = "/planted/list")
+    @ApiOperation("已售罄的菌包列表")
     public PageResult<Seed> seedPlantedList(@RequestBody PageSearch<Seed> search){
         Seed where = null;
         if(null != search.getWhere())
@@ -168,6 +179,7 @@ public class BSeedController {
      * @return
      */
     @PostMapping(value = "/planted/excel")
+    @ApiOperation("售罄菌包下载")
     public ResponseData<Integer> seedPlantedListExcel(@SessionAttribute(SessionAdminUser.sessionKey)AdminUser user,
                                                       @RequestBody PageSearch<Seed> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere()))
@@ -187,6 +199,7 @@ public class BSeedController {
      */
 
     @GetMapping(value = "/cancel/list")
+    @ApiOperation("菌包取消种植列表")
     public PageResult<Seed> seedCancelList(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
                                              @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
         Seed where = new Seed();
@@ -201,6 +214,7 @@ public class BSeedController {
      * @return
      */
     @PutMapping("/show/{id}")
+    @ApiOperation("菌包上下架")
     public ResponseData<String> seedIsShow(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), seedService.seedShow(id).toString());
     }

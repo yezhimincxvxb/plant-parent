@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReapWeighDAO  extends BaseDAO<ReapWeigh> {
    int incField(ReapWeigh reapWeigh);
+   int decField(ReapWeigh reapWeigh);
 }

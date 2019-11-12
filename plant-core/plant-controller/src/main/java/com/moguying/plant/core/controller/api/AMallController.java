@@ -23,6 +23,8 @@ import com.moguying.plant.core.service.mall.MallOrderDetailService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.mall.MallProductService;
 import com.moguying.plant.core.service.user.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/mall")
 @Slf4j
+@Api(tags = "商城")
 public class AMallController {
 
     @Autowired
@@ -62,6 +65,7 @@ public class AMallController {
      * @return
      */
     @PostMapping("/order/search")
+    @ApiOperation("商城订单列表")
     public PageResult<UserMallOrder> orderList(@RequestBody OrderSearch orderSearch, @LoginUserId Integer userId) {
 
         if (null == orderSearch.getPage())
@@ -79,6 +83,7 @@ public class AMallController {
      * 商城订单详情
      */
     @GetMapping("/order/{id}")
+    @ApiOperation("商城订单详情")
     public ResponseData<OrderDetail> orderDetail(@PathVariable Integer id, @LoginUserId Integer userId) {
         MallOrder order = mallOrderService.selectOrderById(id);
         if (null == order)
@@ -121,6 +126,7 @@ public class AMallController {
      */
     @ValidateUser
     @PostMapping("/buy")
+    @ApiOperation("立即购买")
     public ResponseData<OrderBuyResponse> orderBuy(@LoginUserId Integer userId, @RequestBody OrderBuy orderBuy) {
         if (null == orderBuy || null == orderBuy.getProducts() || orderBuy.getProducts().size() == 0)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -138,6 +144,7 @@ public class AMallController {
      */
     @ValidateUser
     @PostMapping("/sum")
+    @ApiOperation("计算订单总价")
     public ResponseData<OrderSum> sumOrder(@LoginUserId Integer userId, @RequestBody SubmitOrder submitOrder) {
         ResultData<OrderSum> resultData = mallProductService.sumOrder(userId, submitOrder);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
@@ -153,6 +160,7 @@ public class AMallController {
      */
     @PostMapping("/order")
     @ResponseBody
+    @ApiOperation("提交订单")
     public ResponseData<BuyResponse> submitOrder(@RequestBody SubmitOrder submitOrder, @LoginUserId Integer userId) {
         ResultData<BuyResponse> resultData = mallProductService.submitOrder(submitOrder, userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
@@ -165,6 +173,7 @@ public class AMallController {
      * @return
      */
     @PostMapping("/pay")
+    @ApiOperation("提交订单信息至第三方支付")
     public ResponseData<SendPayOrderResponse> checkPayOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if (null == payOrder.getIsCheck())
             return new ResponseData<>(MessageEnum.MALL_ORDER_PAY_TYPE_ERROR.getMessage(), MessageEnum.MALL_ORDER_PAY_TYPE_ERROR.getState());
@@ -183,6 +192,7 @@ public class AMallController {
      * @return
      */
     @PutMapping("/pay")
+    @ApiOperation("通过第三方支付后发起支付")
     @SuppressWarnings("all")
     public ResponseData<Integer> payOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
         if ((null != payOrder.getPayMsgCode() && null != payOrder.getPayPassword()) ||
@@ -207,6 +217,7 @@ public class AMallController {
      * @return
      */
     @PostMapping("/cancel")
+    @ApiOperation("取消订单")
     public ResponseData<Integer> cancelOrder(@RequestBody CancelOrder cancelOrder, @LoginUserId Integer userId) {
         MallOrder order = mallOrderService.selectOrderById(cancelOrder.getId());
         if (null == order)
@@ -226,6 +237,7 @@ public class AMallController {
      * @return
      */
     @PutMapping("/order")
+    @ApiOperation("提醒发货/确认收货")
     public ResponseData<Integer> noticeOrder(@RequestBody NoticeOrder noticeOrder) {
         if (null == noticeOrder || null == noticeOrder.getOrderId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -253,6 +265,7 @@ public class AMallController {
      * 物流信息
      */
     @PostMapping("/trace/info")
+    @ApiOperation("物流信息")
     public ResponseData<TraceInfo> traceInfo(@RequestBody NoticeOrder noticeOrder) {
 
         if (null == noticeOrder || null == noticeOrder.getOrderId()) {
@@ -327,6 +340,7 @@ public class AMallController {
      * 退款
      */
     @PutMapping("/order/refund")
+    @ApiOperation("退款")
     public ResponseData<Integer> orderRefund(@RequestBody NoticeOrder noticeOrder, @LoginUserId Integer userId) {
         ResultData<Integer> resultData = mallOrderService.orderRefund(noticeOrder.getOrderId(), userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());

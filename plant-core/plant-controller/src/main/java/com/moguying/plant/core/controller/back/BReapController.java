@@ -9,6 +9,8 @@ import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.reap.ReapService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/reap")
+@Api(tags = "采摘管理")
 public class BReapController {
 
 
@@ -33,6 +36,7 @@ public class BReapController {
      * @return
      */
     @PostMapping(value = "/list")
+    @ApiOperation("采摘列表")
     public PageResult<Reap> reapList(@RequestBody PageSearch<Reap> search){
         return reapService.reapList(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -46,6 +50,7 @@ public class BReapController {
      * @return
      */
     @PostMapping("/excel")
+    @ApiOperation("采摘列表下载")
     public ResponseData<Integer> reapListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                @RequestBody PageSearch<Reap> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere()))
@@ -62,6 +67,7 @@ public class BReapController {
      * @return
      */
     @PutMapping
+    @ApiOperation("采摘")
     public ResponseData<Integer> reap(@RequestParam String ids, @RequestParam Integer state){
         if(StringUtils.isEmpty(ids))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());

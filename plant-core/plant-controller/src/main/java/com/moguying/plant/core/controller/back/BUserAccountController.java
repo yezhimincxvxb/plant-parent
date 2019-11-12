@@ -17,6 +17,8 @@ import com.moguying.plant.core.service.account.MoneyRechargeService;
 import com.moguying.plant.core.service.account.MoneyWithdrawService;
 import com.moguying.plant.core.service.account.UserMoneyLogService;
 import com.moguying.plant.core.service.account.UserMoneyService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/account")
+@Api(tags = "用户帐户管理")
 public class BUserAccountController {
 
     @Autowired
@@ -45,6 +48,7 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/list")
+    @ApiOperation("资金列表")
     public PageResult<UserMoney> userAccountList(@RequestBody PageSearch<UserMoney> search){
         if(null == search.getWhere())
             search.setWhere(new UserMoney());
@@ -60,6 +64,7 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/excel")
+    @ApiOperation("资金导出表")
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                @RequestBody PageSearch<UserMoney> search, HttpServletRequest request){
         userMoneyService.downloadExcel(user.getId(),search,request);
@@ -73,6 +78,7 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/log")
+    @ApiOperation("资金日志")
     public PageResult<UserMoneyLog> accountLogList(@RequestBody PageSearch<UserMoneyLog> search){
         if(null == search.getWhere())
             search.setWhere(new UserMoneyLog());
@@ -87,6 +93,7 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/log/excel")
+    @ApiOperation("导出资金日志表")
     public ResponseData<Integer> downloadLogExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                   @RequestBody PageSearch<UserMoneyLog> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere())) search.setWhere(new UserMoneyLog());
@@ -101,6 +108,7 @@ public class BUserAccountController {
      * @return
      */
     @GetMapping(value = "/recharge")
+    @ApiOperation("充值列表")
     public PageResult<MoneyRecharge> rechargeList(@RequestBody PageSearch<MoneyRecharge> search){
         return moneyRechargeService.moneyRechargeList(search.getPage(),search.getSize(),search.getWhere());
     }
@@ -112,6 +120,7 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/withdraw")
+    @ApiOperation("提现列表")
     public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch<MoneyWithdraw> search){
         if(null == search.getWhere())
             search.setWhere(new MoneyWithdraw());
@@ -127,6 +136,7 @@ public class BUserAccountController {
      * @return
      */
     @PostMapping(value = "/withdraw/excel")
+    @ApiOperation("下载用户提现列表")
     public ResponseData<Integer> withdrawListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                    @RequestBody PageSearch<MoneyWithdraw> search, HttpServletRequest request){
         if(Objects.isNull(search.getWhere())) search.setWhere(new MoneyWithdraw());
@@ -141,6 +151,7 @@ public class BUserAccountController {
      * @return
      */
     @PutMapping("/withdraw/{id}")
+    @ApiOperation("提现复审")
     public ResponseData<Integer> reviewWithdraw(@PathVariable Integer id, @RequestParam("state") Boolean isPass,
                                                 @SessionAttribute(SessionAdminUser.sessionKey)AdminUser adminUser){
         ResultData<PaymentResponse> resultData = moneyWithdrawService.reviewMoneyWithdraw(id,

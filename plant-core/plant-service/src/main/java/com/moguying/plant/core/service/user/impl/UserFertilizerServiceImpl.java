@@ -93,14 +93,6 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
             condition.setType(FertilizerEnum.FULL_FERTILIZER.getState());
         }
 
-        /**
-        // 由于需要将券与种植的类型匹配，而不是与棚的id相匹配
-        // 将前端传入的棚id转为在棚区中种植的菌包类型id
-        if (null != condition.getBlockId()) {
-            Block block = blockDAO.selectById(condition.getBlockId());
-            condition.setBlockId(block.getSeedType());
-            condition.setType(FertilizerEnum.PLANT_FERTILIZER.getState());
-        }*/
 
         // 指定商品(该订单只有一个商品时才有效)
         if (Objects.nonNull(condition.getMallOrderId())) {
@@ -158,6 +150,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     }
 
     @Override
+    @DS("read")
     public UserFertilizer getUserFertilizer(Integer userId, Integer id, Integer type) {
         if (type == null)
             return userFertilizerDAO.findByIdAndUserId(userId, id);

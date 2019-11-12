@@ -39,6 +39,7 @@ import com.moguying.plant.core.service.teste.TasteService;
 import com.moguying.plant.utils.DateUtil;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -56,6 +57,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
+@Slf4j
 public class TasteServiceImpl implements TasteService {
 
 
@@ -139,7 +141,6 @@ public class TasteServiceImpl implements TasteService {
         if(1 != buyOrder.getCount())
             return resultData.setMessageEnum(MessageEnum.TASTE_BUY_SEED_COUNT_ERROR);
 
-        //TODO 是否已参于过
         ResultData<BuyOrderResponse> buyResult = plantOrderService.plantOrder(buyOrder, userId, true);
         if(!buyResult.getMessageEnum().equals(MessageEnum.SUCCESS))
             return resultData.setMessageEnum(buyResult.getMessageEnum());
@@ -150,6 +151,7 @@ public class TasteServiceImpl implements TasteService {
         if(payResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             // 返回订单id，而不是订单详情id
             buyResult.getData().setOrderId(payResult.getData());
+            buyResult.getData().setSeedTypeId(seed.getSeedType());
             return buyResult;
         }
         return resultData;
@@ -221,17 +223,19 @@ public class TasteServiceImpl implements TasteService {
             query.addCriteria(Criteria.where("state").is(where.getState()));
         if(optional.map(Taste::getIsShow).isPresent())
             query.addCriteria(Criteria.where("isShow").is(where.getIsShow()));
-        List<Taste> items = mongoTemplate.find(query,Taste.class);
-        if(null != userId){
-            items.forEach((taste)->{
+        List<Taste> items = mongoTemplate.find(query, Taste.class);
+
+        items.forEach((taste) -> {
+            if (null != userId) {
                 boolean exists = mongoTemplate.exists(new Query(Criteria.where("userId").is(userId).and("tasteId").is(taste.getId())), TasteApply.class);
                 taste.setHasApply(exists);
-                if(taste.getEndTime().compareTo(new Date()) <= 0){
-                    mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())),Update.update("state",ApiEnum.TASTE_CLOSE.getType()),Taste.class);
-                }
-                taste.setApplyCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId()).and("state").is(ApiEnum.TASTE_APPLY_SUCCESS.getType())),TasteApply.class));
-            });
-        }
+            }
+            if (taste.getEndTime().compareTo(new Date()) <= 0) {
+                mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())), Update.update("state", ApiEnum.TASTE_CLOSE.getType()), Taste.class);
+            }
+            taste.setApplySuccessCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId()).and("state").is(ApiEnum.TASTE_APPLY_SUCCESS.getType())), TasteApply.class));
+            taste.setApplyCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId())), TasteApply.class));
+        });
         long count = mongoTemplate.count(query,Taste.class);
         return new PageResult<>(count,items);
     }

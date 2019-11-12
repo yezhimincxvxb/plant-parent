@@ -10,6 +10,8 @@ import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.system.vo.MenuTree;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.admin.AdminMenuService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/menu")
+@Api(tags = "菜单管理")
 public class BAdminMenuController {
 
     @Autowired
@@ -30,6 +33,7 @@ public class BAdminMenuController {
      * @return
      */
     @PostMapping("/list")
+    @ApiOperation("菜单列表")
     public PageResult<AdminMenu> menuList(@RequestBody PageSearch<AdminMenu> search){
         if(null == search.getWhere())
             search.setWhere(new AdminMenu());
@@ -45,6 +49,7 @@ public class BAdminMenuController {
      * @return
      */
     @PostMapping
+    @ApiOperation("添加或修改菜单")
     public ResponseData<Integer> saveMenu(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user, @RequestBody AdminMenu menu) {
         ResultData<Integer> resultData = adminMenuService.saveAdminMenu(menu);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -57,6 +62,7 @@ public class BAdminMenuController {
      * @return
      */
     @DeleteMapping("/{id}")
+    @ApiOperation("删除菜单")
     public ResponseData<Integer> deleteMenu(@PathVariable Integer id){
         ResultData<Integer> resultData  = adminMenuService.deleteMenu(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
@@ -64,11 +70,12 @@ public class BAdminMenuController {
 
 
     /**
-     *获取指定id的菜单信息
+     * 获取指定id的菜单信息
      * @param id
      * @return
      */
     @GetMapping("/{id}")
+    @ApiOperation("获取指定id的菜单信息")
     public ResponseData<AdminMenu> adminMenu(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),adminMenuService.adminMenu(id));
     }
@@ -81,6 +88,7 @@ public class BAdminMenuController {
      * @return
      */
     @GetMapping("/parent")
+    @ApiOperation("获取父级菜单")
     public ResponseData<List<AdminMenu>> parentMenu(){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),adminMenuService.parentMenu());
     }
@@ -91,6 +99,7 @@ public class BAdminMenuController {
      * @return
      */
     @GetMapping("/tree")
+    @ApiOperation("路由表")
     public ResponseData<MenuTree> menuTree() {
         MenuTree tree = new MenuTree();
         List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuService.menus(new AdminMenu()));

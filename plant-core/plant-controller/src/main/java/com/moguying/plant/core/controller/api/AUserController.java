@@ -39,6 +39,8 @@ import com.moguying.plant.core.service.user.UserInviteService;
 import com.moguying.plant.core.service.user.UserMessageService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +68,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@Api(tags = "用户中心")
 public class AUserController {
 
     @Autowired
@@ -137,6 +140,7 @@ public class AUserController {
      * 首页信息
      */
     @GetMapping
+    @ApiOperation("首页信息")
     public ResponseData<UserSummaryInfo> index(@LoginUserId Integer userId) {
 
         ResponseData<UserSummaryInfo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
@@ -163,6 +167,7 @@ public class AUserController {
      * PC端用户中心信息
      */
     @GetMapping("/info")
+    @ApiOperation("PC端用户中心信息")
     public ResponseData<User> userInfo(@LoginUserId Integer userId) {
 
         ResponseData<User> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
@@ -183,6 +188,7 @@ public class AUserController {
      * 修改支付密码
      */
     @PutMapping(value = "/pay/password")
+    @ApiOperation("修改支付密码")
     public ResponseData<Integer> setPayPassword(@RequestBody PayPassword payPassword, @LoginUserId Integer userId) {
         // 用户不存在
         User userInfo = userService.userInfoById(userId);
@@ -220,6 +226,7 @@ public class AUserController {
      * 忘记支付密码
      */
     @PutMapping("/forget/password")
+    @ApiOperation("忘记支付密码")
     public ResponseData<Integer> forgetPassword(@LoginUserId Integer userId, @RequestBody ForgetPayPassword forgetPayPassword) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -241,6 +248,7 @@ public class AUserController {
      * @return
      */
     @GetMapping("/withdraw/password")
+    @ApiOperation("设置/修改提现密码")
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> setWithdrawPassword(@LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
@@ -286,6 +294,7 @@ public class AUserController {
      * @return
      */
     @PutMapping("/password")
+    @ApiOperation("修改登录密码")
     public ResponseData<Integer> modifyPassword(@RequestBody LoginPassword loginPassword, @LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -312,6 +321,7 @@ public class AUserController {
      * @return
      */
     @GetMapping("/real/name")
+    @ApiOperation("用户实名信息")
     public ResponseData<RealName> realName(@LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (null == user)
@@ -333,6 +343,7 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/real/name")
+    @ApiOperation("信息注册")
     public ResponseData<Integer> validateRealName(@RequestBody RealName realName, @LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
         if (userInfo == null)
@@ -392,6 +403,7 @@ public class AUserController {
      * @return
      */
     @GetMapping("/card")
+    @ApiOperation("银行卡信息")
     public ResponseData<List<UserBank>> cardInfo(@LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
         if (userInfo == null)
@@ -409,6 +421,7 @@ public class AUserController {
      * @return
      */
     @PutMapping(value = "/bind/card")
+    @ApiOperation("绑定银行卡")
     public ResponseData<Integer> bindCard(@RequestBody BindCard bindCard, @LoginUserId Integer userId) {
         User user = userService.userInfoById(userId);
         if (user == null)
@@ -474,6 +487,7 @@ public class AUserController {
      * @return
      */
     @DeleteMapping("/delete/card/{id}")
+    @ApiOperation("删除绑定银行卡")
     public ResponseData<String> deleteBindCard(@LoginUserId Integer userId, @PathVariable Integer id) {
         UserBank bank = userService.bankCard(userId, id);
         if (null == bank)
@@ -500,6 +514,7 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/send/bind/sms")
+    @ApiOperation("绑定银行卡时发送短信")
     public ResponseData<SendSmsCodeResponse> sendBindCardSms(@RequestBody BindCard bindCard, @LoginUserId Integer userId) {
 
         User userInfo = userService.userInfoById(userId);
@@ -534,6 +549,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/address/default")
+    @ApiOperation("用户默认地址信息")
     public ResponseData<UserAddress> defaultAddress(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 userService.userDefaultAddress(userId));
@@ -546,6 +562,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/address")
+    @ApiOperation("地址列表")
     public ResponseData<List<UserAddress>> address(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 userService.addressList(userId));
@@ -559,6 +576,7 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/address")
+    @ApiOperation("添加地址")
     public ResponseData<Integer> addAddress(@RequestBody UserAddress address, @LoginUserId Integer userId) {
         address.setUserId(userId);
         ResultData<Integer> resultData = userService.addAddress(address);
@@ -573,6 +591,7 @@ public class AUserController {
      * @return
      */
     @PutMapping(value = "/address/{id}")
+    @ApiOperation("编辑地址")
     public ResponseData<Integer> updateAddress(@RequestBody UserAddress address, @PathVariable Integer id, @LoginUserId Integer userId) {
         if (id == null)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -590,6 +609,7 @@ public class AUserController {
      * @return
      */
     @DeleteMapping("/address/{id}")
+    @ApiOperation("删除地址")
     public ResponseData<Integer> deleteAddress(@PathVariable Integer id, @LoginUserId Integer userId) {
         if (id == null)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -609,6 +629,7 @@ public class AUserController {
      * @return
      */
     @GetMapping("/address/{id}")
+    @ApiOperation("获取单个地址详情")
     public ResponseData<UserAddress> addressDetail(@PathVariable Integer id, @LoginUserId Integer userId) {
         if (id == null)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -623,6 +644,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/seed")
+    @ApiOperation("菌包列表")
     public ResponseData<List<UserSeedOrder>> seedList(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 seedOrderService.userSeedOrder(userId));
@@ -637,6 +659,7 @@ public class AUserController {
      * @return
      */
     @PostMapping("/seed")
+    @ApiOperation("个人在指定棚区可种植的菌包数量")
     public ResponseData<CanPlantOrder> seedInBlock(@RequestBody BlockDetail blockDetail, @LoginUserId Integer userId) {
         CanPlantOrder canPlantOrder = seedOrderService.sumUserSeedByBlockId(blockDetail.getBlockId(), userId);
         if (null == canPlantOrder) {
@@ -652,6 +675,7 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/product")
+    @ApiOperation("获取成品列表")
     public PageResult<Reap> productList(@LoginUserId Integer userId, @RequestBody PageSearch<Reap> search) {
         Reap where = new Reap();
         where.setUserId(userId);
@@ -669,11 +693,12 @@ public class AUserController {
      * @return
      */
     @GetMapping("/product/weigh")
+    @ApiOperation("用户个人种植产量信息")
     public ResponseData<ReapWeigh> userReapWeigh(@LoginUserId Integer userId){
         ResultData<ReapWeigh> resultData = reapWeighService.userReapWeighInfo(userId);
         ResponseData<ReapWeigh> responseData =  new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
         if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
-            responseData.setData(responseData.getData());
+            responseData.setData(resultData.getData());
         return  responseData;
     }
 
@@ -687,6 +712,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/order")
+    @ApiOperation("菌包管理-已购买")
     public PageResult<SeedOrderDetail> seedOrderList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                      @LoginUserId Integer userId) {
@@ -702,6 +728,7 @@ public class AUserController {
      * @return
      */
     @GetMapping("/order/{orderId}/protocol")
+    @ApiOperation("菌包购买协议")
     public ResponseData<String> seedOrderProtocol(@LoginUserId Integer userId, @PathVariable Integer orderId) {
         User userInfo = userService.userInfoById(userId);
         SeedOrderDetail seedOrderDetail = seedOrderDetailService.orderDetailByIdAndUserId(orderId, userId);
@@ -726,6 +753,7 @@ public class AUserController {
      * @return
      */
     @PostMapping(value = "/reap")
+    @ApiOperation("菌包管理-已种植-已采摘-已出售")
     public PageResult<Reap> reapList(@LoginUserId Integer userId, @RequestBody ReapSearch search) {
         Reap where = new Reap();
         where.setUserId(userId);
@@ -740,6 +768,7 @@ public class AUserController {
      * @return
      */
     @GetMapping("/reap/{reapId}/protocol")
+    @ApiOperation("菌包种植协议")
     public ResponseData<String> reapProtocol(@LoginUserId Integer userId, @PathVariable Integer reapId, Model model) {
         User userInfo = userService.userInfoById(userId);
         Reap reapInfo = reapService.reapInfoByIdAndUserId(reapId, userId);
@@ -772,6 +801,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/order/unpay")
+    @ApiOperation("菌包订单")
     public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                            @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                            @LoginUserId Integer userId) {
@@ -787,6 +817,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/order/{id}")
+    @ApiOperation("菌包订单详情")
     public ResponseData<SeedOrderDetail> seedOrderDetail(@PathVariable("id") Integer id, @LoginUserId Integer userId) {
         SeedOrderDetail detail = seedOrderDetailService.orderDetailByIdAndUserId(id, userId);
         if (null == detail)
@@ -804,6 +835,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/message")
+    @ApiOperation("站内信息列表")
     public PageResult<UserMessage> messageList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                                @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                @LoginUserId Integer userId) {
@@ -817,6 +849,7 @@ public class AUserController {
      * @return
      */
     @PutMapping(value = "/message/read")
+    @ApiOperation("读信息")
     public ResponseData<Boolean> readMessage(@LoginUserId Integer userId) {
         UserMessage userMessage = new UserMessage();
         userMessage.setUserId(userId);
@@ -832,6 +865,7 @@ public class AUserController {
      * @return
      */
     @DeleteMapping(value = "/message/delete/{id}")
+    @ApiOperation("删除信息")
     public ResponseData<Boolean> deletedMessage(@PathVariable Integer id, @LoginUserId Integer userId) {
         UserMessage userMessage = new UserMessage();
         userMessage.setId(id);
@@ -849,6 +883,7 @@ public class AUserController {
      * @return
      */
     @GetMapping(value = "/invite")
+    @ApiOperation("邀请信息统计")
     public ResponseData<InviteStatistics> inviteStatistics(@LoginUserId Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 userInviteService.inviteStatistics(userId));
@@ -863,6 +898,7 @@ public class AUserController {
      * @return
      */
     @GetMapping("/invite/list")
+    @ApiOperation("被邀请人列表")
     public PageResult<UserInvite> inviteList(@RequestParam(value = "page", defaultValue = "1") Integer page,
                                              @RequestParam(value = "size", defaultValue = "10") Integer size,
                                              @LoginUserId Integer userId) {
@@ -877,6 +913,7 @@ public class AUserController {
      * @return
      */
     @PostMapping("/fertilizer")
+    @ApiOperation("用户红包列表")
     public PageResult<UserFertilizerInfo> userFertilizers(@LoginUserId Integer userId, @RequestBody FertilizerSearch search) {
         return userFertilizerService.userFertilizers(search.getPage(), search.getSize(), userId, search);
     }
@@ -885,6 +922,7 @@ public class AUserController {
      * 领取红包
      */
     @GetMapping("/redPackage/{id}")
+    @ApiOperation("领取红包")
     public ResponseData<String> redPackage(@LoginUserId Integer userId, @PathVariable("id") Integer id) {
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "领取失败");
 
@@ -908,6 +946,7 @@ public class AUserController {
      * 在使用时可用的券
      */
     @PostMapping("/valid/fertilizer")
+    @ApiOperation("在使用时可用的券")
     public ResponseData<List<UserFertilizerInfo>> fertilizers(@LoginUserId Integer userId, @RequestBody FertilizerUseCondition condition) {
         condition.setUserId(userId);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -921,6 +960,7 @@ public class AUserController {
      * @param userId
      */
     @GetMapping("/invite/poster")
+    @ApiOperation("用户邀请个人专属海报")
     public ResponseData<UserPoster> invitePosterImage(@LoginUserId Integer userId, HttpServletResponse response) {
         ClassPathResource resource = new ClassPathResource(inviteBgImagePath);
         ClassPathResource iconResource = new ClassPathResource(inviteIcon);
@@ -936,7 +976,7 @@ public class AUserController {
             hints.put(EncodeHintType.MARGIN, 1);
             int width = 142, height = 142;
             //生成二维码
-            BitMatrix bitMatrix = multiFormatWriter.encode(inviteUrl + user.getPhone(), BarcodeFormat.QR_CODE, width, height, hints);
+            BitMatrix bitMatrix = multiFormatWriter.encode(inviteUrl + user.getInviteCode(), BarcodeFormat.QR_CODE, width, height, hints);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     bgImage.setRGB(x + 109, y + 946, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
@@ -968,6 +1008,7 @@ public class AUserController {
      * @return
      */
     @PostMapping("/wechat/info")
+    @ApiOperation("微信分享token")
     public ResponseData<WeChatShare> createWeChatInfo(@LoginUserId Integer userId, @RequestBody WeChatShare requestShare) {
         User userInfo = userService.userInfoById(userId);
         if (null == userInfo)
@@ -1017,6 +1058,7 @@ public class AUserController {
      * 品宣活动-点击免费领取30天菌包
      */
     @GetMapping("/free/seed")
+    @ApiOperation("品宣活动-点击免费领取30天菌包")
     public ResponseData<String> freeSeed(@LoginUserId Integer userId) {
 
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
@@ -1039,6 +1081,7 @@ public class AUserController {
      * 好友分享，获取邀请码
      */
     @GetMapping("/friend/sharing")
+    @ApiOperation("好友分享，获取邀请码")
     public ResponseData<User> friendSharing(@LoginUserId Integer userId) {
 
         ResponseData<User> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
@@ -1058,6 +1101,7 @@ public class AUserController {
      * 邀请成功记录
      */
     @GetMapping("/invite/log")
+    @ApiOperation("邀请成功记录")
     public ResponseData<List<UserActivityLog>> inviteLog(@LoginUserId Integer userId) throws ParseException {
 
         ResponseData<List<UserActivityLog>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());

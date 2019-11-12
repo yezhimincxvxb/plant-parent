@@ -19,6 +19,8 @@ import com.moguying.plant.core.entity.seed.vo.SubmitOrder;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.core.service.bargain.BargainLogService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/login/bargain")
 @Slf4j
+@Api(tags = "砍价活动-登录")
 public class ABargainLoginController {
 
     @Autowired
@@ -46,6 +49,7 @@ public class ABargainLoginController {
      * 分享
      */
     @PostMapping("/share")
+    @ApiOperation("分享")
     public ResponseData<ShareVo> share(@LoginUserId Integer userId, @RequestBody BuyProduct buyProduct) {
 
         ResponseData<ShareVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
@@ -89,6 +93,7 @@ public class ABargainLoginController {
      * 砍价中的产品列表
      */
     @PostMapping("/doing/list")
+    @ApiOperation("砍价中的产品列表")
     public PageResult<BargainVo> doingList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId);
     }
@@ -97,6 +102,7 @@ public class ABargainLoginController {
      * 已砍成功的产品列表
      */
     @PostMapping("/success/list")
+    @ApiOperation("已砍成功的产品列表")
     public PageResult<BargainVo> successList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.successList(pageSearch.getPage(), pageSearch.getSize(), userId);
     }
@@ -105,6 +111,7 @@ public class ABargainLoginController {
      * 砍价
      */
     @PostMapping("/help/chop")
+    @ApiOperation("砍价")
     public ResponseData<BargainVo> helpChop(@LoginUserId Integer userId, @RequestBody BargainDetail bargainDetail) {
         ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
 
@@ -166,6 +173,7 @@ public class ABargainLoginController {
      * 好友帮砍记录
      */
     @PostMapping("/help/log")
+    @ApiOperation("好友帮砍记录")
     public PageResult<BargainVo> helpLog(@LoginUserId Integer userId, @RequestBody PageSearch<Integer> pageSearch) {
         return bargainLogService.helpLog(pageSearch.getPage(), pageSearch.getSize(), userId, pageSearch.getWhere());
     }
@@ -174,6 +182,7 @@ public class ABargainLoginController {
      * 砍价成功记录(用户本人)
      */
     @PostMapping("/own/log")
+    @ApiOperation("砍价成功记录(用户本人)")
     public PageResult<BargainVo> ownLog(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.ownLog(pageSearch.getPage(), pageSearch.getSize(), userId);
     }
@@ -182,6 +191,7 @@ public class ABargainLoginController {
      * 提交订单
      */
     @PostMapping("/submit/order")
+    @ApiOperation("提交订单")
     public ResponseData<BuyResponse> submitOrder(@LoginUserId Integer userId, @RequestBody SubmitOrder submitOrder) {
 
         ResponseData<BuyResponse> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), null);

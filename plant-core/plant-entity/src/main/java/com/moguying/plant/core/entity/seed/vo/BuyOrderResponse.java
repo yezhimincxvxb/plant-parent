@@ -42,4 +42,7 @@ public class BuyOrderResponse implements Serializable {
 
     @JSONField(ordinal = 10,serializeUsing = BigDecimalSerialize.class)
     private BigDecimal perWeigh;
+
+    @JSONField(ordinal = 11)
+    private Integer seedTypeId;
 }

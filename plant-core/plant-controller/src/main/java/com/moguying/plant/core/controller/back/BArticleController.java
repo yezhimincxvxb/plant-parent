@@ -10,6 +10,8 @@ import com.moguying.plant.core.entity.content.Article;
 import com.moguying.plant.core.entity.content.ArticleType;
 import com.moguying.plant.core.service.content.ArticleService;
 import com.moguying.plant.core.service.content.ArticleTypeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/article")
+@Api(tags = "文章管理")
 public class BArticleController {
 
 
@@ -34,6 +37,7 @@ public class BArticleController {
      * @return
      */
     @PostMapping
+    @ApiOperation("添加文章")
     public ResponseData<Integer> addArticle(@RequestBody Article article){
         if(articleService.addArticle(article) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
@@ -46,6 +50,7 @@ public class BArticleController {
      * @return
      */
     @DeleteMapping(value = "/{id}")
+    @ApiOperation("删除文章")
     public ResponseData<Integer> deleteArticle(@PathVariable Integer id){
         if(articleService.deleteArticle(id) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
@@ -58,6 +63,7 @@ public class BArticleController {
      * @return
      */
     @PostMapping(value = "/list")
+    @ApiOperation("文章列表")
     public PageResult<Article> articleList(@RequestBody PageSearch<Article> search){
         if(null == search.getWhere())
                 search.setWhere(new Article());
@@ -71,6 +77,7 @@ public class BArticleController {
      * @return
      */
     @GetMapping(value = "/{id}")
+    @ApiOperation("获取单个文章的内容")
     public ResponseData<Article> getArticle(@PathVariable Integer id){
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleService.getArticle(id));
     }
@@ -83,6 +90,7 @@ public class BArticleController {
      * @return
      */
     @PutMapping(value = "/{id}")
+    @ApiOperation("更新文章")
     public ResponseData<Integer> updateArticle(@PathVariable Integer id, @RequestBody Article update){
         ResultData<Integer> resultData = articleService.updateArticle(id,update);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -93,6 +101,7 @@ public class BArticleController {
      * @return
      */
     @GetMapping(value = "/type")
+    @ApiOperation("文章分类列表")
     public ResponseData<List<ArticleType>> typeList(){
 
        return  new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleTypeService.articleTypeList());
@@ -105,6 +114,7 @@ public class BArticleController {
      * @return
      */
     @PostMapping(value = "/type")
+    @ApiOperation("添加文章类型")
     public ResponseData<Integer> addArticleType(@RequestBody ArticleType type){
         ResultData<Integer> resultData = articleTypeService.addArticleType(type);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
@@ -118,6 +128,7 @@ public class BArticleController {
      * @return
      */
     @PutMapping(value = "/type/{id}")
+    @ApiOperation("更新文章类型")
     public ResponseData<Integer> updateArticleType(@PathVariable Integer id, @RequestBody ArticleType type){
         if(articleTypeService.updateArticleType(id,type) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
@@ -131,6 +142,7 @@ public class BArticleController {
      * @return
      */
     @DeleteMapping("/type/{id}")
+    @ApiOperation("删除文章类型")
     public ResponseData<Integer> deleteArticleType(@PathVariable Integer id){
         ResultData<Integer> resultData = articleTypeService.deleteArticleType(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());

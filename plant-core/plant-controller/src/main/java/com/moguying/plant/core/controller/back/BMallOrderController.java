@@ -9,6 +9,8 @@ import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.service.mall.MallCompanyService;
 import com.moguying.plant.core.service.mall.MallOrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/mall/order")
+@Api(tags = "商城订单管理")
 public class BMallOrderController {
 
     @Autowired
@@ -33,6 +36,7 @@ public class BMallOrderController {
      * @return
      */
     @PostMapping
+    @ApiOperation("商城订单列表")
     public PageResult<MallOrder> mallOrderList(@RequestBody MallOrderSearch search) {
         return mallOrderService.mallOrderList(search.getPage(), search.getSize(), search);
     }
@@ -45,6 +49,7 @@ public class BMallOrderController {
      * @return
      */
     @GetMapping("/{id}")
+    @ApiOperation("商城订单详情")
     public ResponseData<MallOrder> mallOrderDetail(@PathVariable Integer id) {
         if (null == id || id <= 0)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
@@ -56,6 +61,7 @@ public class BMallOrderController {
      * 确认发货
      */
     @PutMapping
+    @ApiOperation("确认发货")
     public ResponseData<Integer> addLogistics(@RequestBody MallOrder mallOrder) {
 
         if (null == mallOrder || mallOrder.getId() <= 0 || null == mallOrder.getExpressOrderNumber() || null == mallOrder.getExpressComCode())
@@ -81,6 +87,7 @@ public class BMallOrderController {
      * 显示快递公司名称
      */
     @PostMapping("/getAllComName")
+    @ApiOperation("显示快递公司名称")
     public ResponseData<List<MallCompany>> getAllComName() {
         List<MallCompany> mallCompanies = mallCompanyService.getAllComName();
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallCompanies);
