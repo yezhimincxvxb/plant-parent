@@ -15,7 +15,6 @@ import com.moguying.plant.core.entity.bargain.vo.ShareVo;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallProduct;
-import com.moguying.plant.core.entity.mall.vo.BuyProduct;
 import com.moguying.plant.core.entity.seed.vo.SubmitOrder;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
@@ -24,10 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -50,22 +46,22 @@ public class ABargainLoginController {
     private UserAddressDAO userAddressDAO;
 
     /**
-     * 分享
+     * 点击免费拿
      */
-    @PostMapping("/share")
-    @ApiOperation("分享")
-    public ResponseData<ShareVo> share(@LoginUserId Integer userId, @RequestBody BuyProduct buyProduct) {
+    @GetMapping("/pick/up/{productId}")
+    @ApiOperation("点击免费拿")
+    public ResponseData<ShareVo> pickUp(@LoginUserId Integer userId, @PathVariable("productId") Integer productId) {
 
-        ResponseData<ShareVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        ResponseData<ShareVo> responseData = new ResponseData<>();
 
         // 参数错误
-        if (userId == null || buyProduct == null || buyProduct.getProductId() == null)
+        if (Objects.isNull(userId) || Objects.isNull(productId))
             return responseData
                     .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
                     .setState(MessageEnum.PARAMETER_ERROR.getState());
 
         // 产品存在
-        MallProduct product = mallProductDAO.selectById(buyProduct.getProductId());
+        MallProduct product = mallProductDAO.selectById(productId);
         if (product == null || !product.getIsShow() || product.getBargainCount() <= 0 || product.getBargainNumber() <= 0)
             return responseData
                     .setMessage(MessageEnum.MALL_PRODUCT_NOT_EXISTS.getMessage())
@@ -84,12 +80,42 @@ public class ABargainLoginController {
                     .setState(MessageEnum.MAX_LIMIT.getState());
 
         // 首次分享
-        ResultData<ShareVo> resultData = bargainDetailService.shareSuccess(userId, buyProduct, product);
+        ResultData<ShareVo> resultData = bargainDetailService.shareSuccess(userId, product);
         if (Objects.nonNull(resultData.getData())) responseData.setData(resultData.getData());
 
         return responseData
                 .setMessage(resultData.getMessageEnum().getMessage())
                 .setState(resultData.getMessageEnum().getState());
+    }
+
+    /**
+     * 分享
+     */
+    @GetMapping("/share/{orderId}")
+    @ApiOperation("分享")
+    public ResponseData<ShareVo> share(@LoginUserId Integer userId, @PathVariable("orderId") Integer orderId) {
+
+        ResponseData<ShareVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+
+        // 参数错误
+        if (Objects.isNull(userId) || Objects.isNull(orderId))
+            return responseData
+                    .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
+                    .setState(MessageEnum.PARAMETER_ERROR.getState());
+
+        // 订单详情不存在
+        BargainDetail detail = bargainDetailService.getOneById(orderId);
+        if (Objects.isNull(detail))
+            return responseData
+                    .setMessage(MessageEnum.SHARE_NOT_FOUND.getMessage())
+                    .setState(MessageEnum.SHARE_NOT_FOUND.getState());
+
+        ShareVo shareVo = new ShareVo()
+                .setUserId(userId)
+                .setOrderId(orderId)
+                .setSymbol(detail.getSymbol());
+
+        return responseData.setData(shareVo);
     }
 
     /**

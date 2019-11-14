@@ -555,7 +555,7 @@ public class UserServiceImpl implements UserService {
                 default:
                     break;
             }
-            userActivityLog.setAddTime(new Date());
+            userActivityLog.setAddTime(user.getRegTime());
             if (userActivityLogDAO.insert(userActivityLog) <= 0) return null;
             userActivityLogs.add(userActivityLog);
         }

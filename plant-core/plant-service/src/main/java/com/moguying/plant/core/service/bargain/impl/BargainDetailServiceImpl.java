@@ -25,7 +25,6 @@ import com.moguying.plant.core.entity.bargain.vo.ShareVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallOrderDetail;
 import com.moguying.plant.core.entity.mall.MallProduct;
-import com.moguying.plant.core.entity.mall.vo.BuyProduct;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
@@ -88,14 +87,14 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("write")
     @Transactional
-    public ResultData<ShareVo> shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
+    public ResultData<ShareVo> shareSuccess(Integer userId, MallProduct product) {
 
         ResultData<ShareVo> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
-        if (buyProduct == null || product == null) return resultData;
+        if (Objects.isNull(product)) return resultData;
 
         // 重复分享
-        List<BargainDetail> details = bargainDetailDao.getOneByOpen(userId, buyProduct.getProductId(), false);
+        List<BargainDetail> details = bargainDetailDao.getOneByOpen(userId, product.getId(), false);
         if (details != null && !details.isEmpty()) {
             // 删除多余的订单
             if (details.size() >= 2) {
@@ -106,9 +105,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             // 只获取第一单
             BargainDetail detail = details.get(0);
             ShareVo shareVo = new ShareVo()
-                    .setOrderId(detail.getId())
-                    .setUserId(detail.getUserId())
-                    .setSymbol(detail.getSymbol());
+                    .setOrderId(detail.getId());
             return resultData.setMessageEnum(MessageEnum.BARGAIN_AGAIN).setData(shareVo);
         }
 
@@ -122,21 +119,19 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
         // 首次分享，生成砍价详情
         BargainDetail add = new BargainDetail();
-        synchronized ("") {
-            add.setUserId(userId);
-            add.setProductId(product.getId());
-            add.setProductCount(product.getBargainNumber());
-            add.setTotalAmount(totalAmount);
-            add.setBargainAmount(bargainAmount);
-            add.setLeftAmount(totalAmount.subtract(bargainAmount));
-            add.setTotalCount(product.getBargainCount());
-            add.setBargainCount(1);
-            add.setSymbol(RandomStringUtils.random(12, true, true));
-            add.setAddTime(new Date());
-            add.setBargainTime(new Date());
-            add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
-            if (bargainDetailDao.insert(add) <= 0) return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_ORDER_FAIL);
-        }
+        add.setUserId(userId);
+        add.setProductId(product.getId());
+        add.setProductCount(product.getBargainNumber());
+        add.setTotalAmount(totalAmount);
+        add.setBargainAmount(bargainAmount);
+        add.setLeftAmount(totalAmount.subtract(bargainAmount));
+        add.setTotalCount(product.getBargainCount());
+        add.setBargainCount(1);
+        add.setSymbol(RandomStringUtils.random(12, true, true));
+        add.setAddTime(new Date());
+        add.setBargainTime(new Date());
+        add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
+        if (bargainDetailDao.insert(add) <= 0) return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_ORDER_FAIL);
 
         // 日志
         BargainLog log = new BargainLog();
@@ -148,9 +143,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         log.setHelpTime(new Date());
         if (bargainLogDao.insert(log) > 0) {
             ShareVo shareVo = new ShareVo()
-                    .setOrderId(add.getId())
-                    .setUserId(add.getUserId())
-                    .setSymbol(add.getSymbol());
+                    .setOrderId(add.getId());
             return resultData.setMessageEnum(MessageEnum.BARGAIN_FIRST).setData(shareVo);
         }
         return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_LOG_FAIL);
@@ -431,4 +424,5 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
         return new PageResult<>(iPage.getTotal(), records);
     }
+
 }

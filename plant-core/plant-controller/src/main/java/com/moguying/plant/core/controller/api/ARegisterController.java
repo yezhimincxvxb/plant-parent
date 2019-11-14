@@ -6,15 +6,14 @@ import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
-import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.system.PhoneMessage;
+import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserInvite;
 import com.moguying.plant.core.entity.user.vo.ForgetPassword;
 import com.moguying.plant.core.entity.user.vo.Login;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
 import com.moguying.plant.core.entity.user.vo.Register;
-import com.moguying.plant.core.service.seed.SeedOrderService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserInviteService;
 import com.moguying.plant.core.service.user.UserService;
@@ -47,10 +46,6 @@ public class ARegisterController {
 
     @Autowired
     private UserInviteService userInviteService;
-
-    @Autowired
-    private SeedOrderService seedOrderService;
-
 
 
     /**
