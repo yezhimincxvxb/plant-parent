@@ -266,7 +266,10 @@ public class ASeedController {
     @ApiOperation("兑换实物")
     public ResponseData<Integer> exchangeReap(@LoginUserId Integer userId,@RequestBody ExcReap excReap) {
         ResultData<Integer> resultData = plantOrderService.plantReapExchange(userId,excReap);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
+        ResponseData<Integer> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) responseData.setData(resultData.getData());
+        return responseData;
+
     }
 
 

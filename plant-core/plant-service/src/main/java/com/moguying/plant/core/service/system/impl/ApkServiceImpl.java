@@ -24,7 +24,7 @@ public class ApkServiceImpl implements ApkService {
     @Override
     @DS("read")
     public PageResult<Apk> apkList(Integer page, Integer size , Apk where) {
-        IPage<Apk> pageResult = apkDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
+        IPage<Apk> pageResult = apkDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where).orderByDesc("id"));
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 

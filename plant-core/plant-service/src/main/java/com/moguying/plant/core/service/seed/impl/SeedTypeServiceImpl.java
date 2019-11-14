@@ -44,6 +44,10 @@ public class SeedTypeServiceImpl implements SeedTypeService {
             seedType.getContent().setContractContent(appendStr.concat(seedType.getContent().getContractContent()));
         if(null != seedType.getContent().getSeedIntroduce())
             seedType.getContent().setSeedIntroduce(appendStr.concat(seedType.getContent().getSeedIntroduce()));
+
+        if(seedType.getExMallDefault())
+            setExMallDefault(seedType.getId());
+
         if(null == seedType.getId()) {
             if (seedTypeDAO.insert(seedType) > 0) {
                 if (null != seedType.getContent()) {
@@ -61,7 +65,16 @@ public class SeedTypeServiceImpl implements SeedTypeService {
                 return resultData.setMessageEnum(MessageEnum.SUCCESS);
             }
         }
+
         return resultData;
+    }
+
+    private void setExMallDefault(Integer id) {
+        SeedType update = new SeedType();
+        update.setExMallDefault(false);
+        seedTypeDAO.update(update,new QueryWrapper<>());
+        update.setExMallDefault(true);
+        seedTypeDAO.update(update,new QueryWrapper<SeedType>().lambda().eq(SeedType::getId,id));
     }
 
 

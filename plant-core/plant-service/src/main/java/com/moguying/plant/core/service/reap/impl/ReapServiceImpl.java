@@ -109,7 +109,7 @@ public class ReapServiceImpl<T> implements ReapService {
     public Integer updateReapState(List<Integer> idList, Reap where) {
         //发送短信
         if (reapDAO.updateStateByRange(idList, where) > 0) {
-            List<Reap> reaps = reapDAO.selectReapInRange(idList, null);
+            List<Reap> reaps = reapDAO.selectReapInRange(idList, new Reap());
             reaps.forEach(reap -> {
                 BigDecimal availableProfit = reap.getPreAmount().add(reap.getPreProfit());
                 reapWeighDAO.incField(new ReapWeigh(reap.getUserId()).setAvailableProfit(availableProfit));
@@ -232,6 +232,7 @@ public class ReapServiceImpl<T> implements ReapService {
         totalAmount = totalAmount.add(reap.getPreAmount()).add(reap.getPreProfit());
         //更新已领取收益
         reapWeighDAO.incField(new ReapWeigh(userId).setHasProfit(totalAmount));
+        reapWeighDAO.decField(new ReapWeigh(userId).setAvailableProfit(totalAmount));
         SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());
         message.setSeedTypeName(seedType.getClassName());
         message.setAmount(totalAmount.toString());

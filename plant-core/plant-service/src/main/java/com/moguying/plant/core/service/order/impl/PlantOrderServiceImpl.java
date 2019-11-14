@@ -185,6 +185,10 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         if (null == seed || !seed.getState().equals(SeedEnum.REVIEWED.getState()) || !seed.getIsShow())
             return result.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
 
+        if(!isTaste && seed.getTypeInfo().getIsForNew())
+            return result.setMessageEnum(MessageEnum.SEED_ONLY_FOR_NEWER);
+
+
         // 是否在售买时间
         if (seed.getOpenTime().getTime() > System.currentTimeMillis() || seed.getCloseTime().getTime() < System.currentTimeMillis())
             return result.setMessageEnum(MessageEnum.SEED_NOT_IN_TIME);
@@ -197,7 +201,9 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         order.setCount(Math.min(seed.getLeftCount(), order.getCount()));
 
         // 购买总价
-        BigDecimal buyAmount = InterestUtil.INSTANCE.calAmount(order.getCount(), seed.getPerPrice());
+        BigDecimal buyAmount = BigDecimal.ZERO;
+        if(!isTaste)
+            buyAmount = InterestUtil.INSTANCE.calAmount(order.getCount(), seed.getPerPrice());
 
         // 减少库存
         if (seedDAO.decrSeedLeftCount(order.getCount(), order.getSeedId()) <= 0)
@@ -389,23 +395,24 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         reap.setUserId(userId);
         reap.setBlockId(plantOrder.getBlockId());
         reap.setPlantCount(plantOrder.getPlantCount());
-        reap.setPreAmount(InterestUtil.INSTANCE.calAmount(plantOrder.getPlantCount(), seedType.getPerPrice()));
-        reap.setPreProfit(InterestUtil.INSTANCE.calInterest(reap.getPreAmount(), seedType.getInterestRates(), seedType.getGrowDays()));
+        if(!isTaste) {
+            reap.setPreAmount(InterestUtil.INSTANCE.calAmount(plantOrder.getPlantCount(), seedType.getPerPrice()));
+            reap.setPreProfit(InterestUtil.INSTANCE.calInterest(reap.getPreAmount(), seedType.getInterestRates(), seedType.getGrowDays()));
+        }
         reap.setPlantTime(plantTime);
         reap.setPreReapTime(endTime);
         reap.setAddTime(new Date());
-        reap.setPlantWeigh(seedType.getPerWeigh().multiply(new BigDecimal(plantOrder.getPlantCount())));
         reap.setReapTimes(1);
         BigDecimal plantWeigh = seedType.getPerWeigh().multiply(new BigDecimal(plantOrder.getPlantCount()));
         reap.setPlantWeigh(plantWeigh);
         if (reapDAO.insert(reap) <= 0)
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_INFO_CREATE_FAIL);
 
-        //更新产量
-        reapWeighDAO.incField(new ReapWeigh(userId).setTotalWeigh(plantWeigh).setAvailableWeigh(plantWeigh));
 
         //非体验时使用
         if(!isTaste) {
+            //更新产量
+            reapWeighDAO.incField(new ReapWeigh(userId).setTotalWeigh(plantWeigh));
             // 更新预期本金
             UserMoneyOperator operator = new UserMoneyOperator();
             operator.setOperationId(reap.getOrderNumber());
@@ -512,6 +519,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             return resultData.setMessageEnum(MessageEnum.USER_ADDRESS_NO_EXISTS);
         SeedType seedType = null;
         BigDecimal excWeigh = BigDecimal.ZERO;
+        BigDecimal excProfit = BigDecimal.ZERO;
         if(null != excReap.getReapId()) {
             Reap reap = reapDAO.selectById(excReap.getReapId());
             Optional<Reap> reapOptional = Optional.ofNullable(reap);
@@ -525,9 +533,15 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             //添加商城订单
             seedType = seedTypeDAO.selectById(reap.getSeedType());
             excWeigh = reap.getPlantWeigh();
+            excProfit = reap.getPreAmount().add(reap.getPreProfit());
         } else if( null != excReap.getExcWeigh()){
             seedType = seedTypeDAO.selectOne(new QueryWrapper<SeedType>().lambda().eq(SeedType::getExMallDefault,true));
-            excWeigh = excReap.getExcWeigh();
+            ReapWeigh reapWeigh = reapWeighDAO.selectOne(new QueryWrapper<ReapWeigh>().lambda().eq(ReapWeigh::getUserId, userId));
+            if(reapWeigh.getAvailableWeigh().compareTo(exWeigh) < 0)
+                return resultData.setMessageEnum(MessageEnum.REAP_EXCHANGE_WEIGH_ERROR);
+            excWeigh = reapWeigh.getAvailableWeigh();
+            if(excWeigh.compareTo(excReap.getExcWeigh()) != 0)
+                return resultData;
         }
 
         Optional<SeedType> seedTypeOptional = Optional.ofNullable(seedType);
@@ -539,6 +553,9 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
 
         BigDecimal[] bigDecimals = excWeigh.divideAndRemainder(seedType.getExMallWeigh());
+        if(bigDecimals[0].intValue() <= 0)
+            return resultData.setMessageEnum(MessageEnum.REAP_WEIGH_NOT_ENOUGH);
+
         BuyProduct buyProduct = new BuyProduct();
         buyProduct.setProductId(mallProduct.getId());
         buyProduct.setBuyCount(bigDecimals[0].intValue());
@@ -557,17 +574,20 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             if(null != excReap.getReapId()) {
                 log.setReapId(excReap.getReapId());
                 reapWeighDAO.incField(new ReapWeigh(userId).setAvailableWeigh(bigDecimals[1]));
+                reapWeighDAO.decField(new ReapWeigh(userId).setAvailableProfit(excProfit));
             } else {
                 reapWeighDAO.decField(new ReapWeigh(userId).setAvailableWeigh(excWeigh.subtract(bigDecimals[1])));
             }
+            reapWeighDAO.incField(new ReapWeigh(userId).setHasExWeigh(excWeigh.subtract(bigDecimals[1])));
+
             log.setUserId(userId);
             log.setProductId(mallProduct.getId());
             log.setExcCount(bigDecimals[0].intValue());
-            log.setExcWeigh(excWeigh);
+            log.setExcWeigh(excWeigh.subtract(bigDecimals[1]));
             log.setAddTime(new Date());
             reapExcLogDAO.insert(log);
 
-            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(bigDecimals[0].intValue());
         }
         return resultData;
     }

@@ -33,14 +33,13 @@ public class BSeedTypeController {
      * 种子分类列表
      * @return
      */
-    @GetMapping(value = "/tree")
+    @PostMapping(value = "/tree")
     @ApiOperation("种子分类列表")
-    public PageResult<SeedType> seedTypeList(@RequestParam(value = "page",defaultValue = "1") Integer page,
-                                             @RequestParam(value = "size",defaultValue = "10") Integer size){
+    public PageResult<SeedType> seedTypeList(@RequestBody PageSearch<SeedType> search){
         SeedType where = new SeedType();
         //未删除的
         where.setIsDelete(false);
-        return seedTypeService.seedTypeList(page,size,where);
+        return seedTypeService.seedTypeList(search.getPage(),search.getSize(),where);
     }
 
 

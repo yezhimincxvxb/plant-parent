@@ -168,7 +168,8 @@ public enum  MessageEnum {
     SYMBOL_ERROR("砍价口令",10161),
     RETURN_FERTILIZER_ERROR("返券失败",10162),
     FERTILIZER_NOT("未满足满减券使用条件",10163),
-    YI_TI_YAN("已体验，无须重复体验",10164);
+    YI_TI_YAN("已体验，无须重复体验",10164),
+    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10165);
 
 
 

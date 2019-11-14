@@ -45,6 +45,11 @@ logging:
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS
 
+server:
+  servlet:
+    session:
+      timeout: 1h
+
 #短信相关
 message:
   send:
@@ -141,9 +146,8 @@ reap:
     weigh: 1800
 
 
-
 ---
-debug: true
+debug: false
 server:
   port: 9000
 spring:
@@ -177,7 +181,13 @@ spring:
         min-idle: 20
         max-idle: 120
         max-wait: 2000
-
+  data:
+    mongodb:
+      database: activity
+      host: 192.168.5.220
+      port: 27017
+      username: activityAdmin
+      password: Is&1+KVb[0
 #上传host
 upload:
   save-path: /pages/upload
@@ -225,6 +235,8 @@ spring:
       database: activity
       host: 192.168.5.220
       port: 27017
+      username: activityAdmin
+      password: Is&1+KVb[0
 #上传host
 upload:
   save-path: /pages/upload
@@ -240,15 +252,15 @@ swagger:
   base-package: com.moguying.plant
   docket:
     frontApi:
-      title: frontApi
-      description: 对外接口
+      title: 应用接口
+      description: 应用接口
       base-path: /api/**
     backEndApi:
-      title: backEndApi
+      title: 后台管理接口
       description: 后台管理接口
       base-path: /backEnd/**
     paymentApi:
-      title: paymentAPi
+      title: 支付相关接口
       description: 支付相关接口
       base-path: /payment/**
   global-operation-parameters[0]:

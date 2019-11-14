@@ -50,7 +50,7 @@
         AND t1.seed_type = #{wq.seedType}
       </if>
     </where>
-    order by (t1.buy_count-t1.plant_count) desc
+    order by (t1.buy_count-t1.plant_count),t1.buy_amonut desc
   </select>
 
   <update id="incrSeedOrder" parameterType="com.moguying.plant.core.entity.seed.SeedOrder">

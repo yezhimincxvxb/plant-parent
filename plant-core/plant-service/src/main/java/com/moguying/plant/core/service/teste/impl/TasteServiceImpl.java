@@ -117,6 +117,9 @@ public class TasteServiceImpl implements TasteService {
     public ResultData<BuyOrderResponse> buy(BuyOrder buyOrder,Integer userId) {
         ResultData<BuyOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
 
+        if(!isNew(userId))
+            return resultData.setMessageEnum(MessageEnum.SEED_ONLY_FOR_NEWER);
+
         // 体验购买只有一次机会
         QueryWrapper<SeedOrderDetail> wrapper = new QueryWrapper<SeedOrderDetail>()
                 .and(i -> i.eq("user_id", userId).likeRight("order_number", OrderPrefixEnum.TI_YAN_BUY.getPreFix()));
@@ -182,7 +185,7 @@ public class TasteServiceImpl implements TasteService {
 
         Reap update = new Reap();
         update.setId(reap.getId());
-        update.setState(ReapEnum.REAP_DONE.getState());
+        update.setState(ReapEnum.SALE_DONE.getState());
         if(reapDAO.updateById(update) > 0) {
             TasteReap tasteReap = new TasteReap();
             tasteReap.setSeedTypeName(seedType.getClassName());
@@ -311,6 +314,7 @@ public class TasteServiceImpl implements TasteService {
         apply.setPhone(userOptional.map(User::getPhone).orElse(""));
         apply.setProductName(product.getName());
         apply.setApplyTime(new Date());
+        apply.setProductPrice(product.getPrice());
         mongoTemplate.save(apply);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }

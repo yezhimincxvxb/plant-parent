@@ -2,12 +2,14 @@ package com.moguying.plant.core.entity.taste;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.core.entity.user.UserAddress;
+import com.moguying.plant.utils.BigDecimalSerialize;
 import com.moguying.plant.utils.IdCardSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -54,6 +56,10 @@ public class TasteApply {
      * 试吃商品名
      */
     private String productName;
+
+
+    @JSONField(serializeUsing = BigDecimalSerialize.class)
+    private BigDecimal productPrice;
 
 
 }

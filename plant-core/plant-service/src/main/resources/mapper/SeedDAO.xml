@@ -167,7 +167,6 @@
         AND t3.is_for_new = #{wq.isForNew}
       </if>
     </where>
-
     order by t1.order_number desc
   </select>
   

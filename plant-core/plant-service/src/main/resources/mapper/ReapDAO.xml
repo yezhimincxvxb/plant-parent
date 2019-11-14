@@ -150,7 +150,7 @@
                 AND t3.group_id = #{wq.groupId}
             </if>
         </where>
-
+        order by t1.state
     </select>
 
 

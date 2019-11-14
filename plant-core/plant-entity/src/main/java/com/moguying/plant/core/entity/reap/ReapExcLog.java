@@ -1,7 +1,9 @@
 package com.moguying.plant.core.entity.reap;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
@@ -14,7 +16,7 @@ import java.util.Date;
 public class ReapExcLog {
 
     @JSONField(ordinal = 1)
-    @TableField
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     @JSONField(ordinal = 2)

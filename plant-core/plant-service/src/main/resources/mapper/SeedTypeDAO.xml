@@ -20,6 +20,8 @@
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
         <result column="exchange_num" jdbcType="INTEGER" property="exchangeNum"/>
+        <result column="ex_mall_weigh" jdbcType="INTEGER" property="exMallWeigh"/>
+        <result column="ex_mall_default" jdbcType="INTEGER" property="exMallDefault"/>
     </resultMap>
 
 
@@ -56,8 +58,8 @@
         select
         t1.id, class_name, grow_days, per_price, interest_rates, order_number, is_delete, plant_type,
         reap_type,t1.pic_url,t1.thumb_pic_url,exchange_num,group_id,group_name,is_for_new,ex_mall_product,t3.name as
-        ex_mall_product_name, t1.per_weigh `perWeigh`, t2.id `groupId`, t2.group_name `groupName`, t1.is_for_new `isForNew`,
-        t3.id `exMallProduct`, t3.name `exMallProductName`
+        ex_mall_product_name, t1.per_weigh , t2.id `group_id`, t2.group_name , t1.is_for_new,
+        t3.id `ex_mall_product`, t3.name `ex_mall_product_name`,t1.ex_mall_weigh
         from plant_seed_type t1
         left join plant_seed_group t2 on t1.group_id = t2.id
         left join plant_mall_product t3 on t1.ex_mall_product = t3.id
