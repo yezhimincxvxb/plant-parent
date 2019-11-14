@@ -457,7 +457,6 @@ CREATE TABLE `plant_user_activity_log` (
   `product_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
   `seed_type_id` int(11) NOT NULL DEFAULT '0' COMMENT '菌包id',
   `fertilizer_id` int(11) NOT NULL DEFAULT '0' COMMENT '券id',
-  `state` tinyint(2) NOT NULL DEFAULT '0' COMMENT '发奖状态[0-已发奖，1-未发奖]',
   `add_time` datetime DEFAULT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -469,3 +468,12 @@ ADD COLUMN `ex_mall_weigh` varchar(255) NULL AFTER `ex_mall_product`;
 ALTER TABLE `moguying`.`plant_seed_type`
 MODIFY COLUMN `ex_mall_weigh` decimal(15, 2) NULL DEFAULT NULL COMMENT '每份商品兑换重量' AFTER `ex_mall_product`,
 ADD COLUMN `ex_mall_default` tinyint(1) NULL COMMENT '默认兑换记录' AFTER `ex_mall_weigh`;
+
+/** 用户唯一标识 **/
+CREATE TABLE `plant_user_symbol` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `symbol` varchar(255) NOT NULL DEFAULT '' COMMENT '唯一标识',
+  `add_time` datetime DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

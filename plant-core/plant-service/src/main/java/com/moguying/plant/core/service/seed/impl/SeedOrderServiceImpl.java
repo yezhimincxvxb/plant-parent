@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.constant.ActivityEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
@@ -67,6 +68,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
 
     @Override
     @DS("write")
+    @Transactional
     public synchronized Integer incrSeedOrder(SeedOrderDetail seedOrderDetail) {
 
         // 查找菌包
@@ -120,10 +122,16 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Override
     @DS("write")
     @Transactional
-    public Boolean sendSeedSuccess(Integer userId) {
+    public void sendSeedSuccess(Integer userId) {
+
+        // 奖励只发送一次
+        QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
+                .and(i -> i.eq("user_id", userId).likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix()));
+        List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
+        if (Objects.nonNull(logs) && logs.size() > 0) return;
 
         SeedType seedType = getSeedType(userId);
-        if (Objects.isNull(seedType)) return false;
+        if (Objects.isNull(seedType)) return;
 
         // 添加活动奖励记录
         UserActivityLog log = new UserActivityLog()
@@ -131,13 +139,15 @@ public class SeedOrderServiceImpl implements SeedOrderService {
                 .setUserId(userId)
                 .setSeedTypeId(seedType.getId())
                 .setAddTime(new Date());
-        return userActivityLogDAO.insert(log) > 0;
+         userActivityLogDAO.insert(log);
     }
 
     @Override
+    @DS("write")
+    @Transactional
     public SeedType getSeedType(Integer userId) {
         // 获取价值12.50元的30天菌包
-        SeedType seedType = seedTypeDAO.selectById(12);
+        SeedType seedType = seedTypeDAO.selectById(ActivityEnum.FREE_SEED_30DAY.getState());
         if (Objects.isNull(seedType)) return null;
 
         // 发送菌包

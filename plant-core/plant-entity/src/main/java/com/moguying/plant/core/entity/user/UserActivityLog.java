@@ -77,23 +77,16 @@ public class UserActivityLog implements Serializable {
     private Integer fertilizerId;
 
     /**
-     * 发奖状态
-     */
-    @JSONField(ordinal = 9)
-    @TableField
-    private Boolean state;
-
-    /**
      * 添加时间
      */
-    @JSONField(ordinal = 10, format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 
     /**
      * 手机号
      */
-    @JSONField(ordinal = 11, serializeUsing = IdCardSerialize.class)
+    @JSONField(ordinal = 10, serializeUsing = IdCardSerialize.class)
     @TableField(exist = false)
     private String phone;
 }

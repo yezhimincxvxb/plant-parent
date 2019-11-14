@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.farmer.FarmerLogDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerLog">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="incr_grow_up_count" jdbcType="INTEGER" property="incrGrowUpCount" />
-    <result column="grow_up_count" jdbcType="INTEGER" property="growUpCount" />
-    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
-    <result column="incr_way" jdbcType="VARCHAR" property="incrWay" />
-  </resultMap>
-  <sql id="Base_Column_List">
+
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerLog">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="incr_grow_up_count" jdbcType="INTEGER" property="incrGrowUpCount"/>
+        <result column="grow_up_count" jdbcType="INTEGER" property="growUpCount"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="incr_way" jdbcType="VARCHAR" property="incrWay"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     id, user_id, incr_grow_up_count, grow_up_count, add_time, incr_way
   </sql>
+
+    <select id="farmerLogList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_farmer_log
+        <where>
+            date(add_time) = curdate()
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="incrWay != null">
+                and incr_way = #{incrWay}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -7,6 +7,7 @@ import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
@@ -83,13 +84,12 @@ public class ABargainLoginController {
                     .setState(MessageEnum.MAX_LIMIT.getState());
 
         // 首次分享
-        ShareVo result = bargainDetailService.shareSuccess(userId, buyProduct, product);
-        if (result != null)
-            return responseData.setData(result);
+        ResultData<ShareVo> resultData = bargainDetailService.shareSuccess(userId, buyProduct, product);
+        if (Objects.nonNull(resultData.getData())) responseData.setData(resultData.getData());
 
         return responseData
-                .setMessage(MessageEnum.ERROR.getMessage())
-                .setState(MessageEnum.ERROR.getState());
+                .setMessage(resultData.getMessageEnum().getMessage())
+                .setState(resultData.getMessageEnum().getState());
     }
 
     /**
@@ -154,8 +154,8 @@ public class ABargainLoginController {
         // 砍价口令
         if (!Objects.equals(bargainDetail.getSymbol(), detail.getSymbol()))
             return responseData
-                    .setMessage(MessageEnum.SYMBOL_ERROR.getMessage())
-                    .setState(MessageEnum.SYMBOL_ERROR.getState());
+                    .setMessage(MessageEnum.BARGAIN_SYMBOL_ERROR.getMessage())
+                    .setState(MessageEnum.BARGAIN_SYMBOL_ERROR.getState());
 
         // 帮砍
         detail.setMessage(bargainDetail.getMessage());

@@ -20,6 +20,12 @@ public enum DateUtil {
         return DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss").concat(RandomStringUtils.randomNumeric(6));
     }
 
+    /**
+     * 格式化时分秒
+     */
+    public String numberWithDate() {
+        return DateFormatUtils.format(new Date(), "HHmmsss");
+    }
 
     public String formatDateForPayment(Date now, String format) {
         return DateFormatUtils.format(now, format);
@@ -161,11 +167,25 @@ public enum DateUtil {
         return getString(hour) + ":" + getString(minute) + ":" + getString(second);
     }
 
+    /**
+     * 时分秒小于9前面补零
+     */
     public String getString(long val) {
         return val > 9 ? "" + val : "0" + val;
     }
 
-
+    /**
+     * 时间字符串转化成Date类型
+     */
+    public Date stringToDate(String string) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            return dateFormat.parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
         System.out.println(DateUtil.INSTANCE.todayEnd(DateUtil.INSTANCE.lastDayOfNextMonth()));

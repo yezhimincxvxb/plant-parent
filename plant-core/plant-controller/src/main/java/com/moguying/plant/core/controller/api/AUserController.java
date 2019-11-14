@@ -2,7 +2,6 @@ package com.moguying.plant.core.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -10,7 +9,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.LoginUserId;
-import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -28,6 +26,7 @@ import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.*;
+import com.moguying.plant.core.service.farmer.FarmerService;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.ReapWeighService;
@@ -60,8 +59,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
 
@@ -108,7 +105,7 @@ public class AUserController {
     private StringRedisTemplate redisUtil;
 
     @Autowired
-    private UserActivityLogDAO userActivityLogDAO;
+    private FarmerService farmerService;
 
 
     @Value("${user.invite.bg.image}")
@@ -679,29 +676,29 @@ public class AUserController {
     public PageResult<Reap> productList(@LoginUserId Integer userId, @RequestBody PageSearch<Reap> search) {
         Reap where = new Reap();
         where.setUserId(userId);
-        where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(),ReapEnum.SALE_DONE.getState(),ReapEnum.EXCHANGE_DONE.getState()));
-        if(search.getWhere() != null && null != search.getWhere().getGroupId())
+        where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(), ReapEnum.SALE_DONE.getState(), ReapEnum.EXCHANGE_DONE.getState()));
+        if (search.getWhere() != null && null != search.getWhere().getGroupId())
             where.setGroupId(search.getWhere().getGroupId());
 
-        return reapService.userReapList(search.getPage(), search.getSize(),where);
+        return reapService.userReapList(search.getPage(), search.getSize(), where);
     }
 
 
     /**
      * 用户个人种植产量信息
+     *
      * @param userId
      * @return
      */
     @GetMapping("/product/weigh")
     @ApiOperation("用户个人种植产量信息")
-    public ResponseData<ReapWeigh> userReapWeigh(@LoginUserId Integer userId){
+    public ResponseData<ReapWeigh> userReapWeigh(@LoginUserId Integer userId) {
         ResultData<ReapWeigh> resultData = reapWeighService.userReapWeighInfo(userId);
-        ResponseData<ReapWeigh> responseData =  new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+        ResponseData<ReapWeigh> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
             responseData.setData(resultData.getData());
-        return  responseData;
+        return responseData;
     }
-
 
 
     /**
@@ -1055,46 +1052,21 @@ public class AUserController {
     }
 
     /**
-     * 品宣活动-点击免费领取30天菌包
-     */
-    @GetMapping("/free/seed")
-    @ApiOperation("品宣活动-点击免费领取30天菌包")
-    public ResponseData<String> freeSeed(@LoginUserId Integer userId) {
-
-        ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
-
-        // 奖励只发送一次
-        QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
-                .and(i -> i.eq("user_id", userId).likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix()));
-        List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
-        if (Objects.nonNull(logs) && logs.size() > 0)
-            return responseData.setData("已领取");
-
-        Boolean sendSeedSuccess = seedOrderService.sendSeedSuccess(userId);
-        if (sendSeedSuccess)
-            return responseData.setMessage(MessageEnum.SUCCESS.getMessage()).setState(MessageEnum.SUCCESS.getState()).setData("首次领取成功");
-
-        return responseData;
-    }
-
-    /**
      * 好友分享，获取邀请码
      */
     @GetMapping("/friend/sharing")
     @ApiOperation("好友分享，获取邀请码")
     public ResponseData<User> friendSharing(@LoginUserId Integer userId) {
 
-        ResponseData<User> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        ResponseData<User> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
         User user = userService.userInfoById(userId);
         if (Objects.isNull(user)) return responseData;
 
-        User user1 = new User();
-        user1.setInviteCode(user.getInviteCode());
         return responseData
                 .setMessage(MessageEnum.SUCCESS.getMessage())
                 .setState(MessageEnum.SUCCESS.getState())
-                .setData(user1);
+                .setData(new User().setInviteCode(user.getInviteCode()));
     }
 
     /**
@@ -1102,25 +1074,56 @@ public class AUserController {
      */
     @GetMapping("/invite/log")
     @ApiOperation("邀请成功记录")
-    public ResponseData<List<UserActivityLog>> inviteLog(@LoginUserId Integer userId) throws ParseException {
+    public ResponseData<List<UserActivityLog>> inviteLog(@LoginUserId Integer userId) {
 
-        ResponseData<List<UserActivityLog>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        ResponseData<List<UserActivityLog>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
         User user = userService.userInfoById(userId);
         if (Objects.isNull(user)) return responseData;
 
-        // 活动开启时间
-        String dateStr = "2019-11-01 00:00:00";
-        Date startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
-
         // 发奖
-        List<UserActivityLog> logs = userService.inviteUser(startDate, userId);
+        List<UserActivityLog> logs = userService.inviteUser(userId);
         if (Objects.isNull(logs)) return responseData;
 
         return responseData
                 .setMessage(MessageEnum.SUCCESS.getMessage())
                 .setState(MessageEnum.SUCCESS.getState())
                 .setData(logs);
+    }
+
+    /**
+     * 每日分享，获取成长值
+     */
+    @GetMapping("/grow/up/sharing")
+    @ApiOperation("每日分享，获取成长值")
+    public ResponseData<Integer> growUpSharing(@LoginUserId Integer userId) {
+        ResultData<Integer> resultData = farmerService.getShareReward(userId);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+    }
+
+    /**
+     * 助力分享
+     */
+    @GetMapping("/help/share")
+    @ApiOperation("助力分享")
+    public ResponseData<UserSymbol> helpShare(@LoginUserId Integer userId) {
+        ResultData<UserSymbol> resultData = farmerService.addFriendLog(userId);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
+    }
+
+    /**
+     * 好友助力
+     */
+    @GetMapping("/friend/help/{symbol}")
+    @ApiOperation("好友助力")
+    public ResponseData<Integer> friendHelp(@LoginUserId Integer userId, @PathVariable("symbol") String symbol) {
+
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        if (Objects.isNull(userId) || Objects.isNull(symbol))
+            return responseData;
+
+        ResultData<Integer> resultData = farmerService.friendHelpSuccess(userId, symbol);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 }

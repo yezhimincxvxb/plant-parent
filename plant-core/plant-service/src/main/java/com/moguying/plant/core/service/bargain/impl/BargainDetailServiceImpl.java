@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.bargain.BargainDetailDao;
 import com.moguying.plant.core.dao.bargain.BargainLogDao;
@@ -13,6 +14,7 @@ import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.BargainRate;
@@ -86,9 +88,11 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("write")
     @Transactional
-    public ShareVo shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
+    public ResultData<ShareVo> shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product) {
 
-        if (buyProduct == null || product == null) return null;
+        ResultData<ShareVo> resultData = new ResultData<>(MessageEnum.ERROR, null);
+
+        if (buyProduct == null || product == null) return resultData;
 
         // 重复分享
         List<BargainDetail> details = bargainDetailDao.getOneByOpen(userId, buyProduct.getProductId(), false);
@@ -101,16 +105,16 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             }
             // 只获取第一单
             BargainDetail detail = details.get(0);
-            detail.setMessage("分享成功");
-            return new ShareVo()
+            ShareVo shareVo = new ShareVo()
                     .setOrderId(detail.getId())
                     .setUserId(detail.getUserId())
-                    .setSymbol(detail.getSymbol())
-                    .setMessage("分享成功");
+                    .setSymbol(detail.getSymbol());
+            return resultData.setMessageEnum(MessageEnum.BARGAIN_AGAIN).setData(shareVo);
         }
 
+        // 未设置砍价系数
         BargainRate bargainRate = bargainRateDao.selectById(product.getId());
-        if (Objects.isNull(bargainRate)) return null;
+        if (Objects.isNull(bargainRate)) return resultData.setMessageEnum(MessageEnum.NOT_BARGAIN_RATE);
 
         // 总价、第一刀砍了多少
         BigDecimal totalAmount = product.getPrice().multiply(new BigDecimal(product.getBargainNumber()));
@@ -130,7 +134,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         add.setAddTime(new Date());
         add.setBargainTime(new Date());
         add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
-        if (bargainDetailDao.insert(add) <= 0) return null;
+        if (bargainDetailDao.insert(add) <= 0) return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_ORDER_FAIL);
 
         // 日志
         BargainLog log = new BargainLog();
@@ -141,13 +145,13 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         log.setHelpAmount(bargainAmount);
         log.setHelpTime(new Date());
         if (bargainLogDao.insert(log) > 0) {
-            return new ShareVo()
+            ShareVo shareVo = new ShareVo()
                     .setOrderId(add.getId())
                     .setUserId(add.getUserId())
-                    .setSymbol(add.getSymbol())
-                    .setMessage("首次分享");
+                    .setSymbol(add.getSymbol());
+            return resultData.setMessageEnum(MessageEnum.BARGAIN_FIRST).setData(shareVo);
         }
-        return null;
+        return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_LOG_FAIL);
     }
 
     @Override
@@ -376,6 +380,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     /**
      * 批量关单
      */
+    @DS("write")
     @Transactional
     public Boolean closeOrders(MallProduct product) {
         // 砍价进行中的订单关单
@@ -399,17 +404,25 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("read")
     public PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size) {
+        // 订单详情
         IPage<BackBargainDetailVo> iPage = bargainDetailDao.bargainList(new Page<>(page, size));
         List<BackBargainDetailVo> records = iPage.getRecords();
 
         List<Integer> idList = records.stream().map(BackBargainDetailVo::getOrderId).collect(Collectors.toList());
         if (!idList.isEmpty()) {
+            // 参与人详情
             List<BargainVo> users = bargainLogDao.getAllUserInfo(idList);
             records.forEach(record -> {
+                // 参与人与订单匹配
                 List<BargainVo> vos = Collections.synchronizedList(new ArrayList<>());
-                users.stream()
-                        .filter(user -> record.getOrderId().equals(user.getOrderId()))
-                        .forEach(vos::add);
+                Iterator<BargainVo> iterator = users.iterator();
+                while (iterator.hasNext()) {
+                    BargainVo bargainVo = iterator.next();
+                    if (bargainVo.getOrderId().equals(record.getOrderId())) {
+                        vos.add(bargainVo);
+                        iterator.remove();
+                    }
+                }
                 record.setUsers(vos);
             });
         }

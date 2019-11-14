@@ -2,6 +2,7 @@ package com.moguying.plant.core.service.bargain;
 
 
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.BargainLog;
 import com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo;
@@ -19,7 +20,7 @@ public interface BargainDetailService {
 
     BargainDetail getOneByClose(Integer userId, Integer productId, Boolean state);
 
-    ShareVo shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product);
+    ResultData<ShareVo> shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product);
 
     BargainDetail getOneById(Integer id);
 
