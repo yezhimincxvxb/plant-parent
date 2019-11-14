@@ -14,6 +14,7 @@ import com.moguying.plant.core.entity.user.vo.ForgetPassword;
 import com.moguying.plant.core.entity.user.vo.Login;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
 import com.moguying.plant.core.entity.user.vo.Register;
+import com.moguying.plant.core.service.seed.SeedOrderService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.user.UserInviteService;
 import com.moguying.plant.core.service.user.UserService;
@@ -47,7 +48,8 @@ public class ARegisterController {
     @Autowired
     private UserInviteService userInviteService;
 
-
+    @Autowired
+    private SeedOrderService seedOrderService;
 
 
 
@@ -128,15 +130,16 @@ public class ARegisterController {
 
         if (StringUtils.isEmpty(login.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
+
         User user;
-        //验证码登录
+        // 验证码登录
         if (!StringUtils.isEmpty(login.getCode()) && StringUtils.isEmpty(login.getPassword())) {
             PhoneMessage message = messageService.messageByPhone(login.getPhone());
             if(message == null || !message.getCode().equals(login.getCode()))
                 return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(),MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
             messageService.setMessageState(message.getId(),SystemEnum.PHONE_MESSAGE_VALIDATE);
             user = userService.userInfoByPhone(login.getPhone(),UserEnum.USER_ACTIVE);
-        } else if (!StringUtils.isEmpty(login.getPassword()) && StringUtils.isEmpty(login.getCode())) { //密码登录
+        } else if (!StringUtils.isEmpty(login.getPassword()) && StringUtils.isEmpty(login.getCode())) {
             user = userService.loginByPhoneAndPassword(login.getPhone(),login.getPassword());
             if(user == null)
                 return new ResponseData<>(MessageEnum.LOGIN_ERROR.getMessage(),MessageEnum.LOGIN_ERROR.getState());
@@ -146,6 +149,8 @@ public class ARegisterController {
         User update = new User();
         update.setLastLoginTime(new Date());
         if(null != userService.saveUserInfo(user.getId(),update).getData()) {
+            // 登录后赠送30天菌包
+            seedOrderService.sendSeedSuccess(user.getId());
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                     userService.loginSuccess(user.getId(),user.getPhone()).getData().getData());
         }

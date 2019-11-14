@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
     @TriggerEvent(action = "register")
     @Override
     @DS("write")
+    @Transactional
     public ResultData<TriggerEventResult<InnerMessage>> addUser(User user) {
         ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
@@ -184,8 +185,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     @DS("write")
+    @Transactional
     public ResultData<User> saveUserInfo(Integer id, User user) {
         ResultData<User> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
@@ -225,8 +226,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     @DS("write")
+    @Transactional
     public ResultData<Integer> saveBankCard(UserBank bank) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         if (userDAO.selectById(bank.getUserId()) == null)
@@ -262,6 +263,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @DS("write")
+    @Transactional
     public ResultData<Integer> deleteCard(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         UserBank bankInfo = userBankDAO.selectById(id);
@@ -310,6 +312,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @DS("write")
+    @Transactional
     public ResultData<Integer> addAddress(UserAddress address) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -348,6 +351,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @DS("write")
+    @Transactional
     public ResultData<Integer> updateAddress(Integer id, UserAddress address) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -380,6 +384,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @DS("write")
+    @Transactional
     public ResultData<Integer> deleteAddress(UserAddress address) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
@@ -480,6 +485,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @TriggerEvent(action = "login")
     @DS("write")
+    @Transactional
     public ResultData<TriggerEventResult<LoginResponse>> loginSuccess(Integer id, String phone) {
         ResultData<TriggerEventResult<LoginResponse>> resultData = new ResultData<>(MessageEnum.ERROR, new TriggerEventResult<>());
         LoginResponse response = new LoginResponse();
@@ -509,7 +515,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @DS("write")
     @Transactional
-    public List<UserActivityLog> inviteUser(Date startTime, Integer userId) {
+    public List<UserActivityLog> inviteUser(Integer userId) {
+
+        // 活动开启时间
+        Date startTime = DateUtil.INSTANCE.stringToDate(ActivityEnum.START_ACTIVITY.getMessage());
 
         // 邀请记录
         QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
@@ -537,19 +546,19 @@ public class UserServiceImpl implements UserService {
                     break;
                 case 1:
                     // 5折酒水满减券
-                    ResultData<Integer> resultData = fertilizerService.distributeFertilizer("activity",
-                            new TriggerEventResult().setUserId(userId), FertilizerEnum.WINE_FERTILIZER.getState());
+                    ResultData<Integer> resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
+                            new TriggerEventResult().setUserId(userId), ActivityEnum.WINE_FERTILIZER.getState());
                     if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return null;
-                    log.setFertilizerId(FertilizerEnum.WINE_FERTILIZER.getState());
-                    log.setName(FertilizerEnum.WINE_FERTILIZER.getStateName());
+                    log.setFertilizerId(ActivityEnum.WINE_FERTILIZER.getState());
+                    log.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
                     break;
                 case 2:
                     // 商城食品满减券
-                    ResultData<Integer> result = fertilizerService.distributeFertilizer("activity",
-                            new TriggerEventResult().setUserId(userId), FertilizerEnum.MALL_FOOL_FERTILIZER.getState());
+                    ResultData<Integer> result = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
+                            new TriggerEventResult().setUserId(userId), ActivityEnum.MALL_FOOL_FERTILIZER.getState());
                     if (result.getMessageEnum().equals(MessageEnum.ERROR)) return null;
-                    log.setFertilizerId(FertilizerEnum.MALL_FOOL_FERTILIZER.getState());
-                    log.setName(FertilizerEnum.MALL_FOOL_FERTILIZER.getStateName());
+                    log.setFertilizerId(ActivityEnum.MALL_FOOL_FERTILIZER.getState());
+                    log.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
                     break;
                 default:
                     break;

@@ -23,7 +23,7 @@ public interface SeedOrderService {
 
     void downloadExcel(Integer userId, PageSearch<SeedOrder> search, HttpServletRequest request);
 
-    Boolean sendSeedSuccess(Integer userId);
+    void sendSeedSuccess(Integer userId);
 
     SeedType getSeedType(Integer userId);
 }

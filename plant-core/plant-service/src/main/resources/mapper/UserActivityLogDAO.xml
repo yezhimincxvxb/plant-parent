@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.user.UserActivityLogDAO">
+
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserActivityLog">
+        <id column="id" property="id"/>
+        <result column="number" property="number"/>
+        <result column="name" property="name"/>
+        <result column="user_id" property="userId"/>
+        <result column="friend_id" property="friendId"/>
+        <result column="product_id" property="productId"/>
+        <result column="seed_type_id" property="seedTypeId"/>
+        <result column="fertilizer_id" property="fertilizerId"/>
+        <result column="add_time" property="addTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, `number`, `name`, user_id, friend_id, product_id, seed_type_id, fertilizer_id, add_time
+  </sql>
+
+    <select id="findOnToday" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_user_activity_log
+        <where>
+            date(add_time) = curdate()
+            <if test="log.userId != null">
+                and user_id = #{log.userId}
+            </if>
+            <if test="log.friendId != null">
+                and friend_id = #{log.friendId}
+            </if>
+            <if test="log.number != null">
+                and instr(`number`, #{log.number})
+            </if>
+        </where>
+    </select>
+
+</mapper>

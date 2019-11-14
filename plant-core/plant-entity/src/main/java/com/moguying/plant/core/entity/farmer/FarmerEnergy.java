@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @TableName("plant_farmer_energy")
 @Data
+@Accessors(chain = true)
 public class FarmerEnergy implements Serializable {
     private static final long serialVersionUID = -1159228886637788678L;
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.user.UserSymbolDAO">
+
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserSymbol">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="symbol" property="symbol"/>
+        <result column="add_time" property="addTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, user_id, symbol, add_time
+  </sql>
+
+    <select id="findOnToday" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_user_symbol
+        <where>
+            date(add_time) = curdate()
+            <if test="us.userId != null">
+                and user_id = #{us.userId}
+            </if>
+            <if test="us.symbol != null ">
+                and symbol = #{us.symbol}
+            </if>
+        </where>
+        order by add_time desc
+    </select>
+
+</mapper>

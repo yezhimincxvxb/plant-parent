@@ -12,6 +12,7 @@ public enum  OrderPrefixEnum {
     TI_YAN_BUY("TYB"),
     FREE_JUN_BAO("FJB"),
     INVITE_REWARD("IR"),
+    FRIEND_HELP("FH"),
     RED_PACKAGE("RP");
 
 

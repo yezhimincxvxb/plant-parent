@@ -25,10 +25,4 @@ public class ShareVo {
      */
     @JSONField(ordinal = 3)
     private String symbol;
-
-    /**
-     * 信息说明
-     */
-    @JSONField(ordinal = 4)
-    private String message;
 }

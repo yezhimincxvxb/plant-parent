@@ -1,47 +1,46 @@
-package com.moguying.plant.core.entity.farmer;
+package com.moguying.plant.core.entity.user;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.util.Date;
 
-@TableName("plant_farmer_notice")
 @Data
 @Accessors(chain = true)
-public class FarmerNotice implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@TableName("plant_user_symbol")
+public class UserSymbol {
 
-    private static final long serialVersionUID = 596821671891830663L;
-
-
+    @JSONField(ordinal = 1)
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
      * 用户id
      */
+    @JSONField(ordinal = 2)
     @TableField
-    private transient Integer userId;
+    private Integer userId;
 
     /**
-     * 消息内容
+     * 唯一标识
      */
+    @JSONField(ordinal = 3)
     @TableField
-    private String message;
+    private String symbol;
 
     /**
-     * [0未读，1已读]
+     * 添加时间
      */
-    @TableField
-    private Integer state;
-
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 4, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
-
 }

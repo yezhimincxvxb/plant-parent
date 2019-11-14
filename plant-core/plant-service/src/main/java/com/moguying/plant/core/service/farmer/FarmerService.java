@@ -7,6 +7,7 @@ import com.moguying.plant.core.entity.farmer.FarmerNotice;
 import com.moguying.plant.core.entity.farmer.vo.FarmerData;
 import com.moguying.plant.core.entity.farmer.vo.FarmerLevelGift;
 import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.entity.user.UserSymbol;
 
 public interface FarmerService {
 
@@ -90,6 +91,12 @@ public interface FarmerService {
 
     
     ResultData<Integer> delNotice(FarmerNotice notice);
+
+    ResultData<Integer> getShareReward(Integer userId);
+
+    ResultData<UserSymbol> addFriendLog(Integer userId);
+
+    ResultData<Integer> friendHelpSuccess(Integer userId, String symbol);
 
 }
 

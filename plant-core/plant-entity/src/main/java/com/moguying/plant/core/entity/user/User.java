@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.moguying.plant.utils.IdCardSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-import javax.validation.constraints.AssertFalse;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,6 +21,7 @@ import java.util.Date;
 @TableName("plant_user")
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class User implements Serializable {
 
     private static final long serialVersionUID = 6900803451538227091L;
