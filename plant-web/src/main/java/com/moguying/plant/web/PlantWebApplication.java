@@ -12,6 +12,7 @@ import java.util.TimeZone;
 @SpringBootApplication(scanBasePackages = {"com.moguying"})
 @EnableTransactionManagement
 @EnableScheduling
+@EnableAspectJAutoProxy(proxyTargetClass = true,exposeProxy = true)
 public class PlantWebApplication {
 
     @PostConstruct
