@@ -169,7 +169,7 @@ public enum  MessageEnum {
     RETURN_FERTILIZER_ERROR("返券失败",10162),
     FERTILIZER_NOT("未满足满减券使用条件",10163),
     BARGAIN_FIRST("首次分享成功，快喊好友来帮砍",10164),
-    BARGAIN_AGAIN("分享成功，快喊好友来帮砍",10165),
+    BARGAIN_AGAIN("已领取，快邀请好友帮忙砍价",10165),
     NOT_BARGAIN_RATE("该商品未设置砍价系数",10166),
     ADD_BARGAIN_ORDER_FAIL("生成砍价详情失败",10167),
     ADD_BARGAIN_LOG_FAIL("生成砍价记录失败",10168),

@@ -34,4 +34,5 @@ public class BargainLogServiceImpl implements BargainLogService {
         IPage<BargainVo> pageResult = bargainLogDao.helpLog(new Page<>(page, size), shareId, orderId);
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
+
 }
