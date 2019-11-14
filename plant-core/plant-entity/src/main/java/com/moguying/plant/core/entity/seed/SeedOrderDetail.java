@@ -182,6 +182,9 @@ public class SeedOrderDetail implements Serializable, PayOrder {
     @TableField(exist = false)
     private Date endTime;
 
+    @TableField(exist = false)
+    private Boolean isForNew;
+
     @Override
     public MoneyOpEnum getOpType() {
         return MoneyOpEnum.BUY_SEED_ORDER;

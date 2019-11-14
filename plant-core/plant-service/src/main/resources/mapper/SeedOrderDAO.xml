@@ -49,8 +49,11 @@
       <if test="wq.seedType != null">
         AND t1.seed_type = #{wq.seedType}
       </if>
+      <if test="wq.isForNew != null">
+        AND t2.is_for_new = #{wq.isForNew}
+      </if>
     </where>
-    order by (t1.buy_count-t1.plant_count),t1.buy_amonut desc
+    order by (t1.buy_count-t1.plant_count),t1.buy_amount desc
   </select>
 
   <update id="incrSeedOrder" parameterType="com.moguying.plant.core.entity.seed.SeedOrder">

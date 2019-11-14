@@ -38,6 +38,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -111,7 +112,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Override
     @DS("read")
     public List<UserSeedOrder> userSeedOrder(Integer userId) {
-        return seedOrderDAO.userSeedOrderStatistics(userId);
+        return seedOrderDAO.userSeedOrderStatistics(userId).stream().filter(x -> x.getCount() > 0).collect(Collectors.toList());
     }
 
     @Override

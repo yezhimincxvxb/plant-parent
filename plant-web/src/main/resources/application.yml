@@ -310,6 +310,8 @@ spring:
       host: 172.18.146.177
       port: 27589
       database: activity
+      username: activityAdmin
+      password: Is&1+KVb[0
 
 #上传host
 upload:

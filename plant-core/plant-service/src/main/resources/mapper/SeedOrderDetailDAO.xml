@@ -132,6 +132,10 @@
             AND UNIX_TIMESTAMP(#{wq.endTime}) >= UNIX_TIMESTAMP(t1.add_time)
         ]]>
       </if>
+      <if test="wq.isForNew != null">
+        AND t3.is_for_new = #{wq.isForNew}
+      </if>
+
     </where>
     order by t1.add_time desc
   </select>
