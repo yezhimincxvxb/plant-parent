@@ -179,8 +179,9 @@ public enum  MessageEnum {
     SYMBOL_ERROR("标识错误",10172),
     TODAY_HELPED("今天已帮过该好友助力了，请明天再试",10173),
     OWN_HELPED("自己无法助力自己，快邀请好友帮忙",10174),
-    YI_TI_YAN("已体验，无须重复体验",10175),
-    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10176);
+    INVITE_REWARD("邀请奖励已领取",10175),
+    YI_TI_YAN("已体验，无须重复体验",10176),
+    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10177);
 
 
 

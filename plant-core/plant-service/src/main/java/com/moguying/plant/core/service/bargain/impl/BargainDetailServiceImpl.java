@@ -122,19 +122,21 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
         // 首次分享，生成砍价详情
         BargainDetail add = new BargainDetail();
-        add.setUserId(userId);
-        add.setProductId(product.getId());
-        add.setProductCount(product.getBargainNumber());
-        add.setTotalAmount(totalAmount);
-        add.setBargainAmount(bargainAmount);
-        add.setLeftAmount(totalAmount.subtract(bargainAmount));
-        add.setTotalCount(product.getBargainCount());
-        add.setBargainCount(1);
-        add.setSymbol(RandomStringUtils.random(12, true, true));
-        add.setAddTime(new Date());
-        add.setBargainTime(new Date());
-        add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
-        if (bargainDetailDao.insert(add) <= 0) return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_ORDER_FAIL);
+        synchronized ("") {
+            add.setUserId(userId);
+            add.setProductId(product.getId());
+            add.setProductCount(product.getBargainNumber());
+            add.setTotalAmount(totalAmount);
+            add.setBargainAmount(bargainAmount);
+            add.setLeftAmount(totalAmount.subtract(bargainAmount));
+            add.setTotalCount(product.getBargainCount());
+            add.setBargainCount(1);
+            add.setSymbol(RandomStringUtils.random(12, true, true));
+            add.setAddTime(new Date());
+            add.setBargainTime(new Date());
+            add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
+            if (bargainDetailDao.insert(add) <= 0) return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_ORDER_FAIL);
+        }
 
         // 日志
         BargainLog log = new BargainLog();

@@ -11,11 +11,13 @@
         <result column="product_id" property="productId"/>
         <result column="seed_type_id" property="seedTypeId"/>
         <result column="fertilizer_id" property="fertilizerId"/>
+        <result column="state" property="state"/>
         <result column="add_time" property="addTime"/>
+        <result column="receive_time" property="receiveTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, `number`, `name`, user_id, friend_id, product_id, seed_type_id, fertilizer_id, add_time
+    id, `number`, `name`, user_id, friend_id, product_id, seed_type_id, fertilizer_id, state, add_time, receive_time
   </sql>
 
     <select id="findOnToday" resultMap="BaseResultMap">

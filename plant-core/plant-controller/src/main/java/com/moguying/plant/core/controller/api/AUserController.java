@@ -1052,10 +1052,20 @@ public class AUserController {
     }
 
     /**
-     * 好友分享，获取邀请码
+     * 品宣部-领取菌包
+     */
+    @GetMapping("/free/seed")
+    @ApiOperation("品宣部-领取菌包")
+    public ResponseData<Integer> freeSeed(@LoginUserId Integer userId) {
+        ResultData<Integer> resultData = seedOrderService.sendSeedSuccess(userId);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    }
+
+    /**
+     * 品宣部-分享邀请码
      */
     @GetMapping("/friend/sharing")
-    @ApiOperation("好友分享，获取邀请码")
+    @ApiOperation("品宣部-分享邀请码")
     public ResponseData<User> friendSharing(@LoginUserId Integer userId) {
 
         ResponseData<User> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
@@ -1070,10 +1080,10 @@ public class AUserController {
     }
 
     /**
-     * 邀请成功记录
+     * 品宣部-邀请记录
      */
     @GetMapping("/invite/log")
-    @ApiOperation("邀请成功记录")
+    @ApiOperation("品宣部-邀请记录")
     public ResponseData<List<UserActivityLog>> inviteLog(@LoginUserId Integer userId) {
 
         ResponseData<List<UserActivityLog>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
@@ -1092,30 +1102,49 @@ public class AUserController {
     }
 
     /**
-     * 每日分享，获取成长值
+     * 品宣部-领取奖励
+     */
+    @GetMapping("/pick/up/reward/{name}")
+    @ApiOperation("品宣部-领取奖励")
+    public ResponseData<Integer> pickUpReward(@LoginUserId Integer userId, @PathVariable("name") String name) {
+
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+
+        if (Objects.isNull(userId) || Objects.isNull(name))
+            return responseData;
+
+        User user = userService.userInfoById(userId);
+        if (Objects.isNull(user)) return responseData;
+
+        ResultData<Integer> resultData = userService.pickUpReward(userId, name);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    }
+
+    /**
+     * 田园种植-每日分享
      */
     @GetMapping("/grow/up/sharing")
-    @ApiOperation("每日分享，获取成长值")
+    @ApiOperation("田园种植-每日分享")
     public ResponseData<Integer> growUpSharing(@LoginUserId Integer userId) {
         ResultData<Integer> resultData = farmerService.getShareReward(userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
     /**
-     * 助力分享
+     * 田园种植-分享标识
      */
-    @GetMapping("/help/share")
-    @ApiOperation("助力分享")
+    @GetMapping("/help/sharing")
+    @ApiOperation("田园种植-分享标识")
     public ResponseData<UserSymbol> helpShare(@LoginUserId Integer userId) {
         ResultData<UserSymbol> resultData = farmerService.addFriendLog(userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
     /**
-     * 好友助力
+     * 田园种植-好友助力
      */
     @GetMapping("/friend/help/{symbol}")
-    @ApiOperation("好友助力")
+    @ApiOperation("田园种植-好友助力")
     public ResponseData<Integer> friendHelp(@LoginUserId Integer userId, @PathVariable("symbol") String symbol) {
 
         ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());

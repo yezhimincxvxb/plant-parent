@@ -525,56 +525,95 @@ public class UserServiceImpl implements UserService {
                 .eq("user_id", userId)
                 .likeRight("number", OrderPrefixEnum.INVITE_REWARD.getPreFix())
                 .orderByAsc("add_time");
-        List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
+        List<UserActivityLog> userActivityLogs = userActivityLogDAO.selectList(wrapper);
 
         // 发奖
         List<User> users = userDAO.inviteUser(startTime, userId);
         if (Objects.isNull(users) || users.size() == 0) return null;
-        for (int i = logs.size(); i < users.size(); i++) {
+        for (int i = userActivityLogs.size(); i < users.size(); i++) {
             User user = users.get(i);
-            UserActivityLog log = new UserActivityLog();
-            log.setUserId(userId);
-            log.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
-            log.setFriendId(user.getId());
+            UserActivityLog userActivityLog = new UserActivityLog();
+            userActivityLog.setUserId(userId);
+            userActivityLog.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
+            userActivityLog.setFriendId(user.getId());
             switch (i) {
                 case 0:
                     // 一份12.5的菌包
-                    SeedType seedType = seedOrderService.getSeedType(userId);
-                    if (Objects.isNull(seedType)) return null;
-                    log.setSeedTypeId(seedType.getId());
-                    log.setName(seedType.getClassName());
+                    userActivityLog.setSeedTypeId(ActivityEnum.FREE_SEED_30DAY.getState());
+                    userActivityLog.setName(ActivityEnum.FREE_SEED_30DAY.getMessage());
                     break;
                 case 1:
                     // 5折酒水满减券
-                    ResultData<Integer> resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                            new TriggerEventResult().setUserId(userId), ActivityEnum.WINE_FERTILIZER.getState());
-                    if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return null;
-                    log.setFertilizerId(ActivityEnum.WINE_FERTILIZER.getState());
-                    log.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
+                    userActivityLog.setFertilizerId(ActivityEnum.WINE_FERTILIZER.getState());
+                    userActivityLog.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
                     break;
                 case 2:
                     // 商城食品满减券
-                    ResultData<Integer> result = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                            new TriggerEventResult().setUserId(userId), ActivityEnum.MALL_FOOL_FERTILIZER.getState());
-                    if (result.getMessageEnum().equals(MessageEnum.ERROR)) return null;
-                    log.setFertilizerId(ActivityEnum.MALL_FOOL_FERTILIZER.getState());
-                    log.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
+                    userActivityLog.setFertilizerId(ActivityEnum.MALL_FOOL_FERTILIZER.getState());
+                    userActivityLog.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
                     break;
                 default:
                     break;
             }
-            log.setAddTime(new Date());
-            if (userActivityLogDAO.insert(log) <= 0) return null;
-            logs.add(log);
+            userActivityLog.setAddTime(new Date());
+            if (userActivityLogDAO.insert(userActivityLog) <= 0) return null;
+            userActivityLogs.add(userActivityLog);
         }
 
         // 填充手机号
         users.forEach(user ->
-                logs.stream()
-                        .filter(log -> Objects.equals(user.getId(), log.getFriendId()))
-                        .forEach(log -> log.setPhone(user.getPhone())));
+                userActivityLogs.stream()
+                        .filter(userActivityLog -> Objects.equals(user.getId(), userActivityLog.getFriendId()))
+                        .forEach(userActivityLog -> userActivityLog.setPhone(user.getPhone())));
 
-        return logs;
+        return userActivityLogs;
+    }
+
+    @Override
+    @DS("write")
+    @Transactional
+    public ResultData<Integer> pickUpReward(Integer userId, String name) {
+
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+
+        // 是否已领取
+        QueryWrapper<UserActivityLog> queryWrapper = new QueryWrapper<UserActivityLog>()
+                .eq("user_id", userId)
+                .likeRight("number", OrderPrefixEnum.INVITE_REWARD.getPreFix())
+                .eq("name", name)
+                .eq("state", false);
+        List<UserActivityLog> userActivityLogs = userActivityLogDAO.selectList(queryWrapper);
+        if (Objects.isNull(userActivityLogs) || userActivityLogs.isEmpty())
+            return resultData.setMessageEnum(MessageEnum.INVITE_REWARD);
+
+        // 领取
+        if (name.equals(ActivityEnum.FREE_SEED_30DAY.getMessage())) {
+            // 一份12.5的菌包
+            SeedType seedType = seedOrderService.getSeedType(userId);
+            if (Objects.isNull(seedType)) return resultData;
+
+        } else if (name.equals(ActivityEnum.WINE_FERTILIZER.getMessage())) {
+            // 5折酒水满减券
+            resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
+                    new TriggerEventResult().setUserId(userId), ActivityEnum.WINE_FERTILIZER.getState());
+            if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
+
+        } else if (name.equals(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage())) {
+            // 商城食物满减券
+            resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
+                    new TriggerEventResult().setUserId(userId), ActivityEnum.MALL_FOOL_FERTILIZER.getState());
+            if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
+
+        }
+
+        // 更新状态
+        UserActivityLog userActivityLog = userActivityLogs.get(0)
+                .setState(true)
+                .setReceiveTime(new Date());
+        if (userActivityLogDAO.updateById(userActivityLog) <= 0)
+            return resultData;
+
+        return resultData.setMessageEnum(MessageEnum.SUCCESS);
     }
 }
 

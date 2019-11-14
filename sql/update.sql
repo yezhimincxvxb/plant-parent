@@ -457,7 +457,9 @@ CREATE TABLE `plant_user_activity_log` (
   `product_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品id',
   `seed_type_id` int(11) NOT NULL DEFAULT '0' COMMENT '菌包id',
   `fertilizer_id` int(11) NOT NULL DEFAULT '0' COMMENT '券id',
+  `state` tinyint(1) NOT NULL DEFAULT '0' COMMENT '发奖状态[0-未发奖、1-已发奖]',
   `add_time` datetime DEFAULT NULL COMMENT '添加时间',
+  `receive_time` datetime DEFAULT NULL COMMENT '领奖时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

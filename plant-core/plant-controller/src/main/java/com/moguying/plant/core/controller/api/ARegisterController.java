@@ -149,8 +149,6 @@ public class ARegisterController {
         User update = new User();
         update.setLastLoginTime(new Date());
         if(null != userService.saveUserInfo(user.getId(),update).getData()) {
-            // 登录后赠送30天菌包
-            seedOrderService.sendSeedSuccess(user.getId());
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                     userService.loginSuccess(user.getId(),user.getPhone()).getData().getData());
         }

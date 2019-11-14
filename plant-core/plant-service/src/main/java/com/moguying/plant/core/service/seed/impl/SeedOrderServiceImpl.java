@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.ActivityEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
@@ -14,6 +15,7 @@ import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrder;
@@ -122,24 +124,32 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Override
     @DS("write")
     @Transactional
-    public void sendSeedSuccess(Integer userId) {
+    public ResultData<Integer> sendSeedSuccess(Integer userId) {
+
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
         // 奖励只发送一次
         QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
-                .and(i -> i.eq("user_id", userId).likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix()));
+                .eq("user_id", userId)
+                .likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix());
         List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
-        if (Objects.nonNull(logs) && logs.size() > 0) return;
+        if (Objects.nonNull(logs) && logs.size() > 0)
+            return resultData.setMessageEnum(MessageEnum.PICK_UP_SEED);
 
+        // 发菌包
         SeedType seedType = getSeedType(userId);
-        if (Objects.isNull(seedType)) return;
+        if (Objects.isNull(seedType)) return resultData;
 
         // 添加活动奖励记录
         UserActivityLog log = new UserActivityLog()
                 .setNumber(OrderPrefixEnum.FREE_JUN_BAO.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate())
                 .setUserId(userId)
                 .setSeedTypeId(seedType.getId())
-                .setAddTime(new Date());
-         userActivityLogDAO.insert(log);
+                .setState(true)
+                .setAddTime(new Date())
+                .setReceiveTime(new Date());
+        if (userActivityLogDAO.insert(log) <= 0) return resultData;
+        return resultData.setMessageEnum(MessageEnum.FIRST_PICK_UP_SEED);
     }
 
     @Override
@@ -150,21 +160,19 @@ public class SeedOrderServiceImpl implements SeedOrderService {
         SeedType seedType = seedTypeDAO.selectById(ActivityEnum.FREE_SEED_30DAY.getState());
         if (Objects.isNull(seedType)) return null;
 
-        // 发送菌包
-        SeedOrder seedOrder = new SeedOrder();
-        seedOrder.setUserId(userId);
-        seedOrder.setSeedType(seedType.getId());
-
         // 是否购买过同类型的菌包
-        List<SeedOrder> seedOrders = seedOrderDAO.selectSelective(seedOrder);
+        QueryWrapper<SeedOrder> queryWrapper = new QueryWrapper<SeedOrder>()
+                .eq("user_id", userId)
+                .eq("seed_type", seedType.getId());
+        List<SeedOrder> seedOrders = seedOrderDAO.selectList(queryWrapper);
         if (Objects.isNull(seedOrders) || seedOrders.isEmpty()) {
             SeedOrder order = new SeedOrder();
-            order.setSeedType(seedOrder.getSeedType());
-            order.setUserId(seedOrder.getUserId());
+            order.setSeedType(seedType.getId());
+            order.setUserId(userId);
             order.setBuyCount(1);
             order.setBuyAmount(seedType.getPerPrice());
             if (seedOrderDAO.insert(order) <= 0) return null;
-        } else if (seedOrders.size() == 1) {
+        } else {
             SeedOrder order = seedOrders.get(0);
             order.setBuyCount(order.getBuyCount() + 1);
             order.setBuyAmount(new BigDecimal(order.getBuyCount()).multiply(seedType.getPerPrice()));

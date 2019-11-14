@@ -68,4 +68,6 @@ public interface UserService {
     User userInfo(User where);
 
     List<UserActivityLog> inviteUser(Integer userId);
+
+    ResultData<Integer> pickUpReward(Integer userId, String name);
 }

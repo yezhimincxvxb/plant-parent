@@ -2,6 +2,7 @@ package com.moguying.plant.core.service.seed;
 
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.SeedType;
@@ -23,7 +24,7 @@ public interface SeedOrderService {
 
     void downloadExcel(Integer userId, PageSearch<SeedOrder> search, HttpServletRequest request);
 
-    void sendSeedSuccess(Integer userId);
+    ResultData<Integer> sendSeedSuccess(Integer userId);
 
     SeedType getSeedType(Integer userId);
 }
