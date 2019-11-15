@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.exshop.ExShopDAO">
+    <resultMap id="BaseResultMap" type="ExShop">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="open_time" jdbcType="VARCHAR" property="openTime"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+    </resultMap>
+
+    <resultMap id="exShopList" type="ExShop" extends="BaseResultMap">
+        <collection property="pics" ofType="ExShopPic">
+            <result column="pic_id" property="id"/>
+            <result column="pic_url" property="picUrl"/>
+            <result column="shop_id" property="shopId"/>
+        </collection>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id, shop_name, address, phone, open_time,location, add_time
+    </sql>
+
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_ex_shop
+        <where>
+            <if test="shopName != null and shopName != ''">
+                <bind name="nameLike" value="'%'+ showName +'%'"/>
+                show_name like #{nameLike}
+            </if>
+
+            <if test="address != null and address != ''">
+                <bind name="addressLike" value="'%' + address + '%'"/>
+                address like #{addressLike}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+
+</mapper>
