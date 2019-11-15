@@ -150,7 +150,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
                 .setAddTime(new Date())
                 .setReceiveTime(new Date());
         if (userActivityLogDAO.insert(log) <= 0) return resultData;
-        return resultData.setMessageEnum(MessageEnum.FIRST_PICK_UP_SEED);
+        return resultData.setMessageEnum(MessageEnum.SUCCESS);
     }
 
     @Override

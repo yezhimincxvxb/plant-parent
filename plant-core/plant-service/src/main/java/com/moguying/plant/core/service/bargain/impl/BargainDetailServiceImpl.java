@@ -144,7 +144,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         if (bargainLogDao.insert(log) > 0) {
             ShareVo shareVo = new ShareVo()
                     .setOrderId(add.getId());
-            return resultData.setMessageEnum(MessageEnum.BARGAIN_FIRST).setData(shareVo);
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(shareVo);
         }
         return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_LOG_FAIL);
     }

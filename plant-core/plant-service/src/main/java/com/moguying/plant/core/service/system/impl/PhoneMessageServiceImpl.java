@@ -148,7 +148,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     @Override
     @DS("read")
     public PhoneMessage messageByPhone(String phone) {
-        //1分钟内有效
+        // 1分钟内有效
         Long inTime = (System.currentTimeMillis() - Long.parseLong(time)) / 1000;
         return phoneMessageDAO.selectByPhoneInTime(phone,String.valueOf(inTime));
     }

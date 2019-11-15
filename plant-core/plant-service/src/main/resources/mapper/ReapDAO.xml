@@ -131,7 +131,7 @@
 
     <select id="userReapList" resultType="com.moguying.plant.core.entity.reap.Reap">
         select t1.id,t1.pre_profit,t1.pre_amount,t1.add_time,t1.state,t1.plant_weigh,t1.plant_count,
-        t2.number as block_number,
+        t2.number as block_number, t3.is_for_new `isForNew`,
         t3.pic_url,t3.class_name as seed_type_name,t3.grow_days `seedGrowDays`
         from plant_reap t1
         left join plant_block t2 on t1.block_id = t2.id
