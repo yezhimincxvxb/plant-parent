@@ -1117,16 +1117,16 @@ public class AUserController {
      */
     @GetMapping("/invite/log")
     @ApiOperation("品宣部-邀请记录")
-    public ResponseData<List<UserActivityLog>> inviteLog(@LoginUserId Integer userId) {
+    public ResponseData<List<UserActivityLogVo>> inviteLog(@LoginUserId Integer userId) {
 
-        ResponseData<List<UserActivityLog>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        ResponseData<List<UserActivityLogVo>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
         User user = userService.userInfoById(userId);
         if (Objects.isNull(user)) return responseData;
 
         // 发奖
-        List<UserActivityLog> logs = userService.inviteUser(userId);
-        if (Objects.isNull(logs))
+        List<UserActivityLogVo> logs = userService.inviteUser(userId);
+        if (Objects.isNull(logs) || logs.isEmpty())
             return responseData
                     .setMessage(MessageEnum.ONT_INVITE_LOG.getMessage())
                     .setState(MessageEnum.ONT_INVITE_LOG.getState());
@@ -1146,22 +1146,21 @@ public class AUserController {
 
         ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
-        if (Objects.isNull(login) || Objects.isNull(login.getPhone()) || Objects.isNull(login.getCode()))
-            return responseData;
-
-        if (Objects.isNull(userId) || Objects.isNull(login.getName()))
+        if (Objects.isNull(userId) || Objects.isNull(login.getId()))
             return responseData;
 
         // 短信验证
-        PhoneMessage message = messageService.messageByPhone(login.getPhone());
-        if (Objects.isNull(message) || !Objects.equals(message.getCode(), login.getCode()))
-            return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
-        messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
+        if (StringUtils.isNotEmpty(login.getPhone()) && StringUtils.isNotEmpty(login.getCode())) {
+            PhoneMessage message = messageService.messageByPhone(login.getPhone());
+            if (Objects.isNull(message) || !Objects.equals(message.getCode(), login.getCode()))
+                return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
+            messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
+        }
 
         User user = userService.userInfoById(userId);
         if (Objects.isNull(user)) return responseData;
 
-        ResultData<Integer> resultData = userService.pickUpReward(userId, login.getName());
+        ResultData<Integer> resultData = userService.pickUpReward(userId, login.getId());
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
