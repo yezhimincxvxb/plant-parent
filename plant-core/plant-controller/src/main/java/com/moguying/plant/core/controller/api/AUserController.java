@@ -1126,7 +1126,10 @@ public class AUserController {
 
         // 发奖
         List<UserActivityLog> logs = userService.inviteUser(userId);
-        if (Objects.isNull(logs)) return responseData;
+        if (Objects.isNull(logs))
+            return responseData
+                    .setMessage(MessageEnum.ONT_INVITE_LOG.getMessage())
+                    .setState(MessageEnum.ONT_INVITE_LOG.getState());
 
         return responseData
                 .setMessage(MessageEnum.SUCCESS.getMessage())
@@ -1137,19 +1140,28 @@ public class AUserController {
     /**
      * 品宣部-领取奖励
      */
-    @GetMapping("/pick/up/reward/{name}")
+    @PostMapping("/pick/up/reward")
     @ApiOperation("品宣部-领取奖励")
-    public ResponseData<Integer> pickUpReward(@LoginUserId Integer userId, @PathVariable("name") String name) {
+    public ResponseData<Integer> pickUpReward(@LoginUserId Integer userId, @RequestBody Login login) {
 
         ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
-        if (Objects.isNull(userId) || Objects.isNull(name))
+        if (Objects.isNull(login) || Objects.isNull(login.getPhone()) || Objects.isNull(login.getCode()))
             return responseData;
+
+        if (Objects.isNull(userId) || Objects.isNull(login.getName()))
+            return responseData;
+
+        // 短信验证
+        PhoneMessage message = messageService.messageByPhone(login.getPhone());
+        if (Objects.isNull(message) || !Objects.equals(message.getCode(), login.getCode()))
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
+        messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
 
         User user = userService.userInfoById(userId);
         if (Objects.isNull(user)) return responseData;
 
-        ResultData<Integer> resultData = userService.pickUpReward(userId, name);
+        ResultData<Integer> resultData = userService.pickUpReward(userId, login.getName());
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 

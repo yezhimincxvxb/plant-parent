@@ -178,7 +178,8 @@ public enum  MessageEnum {
     OWN_HELPED("自己无法助力自己，快邀请好友帮忙",10174),
     INVITE_REWARD("邀请奖励已领取",10175),
     YI_TI_YAN("已体验，无须重复体验",10176),
-    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10177);
+    ONT_INVITE_LOG("目前还没有邀请记录，快邀请好友拿大奖",10177),
+    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10178);
 
 
 
