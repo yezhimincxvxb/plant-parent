@@ -578,7 +578,7 @@ public class FarmerServiceImpl implements FarmerService {
                 .setIncrWay(FieldEnum.HELP_FRIEND.getField())
                 .setAddTime(new Date());
         // 当前登录用户是否是新用户
-        List<User> users = userDAO.inviteUser(userSymbol.getAddTime(), userSymbol.getUserId());
+        List<User> users = userDAO.inviteUser(userSymbol.getAddTime(), null);
         if (Objects.nonNull(users) && users.size() > 0) {
             List<Integer> idList = users.stream().map(User::getId).collect(Collectors.toList());
             // 新用户赠50助力成长值、现金礼包

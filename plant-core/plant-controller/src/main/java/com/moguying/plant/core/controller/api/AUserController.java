@@ -1095,24 +1095,6 @@ public class AUserController {
     }
 
     /**
-     * 品宣部-分享邀请码
-     */
-    @GetMapping("/friend/sharing")
-    @ApiOperation("品宣部-分享邀请码")
-    public ResponseData<User> friendSharing(@LoginUserId Integer userId) {
-
-        ResponseData<User> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-
-        User user = userService.userInfoById(userId);
-        if (Objects.isNull(user)) return responseData;
-
-        return responseData
-                .setMessage(MessageEnum.SUCCESS.getMessage())
-                .setState(MessageEnum.SUCCESS.getState())
-                .setData(new User().setInviteCode(user.getInviteCode()));
-    }
-
-    /**
      * 品宣部-邀请记录
      */
     @GetMapping("/invite/log")
@@ -1146,7 +1128,7 @@ public class AUserController {
 
         ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
-        if (Objects.isNull(userId) || Objects.isNull(login.getId()))
+        if (Objects.isNull(login.getId()))
             return responseData;
 
         // 短信验证
@@ -1156,9 +1138,6 @@ public class AUserController {
                 return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
             messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
         }
-
-        User user = userService.userInfoById(userId);
-        if (Objects.isNull(user)) return responseData;
 
         ResultData<Integer> resultData = userService.pickUpReward(userId, login.getId());
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());

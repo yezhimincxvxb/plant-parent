@@ -532,36 +532,41 @@ public class UserServiceImpl implements UserService {
         // 发奖
         List<User> users = userDAO.inviteUser(startTime, userId);
         if (Objects.isNull(users) || users.size() == 0) return null;
-        for (int i = userActivityLogs.size(); i < 3; i++) {
-            User user = users.get(i);
-            UserActivityLog userActivityLog = new UserActivityLog();
-            userActivityLog.setUserId(userId);
-            userActivityLog.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
-            userActivityLog.setFriendId(user.getId());
-            switch (i) {
-                case 0:
-                    // 一份12.5的菌包
-                    userActivityLog.setSeedTypeId(ActivityEnum.FREE_SEED_30DAY.getState());
-                    userActivityLog.setName(ActivityEnum.FREE_SEED_30DAY.getMessage());
-                    break;
-                case 1:
-                    // 5折酒水满减券
-                    userActivityLog.setFertilizerId(ActivityEnum.WINE_FERTILIZER.getState());
-                    userActivityLog.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
-                    break;
-                case 2:
-                    // 商城食品满减券
-                    userActivityLog.setFertilizerId(ActivityEnum.MALL_FOOL_FERTILIZER.getState());
-                    userActivityLog.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
-                    break;
-                default:
-                    break;
+        // 前三个邀请成功才有奖励
+        if (users.size() <= 3) {
+            for (int i = userActivityLogs.size(); i < users.size(); i++) {
+                User user = users.get(i);
+                UserActivityLog userActivityLog = new UserActivityLog();
+                userActivityLog.setUserId(userId);
+                userActivityLog.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
+                userActivityLog.setFriendId(user.getId());
+                switch (i) {
+                    case 0:
+                        // 一份12.5的菌包
+                        userActivityLog.setSeedTypeId(ActivityEnum.FREE_SEED_30DAY.getState());
+                        userActivityLog.setName(ActivityEnum.FREE_SEED_30DAY.getMessage());
+                        break;
+                    case 1:
+                        // 5折酒水满减券
+                        userActivityLog.setFertilizerId(ActivityEnum.WINE_FERTILIZER.getState());
+                        userActivityLog.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
+                        break;
+                    case 2:
+                        // 商城食品满减券
+                        userActivityLog.setFertilizerId(ActivityEnum.MALL_FOOL_FERTILIZER.getState());
+                        userActivityLog.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
+                        break;
+                    default:
+                        break;
+                }
+                userActivityLog.setState(false);
+                userActivityLog.setAddTime(user.getRegTime());
+                if (userActivityLogDAO.insert(userActivityLog) <= 0) return null;
+                userActivityLogs.add(userActivityLog);
             }
-            userActivityLog.setAddTime(user.getRegTime());
-            if (userActivityLogDAO.insert(userActivityLog) <= 0) return null;
-            userActivityLogs.add(userActivityLog);
         }
 
+        // 赋值属性
         List<UserActivityLogVo> userActivityLogVos = Collections.synchronizedList(new ArrayList<>());
         userActivityLogs.forEach(userActivityLog -> {
             UserActivityLogVo userActivityLogVo = new UserActivityLogVo();
@@ -584,21 +589,19 @@ public class UserServiceImpl implements UserService {
         if (Objects.isNull(userActivityLog) || userActivityLog.getState())
             return resultData.setMessageEnum(MessageEnum.INVITE_REWARD);
 
-        String name = userActivityLog.getName();
-
         // 领取
-        if (Objects.equals(name, ActivityEnum.FREE_SEED_30DAY.getMessage())) {
+        if (Objects.equals(userActivityLog.getName(), ActivityEnum.FREE_SEED_30DAY.getMessage())) {
             // 一份12.5的菌包
             SeedType seedType = seedOrderService.getSeedType(userId);
             if (Objects.isNull(seedType)) return resultData;
 
-        } else if (Objects.equals(name, ActivityEnum.WINE_FERTILIZER.getMessage())) {
+        } else if (Objects.equals(userActivityLog.getName(), ActivityEnum.WINE_FERTILIZER.getMessage())) {
             // 5折酒水满减券
             resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
                     new TriggerEventResult().setUserId(userId), ActivityEnum.WINE_FERTILIZER.getState());
             if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
 
-        } else if (Objects.equals(name, ActivityEnum.MALL_FOOL_FERTILIZER.getMessage())) {
+        } else if (Objects.equals(userActivityLog.getName(), ActivityEnum.MALL_FOOL_FERTILIZER.getMessage())) {
             // 商城食物满减券
             resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
                     new TriggerEventResult().setUserId(userId), ActivityEnum.MALL_FOOL_FERTILIZER.getState());
@@ -607,8 +610,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 更新状态
-         userActivityLog.setState(true)
-                .setReceiveTime(new Date());
+        userActivityLog.setState(true).setReceiveTime(new Date());
         if (userActivityLogDAO.updateById(userActivityLog) <= 0)
             return resultData;
 
