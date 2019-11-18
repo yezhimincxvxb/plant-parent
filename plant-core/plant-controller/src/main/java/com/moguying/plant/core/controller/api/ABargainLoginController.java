@@ -1,7 +1,9 @@
 package com.moguying.plant.core.controller.api;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
+import com.moguying.plant.core.dao.bargain.BargainDetailDao;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.entity.PageResult;
@@ -45,6 +47,9 @@ public class ABargainLoginController {
 
     @Autowired
     private UserAddressDAO userAddressDAO;
+
+    @Autowired
+    private BargainDetailDao bargainDetailDao;
 
     /**
      * 点击免费拿
@@ -179,7 +184,7 @@ public class ABargainLoginController {
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());
 
         // 砍价口令
-        if (StringUtils.isNotEmpty(bargainDetail.getSymbol()) && !bargainDetail.getSymbol().contains(detail.getSymbol()))
+        if (StringUtils.isNotEmpty(bargainDetail.getSymbol()) && !bargainDetail.getSymbol().equals(detail.getSymbol()))
             return responseData
                     .setMessage(MessageEnum.BARGAIN_SYMBOL_ERROR.getMessage())
                     .setState(MessageEnum.BARGAIN_SYMBOL_ERROR.getState());
@@ -276,5 +281,42 @@ public class ABargainLoginController {
                 .setState(MessageEnum.MALL_ORDER_UPDATE_ERROR.getState());
     }
 
+    /**
+     * 是否帮过
+     */
+    @PostMapping("/is/help")
+    @ApiOperation("是否帮过")
+    public ResponseData<Integer> isHelp(@LoginUserId Integer userId, @RequestBody BargainVo bargainVo) {
+
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+
+        if (Objects.isNull(bargainVo) || Objects.isNull(bargainVo.getSymbol()))
+            return responseData
+                    .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
+                    .setState(MessageEnum.PARAMETER_ERROR.getState());
+
+        // 根据口令
+        QueryWrapper<BargainDetail> queryWrapper = new QueryWrapper<BargainDetail>().eq("symbol", bargainVo.getSymbol());
+        BargainDetail detail = bargainDetailDao.selectOne(queryWrapper);
+        if (Objects.isNull(detail))
+            return responseData
+                    .setMessage(MessageEnum.NOT_BARGAIN_DETAIL.getMessage())
+                    .setState(MessageEnum.NOT_BARGAIN_DETAIL.getState());
+
+        if (userId.equals(detail.getUserId()))
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState())
+                    .setState(1);
+
+        Integer count = bargainLogService.getBargainCount(userId, detail.getId());
+        if (count >= 1)
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState())
+                    .setState(1);
+
+        return responseData;
+    }
 
 }

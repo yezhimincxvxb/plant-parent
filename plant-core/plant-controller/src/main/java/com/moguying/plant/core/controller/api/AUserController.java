@@ -1081,8 +1081,13 @@ public class AUserController {
     @ApiOperation("品宣部-领取菌包")
     public ResponseData<Integer> freeSeed(@LoginUserId Integer userId, @RequestBody Login login) {
 
-        if (Objects.isNull(login) || Objects.isNull(login.getPhone()) || Objects.isNull(login.getCode()))
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        // 请求参数错误
+        if (Objects.isNull(login) || StringUtils.isEmpty(login.getPhone()) || StringUtils.isEmpty(login.getCode()))
+            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+
+        // 校验手机号格式
+        if (!CommonUtil.INSTANCE.isPhone(login.getPhone()))
+            return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
 
         // 短信验证
         PhoneMessage message = messageService.messageByPhone(login.getPhone());
@@ -1090,6 +1095,7 @@ public class AUserController {
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
         messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
 
+        // 赠送菌包
         ResultData<Integer> resultData = seedOrderService.sendSeedSuccess(userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
@@ -1102,9 +1108,6 @@ public class AUserController {
     public ResponseData<List<UserActivityLogVo>> inviteLog(@LoginUserId Integer userId) {
 
         ResponseData<List<UserActivityLogVo>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-
-        User user = userService.userInfoById(userId);
-        if (Objects.isNull(user)) return responseData;
 
         // 发奖
         List<UserActivityLogVo> logs = userService.inviteUser(userId);
@@ -1171,7 +1174,7 @@ public class AUserController {
     public ResponseData<Integer> friendHelp(@LoginUserId Integer userId, @PathVariable("symbol") String symbol) {
 
         ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-        if (Objects.isNull(userId) || Objects.isNull(symbol))
+        if (Objects.isNull(userId) || StringUtils.isBlank(symbol))
             return responseData;
 
         ResultData<Integer> resultData = farmerService.friendHelpSuccess(userId, symbol);

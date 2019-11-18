@@ -10,7 +10,6 @@ import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
-import com.moguying.plant.core.dao.seed.SeedTypeDAO;
 import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
@@ -20,7 +19,6 @@ import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
-import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.UserActivityLog;
 import com.moguying.plant.core.entity.user.vo.UserSeedOrder;
@@ -52,9 +50,6 @@ public class SeedOrderServiceImpl implements SeedOrderService {
 
     @Autowired
     private SeedDAO seedDAO;
-
-    @Autowired
-    private SeedTypeDAO seedTypeDAO;
 
     @Autowired
     private UserActivityLogDAO userActivityLogDAO;
@@ -129,7 +124,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
 
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
-        // 奖励只发送一次
+        // 奖励已发
         QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
                 .eq("user_id", userId)
                 .likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix());
@@ -146,6 +141,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
         UserActivityLog log = new UserActivityLog()
                 .setNumber(OrderPrefixEnum.FREE_JUN_BAO.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate())
                 .setUserId(userId)
+                .setName("登录即送30天菌包一份")
                 .setSeedTypeId(seed.getId())
                 .setState(true)
                 .setAddTime(new Date())

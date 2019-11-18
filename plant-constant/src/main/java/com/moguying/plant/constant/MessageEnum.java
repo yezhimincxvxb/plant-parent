@@ -169,6 +169,7 @@ public enum  MessageEnum {
     FERTILIZER_NOT("未满足满减券使用条件",10163),
     BARGAIN_AGAIN("已领取，快邀请好友帮忙砍价",10165),
     NOT_BARGAIN_RATE("该商品未设置砍价系数",10166),
+    NOT_BARGAIN_DETAIL("砍价详情不存在",10178),
     ADD_BARGAIN_ORDER_FAIL("生成砍价详情失败",10167),
     ADD_BARGAIN_LOG_FAIL("生成砍价记录失败",10168),
     SHARE_MAX_ON_DAY("每日分享已上限，再次分享无法获取成长值",10169),
@@ -179,7 +180,7 @@ public enum  MessageEnum {
     INVITE_REWARD("邀请奖励已领取",10175),
     YI_TI_YAN("已体验，无须重复体验",10176),
     ONT_INVITE_LOG("目前还没有邀请记录，快邀请好友拿大奖",10177),
-    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10178);
+    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10179);
 
 
 

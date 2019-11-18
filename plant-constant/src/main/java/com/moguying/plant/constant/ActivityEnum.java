@@ -7,8 +7,8 @@ public enum ActivityEnum {
     MALL_FOOL_FERTILIZER(1,"商城食品满减券"),
 
     START_ACTIVITY(1,"2019-11-18 00:00:00"),
-    MONEY_5RMB(87,"5元现金红包券"),
-    PLANT_FERTILIZER_95RMB(88,"95元种植券");
+    MONEY_5RMB(1,"5元现金红包券"),
+    PLANT_FERTILIZER_95RMB(1,"95元种植券");
 
     private Integer state;
     private String message;
