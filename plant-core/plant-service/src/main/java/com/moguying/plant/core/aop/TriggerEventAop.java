@@ -7,17 +7,16 @@ import com.moguying.plant.core.entity.TriggerEventResult;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.user.UserMessageService;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
+@Slf4j
 public class TriggerEventAop  {
-    Logger logger = LoggerFactory.getLogger(TriggerEventAop.class);
 
     @Autowired
     private UserMessageService userMessageService;

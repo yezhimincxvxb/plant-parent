@@ -144,7 +144,9 @@ device:
 reap:
   exchange:
     weigh: 1800
-
+lbs:
+  map:
+    key:
 
 ---
 debug: false

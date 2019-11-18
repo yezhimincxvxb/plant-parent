@@ -302,6 +302,9 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     }
 
     @Override
+    @FarmerTrigger(action = "plant")
+    @TriggerEvent(action = "plant")
+    @DS("write")
     public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder) {
         return plantSeed(userId,plantOrder,false);
     }
