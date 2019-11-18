@@ -18,19 +18,20 @@ import java.util.Map;
 @Component
 public class CallBackInterceptor implements HandlerInterceptor {
 
-    private Logger log  = LoggerFactory.getLogger(CallBackInterceptor.class);
+    private Logger log = LoggerFactory.getLogger(CallBackInterceptor.class);
 
 
     private String cerfile = "sq_formal_sign.cer";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Map<String,Object> requestMap = new LinkedHashMap<>();
-        requestMap.put("code",request.getParameter("code"));
-        requestMap.put("msg",request.getParameter("msg"));
-        requestMap.put("responseType",request.getParameter("responseType"));
-        requestMap.put("responseParameters",request.getParameter("responseParameters"));
-        String beforeSign = CFCARAUtil.joinMapValue(requestMap,'&');
-        if(CFCARAUtil.verifyMessageByP1(beforeSign,request.getParameter("sign"),
+        Map<String, Object> requestMap = new LinkedHashMap<>();
+        requestMap.put("code", request.getParameter("code"));
+        requestMap.put("msg", request.getParameter("msg"));
+        requestMap.put("responseType", request.getParameter("responseType"));
+        requestMap.put("responseParameters", request.getParameter("responseParameters"));
+        String beforeSign = CFCARAUtil.joinMapValue(requestMap, '&');
+        if (CFCARAUtil.verifyMessageByP1(beforeSign, request.getParameter("sign"),
                 new ClassPathResource(cerfile).getPath())) {
             log.debug("验签成功");
             return true;

@@ -6,12 +6,12 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public enum  CurlUtil {
+public enum CurlUtil {
     INSTANCE;
 
     private final int connectTimeOut = 30000;
 
-    public String jsonPostRequest(String requestUrl,String requestParam,String requestMethod){
+    public String jsonPostRequest(String requestUrl, String requestParam, String requestMethod) {
         try {
             URL url = new URL(requestUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -19,9 +19,9 @@ public enum  CurlUtil {
             connection.setRequestMethod(requestMethod);
             connection.setDoInput(true);
             connection.setDoOutput(true);
-            connection.setRequestProperty("Charset","UTF-8");
-            connection.setRequestProperty("Content-Type","application/json");
-            return httpRequest(requestParam,connection);
+            connection.setRequestProperty("Charset", "UTF-8");
+            connection.setRequestProperty("Content-Type", "application/json");
+            return httpRequest(requestParam, connection);
         } catch (ProtocolException e) {
             e.printStackTrace();
             return null;
@@ -34,7 +34,7 @@ public enum  CurlUtil {
         }
     }
 
-    public String httpRequest(String requestUrl,String requestParam,String requestMethod) {
+    public String httpRequest(String requestUrl, String requestParam, String requestMethod) {
         try {
             URL url = new URL(requestUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -42,7 +42,7 @@ public enum  CurlUtil {
             connection.setRequestMethod(requestMethod);
             connection.setDoInput(true);
             connection.setDoOutput(true);
-            return httpRequest(requestParam,connection);
+            return httpRequest(requestParam, connection);
         } catch (ProtocolException e) {
             e.printStackTrace();
             return null;

@@ -20,7 +20,7 @@ public class BuyResponse implements Serializable {
      * 如果是现金支付，则totalAmount表示：运费 + 订单总价
      * 如果是蘑菇币兑换，则totalAmount仅表示：运费
      */
-    @JSONField(ordinal = 2,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 2, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal totalAmount;
 
     @JSONField(ordinal = 3)

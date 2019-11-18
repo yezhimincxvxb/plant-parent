@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.system.PhoneMessageDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.system.PhoneMessage">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="message" jdbcType="VARCHAR" property="message" />
-    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, phone, code, message, add_time,state
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.system.PhoneMessage">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="message" jdbcType="VARCHAR" property="message"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, phone, code, message, add_time,state
+    </sql>
 
-  <select id="selectByPhoneInTime" resultMap="BaseResultMap">
-    select * from plant_phone_message
-    where phone = #{phone}
-    and UNIX_TIMESTAMP(add_time) &gt; #{inTime}
-    and state = 0
-  </select>
+    <select id="selectByPhoneInTime" resultMap="BaseResultMap">
+        select * from plant_phone_message
+        where phone = #{phone}
+        and UNIX_TIMESTAMP(add_time) &gt; #{inTime}
+        and state = 0
+    </select>
 </mapper>

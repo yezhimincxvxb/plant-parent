@@ -34,34 +34,34 @@ public class SeedInnerServiceImpl implements SeedInnerService {
     SeedService seedService;
 
     @Override
-    public PageResult<SeedInnerOrderCount> seedInnerList(Integer page , Integer size) {
+    public PageResult<SeedInnerOrderCount> seedInnerList(Integer page, Integer size) {
         innerOrderDAO.innerOrderCountList();
         return null;
     }
 
 
     @Override
-    public List<UserInner> seedInnerUserList(Integer seedId, Integer innerCount, Integer userCount)  {
+    public List<UserInner> seedInnerUserList(Integer seedId, Integer innerCount, Integer userCount) {
         Seed seed = seedDAO.selectById(seedId);
-        if(seed == null || !seed.getState().equals(SeedEnum.REVIEWED.getState()))
+        if (seed == null || !seed.getState().equals(SeedEnum.REVIEWED.getState()))
             return null;
-        if(userCount > innerCount)
+        if (userCount > innerCount)
             throw new IndexOutOfBoundsException();
-        if(innerCount > seed.getLeftCount())
+        if (innerCount > seed.getLeftCount())
             throw new IndexOutOfBoundsException();
         Random random = new Random();
         Set<Integer> idSet = new HashSet<>();
         List<UserInner> userInnerList = new ArrayList<>();
-        RandomCount randomCount = new RandomCount(innerCount,userCount);
-        while (userInnerList.size() != userCount){
+        RandomCount randomCount = new RandomCount(innerCount, userCount);
+        while (userInnerList.size() != userCount) {
             Integer id = random.nextInt(50);
-            if(!idSet.contains(id)) {
+            if (!idSet.contains(id)) {
                 idSet.add(id);
             } else continue;
 
             UserInner userInner = userInnerDAO.selectById(id);
-            if( userInner != null){
-                Integer count  = getRandomCount(randomCount);
+            if (userInner != null) {
+                Integer count = getRandomCount(randomCount);
                 userInner.setInnerCount(count);
                 userInnerList.add(userInner);
             }
@@ -72,13 +72,14 @@ public class SeedInnerServiceImpl implements SeedInnerService {
 
     /**
      * 生成随机数和
+     *
      * @param randomCount
      * @return
      */
-    private Integer getRandomCount(RandomCount randomCount){
+    private Integer getRandomCount(RandomCount randomCount) {
 
-        if(randomCount.leftUser == 1 ){
-            randomCount.leftUser --;
+        if (randomCount.leftUser == 1) {
+            randomCount.leftUser--;
             return randomCount.leftCount;
         }
         Random random = new Random();
@@ -102,16 +103,16 @@ public class SeedInnerServiceImpl implements SeedInnerService {
         Integer result = -inners.size();
         Seed update = new Seed();
         update.setId(innerBuy.getSeedId());
-        for(UserInner user : inners){
+        for (UserInner user : inners) {
 
             Seed seed = seedDAO.selectById(innerBuy.getSeedId());
-            if(seed == null || !seed.getState().equals(SeedEnum.REVIEWED.getState()))
+            if (seed == null || !seed.getState().equals(SeedEnum.REVIEWED.getState()))
                 break;
 
-            if(seed.getLeftCount() == 0)
+            if (seed.getLeftCount() == 0)
                 break;
 
-            if(seed.getLeftCount() < user.getInnerCount())
+            if (seed.getLeftCount() < user.getInnerCount())
                 user.setInnerCount(seed.getLeftCount());
 
             order.setOrderNumber(Long.toString(System.currentTimeMillis()));
@@ -123,7 +124,7 @@ public class SeedInnerServiceImpl implements SeedInnerService {
             update.setLeftCount(seed.getLeftCount() - user.getInnerCount());
             update.setInnerCount(seed.getInnerCount() + user.getInnerCount());
             result += seedDAO.updateById(update);
-            if(update.getLeftCount() == 0){
+            if (update.getLeftCount() == 0) {
                 //菌包售罄
                 seedService.seedFull(innerBuy.getSeedId());
             }
@@ -133,7 +134,7 @@ public class SeedInnerServiceImpl implements SeedInnerService {
     }
 }
 
-class RandomCount{
+class RandomCount {
 
     public int leftCount;
 

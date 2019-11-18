@@ -28,7 +28,7 @@ public class MoneyRecharge implements Serializable {
     @TableField
     private Integer userId;
 
-    @JSONField(name = "user_name",deserialize = false)
+    @JSONField(name = "user_name", deserialize = false)
 
     @TableField(exist = false)
     private String userName;
@@ -53,28 +53,28 @@ public class MoneyRecharge implements Serializable {
     /**
      * 充值时间
      */
-    @JSONField(name = "recharge_time",format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(name = "recharge_time", format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date rechargeTime;
 
     /**
      * 到账时间
      */
-    @JSONField(name = "to_account_time",format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(name = "to_account_time", format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date toAccountTime;
 
     /**
      * 到账金额
      */
-    @JSONField(name = "to_account_money",serializeUsing = BigDecimalSerialize.class)
+    @JSONField(name = "to_account_money", serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal toAccountMoney;
 
     /**
      * 充值手续费
      */
-    @JSONField(name = "fee",serializeUsing = BigDecimalSerialize.class)
+    @JSONField(name = "fee", serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal fee;
 
@@ -82,7 +82,7 @@ public class MoneyRecharge implements Serializable {
     /**
      * 第三方支付短信流水号
      */
-    @JSONField(serialize = false,deserialize = false)
+    @JSONField(serialize = false, deserialize = false)
     @TableField
     private String paySmsSqNo;
 

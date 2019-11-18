@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.content.AdvTypeDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.AdvType">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="position_flag" jdbcType="VARCHAR" property="positionFlag" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, type_name, description, position_flag
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.AdvType">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="position_flag" jdbcType="VARCHAR" property="positionFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, type_name, description, position_flag
+    </sql>
 
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_adv_type
-    <where>
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_adv_type
+        <where>
 
-      <if test="typeName != null">
-        <bind name="typeNameLike" value="'%' + typeName + '%'"/>
-        type_name like #{typeNameLike}
-      </if>
-      <if test="positionFlag != null">
-        AND position_flag = #{positionFlag}
-      </if>
-    </where>
-    order by id desc
-  </select>
+            <if test="typeName != null">
+                <bind name="typeNameLike" value="'%' + typeName + '%'"/>
+                type_name like #{typeNameLike}
+            </if>
+            <if test="positionFlag != null">
+                AND position_flag = #{positionFlag}
+            </if>
+        </where>
+        order by id desc
+    </select>
 
 
 </mapper>

@@ -44,7 +44,7 @@ public class Reap implements Serializable {
     @TableField
     private Integer seedType;
 
-    @JSONField(ordinal = 5,deserialize = false)
+    @JSONField(ordinal = 5, deserialize = false)
     @TableField(exist = false)
     private String seedName;
 
@@ -58,7 +58,7 @@ public class Reap implements Serializable {
     @TableField(exist = false)
     private Integer seedGrowDays;
 
-    @JSONField(ordinal = 8,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 8, serializeUsing = BigDecimalSerialize.class)
     @TableField(exist = false)
     private BigDecimal seedPrice;
 
@@ -107,8 +107,8 @@ public class Reap implements Serializable {
     /**
      * 种植时间
      */
-    @Excel(name = "种植时间",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(ordinal = 14,format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "种植时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 14, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date plantTime;
 
@@ -116,7 +116,7 @@ public class Reap implements Serializable {
      * 预计收益
      */
     @Excel(name = "预计收益")
-    @JSONField(ordinal = 15,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 15, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal preProfit;
 
@@ -124,44 +124,44 @@ public class Reap implements Serializable {
      * 预计收回种本成本
      */
     @Excel(name = "种植金额")
-    @JSONField(ordinal = 16,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 16, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal preAmount;
 
     /**
      * 最后一次收获时间
      */
-    @Excel(name = "预期采摘时间",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(ordinal = 17,format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "预期采摘时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 17, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date preReapTime;
 
     /**
      * 实际收益
      */
-    @JSONField(ordinal = 18,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 18, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal recProfit;
 
     /**
      * 实际收回成本
      */
-    @JSONField(ordinal = 19,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 19, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal recAmount;
 
     /**
      * 实际最后一次收获时间
      */
-    @JSONField(ordinal = 20,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 20, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date recReapTime;
 
     /**
      * 出售时间
      */
-    @Excel(name = "出售时间",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(ordinal = 21,format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "出售时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 21, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date saleTime;
 
@@ -175,7 +175,7 @@ public class Reap implements Serializable {
     /**
      * 状态：[0待采摘，1已采摘，2售卖中，3已售卖，4已兑换]
      */
-    @Excel(name = "状态",replace = {"待采摘_0","已采摘_1","售卖中_2","已售卖_3","已兑换_4"})
+    @Excel(name = "状态", replace = {"待采摘_0", "已采摘_1", "售卖中_2", "已售卖_3", "已兑换_4"})
     @JSONField(ordinal = 23)
     @TableField
     private Integer state;
@@ -183,8 +183,8 @@ public class Reap implements Serializable {
     /**
      * 添加时间
      */
-    @Excel(name = "操作时间",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(ordinal = 24,format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "操作时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 24, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 
@@ -200,7 +200,7 @@ public class Reap implements Serializable {
     /**
      * 兑换时间
      */
-    @Excel(name = "兑换时间",format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "兑换时间", format = "yyyy-MM-dd HH:mm:ss")
     @JSONField(ordinal = 26, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date exchangeTime;
@@ -216,7 +216,7 @@ public class Reap implements Serializable {
     /**
      * 出菇量
      */
-    @JSONField(ordinal = 28,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 28, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal plantWeigh;
 

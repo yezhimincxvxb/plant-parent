@@ -5,7 +5,8 @@ import com.moguying.plant.core.entity.reap.ReapWeigh;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReapWeighDAO  extends BaseDAO<ReapWeigh> {
-   int incField(ReapWeigh reapWeigh);
-   int decField(ReapWeigh reapWeigh);
+public interface ReapWeighDAO extends BaseDAO<ReapWeigh> {
+    int incField(ReapWeigh reapWeigh);
+
+    int decField(ReapWeigh reapWeigh);
 }

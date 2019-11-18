@@ -31,31 +31,31 @@ public class RedisUtil {
             config.setMaxIdle(MAX_IDLE);
             config.setMaxWaitMillis(MAX_WAIT);
             config.setTestOnBorrow(false);
-            jedisPool = new JedisPool(config,HOST,PORT,TIME_OUT,PASSWORD);
-        } catch (Exception e){
+            jedisPool = new JedisPool(config, HOST, PORT, TIME_OUT, PASSWORD);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public synchronized Jedis getJedis(){
+    public synchronized Jedis getJedis() {
         Jedis jedis = null;
         try {
             if (null != jedisPool) {
-                 jedis = jedisPool.getResource();
+                jedis = jedisPool.getResource();
                 return jedis;
             } else
                 return null;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(null != jedis)
+            if (null != jedis)
                 jedis.close();
         }
         return null;
     }
 
-    public void releaseJedis(Jedis jedis){
-        if(null != jedis)
+    public void releaseJedis(Jedis jedis) {
+        if (null != jedis)
             jedis.close();
     }
 }

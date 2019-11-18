@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReapExcLogDAO extends BaseDAO<ReapExcLog> {
 
-    IPage<ReapExcLog> selectSelective(Page page,@Param("wq") ReapExcLog where);
+    IPage<ReapExcLog> selectSelective(Page page, @Param("wq") ReapExcLog where);
 }

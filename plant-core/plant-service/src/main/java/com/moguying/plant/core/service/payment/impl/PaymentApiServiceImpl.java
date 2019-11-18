@@ -35,18 +35,18 @@ public class PaymentApiServiceImpl implements PaymentApiService {
     @Override
     @DS("write")
     public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, PayOrder orderDetail, User userInfo) {
-        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
         // 仅全额由余额支付时校验支付密码
-        if(orderDetail.getAccountPayAmount().add(orderDetail.getReducePayAmount())
-                .compareTo(orderDetail.getBuyAmount().add(orderDetail.getFeeAmount())) == 0){
-            if(null == userInfo.getPayPassword() || StringUtils.isEmpty(userInfo.getPayPassword()))
+        if (orderDetail.getAccountPayAmount().add(orderDetail.getReducePayAmount())
+                .compareTo(orderDetail.getBuyAmount().add(orderDetail.getFeeAmount())) == 0) {
+            if (null == userInfo.getPayPassword() || StringUtils.isEmpty(userInfo.getPayPassword()))
                 return resultData.setMessageEnum(MessageEnum.NEED_PAY_PASSWORD);
-            if(!PasswordUtil.INSTANCE.encode(payOrder.getPayPassword().getBytes()).equals(userInfo.getPayPassword()))
+            if (!PasswordUtil.INSTANCE.encode(payOrder.getPayPassword().getBytes()).equals(userInfo.getPayPassword()))
                 return resultData.setMessageEnum(MessageEnum.PAY_PASSWORD_ERROR);
         }
 
         // 余额支付
-        if(orderDetail.getAccountPayAmount().compareTo(new BigDecimal("0")) > 0){
+        if (orderDetail.getAccountPayAmount().compareTo(new BigDecimal("0")) > 0) {
             // 资金操作
             UserMoneyOperator operator = new UserMoneyOperator();
             operator.setOpType(orderDetail.getOpType());
@@ -54,13 +54,13 @@ public class PaymentApiServiceImpl implements PaymentApiService {
             money.setAvailableMoney(orderDetail.getAccountPayAmount().negate());
             operator.setUserMoney(money);
             operator.setOperationId(orderDetail.getOrderNumber());
-            if(userMoneyService.updateAccount(operator) != null) {
+            if (userMoneyService.updateAccount(operator) != null) {
                 resultData.setMessageEnum(MessageEnum.SUCCESS);
             }
         }
 
         // 卡支付
-        if(orderDetail.getCarPayAmount().compareTo(new BigDecimal("0")) > 0) {
+        if (orderDetail.getCarPayAmount().compareTo(new BigDecimal("0")) > 0) {
 
             PayRequestInfo payRequestInfo = new PayRequestInfo();
             payRequestInfo.setUserId(userInfo.getId());
@@ -73,7 +73,7 @@ public class PaymentApiServiceImpl implements PaymentApiService {
             ResultData<PaymentResponse> payResult = paymentService.pay(payRequestInfo);
             if (null != payResult && payResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
                 resultData.setMessageEnum(MessageEnum.SUCCESS);
-            } else if(null != payResult){
+            } else if (null != payResult) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return resultData.setMessageEnum(MessageEnum.ERROR).setData(payResult.getData());
             }

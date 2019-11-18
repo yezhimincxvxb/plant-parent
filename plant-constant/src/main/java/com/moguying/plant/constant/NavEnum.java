@@ -1,8 +1,8 @@
 package com.moguying.plant.constant;
 
-public enum  NavEnum {
-    PLANT_TYPE(1,"种植平台"),
-    MALL_TYPE(2,"商城");
+public enum NavEnum {
+    PLANT_TYPE(1, "种植平台"),
+    MALL_TYPE(2, "商城");
 
     NavEnum(Integer type, String typeName) {
         this.type = type;

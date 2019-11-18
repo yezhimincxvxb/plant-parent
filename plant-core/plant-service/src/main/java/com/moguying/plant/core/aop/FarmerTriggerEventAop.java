@@ -23,15 +23,15 @@ public class FarmerTriggerEventAop {
     @AfterReturning(pointcut = "@annotation(trigger)",
             returning = "retVal"
     )
-    private void addMessage(Object retVal, FarmerTrigger trigger){
-        if(retVal instanceof ResultData){
+    private void addMessage(Object retVal, FarmerTrigger trigger) {
+        if (retVal instanceof ResultData) {
             ResultData resultData = (ResultData) retVal;
-            if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)){
-                if(resultData.getData() instanceof User){
-                    farmerService.addEnergyToUserByTriggerEvent(trigger.action(),((User) resultData.getData()).getId());
+            if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+                if (resultData.getData() instanceof User) {
+                    farmerService.addEnergyToUserByTriggerEvent(trigger.action(), ((User) resultData.getData()).getId());
                 }
-                if(resultData.getData() instanceof TriggerEventResult){
-                    farmerService.addEnergyToUserByTriggerEvent(trigger.action(),((TriggerEventResult)resultData.getData()).getUserId());
+                if (resultData.getData() instanceof TriggerEventResult) {
+                    farmerService.addEnergyToUserByTriggerEvent(trigger.action(), ((TriggerEventResult) resultData.getData()).getUserId());
                 }
             }
         }

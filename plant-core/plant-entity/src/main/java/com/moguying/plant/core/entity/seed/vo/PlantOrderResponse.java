@@ -25,12 +25,12 @@ public class PlantOrderResponse {
     /**
      * 预期采摘时间
      */
-    @JSONField(ordinal = 3,format = "MM月dd日")
+    @JSONField(ordinal = 3, format = "MM月dd日")
     private Date preReapTime;
 
     private transient Integer userId;
 
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal plantAmount;
 
     /**

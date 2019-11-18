@@ -24,44 +24,45 @@ public class MallProductTypeController {
 
     /**
      * 商品类型列表
+     *
      * @param search
      * @return
      */
     @PostMapping("/list")
     @ApiOperation("商品类型列表")
-    public ResponseData<List<MallProductType>> typePageResult(@RequestBody PageSearch<MallProductType> search){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),typeService.typeList(search.getWhere()));
+    public ResponseData<List<MallProductType>> typePageResult(@RequestBody PageSearch<MallProductType> search) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), typeService.typeList(search.getWhere()));
     }
 
 
     /**
      * 添加/修改商品类型
+     *
      * @param type
      * @return
      */
     @ApiOperation("添加/修改商品类型")
     @PostMapping
     public ResponseData<Integer> saveType(@RequestBody MallProductType type) {
-        if(null == type || null == type.getTypeName())
-            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
+        if (null == type || null == type.getTypeName())
+            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
 
         ResultData<Integer> resultData = typeService.saveType(type);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
     /**
      * 删除对应id的商品类型
+     *
      * @param id
      * @return
      */
     @ApiOperation("删除对应id的商品类型")
     @DeleteMapping("/{id}")
-    public ResponseData<Integer> deleteType(@PathVariable Integer id){
+    public ResponseData<Integer> deleteType(@PathVariable Integer id) {
         ResultData<Integer> resultData = typeService.deleteType(id);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
-
-
 
 
 }

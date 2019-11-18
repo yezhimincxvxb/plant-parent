@@ -1,6 +1,6 @@
 package com.moguying.plant.constant;
 
-public enum  OrderPrefixEnum {
+public enum OrderPrefixEnum {
     SEED_ORDER("O"),
     SEED_ORDER_DETAIL("D"),
     RECHARGE_ORDER("R"),
@@ -14,7 +14,6 @@ public enum  OrderPrefixEnum {
     INVITE_REWARD("IR"),
     FRIEND_HELP("FH"),
     RED_PACKAGE("RP");
-
 
 
     private String preFix;

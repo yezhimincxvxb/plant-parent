@@ -34,7 +34,7 @@ public class ReapFeeParam implements Serializable {
     private Integer seedType;
 
     @TableField
-    @TableLogic(value = "0",delval = "1")
+    @TableLogic(value = "0", delval = "1")
     @JSONField(serialize = false)
     private Boolean isDelete;
 

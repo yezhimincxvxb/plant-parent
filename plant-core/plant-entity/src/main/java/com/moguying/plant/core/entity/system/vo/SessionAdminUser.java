@@ -28,7 +28,7 @@ public class SessionAdminUser {
      */
     private Integer roleId;
 
-    public SessionAdminUser (AdminUser adminUser){
+    public SessionAdminUser(AdminUser adminUser) {
         id = adminUser.getId();
         name = adminUser.getUserName();
         isLocked = adminUser.getIsLocked();

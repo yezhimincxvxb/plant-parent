@@ -16,5 +16,6 @@ import java.util.List;
 @Repository
 public interface BannerDAO extends BaseDAO<Banner> {
     IPage<Banner> selectSelective(Page<Banner> page, @Param("wq") Banner where);
+
     List<Banner> bannerListForHome(Integer type);
 }

@@ -52,5 +52,5 @@ public class ReapWeigh {
      * 可领取收益
      */
     @TableField
-    private  BigDecimal availableProfit;
+    private BigDecimal availableProfit;
 }

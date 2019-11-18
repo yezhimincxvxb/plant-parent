@@ -24,21 +24,21 @@ public class AccountLogAop {
     Logger log = LoggerFactory.getLogger(AccountLogAop.class);
 
     @Pointcut("execution(* com.moguying.plant.core.service.account.UserMoneyService.updateAccount(..))")
-    public void accountLog(){
+    public void accountLog() {
 
     }
 
 
-    @AfterReturning( returning = "result",pointcut = "accountLog()")
-    public void addAccountLog(JoinPoint joinPoint, Object result){
+    @AfterReturning(returning = "result", pointcut = "accountLog()")
+    public void addAccountLog(JoinPoint joinPoint, Object result) {
         UserMoneyOperator operator = null;
 
-        if(result != null) {
+        if (result != null) {
             operator = (UserMoneyOperator) result;
             UserMoneyLog userMoneyLog = new UserMoneyLog();
             userMoneyLog.setUserId(operator.getUserMoney().getUserId());
             //如果影响金额为空，则不记录
-            if(null == operator.getAffectMoney())
+            if (null == operator.getAffectMoney())
                 return;
             userMoneyLog.setAffectMoney(operator.getAffectMoney());
             userMoneyLog.setAvailableMoney(operator.getUserMoney().getAvailableMoney());

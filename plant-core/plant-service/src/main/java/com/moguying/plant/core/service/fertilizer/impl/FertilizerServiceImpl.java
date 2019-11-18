@@ -88,8 +88,8 @@ public class FertilizerServiceImpl implements FertilizerService {
     @Override
     @DS("read")
     public PageResult<Fertilizer> fertilizerList(int page, int size, Fertilizer where) {
-        IPage<Fertilizer> pageResult = fertilizerDAO.selectSelective(new Page<>(page,size),where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        IPage<Fertilizer> pageResult = fertilizerDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
 
@@ -128,7 +128,7 @@ public class FertilizerServiceImpl implements FertilizerService {
             condition.setBlockId(block.getSeedType());
         }*/
 
-       // 指定商城
+        // 指定商城
         if (null != condition.getMallOrderId()) {
             List<OrderItem> mallOrderDetail = mallOrderDetailDAO.selectDetailListByOrderId(condition.getMallOrderId(), condition.getUserId());
             if (mallOrderDetail.size() == 1)
@@ -271,7 +271,7 @@ public class FertilizerServiceImpl implements FertilizerService {
     @DS("read")
     public PageResult<ExchangeInfo> showFertilizer(Integer page, Integer size) {
         IPage<ExchangeInfo> pageResult = fertilizerDAO.showFertilizer(new Page<>(page, size));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -284,6 +284,6 @@ public class FertilizerServiceImpl implements FertilizerService {
     @DS("read")
     public PageResult<ExchangeInfo> showFertilizerLog(Integer page, Integer size, Integer userId) {
         IPage<ExchangeInfo> pageResult = saleCoinLogDao.showFertilizerLog(new Page<>(page, size), userId);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 }

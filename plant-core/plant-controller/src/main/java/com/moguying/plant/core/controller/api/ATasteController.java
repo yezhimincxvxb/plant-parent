@@ -52,7 +52,7 @@ public class ATasteController {
                     .setMessage(MessageEnum.PARAMETER_ERROR.getMessage())
                     .setState(MessageEnum.PARAMETER_ERROR.getState());
 
-       return responseData.setData(tasteService.isNew(userId));
+        return responseData.setData(tasteService.isNew(userId));
     }
 
     /**
@@ -79,7 +79,7 @@ public class ATasteController {
     @ApiOperation("种植体验")
     public ResponseData<PlantOrderResponse> plant(@LoginUserId Integer userId, @RequestBody PlantOrder plantOrder) {
         ResultData<TriggerEventResult<PlantOrderResponse>> resultData = plantOrderService.plantSeed(userId, plantOrder, true);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),resultData.getData() == null ? null : resultData.getData().getData());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData() == null ? null : resultData.getData().getData());
     }
 
 
@@ -98,41 +98,42 @@ public class ATasteController {
 
     /**
      * 获取使用的弹幕
+     *
      * @return
      */
     @GetMapping("/pop")
     @ApiOperation("获取使用的弹幕")
     @NoLogin
-    public ResponseData<PopMessage> popMessage(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),popMessageService.usedPopMessage());
+    public ResponseData<PopMessage> popMessage() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), popMessageService.usedPopMessage());
     }
 
 
     /**
-     *  新手体验券礼包
+     * 新手体验券礼包
+     *
      * @return
      */
     @GetMapping("/gift")
     @ApiOperation("新手体验券礼包")
     @NoLogin
-    public ResponseData<List<Fertilizer>> giftList(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),
+    public ResponseData<List<Fertilizer>> giftList() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                 tasteService.tasteGiftList());
     }
 
     /**
      * 领取新手礼包
+     *
      * @param userId
      * @return
      */
     @PostMapping("/gift")
     @ApiOperation("领取新手礼包")
-    public ResponseData<Integer> pickUpGift(@LoginUserId Integer userId){
+    public ResponseData<Integer> pickUpGift(@LoginUserId Integer userId) {
         ResultData<Integer> pickUpGift = tasteService.pickUpGift(userId);
-        return new ResponseData<>(pickUpGift.getMessageEnum().getMessage(),pickUpGift.getMessageEnum().getState(), pickUpGift.getData());
+        return new ResponseData<>(pickUpGift.getMessageEnum().getMessage(), pickUpGift.getMessageEnum().getState(), pickUpGift.getData());
     }
-
-
 
 
     /**
@@ -145,12 +146,13 @@ public class ATasteController {
     @PostMapping("/free/list")
     @ApiOperation("首页免费试吃表列")
     public PageResult<Taste> freeTasteList(@RequestBody PageSearch<Taste> search) {
-      return freeTasteList(null,search);
+        return freeTasteList(null, search);
     }
 
 
     /**
      * 用户登录查询的试吃列表
+     *
      * @param userId
      * @param search
      * @return
@@ -159,23 +161,24 @@ public class ATasteController {
     @ApiOperation("用户登录查询的试吃列表")
     public PageResult<Taste> freeTasteList(@LoginUserId Integer userId, @RequestBody PageSearch<Taste> search) {
         Optional<Taste> optional = Optional.ofNullable(search.getWhere());
-        if(!optional.isPresent())
+        if (!optional.isPresent())
             search.setWhere(new Taste());
         search.getWhere().setIsShow(true);
-        return tasteService.tastePageResult(search.getPage(),search.getSize(),search.getWhere(),userId);
+        return tasteService.tastePageResult(search.getPage(), search.getSize(), search.getWhere(), userId);
     }
 
 
     /**
      * 查询申请记录
+     *
      * @param search
      * @return
      */
     @NoLogin
     @PostMapping("/free/apply/log")
     @ApiOperation("查询申请记录")
-    public PageResult<TasteApply> tasteApplyList(@RequestBody PageSearch<TasteApply> search){
-        return tasteService.tasteApplyPageResult(search.getPage(),search.getSize(),search.getWhere());
+    public PageResult<TasteApply> tasteApplyList(@RequestBody PageSearch<TasteApply> search) {
+        return tasteService.tasteApplyPageResult(search.getPage(), search.getSize(), search.getWhere());
     }
 
 

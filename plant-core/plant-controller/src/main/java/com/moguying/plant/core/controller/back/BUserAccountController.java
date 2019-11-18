@@ -45,19 +45,21 @@ public class BUserAccountController {
 
     /**
      * 资金列表
+     *
      * @return
      */
     @PostMapping(value = "/list")
     @ApiOperation("资金列表")
-    public PageResult<UserMoney> userAccountList(@RequestBody PageSearch<UserMoney> search){
-        if(null == search.getWhere())
+    public PageResult<UserMoney> userAccountList(@RequestBody PageSearch<UserMoney> search) {
+        if (null == search.getWhere())
             search.setWhere(new UserMoney());
-        return userMoneyService.userMoneyList(search.getPage(),search.getSize(),search.getWhere());
+        return userMoneyService.userMoneyList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 导出表
+     *
      * @param user
      * @param search
      * @param request
@@ -66,27 +68,28 @@ public class BUserAccountController {
     @PostMapping(value = "/excel")
     @ApiOperation("资金导出表")
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                               @RequestBody PageSearch<UserMoney> search, HttpServletRequest request){
-        userMoneyService.downloadExcel(user.getId(),search,request);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+                                               @RequestBody PageSearch<UserMoney> search, HttpServletRequest request) {
+        userMoneyService.downloadExcel(user.getId(), search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
-
 
 
     /**
      * 资金日志
+     *
      * @return
      */
     @PostMapping(value = "/log")
     @ApiOperation("资金日志")
-    public PageResult<UserMoneyLog> accountLogList(@RequestBody PageSearch<UserMoneyLog> search){
-        if(null == search.getWhere())
+    public PageResult<UserMoneyLog> accountLogList(@RequestBody PageSearch<UserMoneyLog> search) {
+        if (null == search.getWhere())
             search.setWhere(new UserMoneyLog());
-        return userMoneyLogService.moneyLogList(search.getPage(),search.getSize(),search.getWhere());
+        return userMoneyLogService.moneyLogList(search.getPage(), search.getSize(), search.getWhere());
     }
 
     /**
      * 导出资金日志表
+     *
      * @param user
      * @param search
      * @param request
@@ -95,41 +98,42 @@ public class BUserAccountController {
     @PostMapping(value = "/log/excel")
     @ApiOperation("导出资金日志表")
     public ResponseData<Integer> downloadLogExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                                  @RequestBody PageSearch<UserMoneyLog> search, HttpServletRequest request){
-        if(Objects.isNull(search.getWhere())) search.setWhere(new UserMoneyLog());
-        userMoneyLogService.downloadExcel(user.getId(),search,request);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+                                                  @RequestBody PageSearch<UserMoneyLog> search, HttpServletRequest request) {
+        if (Objects.isNull(search.getWhere())) search.setWhere(new UserMoneyLog());
+        userMoneyLogService.downloadExcel(user.getId(), search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
-
 
 
     /**
      * 充值列表
+     *
      * @return
      */
     @GetMapping(value = "/recharge")
     @ApiOperation("充值列表")
-    public PageResult<MoneyRecharge> rechargeList(@RequestBody PageSearch<MoneyRecharge> search){
-        return moneyRechargeService.moneyRechargeList(search.getPage(),search.getSize(),search.getWhere());
+    public PageResult<MoneyRecharge> rechargeList(@RequestBody PageSearch<MoneyRecharge> search) {
+        return moneyRechargeService.moneyRechargeList(search.getPage(), search.getSize(), search.getWhere());
     }
-
 
 
     /**
      * 提现列表
+     *
      * @return
      */
     @PostMapping(value = "/withdraw")
     @ApiOperation("提现列表")
-    public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch<MoneyWithdraw> search){
-        if(null == search.getWhere())
+    public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch<MoneyWithdraw> search) {
+        if (null == search.getWhere())
             search.setWhere(new MoneyWithdraw());
-        return moneyWithdrawService.moneyWithdrawList(search.getPage(),search.getSize(),search.getWhere());
+        return moneyWithdrawService.moneyWithdrawList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 下载用户提现列表
+     *
      * @param user
      * @param search
      * @param request
@@ -138,29 +142,29 @@ public class BUserAccountController {
     @PostMapping(value = "/withdraw/excel")
     @ApiOperation("下载用户提现列表")
     public ResponseData<Integer> withdrawListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                                   @RequestBody PageSearch<MoneyWithdraw> search, HttpServletRequest request){
-        if(Objects.isNull(search.getWhere())) search.setWhere(new MoneyWithdraw());
-        moneyWithdrawService.downloadExcel(user.getId(),search,request);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+                                                   @RequestBody PageSearch<MoneyWithdraw> search, HttpServletRequest request) {
+        if (Objects.isNull(search.getWhere())) search.setWhere(new MoneyWithdraw());
+        moneyWithdrawService.downloadExcel(user.getId(), search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
-
 
 
     /**
      * 提现复审
+     *
      * @return
      */
     @PutMapping("/withdraw/{id}")
     @ApiOperation("提现复审")
     public ResponseData<Integer> reviewWithdraw(@PathVariable Integer id, @RequestParam("state") Boolean isPass,
-                                                @SessionAttribute(SessionAdminUser.sessionKey)AdminUser adminUser){
+                                                @SessionAttribute(SessionAdminUser.sessionKey) AdminUser adminUser) {
         ResultData<PaymentResponse> resultData = moneyWithdrawService.reviewMoneyWithdraw(id,
                 isPass ? MoneyStateEnum.WITHDRAW_SUCCESS.getState() : MoneyStateEnum.WITHDRAW_FAILED.getState(),
                 adminUser.getId());
 
-        if(resultData.getMessageEnum().equals(MessageEnum.ERROR) && null != resultData.getData())
-            return new ResponseData<>(resultData.getData().getMsg(),resultData.getMessageEnum().getState());
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        if (resultData.getMessageEnum().equals(MessageEnum.ERROR) && null != resultData.getData())
+            return new ResponseData<>(resultData.getData().getMsg(), resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 }

@@ -6,34 +6,37 @@ import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
-public enum  CommonUtil {
+public enum CommonUtil {
     INSTANCE;
 
-    private final String[] seedStr = {"0","Q","9","M","1","U","6","3","B","N","4","D","5","W","C","7","R","F","8","A","E","G","P",
-            "Y","J","K","H","L","S","T","V","2","X","Z"};
+    private final String[] seedStr = {"0", "Q", "9", "M", "1", "U", "6", "3", "B", "N", "4", "D", "5", "W", "C", "7", "R", "F", "8", "A", "E", "G", "P",
+            "Y", "J", "K", "H", "L", "S", "T", "V", "2", "X", "Z"};
 
     /**
      * 校验是否为手机号
+     *
      * @param phone
      * @return
      */
-    public boolean isPhone(String phone){
+    public boolean isPhone(String phone) {
 
-        return Pattern.matches("^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$",phone);
+        return Pattern.matches("^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$", phone);
     }
 
 
     /**
      * 短信验证码
+     *
      * @return
      */
-    public String messageCode(){
-        return Integer.toString((int)(((Math.random()*9) + 1) * 100000));
+    public String messageCode() {
+        return Integer.toString((int) (((Math.random() * 9) + 1) * 100000));
     }
 
 
     /**
      * 身份证号校验
+     *
      * @param IDNumber
      * @return
      */
@@ -84,10 +87,11 @@ public enum  CommonUtil {
 
     /**
      * 用户于微信生成签名序列字符
+     *
      * @param decript
      * @return
      */
-    public String sha1Sign(String decript){
+    public String sha1Sign(String decript) {
         try {
             MessageDigest digest = java.security.MessageDigest.getInstance("SHA-1");
             try {
@@ -117,27 +121,28 @@ public enum  CommonUtil {
 
     /**
      * 生成6位邀请码
-     * @param  seed 生成因子
+     *
+     * @param seed 生成因子
      * @return
      */
-    public String createInviteCode(Integer seed){
+    public String createInviteCode(Integer seed) {
         Integer mod = 0;
         LinkedList<String> stringLinkedList = new LinkedList<>();
         seed += 50000000;
-        while (seed != 0){
+        while (seed != 0) {
             mod = seed % 34;
             seed = seed / 34;
             stringLinkedList.addFirst(seedStr[mod]);
         }
         StringBuilder sb = new StringBuilder();
-        if(stringLinkedList.size() >= 6){
-            for(String i : stringLinkedList){
+        if (stringLinkedList.size() >= 6) {
+            for (String i : stringLinkedList) {
                 sb.append(i);
             }
             return sb.toString();
         } else {
-            for(int i = 0 ; i < 6; i++){
-                if(i < 6 - stringLinkedList.size()){
+            for (int i = 0; i < 6; i++) {
+                if (i < 6 - stringLinkedList.size()) {
                     sb.append(seedStr[0]);
                 } else {
                     sb.append(stringLinkedList.pollFirst());

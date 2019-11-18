@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class ModifyItemResponse implements Serializable {
 
     public ModifyItemResponse(BigDecimal checkedAmount) {
-        this(checkedAmount,false);
+        this(checkedAmount, false);
     }
 
     public ModifyItemResponse(BigDecimal checkedAmount, Boolean checkAll) {
@@ -21,7 +21,7 @@ public class ModifyItemResponse implements Serializable {
         this.checkAll = checkAll;
     }
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 1)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 1)
     private BigDecimal checkedAmount = BigDecimal.ZERO;
 
     @JSONField(ordinal = 2)

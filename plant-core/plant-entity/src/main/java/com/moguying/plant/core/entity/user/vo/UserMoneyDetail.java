@@ -41,7 +41,7 @@ public class UserMoneyDetail implements Serializable {
     /**
      * 影响时间
      */
-    @JSONField(ordinal = 5,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 5, format = "yyyy-MM-dd HH:mm:ss")
     private Date affectTime;
 
     /**

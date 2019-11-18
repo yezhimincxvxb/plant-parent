@@ -15,6 +15,4 @@ public interface MallProductTypeService {
     ResultData<Integer> deleteType(Integer id);
 
 
-
-
 }

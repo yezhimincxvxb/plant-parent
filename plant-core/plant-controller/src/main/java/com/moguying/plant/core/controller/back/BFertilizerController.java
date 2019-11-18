@@ -42,9 +42,9 @@ public class BFertilizerController {
     @PostMapping("/list")
     @ApiOperation("券列表")
     public PageResult<Fertilizer> fertilizerList(@RequestBody PageSearch<Fertilizer> search) {
-        if(null == search.getWhere())
+        if (null == search.getWhere())
             search.setWhere(new Fertilizer());
-        return fertilizerService.fertilizerList(search.getPage(),search.getSize(),search.getWhere());
+        return fertilizerService.fertilizerList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 

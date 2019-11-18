@@ -9,6 +9,7 @@ public interface PopMessageService {
 
     /**
      * 保存弹幕信息
+     *
      * @param message
      * @return
      */
@@ -16,13 +17,14 @@ public interface PopMessageService {
 
     /**
      * 删除弹幕信息
+     *
      * @param id
      * @return
      */
     ResultData<Boolean> deletePopMessage(String id);
 
 
-    PageResult<PopMessage> popMessagePageResult(Integer page,Integer size,PopMessage message);
+    PageResult<PopMessage> popMessagePageResult(Integer page, Integer size, PopMessage message);
 
     PopMessage usedPopMessage();
 

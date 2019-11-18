@@ -43,23 +43,25 @@ public class UserMoneyLogServiceImpl implements UserMoneyLogService {
     @DS("read")
     public PageResult<UserMoneyLog> moneyLogList(Integer page, Integer size, UserMoneyLog where) {
         IPage<UserMoneyLog> pageResult = userMoneyLogDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     /**
      * 对收益求和
+     *
      * @param userId
      * @return
      */
     @Override
     @DS("read")
     public BigDecimal sumFieldAndType(FieldEnum field, Integer userId, List<MoneyOpEnum> opEnums) {
-        return userMoneyLogDAO.fieldSumByTypeUserId(field.getField(),userId, opEnums,null,null);
+        return userMoneyLogDAO.fieldSumByTypeUserId(field.getField(), userId, opEnums, null, null);
     }
 
 
     /**
      * 用户查询个人资金明细
+     *
      * @param userId
      * @param where
      * @return

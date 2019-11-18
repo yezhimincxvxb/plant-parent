@@ -31,21 +31,21 @@ public class MallCarServiceImpl implements MallCarService {
     @DS("read")
     public PageResult<OrderItem> userCarItems(Integer page, Integer size, Integer userId) {
         IPage<OrderItem> pageResult = mallCarDAO.userCarItemList(new Page<>(page, size), userId);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("write")
     public ResultData<Integer> addItemToCar(MallCar mallCar) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        if(null == mallProductDAO.productCountEnough(mallCar.getProductId(),mallCar.getProductCount()))
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+        if (null == mallProductDAO.productCountEnough(mallCar.getProductId(), mallCar.getProductCount()))
             return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_ENOUGH);
-        MallCar carItem =  mallCarDAO.selectByUserIdAndProductId(mallCar.getUserId(),mallCar.getProductId());
-        if(null == carItem){
-            if(mallCarDAO.insert(mallCar) > 0)
+        MallCar carItem = mallCarDAO.selectByUserIdAndProductId(mallCar.getUserId(), mallCar.getProductId());
+        if (null == carItem) {
+            if (mallCarDAO.insert(mallCar) > 0)
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(mallCar.getId());
         } else {
-            if(mallCarDAO.addCarItemCount(carItem.getId(),mallCar.getProductCount()) > 0)
+            if (mallCarDAO.addCarItemCount(carItem.getId(), mallCar.getProductCount()) > 0)
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(carItem.getId());
         }
         return resultData;
@@ -53,9 +53,9 @@ public class MallCarServiceImpl implements MallCarService {
 
     @Override
     @DS("write")
-    public ResultData<Boolean> removeItemFromCar(List<OrderItem> ids,Integer userId) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
-        if(mallCarDAO.deleteItemByRange(ids,userId) > 0)
+    public ResultData<Boolean> removeItemFromCar(List<OrderItem> ids, Integer userId) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
+        if (mallCarDAO.deleteItemByRange(ids, userId) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
         return resultData;
     }
@@ -63,12 +63,12 @@ public class MallCarServiceImpl implements MallCarService {
     @Override
     @DS("write")
     public ResultData<Integer> modifyItemCount(OrderItem orderItem) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MallCar item = mallCarDAO.selectById(orderItem.getId());
-        if(null == item || !orderItem.getProductId().equals(item.getProductId()))
+        if (null == item || !orderItem.getProductId().equals(item.getProductId()))
             return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
         Integer modifyCount = orderItem.getBuyCount();
-        if(modifyCount > 0) {
+        if (modifyCount > 0) {
             if (null == mallProductDAO.productCountEnough(item.getProductId(), modifyCount))
                 return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_ENOUGH);
         } else {
@@ -77,7 +77,7 @@ public class MallCarServiceImpl implements MallCarService {
         MallCar update = new MallCar();
         update.setId(orderItem.getId());
         update.setProductCount(orderItem.getBuyCount());
-        if(mallCarDAO.updateById(update) > 0)
+        if (mallCarDAO.updateById(update) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;
     }
@@ -86,16 +86,16 @@ public class MallCarServiceImpl implements MallCarService {
     @DS("read")
     public BigDecimal getCheckedItemAmount(Integer userId) {
         BigDecimal amount = mallCarDAO.sumCheckedItemAmount(userId);
-       if(null == amount)
-           return BigDecimal.ZERO;
-       return amount;
+        if (null == amount)
+            return BigDecimal.ZERO;
+        return amount;
     }
 
     @Override
     @DS("write")
-    public ResultData<Integer> checkItems(List<OrderItem> items,Integer userId,Boolean check) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        if(mallCarDAO.checkItems(items,userId,check) > 0)
+    public ResultData<Integer> checkItems(List<OrderItem> items, Integer userId, Boolean check) {
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+        if (mallCarDAO.checkItems(items, userId, check) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;
     }
@@ -103,8 +103,8 @@ public class MallCarServiceImpl implements MallCarService {
     @Override
     @DS("read")
     public Boolean isAllCheck(Integer userId) {
-        Integer unCheckCount = mallCarDAO.countByCheckState(false,userId);
-        if(null == unCheckCount || unCheckCount == 0)
+        Integer unCheckCount = mallCarDAO.countByCheckState(false, userId);
+        if (null == unCheckCount || unCheckCount == 0)
             return true;
         return false;
     }

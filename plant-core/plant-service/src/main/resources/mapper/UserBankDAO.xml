@@ -1,64 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.user.UserBankDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserBank">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="bank_number" jdbcType="VARCHAR" property="bankNumber" />
-    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
-    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
-    <result column="bank_id" jdbcType="VARCHAR" property="bankId" />
-    <result column="card_type" jdbcType="VARCHAR" property="cardType" />
-    <result column="bank_address" jdbcType="VARCHAR" property="bankAddress" />
-    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-  </resultMap>
-  
-  <resultMap id="BankInfoWithPaymentAccountMap" type="com.moguying.plant.core.entity.user.UserBank" extends="BaseResultMap">
-    <result column="payment_account" jdbcType="INTEGER" property="paymentAccount" />
-  </resultMap>
-  
-  
-  <sql id="Base_Column_List">
-    id,user_id, order_number,bank_number, bank_id, card_type, bank_address, add_time, `state`,bank_phone
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserBank">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="bank_number" jdbcType="VARCHAR" property="bankNumber"/>
+        <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="bank_id" jdbcType="VARCHAR" property="bankId"/>
+        <result column="card_type" jdbcType="VARCHAR" property="cardType"/>
+        <result column="bank_address" jdbcType="VARCHAR" property="bankAddress"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+    </resultMap>
+
+    <resultMap id="BankInfoWithPaymentAccountMap" type="com.moguying.plant.core.entity.user.UserBank"
+               extends="BaseResultMap">
+        <result column="payment_account" jdbcType="INTEGER" property="paymentAccount"/>
+    </resultMap>
 
 
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_user_bank
-    <where>
-      <if test="userId != null">
-        user_id = #{userId}
-      </if>
-      <if test="state != null">
-        AND state = #{state}
-      </if>
-      <if test="bankNumber != null">
-        AND bank_number = #{bankNumber}
-      </if>
-      <if test="bankPhone != null">
-        AND bank_phone = #{bankPhone}
-      </if>
-      <if test="orderNumber != null">
-        AND order_number = #{orderNumber}
-      </if>
-    </where>
-    order by add_time desc
-  </select>
+    <sql id="Base_Column_List">
+        id,user_id, order_number,bank_number, bank_id, card_type, bank_address, add_time, `state`,bank_phone
+    </sql>
 
-<select id="bankInfoByUserIdAndId" resultMap="BankInfoWithPaymentAccountMap" parameterType="int">
-  select t1.*,t2.payment_account from plant_user_bank t1
-  left join plant_user t2 on t1.user_id = t2.id
-  where
-   <if test="userId != null">
-     t1.user_id = #{userId}
-   </if>
-   <if test="id != null">
-     AND t1.id = #{id}
-   </if>
-    and t2.user_state = 1
-</select>
 
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_user_bank
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="bankNumber != null">
+                AND bank_number = #{bankNumber}
+            </if>
+            <if test="bankPhone != null">
+                AND bank_phone = #{bankPhone}
+            </if>
+            <if test="orderNumber != null">
+                AND order_number = #{orderNumber}
+            </if>
+        </where>
+        order by add_time desc
+    </select>
+
+    <select id="bankInfoByUserIdAndId" resultMap="BankInfoWithPaymentAccountMap" parameterType="int">
+        select t1.*,t2.payment_account from plant_user_bank t1
+        left join plant_user t2 on t1.user_id = t2.id
+        where
+        <if test="userId != null">
+            t1.user_id = #{userId}
+        </if>
+        <if test="id != null">
+            AND t1.id = #{id}
+        </if>
+        and t2.user_state = 1
+    </select>
 
 
 </mapper>

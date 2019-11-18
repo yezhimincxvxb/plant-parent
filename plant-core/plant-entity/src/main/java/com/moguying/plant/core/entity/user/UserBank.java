@@ -24,14 +24,14 @@ public class UserBank implements Serializable {
     /**
      * 用户id
      */
-    @JSONField(ordinal = 2,serialize = false)
+    @JSONField(ordinal = 2, serialize = false)
     @TableField
     private Integer userId;
 
     /**
      * 银行卡号
      */
-    @JSONField(serializeUsing = BankCarSerialize.class,ordinal = 3)
+    @JSONField(serializeUsing = BankCarSerialize.class, ordinal = 3)
     @TableField
     private String bankNumber;
 
@@ -59,14 +59,14 @@ public class UserBank implements Serializable {
     /**
      * 银行名称
      */
-    @JSONField(ordinal = 7,name = "bankName")
+    @JSONField(ordinal = 7, name = "bankName")
     @TableField
     private String bankAddress;
 
     /**
      * 绑卡时间
      */
-    @JSONField(serialize = false,deserialize = false,ordinal = 8)
+    @JSONField(serialize = false, deserialize = false, ordinal = 8)
     @TableField
     private Date addTime;
 
@@ -77,7 +77,7 @@ public class UserBank implements Serializable {
     @TableField
     private Integer state;
 
-    @JSONField(serialize = false,deserialize = false,ordinal = 10)
+    @JSONField(serialize = false, deserialize = false, ordinal = 10)
     @TableField(exist = false)
     private String paymentAccount;
 

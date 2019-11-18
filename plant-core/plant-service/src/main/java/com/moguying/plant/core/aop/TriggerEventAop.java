@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-public class TriggerEventAop  {
+public class TriggerEventAop {
     Logger logger = LoggerFactory.getLogger(TriggerEventAop.class);
 
     @Autowired
@@ -26,14 +26,14 @@ public class TriggerEventAop  {
     private FertilizerService fertilizerService;
 
     @AfterReturning(pointcut = "@annotation(message)", returning = "retVal")
-    private void addMessage(Object retVal, TriggerEvent message){
-        if(retVal instanceof ResultData){
+    private void addMessage(Object retVal, TriggerEvent message) {
+        if (retVal instanceof ResultData) {
             ResultData resultData = (ResultData) retVal;
 
-            if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)){
-                if(resultData.getData() instanceof TriggerEventResult) {
+            if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+                if (resultData.getData() instanceof TriggerEventResult) {
                     TriggerEventResult<?> triggerEventResult = (TriggerEventResult<?>) resultData.getData();
-                    if(triggerEventResult.getData() instanceof  InnerMessage) {
+                    if (triggerEventResult.getData() instanceof InnerMessage) {
                         InnerMessage innerMessage = (InnerMessage) triggerEventResult.getData();
                         userMessageService.addMessage(innerMessage, message.action());
                     }

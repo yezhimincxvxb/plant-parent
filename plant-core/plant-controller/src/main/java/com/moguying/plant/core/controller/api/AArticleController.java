@@ -29,39 +29,37 @@ public class AArticleController {
 
     @GetMapping("/types")
     @ApiOperation("文章分类")
-    public ResponseData<List<ArticleType>> articleTypes(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleTypeService.articleTypeList());
+    public ResponseData<List<ArticleType>> articleTypes() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleTypeService.articleTypeList());
     }
-
 
 
     @PostMapping("/{urlName}")
     @ApiOperation("对应分类文章列表")
-    public PageResult<Article> articleList(@RequestBody PageSearch<Article> search, @PathVariable String urlName){
+    public PageResult<Article> articleList(@RequestBody PageSearch<Article> search, @PathVariable String urlName) {
         PageResult<Article> list = new PageResult<>();
         ArticleType type = articleTypeService.selectTypeByUrlName(urlName);
-        if(null == type)
+        if (null == type)
             return list.setMessage(MessageEnum.ARTICLE_TYPE_NOT_EXIST.getMessage()).setStatus(MessageEnum.ARTICLE_TYPE_NOT_EXIST.getState());
         Article where = new Article();
-        if(null != search.getWhere())
+        if (null != search.getWhere())
             where = search.getWhere();
         where.setIsShow(true);
         where.setTypeId(type.getId());
-        return articleService.articleList(search.getPage(),search.getSize(),where);
+        return articleService.articleList(search.getPage(), search.getSize(), where);
     }
-
 
 
     @GetMapping("/{urlName}/{id}")
     @ApiOperation("文章详情")
-    public ResponseData<Article> articleDetail(@PathVariable String urlName, @PathVariable Integer id){
-        ResponseData<Article> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+    public ResponseData<Article> articleDetail(@PathVariable String urlName, @PathVariable Integer id) {
+        ResponseData<Article> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
         ArticleType type = articleTypeService.selectTypeByUrlName(urlName);
-        if(null == type)
+        if (null == type)
             return responseData.setMessage(MessageEnum.ARTICLE_TYPE_NOT_EXIST.getMessage())
                     .setState(MessageEnum.ARTICLE_TYPE_NOT_EXIST.getState());
         Article article = articleService.getArticle(id);
-        if(null == article)
+        if (null == article)
             return responseData.setMessage(MessageEnum.ARTICLE_NOT_EXISTS.getMessage())
                     .setState(MessageEnum.ARTICLE_NOT_EXISTS.getState());
         return responseData.setData(article);

@@ -19,8 +19,8 @@ public class LoginUserIdMethodArgumentResolver implements HandlerMethodArgumentR
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        if(methodParameter.getParameterType().isAssignableFrom(Integer.class)
-            && methodParameter.hasParameterAnnotation(LoginUserId.class)
+        if (methodParameter.getParameterType().isAssignableFrom(Integer.class)
+                && methodParameter.hasParameterAnnotation(LoginUserId.class)
         ) {
             return true;
         }
@@ -30,7 +30,7 @@ public class LoginUserIdMethodArgumentResolver implements HandlerMethodArgumentR
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
         Integer loginUserId = (Integer) nativeWebRequest.getAttribute(ApiEnum.LOGIN_USER_ID.getTypeStr(), RequestAttributes.SCOPE_REQUEST);
-        if(null != loginUserId)
+        if (null != loginUserId)
             return loginUserId;
         return 0;
     }

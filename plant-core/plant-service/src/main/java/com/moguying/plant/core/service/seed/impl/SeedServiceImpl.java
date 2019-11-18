@@ -41,23 +41,25 @@ public class SeedServiceImpl implements SeedService {
     private String downloadDir;
 
 
-    private static Map<Boolean,String> markMap;
+    private static Map<Boolean, String> markMap;
+
     static {
         markMap = new HashMap<>();
-        markMap.put(true,"审核通过");
-        markMap.put(false,"审核不通过");
+        markMap.put(true, "审核通过");
+        markMap.put(false, "审核不通过");
     }
 
 
     @Override
     @DS("read")
-    public PageResult<Seed> seedList(Integer page , Integer size , Seed seed) {
+    public PageResult<Seed> seedList(Integer page, Integer size, Seed seed) {
         IPage<Seed> pageResult = seedDAO.selectSelective(new Page<>(page, size), seed);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     /**
      * 初审菌包
+     *
      * @param id
      * @param seedReview
      * @return
@@ -65,28 +67,28 @@ public class SeedServiceImpl implements SeedService {
     @Override
     @DS("write")
     public ResultData<Integer> review(Integer id, SeedReview seedReview, Integer verifyUserId) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         Seed reviewSeed = seedDAO.selectById(id);
-        if(reviewSeed == null || reviewSeed.getState().equals(SeedEnum.CANCEL.getState()))
+        if (reviewSeed == null || reviewSeed.getState().equals(SeedEnum.CANCEL.getState()))
             return resultData.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
         Integer state;
-        if(seedReview.getState())
+        if (seedReview.getState())
             state = SeedEnum.REVIEWED.getState();
         else
             state = SeedEnum.CANCEL.getState();
 
-        if(reviewSeed.getState().equals(state))
+        if (reviewSeed.getState().equals(state))
             return resultData.setMessageEnum(MessageEnum.SEED_HAD_REVIEWED);
         Seed update = new Seed();
         update.setId(id);
         update.setState(state);
-        if(StringUtils.isEmpty(seedReview.getMark()))
+        if (StringUtils.isEmpty(seedReview.getMark()))
             update.setReviewMark(markMap.get(seedReview.getState()));
         else
             update.setReviewMark(seedReview.getMark());
 
         //审核通过计算收益
-        if(seedReview.getState()) {
+        if (seedReview.getState()) {
             //计算预期收益
             BigDecimal interest = InterestUtil.INSTANCE.calInterest(reviewSeed.getTotalAmount(), reviewSeed.getInterestRates(), reviewSeed.getGrowDays());
             update.setTotalInterest(interest);
@@ -101,35 +103,36 @@ public class SeedServiceImpl implements SeedService {
 
     /**
      * 编辑菌包
+     *
      * @param seed
      * @param isAdd
      * @return
      */
     @Override
     @DS("write")
-    public ResultData<Integer> seedSave(Seed seed,boolean isAdd) {
+    public ResultData<Integer> seedSave(Seed seed, boolean isAdd) {
 
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
         //应该比较分
-        if(seed.getOpenTime().getTime() < System.currentTimeMillis() ||
-            seed.getCloseTime().getTime() < seed.getOpenTime().getTime() ||
+        if (seed.getOpenTime().getTime() < System.currentTimeMillis() ||
+                seed.getCloseTime().getTime() < seed.getOpenTime().getTime() ||
                 seed.getCloseTime().getTime() < System.currentTimeMillis()
-        ){
+        ) {
             return resultData.setMessageEnum(MessageEnum.SEED_TIME_ERROR);
         }
 
         //校验总价与单价是否整除
         BigDecimal[] result = seed.getTotalAmount().divideAndRemainder(seed.getPerPrice());
-        if(result[1].compareTo(new BigDecimal("0")) != 0 )
-           return resultData.setMessageEnum(MessageEnum.SEED_PRICE_ERROR);
+        if (result[1].compareTo(new BigDecimal("0")) != 0)
+            return resultData.setMessageEnum(MessageEnum.SEED_PRICE_ERROR);
 
         if (isAdd) {
             seed.setAddTime(new Date());
-            if(seedDAO.insert(seed) > 0)
+            if (seedDAO.insert(seed) > 0)
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(seed.getId());
         } else { //更新
-            if(seedDAO.updateById(seed) > 0)
+            if (seedDAO.updateById(seed) > 0)
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(seed.getId());
         }
         return resultData;
@@ -137,6 +140,7 @@ public class SeedServiceImpl implements SeedService {
 
     /**
      * 菌包详情
+     *
      * @param id
      * @return
      */
@@ -149,9 +153,10 @@ public class SeedServiceImpl implements SeedService {
 
     /**
      * 菌包售罄
+     *
      * @param id
-     * @deprecated
      * @return
+     * @deprecated
      */
     @Override
     @DS("read")
@@ -162,6 +167,7 @@ public class SeedServiceImpl implements SeedService {
 
     /**
      * 菌包是否上架
+     *
      * @param id
      * @return
      */
@@ -169,7 +175,7 @@ public class SeedServiceImpl implements SeedService {
     @DS("write")
     public Boolean seedShow(Integer id) {
         Seed seed = seedDAO.selectById(id);
-        if(null == seed)
+        if (null == seed)
             return false;
         Seed update = new Seed();
         update.setId(seed.getId());
@@ -181,9 +187,9 @@ public class SeedServiceImpl implements SeedService {
 
     @Override
     @DS("read")
-    public PageResult<HomeSeed> seedListForHome(Integer page, Integer size,HomeSeed where) {
-        IPage<HomeSeed> pageResult = seedDAO.selectSeedListForHome(new Page<>(page, size),where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+    public PageResult<HomeSeed> seedListForHome(Integer page, Integer size, HomeSeed where) {
+        IPage<HomeSeed> pageResult = seedDAO.selectSeedListForHome(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override

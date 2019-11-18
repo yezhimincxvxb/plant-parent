@@ -10,15 +10,15 @@ import com.moguying.plant.core.entity.user.UserInvite;
 import com.moguying.plant.core.entity.user.vo.InviteStatistics;
 
 public interface UserInviteService {
-    
+
     ResultData<TriggerEventResult<InnerMessage>> inviterPlanted(User user, Reap reap, User inviteUser);
 
-    
+
     ResultData<User> saveInviteInfo(UserInvite userInvite);
 
-    
+
     InviteStatistics inviteStatistics(Integer userId);
 
-    
+
     PageResult<UserInvite> inviteList(Integer page, Integer size, Integer userId);
 }

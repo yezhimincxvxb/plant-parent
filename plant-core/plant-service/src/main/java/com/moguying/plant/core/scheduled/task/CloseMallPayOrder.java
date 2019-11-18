@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 public class CloseMallPayOrder extends CloseOrderItem {
     private Logger log = LoggerFactory.getLogger(CloseSeedPayOrder.class);
 
-    public CloseMallPayOrder(Integer id,Long expireTime) {
-        super(id,(int)(expireTime / 60));
+    public CloseMallPayOrder(Integer id, Long expireTime) {
+        super(id, (int) (expireTime / 60));
     }
 
     public CloseMallPayOrder(Integer id, int loop) {
@@ -20,8 +20,8 @@ public class CloseMallPayOrder extends CloseOrderItem {
 
     @Override
     public void run() {
-        log.debug("close mall pay order:{}",toString());
+        log.debug("close mall pay order:{}", toString());
         MallOrderService mallOrderService = ApplicationContextUtil.getBean(MallOrderService.class);
-        mallOrderService.cancelOrder(new CancelOrder(id, MessageEnum.MALL_ORDER_TIMEOUT_CLOSED.getMessage()),null);
+        mallOrderService.cancelOrder(new CancelOrder(id, MessageEnum.MALL_ORDER_TIMEOUT_CLOSED.getMessage()), null);
     }
 }

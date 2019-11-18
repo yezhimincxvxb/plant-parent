@@ -16,10 +16,16 @@ import java.util.List;
 @Repository
 public interface BlockDAO extends BaseDAO<Block> {
     IPage<Block> selectSelective(Page<Block> page, @Param("wq") Block where);
+
     List<Block> selectSelective(@Param("wq") Block where);
+
     Block selectBlockByNumber(String number);
+
     Integer blockIsFree(Integer id);
+
     Block selectById(Integer id);
+
     Block selectBySeedType(Integer seedType);
+
     List<BlockDetail> blockRecommend();
 }

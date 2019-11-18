@@ -15,6 +15,7 @@
         <module>plant-utils</module>
         <module>plant-web</module>
         <module>plant-constant</module>
+        <module>plant-mq</module>
     </modules>
 
     <parent>
@@ -23,8 +24,6 @@
         <version>2.1.9.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-
-
 
 
     <properties>
@@ -43,8 +42,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-
 
 
         <dependency>
@@ -206,7 +203,6 @@
             <artifactId>commons-net</artifactId>
             <version>3.6</version>
         </dependency>
-
 
 
         <!--开发热重载-->

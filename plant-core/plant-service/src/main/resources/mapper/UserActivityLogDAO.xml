@@ -15,8 +15,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, `number`, `name`, user_id, friend_id, product_id, seed_type_id, fertilizer_id, add_time
-  </sql>
+        id, `number`, `name`, user_id, friend_id, product_id, seed_type_id, fertilizer_id, add_time
+    </sql>
 
     <select id="findOnToday" resultMap="BaseResultMap">
         select

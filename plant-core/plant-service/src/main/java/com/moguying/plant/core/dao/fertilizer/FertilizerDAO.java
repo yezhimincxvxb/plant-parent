@@ -16,6 +16,7 @@ import java.util.List;
 @Repository
 public interface FertilizerDAO extends BaseDAO<Fertilizer> {
     IPage<Fertilizer> selectSelective(Page<Fertilizer> page, @Param("wq") Fertilizer where);
+
     List<Fertilizer> selectSelective(@Param("wq") Fertilizer where);
 
     /**

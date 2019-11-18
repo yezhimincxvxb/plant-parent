@@ -21,15 +21,15 @@ public class PageResult<T> implements Serializable {
 
     private static final long serialVersionUID = 5827582072360440719L;
 
-    @JSONField(name = "state",ordinal = 1)
+    @JSONField(name = "state", ordinal = 1)
     private Integer status = null;
-    @JSONField(name = "msg",ordinal = 2)
+    @JSONField(name = "msg", ordinal = 2)
     private String message = null;
 
-    @JSONField(name = "count",ordinal = 3)
+    @JSONField(name = "count", ordinal = 3)
     private Integer count;
 
-    @JSONField(name = "data",ordinal = 4)
+    @JSONField(name = "data", ordinal = 4)
     private List<T> data;
 
     public PageResult() {
@@ -43,18 +43,12 @@ public class PageResult<T> implements Serializable {
     }
 
     public PageResult(long count, List<T> data) {
-        this.count = new Long(count).intValue();;
+        this.count = new Long(count).intValue();
+        ;
         this.data = data;
         this.message = MessageEnum.SUCCESS.getMessage();
         this.status = MessageEnum.SUCCESS.getState();
     }
-
-
-
-
-
-
-
 
 
 }

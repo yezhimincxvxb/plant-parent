@@ -1,8 +1,8 @@
 package com.moguying.plant.constant;
 
 public enum BlockStateEnum {
-    NO_OPEN("未开放",0),
-    OPEN("已开放",1);
+    NO_OPEN("未开放", 0),
+    OPEN("已开放", 1);
 
     private String name;
     private Integer state;

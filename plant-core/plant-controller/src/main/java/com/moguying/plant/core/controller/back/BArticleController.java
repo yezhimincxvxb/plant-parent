@@ -33,119 +33,128 @@ public class BArticleController {
 
     /**
      * 添加文章
+     *
      * @param article
      * @return
      */
     @PostMapping
     @ApiOperation("添加文章")
-    public ResponseData<Integer> addArticle(@RequestBody Article article){
-        if(articleService.addArticle(article) > 0)
+    public ResponseData<Integer> addArticle(@RequestBody Article article) {
+        if (articleService.addArticle(article) > 0)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
     /**
      * 删除文章
+     *
      * @param id
      * @return
      */
     @DeleteMapping(value = "/{id}")
     @ApiOperation("删除文章")
-    public ResponseData<Integer> deleteArticle(@PathVariable Integer id){
-        if(articleService.deleteArticle(id) > 0)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+    public ResponseData<Integer> deleteArticle(@PathVariable Integer id) {
+        if (articleService.deleteArticle(id) > 0)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
     /**
      * 文章列表
+     *
      * @param search
      * @return
      */
     @PostMapping(value = "/list")
     @ApiOperation("文章列表")
-    public PageResult<Article> articleList(@RequestBody PageSearch<Article> search){
-        if(null == search.getWhere())
-                search.setWhere(new Article());
-        return articleService.articleList(search.getPage(),search.getSize(),search.getWhere());
+    public PageResult<Article> articleList(@RequestBody PageSearch<Article> search) {
+        if (null == search.getWhere())
+            search.setWhere(new Article());
+        return articleService.articleList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 获取单个文章的内容
+     *
      * @param id
      * @return
      */
     @GetMapping(value = "/{id}")
     @ApiOperation("获取单个文章的内容")
-    public ResponseData<Article> getArticle(@PathVariable Integer id){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleService.getArticle(id));
+    public ResponseData<Article> getArticle(@PathVariable Integer id) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleService.getArticle(id));
     }
 
 
     /**
      * 更新文章
+     *
      * @param id
      * @param update
      * @return
      */
     @PutMapping(value = "/{id}")
     @ApiOperation("更新文章")
-    public ResponseData<Integer> updateArticle(@PathVariable Integer id, @RequestBody Article update){
-        ResultData<Integer> resultData = articleService.updateArticle(id,update);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
+    public ResponseData<Integer> updateArticle(@PathVariable Integer id, @RequestBody Article update) {
+        ResultData<Integer> resultData = articleService.updateArticle(id, update);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
     /**
      * 文章分类列表
+     *
      * @return
      */
     @GetMapping(value = "/type")
     @ApiOperation("文章分类列表")
-    public ResponseData<List<ArticleType>> typeList(){
+    public ResponseData<List<ArticleType>> typeList() {
 
-       return  new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),articleTypeService.articleTypeList());
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleTypeService.articleTypeList());
     }
 
 
     /**
      * 添加文章类型
+     *
      * @param type
      * @return
      */
     @PostMapping(value = "/type")
     @ApiOperation("添加文章类型")
-    public ResponseData<Integer> addArticleType(@RequestBody ArticleType type){
+    public ResponseData<Integer> addArticleType(@RequestBody ArticleType type) {
         ResultData<Integer> resultData = articleTypeService.addArticleType(type);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
 
     /**
      * 更新文章类型
+     *
      * @param id
      * @param type
      * @return
      */
     @PutMapping(value = "/type/{id}")
     @ApiOperation("更新文章类型")
-    public ResponseData<Integer> updateArticleType(@PathVariable Integer id, @RequestBody ArticleType type){
-        if(articleTypeService.updateArticleType(id,type) > 0)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+    public ResponseData<Integer> updateArticleType(@PathVariable Integer id, @RequestBody ArticleType type) {
+        if (articleTypeService.updateArticleType(id, type) > 0)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
 
     /**
      * 删除文章类型
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/type/{id}")
     @ApiOperation("删除文章类型")
-    public ResponseData<Integer> deleteArticleType(@PathVariable Integer id){
+    public ResponseData<Integer> deleteArticleType(@PathVariable Integer id) {
         ResultData<Integer> resultData = articleTypeService.deleteArticleType(id);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 }

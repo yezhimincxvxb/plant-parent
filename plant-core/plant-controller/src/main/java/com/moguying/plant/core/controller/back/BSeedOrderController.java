@@ -39,12 +39,13 @@ public class BSeedOrderController {
     @PostMapping(value = "/list")
     @ApiOperation("菌包统计列表")
     public PageResult<SeedOrder> seedOrderList(@RequestBody PageSearch<SeedOrder> search) {
-        return seedOrderService.seedOrderList(search.getPage(),search.getSize(),search.getWhere());
+        return seedOrderService.seedOrderList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 下载菌包统计列表
+     *
      * @param user
      * @param search
      * @param request
@@ -53,27 +54,29 @@ public class BSeedOrderController {
     @PostMapping(value = "/excel")
     @ApiOperation("下载菌包统计列表")
     public ResponseData<Integer> seedOrderListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                                    @RequestBody PageSearch<SeedOrder> search, HttpServletRequest request){
-        if(Objects.isNull(search.getWhere()))
+                                                    @RequestBody PageSearch<SeedOrder> search, HttpServletRequest request) {
+        if (Objects.isNull(search.getWhere()))
             search.setWhere(new SeedOrder());
-        seedOrderService.downloadExcel(user.getId(),search,request);
+        seedOrderService.downloadExcel(user.getId(), search, request);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 
     /**
      * 菌包订单支付列表
+     *
      * @return
      */
     @PostMapping(value = "/pay/list")
     @ApiOperation("菌包订单支付列表")
-    public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestBody PageSearch<SeedOrderDetail> search){
-        return seedOrderDetailService.seedOrderDetailList(search.getPage(),search.getSize(),search.getWhere());
+    public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestBody PageSearch<SeedOrderDetail> search) {
+        return seedOrderDetailService.seedOrderDetailList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 菌包支付订单下载
+     *
      * @param user
      * @param search
      * @param request
@@ -81,12 +84,12 @@ public class BSeedOrderController {
      */
     @PostMapping("/pay/list/excel")
     @ApiOperation("菌包支付订单下载")
-    public ResponseData<Integer> seedPayOrderListExcel(@SessionAttribute(SessionAdminUser.sessionKey)AdminUser user,
-                                                       @RequestBody PageSearch<SeedOrderDetail> search, HttpServletRequest request){
-        if(Objects.isNull(search.getWhere()))
+    public ResponseData<Integer> seedPayOrderListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
+                                                       @RequestBody PageSearch<SeedOrderDetail> search, HttpServletRequest request) {
+        if (Objects.isNull(search.getWhere()))
             search.setWhere(new SeedOrderDetail());
-        seedOrderDetailService.downloadExcel(user.getId(),search,request);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+        seedOrderDetailService.downloadExcel(user.getId(), search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 

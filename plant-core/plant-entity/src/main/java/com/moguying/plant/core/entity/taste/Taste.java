@@ -57,14 +57,14 @@ public class Taste {
     /**
      * 开始时间
      */
-    @JSONField(ordinal = 6,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 6, format = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
 
     /**
      * 结束时间
      */
-    @JSONField(ordinal = 7,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 7, format = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
 

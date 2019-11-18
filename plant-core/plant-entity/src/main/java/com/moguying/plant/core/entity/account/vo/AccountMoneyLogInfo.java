@@ -20,10 +20,10 @@ public class AccountMoneyLogInfo implements Serializable {
     @JSONField(ordinal = 2)
     private String month;
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 3)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 3)
     private BigDecimal thisMonthInAccount;
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 4)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 4)
     private BigDecimal thisMonthOutAccount;
 
     @JSONField(ordinal = 5)

@@ -24,7 +24,7 @@ public class CallBackBefore {
     PaymentInfoService paymentInfoService;
 
     @Around("execution(* com.moguying.plant.core.controller.payment.CallBackController.*Callback(..)) && args(request,..)")
-    private Object setCallBackData(ProceedingJoinPoint pjp , HttpServletRequest request) throws Throwable {
+    private Object setCallBackData(ProceedingJoinPoint pjp, HttpServletRequest request) throws Throwable {
         PaymentResponse<CallBackResponse> paymentResponse = new PaymentResponse<>();
         paymentResponse.setCode(request.getParameter("code"));
         paymentResponse.setMsg(request.getParameter("msg"));
@@ -36,7 +36,7 @@ public class CallBackBefore {
         paymentInfo.setOrderNumber(paymentResponse.getData().getMerMerOrderNo());
         paymentInfo.setNotifyResponse(JSON.toJSONString(paymentResponse));
         paymentInfoService.updateNotifyResponse(paymentInfo);
-        return pjp.proceed(new Object[]{request,paymentResponse});
+        return pjp.proceed(new Object[]{request, paymentResponse});
 
     }
 

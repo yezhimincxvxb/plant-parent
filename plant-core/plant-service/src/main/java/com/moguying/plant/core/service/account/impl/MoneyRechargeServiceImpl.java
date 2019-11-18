@@ -41,8 +41,8 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
 
     @Override
     public PageResult<MoneyRecharge> moneyRechargeList(Integer page, Integer size, MoneyRecharge where) {
-        IPage<MoneyRecharge> pageResult = moneyRechargeDAO.selectPage(new Page<>(page,size),new QueryWrapper<>(where));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        IPage<MoneyRecharge> pageResult = moneyRechargeDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
 
@@ -53,21 +53,20 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
     }
 
 
-
     @Override
     @DS("write")
     public ResultData<Integer> reviewRecharge(Integer id, Boolean state) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS, 0);
         MoneyRecharge recharge = moneyRechargeDAO.selectByPrimaryKey(id);
 
-        if(recharge == null || !recharge.getState().equals(MoneyStateEnum.RECHARGING.getState()))
+        if (recharge == null || !recharge.getState().equals(MoneyStateEnum.RECHARGING.getState()))
             return resultData.setMessageEnum(MessageEnum.RECHARGE_IS_REVIEWED);
 
-        if(recharge.getMoney().compareTo(new BigDecimal("0.00")) <= 0)
+        if (recharge.getMoney().compareTo(new BigDecimal("0.00")) <= 0)
             return resultData.setMessageEnum(MessageEnum.RECHARGE_NOT_AVAILABLE);
         BigDecimal rechargeMoney = recharge.getMoney().subtract(recharge.getFee());
         //手续费后不能为0或负数
-        if(rechargeMoney.compareTo(new BigDecimal("0.00")) <= 0)
+        if (rechargeMoney.compareTo(new BigDecimal("0.00")) <= 0)
             return resultData.setMessageEnum(MessageEnum.RECHARGE_NOT_AVAILABLE);
 
         MoneyRecharge update = new MoneyRecharge();
@@ -76,7 +75,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
         operator.setOperationId(recharge.getOrderNumber());
         UserMoney userMoney = new UserMoney(recharge.getUserId());
         userMoney.setFreezeMoney(rechargeMoney.negate());
-        if(state) {
+        if (state) {
             update.setToAccountTime(new Date());
             update.setToAccountMoney(rechargeMoney);
             update.setState(MoneyStateEnum.RECHARGE_SUCCESS.getState());
@@ -96,16 +95,16 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
     @Override
     @DS("write")
     public ResultData<Integer> addMoneyRecharge(MoneyRecharge addRecharge) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
-        if(addRecharge.getMoney().compareTo(new BigDecimal("0.00")) <= 0){
+        if (addRecharge.getMoney().compareTo(new BigDecimal("0.00")) <= 0) {
             return resultData.setMessageEnum(MessageEnum.RECHARGE_NOT_AVAILABLE);
         }
         addRecharge.setRechargeTime(new Date());
-        if(addRecharge.getOrderNumber() == null) {
+        if (addRecharge.getOrderNumber() == null) {
             addRecharge.setOrderNumber(OrderPrefixEnum.RECHARGE_ORDER.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
         }
-        if(moneyRechargeDAO.insert(addRecharge) > 0){
+        if (moneyRechargeDAO.insert(addRecharge) > 0) {
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(addRecharge.getId());
         }
         return resultData;

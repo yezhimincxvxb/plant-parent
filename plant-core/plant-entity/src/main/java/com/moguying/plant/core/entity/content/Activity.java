@@ -36,14 +36,14 @@ public class Activity implements Serializable {
     /**
      * 开始时间
      */
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 4)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss", ordinal = 4)
     @TableField
     private Date openTime;
 
     /**
      * 结束时间
      */
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 5)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss", ordinal = 5)
     @TableField
     private Date closeTime;
 

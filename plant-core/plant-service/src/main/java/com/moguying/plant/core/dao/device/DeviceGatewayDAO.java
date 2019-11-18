@@ -13,5 +13,6 @@ import java.util.List;
 @Repository
 public interface DeviceGatewayDAO extends BaseDAO<DeviceGateway> {
     DeviceGateway selectByGatewayLogo(String gatewayLogo);
+
     List<DeviceGateway> selectSelective(DeviceGateway where);
 }

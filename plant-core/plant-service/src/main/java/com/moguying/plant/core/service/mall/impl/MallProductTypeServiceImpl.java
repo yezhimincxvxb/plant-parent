@@ -26,19 +26,19 @@ public class MallProductTypeServiceImpl implements MallProductTypeService {
     @Override
     @DS("read")
     public List<MallProductType> typeList(MallProductType where) {
-       return mallProductTypeDAO.selectSelective(where);
+        return mallProductTypeDAO.selectSelective(where);
     }
 
     @Override
     @DS("write")
     public ResultData<Integer> saveType(MallProductType type) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
-        if(null == type.getId()){
-            if(mallProductTypeDAO.insert(type) > 0)
+        if (null == type.getId()) {
+            if (mallProductTypeDAO.insert(type) > 0)
                 return resultData.setData(type.getId()).setMessageEnum(MessageEnum.SUCCESS);
             return resultData;
         } else {
-            if(mallProductTypeDAO.updateById(type) > 0)
+            if (mallProductTypeDAO.updateById(type) > 0)
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(type.getId());
             return resultData;
         }
@@ -46,13 +46,13 @@ public class MallProductTypeServiceImpl implements MallProductTypeService {
 
     @Override
     public ResultData<Integer> deleteType(Integer id) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MallProduct where = new MallProduct();
         where.setTypeId(id);
         List<MallProduct> products = mallProductDAO.selectSelective(where);
-        if(null != products && products.size() > 0)
+        if (null != products && products.size() > 0)
             return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_TYPE_CAN_NOT_DELETE);
-        if(mallProductTypeDAO.deleteById(id) > 0)
+        if (mallProductTypeDAO.deleteById(id) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;
     }

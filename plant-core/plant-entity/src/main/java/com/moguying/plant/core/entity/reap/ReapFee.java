@@ -17,7 +17,8 @@ import java.util.Date;
 
 /**
  * plant_reap_fee
- * @author 
+ *
+ * @author
  */
 @TableName("plant_reap_fee")
 @Data
@@ -52,7 +53,7 @@ public class ReapFee implements Serializable {
     @TableField
     private BigDecimal feeAmount;
 
-    @Excel(name = "状态",replace = {"首种_true","复种_false"})
+    @Excel(name = "状态", replace = {"首种_true", "复种_false"})
     @TableField
     private Boolean isFirst;
 

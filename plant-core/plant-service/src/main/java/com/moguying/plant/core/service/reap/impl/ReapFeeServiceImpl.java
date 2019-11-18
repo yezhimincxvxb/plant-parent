@@ -46,16 +46,16 @@ public class ReapFeeServiceImpl implements ReapFeeService {
     @DS("write")
     @Transactional
     public ResultData<Integer> addReapFee(ReapFee reapFee) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        Reap reap = reapDAO.selectByIdAndUserId(reapFee.getReapId(),reapFee.getUserId());
-        if(null == reap) return  resultData;
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+        Reap reap = reapDAO.selectByIdAndUserId(reapFee.getReapId(), reapFee.getUserId());
+        if (null == reap) return resultData;
         //获取到指定渠道的结算比
         ReapFeeParam where = new ReapFeeParam();
         where.setInviteUid(reapFee.getInviteUid());
         where.setSeedType(reap.getSeedType());
         ReapFeeParam reapFeeParam = reapFeeParamDAO.selectOne(new QueryWrapper<>(where));
-        if(null == reapFeeParam) return resultData;
-        Integer isFirst = reapDAO.countByUserIdAndGrowUpDays(reapFee.getUserId(),reap.getSeedGrowDays());
+        if (null == reapFeeParam) return resultData;
+        Integer isFirst = reapDAO.countByUserIdAndGrowUpDays(reapFee.getUserId(), reap.getSeedGrowDays());
         BigDecimal feeAmount;
         if (isFirst == 1 && reapFeeParam.getFirstPlantRate().compareTo(BigDecimal.ZERO) > 0) {
             feeAmount = reap.getPreAmount().multiply(reapFeeParam.getFirstPlantRate());
@@ -65,7 +65,7 @@ public class ReapFeeServiceImpl implements ReapFeeService {
         }
         feeAmount = InterestUtil.INSTANCE.divide(feeAmount, new BigDecimal("100.00"));
         reapFee.setFeeAmount(feeAmount);
-        if(reapFeeDAO.insert(reapFee) > 0)
+        if (reapFeeDAO.insert(reapFee) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;
     }
@@ -74,18 +74,16 @@ public class ReapFeeServiceImpl implements ReapFeeService {
     @Override
     public PageResult<ReapFee> reapFeeList(Integer page, Integer size, ReapFee where) {
         IPage<ReapFee> pageResult = reapFeeDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
 
     @Override
     @DS("read")
     public void downloadExcel(Integer userId, PageSearch<ReapFee> search, HttpServletRequest request) {
-        DownloadInfo downloadInfo = new DownloadInfo("渠道费用",request.getServletContext(),userId,downloadDir);
-        new Thread(new DownloadService<>(reapFeeDAO,search, ReapFee.class,downloadInfo)).start();
+        DownloadInfo downloadInfo = new DownloadInfo("渠道费用", request.getServletContext(), userId, downloadDir);
+        new Thread(new DownloadService<>(reapFeeDAO, search, ReapFee.class, downloadInfo)).start();
     }
-
-
 
 
 }

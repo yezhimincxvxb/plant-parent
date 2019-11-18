@@ -55,7 +55,7 @@ public class Banner implements Serializable {
     /**
      * 是否显示[0不显示，1显示]
      */
-    @JSONField(ordinal = 7,name = "isShow")
+    @JSONField(ordinal = 7, name = "isShow")
     @TableField
     private Boolean isShow;
 
@@ -69,14 +69,14 @@ public class Banner implements Serializable {
     /**
      * 显示时间
      */
-    @JSONField(ordinal = 9,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date showTime;
 
     /**
      * 添加时间
      */
-    @JSONField(ordinal = 10,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 10, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 

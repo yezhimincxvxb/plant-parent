@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.farmer.FarmerEnergyTriggerDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerEnergyTrigger">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="trigger_event" jdbcType="VARCHAR" property="triggerEvent" />
-    <result column="incr_grow_up_count" jdbcType="INTEGER" property="incrGrowUpCount" />
-    <result column="incr_grow_up_rate" jdbcType="DECIMAL" property="incrGrowUpRate" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, trigger_event, incr_grow_up_count,incr_grow_up_rate
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerEnergyTrigger">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="trigger_event" jdbcType="VARCHAR" property="triggerEvent"/>
+        <result column="incr_grow_up_count" jdbcType="INTEGER" property="incrGrowUpCount"/>
+        <result column="incr_grow_up_rate" jdbcType="DECIMAL" property="incrGrowUpRate"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, trigger_event, incr_grow_up_count,incr_grow_up_rate
+    </sql>
 
 
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_farmer_energy_trigger
-    <where>
-      <if test="triggerEvent != null and triggerEvent != ''">
-        trigger_event = #{triggerEvent}
-      </if>
-      <if test="id != null">
-        AND id = #{id}
-      </if>
-    </where>
-    order by id desc
-  </select>
-  
-  <select id="selectByTriggerEvent" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_farmer_energy_trigger
-    where trigger_event = #{triggerEvent};
-  </select>
-  
-  
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_farmer_energy_trigger
+        <where>
+            <if test="triggerEvent != null and triggerEvent != ''">
+                trigger_event = #{triggerEvent}
+            </if>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectByTriggerEvent" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_farmer_energy_trigger
+        where trigger_event = #{triggerEvent};
+    </select>
+
+
 </mapper>

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.admin.AdminMenuMetaDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.admin.AdminMenuMeta">
-    <id column="menu_id" jdbcType="INTEGER" property="menuId" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="icon" jdbcType="VARCHAR" property="icon" />
-    <result column="no_cache" jdbcType="INTEGER" property="noCache" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    menu_id, title, icon, no_cache
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.admin.AdminMenuMeta">
+        <id column="menu_id" jdbcType="INTEGER" property="menuId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="no_cache" jdbcType="INTEGER" property="noCache"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        menu_id, title, icon, no_cache
+    </sql>
 
-  <delete id="deleteByMenuIds">
-    delete from plant_admin_menu_meta
-    <where>
-      <if test="ids != null">
-        menu_id in
-        <foreach collection="ids" open="(" close=")" separator="," item="item">
-            #{item}
-        </foreach>
-      </if>
-    </where>
-  </delete>
+    <delete id="deleteByMenuIds">
+        delete from plant_admin_menu_meta
+        <where>
+            <if test="ids != null">
+                menu_id in
+                <foreach collection="ids" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </delete>
 </mapper>

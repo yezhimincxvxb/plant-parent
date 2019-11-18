@@ -21,10 +21,10 @@ public class HomeProduct implements Serializable {
     @JSONField(ordinal = 3)
     private String name;
 
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal price;
 
-    @JSONField(ordinal = 5,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal oldPrice;
 
     @JSONField(ordinal = 6)

@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface SeedInnerService {
     PageResult<SeedInnerOrderCount> seedInnerList(Integer page, Integer size);
+
     List<UserInner> seedInnerUserList(Integer seedId, Integer innerCount, Integer userCount);
+
     Integer seedInnerOrder(SeedInnerBuy seedInnerBuy);
 }

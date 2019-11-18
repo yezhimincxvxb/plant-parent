@@ -14,7 +14,8 @@ import java.math.BigDecimal;
 
 /**
  * plant_farmer_energy_trigger
- * @author 
+ *
+ * @author
  */
 @Data
 @RequiredArgsConstructor

@@ -20,7 +20,7 @@ public class TriggerEvent implements Serializable {
     private String triggerEvent;
 
     /**
-         * 触发事件中文
+     * 触发事件中文
      */
     @TableField
     private String mark;

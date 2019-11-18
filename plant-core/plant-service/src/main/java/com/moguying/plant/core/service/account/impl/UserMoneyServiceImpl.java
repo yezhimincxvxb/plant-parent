@@ -43,7 +43,7 @@ public class UserMoneyServiceImpl implements UserMoneyService {
     @DS("read")
     public PageResult<UserMoney> userMoneyList(Integer page, Integer size, UserMoney where) {
         IPage<UserMoney> pageResult = userMoneyDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -127,7 +127,7 @@ public class UserMoneyServiceImpl implements UserMoneyService {
     @Override
     public PageResult<UserMoneyDetail> findUserMoney(Integer page, Integer size, Integer userId, String dateTime, List<Integer> list) {
         IPage<UserMoneyDetail> pageResult = userMoneyDetailDAO.findUserMoney(new Page<>(page, size), userId, dateTime, list);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @DS("read")

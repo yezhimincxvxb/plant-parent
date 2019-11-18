@@ -16,6 +16,7 @@ public interface UserFertilizerService {
 
     /**
      * 用户券中心
+     *
      * @param page
      * @param size
      * @param userId
@@ -25,6 +26,7 @@ public interface UserFertilizerService {
 
     /**
      * 在指定条件下可使用的券
+     *
      * @return
      */
     List<UserFertilizerInfo> canUseFertilizers(FertilizerUseCondition condition);

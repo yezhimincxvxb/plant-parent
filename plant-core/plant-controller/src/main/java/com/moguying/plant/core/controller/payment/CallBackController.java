@@ -59,13 +59,14 @@ public class CallBackController {
 
     /**
      * 支付异步处理
+     *
      * @param request
      * @return
      */
     @PostMapping("/pay")
     @ResponseBody
     @ApiOperation("支付异步处理")
-    public CallBackResponseToPayment payCallback(HttpServletRequest request, PaymentResponse paymentResponse){
+    public CallBackResponseToPayment payCallback(HttpServletRequest request, PaymentResponse paymentResponse) {
         CallBackResponseToPayment responseToPayment = new CallBackResponseToPayment("000000", "success");
         //TODO 验签
 
@@ -73,20 +74,20 @@ public class CallBackController {
 
                 PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo().equals(paymentResponse.getCode())) {
             CallBackResponse callBackResponse = null;
-            if(null != paymentResponse.getData()){
+            if (null != paymentResponse.getData()) {
                 callBackResponse = (CallBackResponse) paymentResponse.getData();
             }
-            if(null != callBackResponse){
+            if (null != callBackResponse) {
                 String orderNumber = callBackResponse.getMerMerOrderNo();
-                if(orderNumber.startsWith("D")){
+                if (orderNumber.startsWith("D")) {
                     SeedOrderDetail detail = seedOrderDetailService.selectByOrderNumber(orderNumber);
-                    if(detail.getState().equals(SeedEnum.SEED_ORDER_DETAIL_HAS_PAY.getState()))
+                    if (detail.getState().equals(SeedEnum.SEED_ORDER_DETAIL_HAS_PAY.getState()))
                         return null;
-                    if(null == detail) return responseToPayment;
+                    if (null == detail) return responseToPayment;
                     BigDecimal payAmount = new BigDecimal(callBackResponse.getPayAmount());
-                    if(payAmount.compareTo(detail.getBuyAmount()) != 0) return null;
+                    if (payAmount.compareTo(detail.getBuyAmount()) != 0) return null;
                     User user = userService.userInfoById(detail.getUserId());
-                    if(plantOrderService.payOrderSuccess(detail,user).getMessageEnum().equals(MessageEnum.SUCCESS))
+                    if (plantOrderService.payOrderSuccess(detail, user).getMessageEnum().equals(MessageEnum.SUCCESS))
                         return responseToPayment;
                     else {
                         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -103,6 +104,7 @@ public class CallBackController {
 
     /**
      * 提现异步处理
+     *
      * @return
      */
     @PostMapping("/withdraw")
@@ -125,13 +127,13 @@ public class CallBackController {
                 }
                 //提现到账
                 ResultData<PaymentResponse> resultData =
-                        moneyWithdrawService.reviewMoneyWithdraw(withdraw.getId(),MoneyStateEnum.WITHDRAW_IN_ACCOUNT.getState());
-                if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+                        moneyWithdrawService.reviewMoneyWithdraw(withdraw.getId(), MoneyStateEnum.WITHDRAW_IN_ACCOUNT.getState());
+                if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
                     return new CallBackResponseToPayment("000000", "success");
                 }
             } else {
                 //退还提现金额
-                if(null != withdraw) {
+                if (null != withdraw) {
                     moneyWithdrawService.reviewMoneyWithdraw(withdraw.getId(), MoneyStateEnum.WITHDRAW_FAILED.getState());
                 }
             }
@@ -142,18 +144,19 @@ public class CallBackController {
 
     /**
      * 绑卡回调
+     *
      * @return
      */
     @PostMapping("/bind/card")
     @ResponseBody
     @ApiOperation("绑卡回调")
-    public CallBackResponseToPayment bindCardCallback(HttpServletRequest request, PaymentResponse paymentResponse){
+    public CallBackResponseToPayment bindCardCallback(HttpServletRequest request, PaymentResponse paymentResponse) {
         if (TYPE_BIND_CARD.equals(paymentResponse.getResponseType()) &&
                 PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo().equals(paymentResponse.getCode())) {
             BindCardCallback cardCallback = JSON.parseObject(paymentResponse.getResponseParameters(), BindCardCallback.class);
-            if(null == cardCallback) return null;
+            if (null == cardCallback) return null;
             UserBank bank = userService.bankCardByOrderNumber(cardCallback.getOrderNo());
-            if(null == bank) return null;
+            if (null == bank) return null;
             //查询银行卡信息
             QueryBankCardBinRequest queryBankCardBinRequest = new QueryBankCardBinRequest();
             queryBankCardBinRequest.setCardNo(bank.getBankNumber());
@@ -169,15 +172,10 @@ public class CallBackController {
                 userService.saveBankCard(update);
             }
 
-            return new CallBackResponseToPayment("000000","success");
+            return new CallBackResponseToPayment("000000", "success");
         }
         return null;
     }
-
-
-
-
-
 
 
 }

@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.content.BannerDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.Banner">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="type" jdbcType="BIT" property="type" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl" />
-    <result column="jump_url" jdbcType="VARCHAR" property="jumpUrl" />
-    <result column="is_show" jdbcType="INTEGER" property="isShow" />
-    <result column="sort_order" jdbcType="TINYINT" property="sortOrder" />
-    <result column="show_time" jdbcType="TIMESTAMP" property="showTime" />
-    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, `type`, `name`, pic_url, thumb_pic_url, jump_url, is_show, sort_order, show_time, 
-    add_time
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.Banner">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type" jdbcType="BIT" property="type"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
+        <result column="jump_url" jdbcType="VARCHAR" property="jumpUrl"/>
+        <result column="is_show" jdbcType="INTEGER" property="isShow"/>
+        <result column="sort_order" jdbcType="TINYINT" property="sortOrder"/>
+        <result column="show_time" jdbcType="TIMESTAMP" property="showTime"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `type`, `name`, pic_url, thumb_pic_url, jump_url, is_show, sort_order, show_time,
+        add_time
+    </sql>
 
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select  <include refid="Base_Column_List"/> from plant_banner
-    <where>
-        <if test="id != null">
-          id = #{id}
-        </if>
-        <if test="name != null">
-          AND name like #{name}
-        </if>
-        <if test="isShow != null">
-          AND is_show = #{isShow}
-        </if>
-    </where>
-    order by sort_order desc
-  </select>
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_banner
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name like #{name}
+            </if>
+            <if test="isShow != null">
+                AND is_show = #{isShow}
+            </if>
+        </where>
+        order by sort_order desc
+    </select>
 
 
-  <select id="bannerListForHome" parameterType="int" resultMap="BaseResultMap">
-    select  `name`, pic_url,jump_url from plant_banner
-    where is_show = 1
-    <![CDATA[
+    <select id="bannerListForHome" parameterType="int" resultMap="BaseResultMap">
+        select `name`, pic_url,jump_url from plant_banner
+        where is_show = 1
+        <![CDATA[
     and UNIX_TIMESTAMP(show_time) < UNIX_TIMESTAMP(NOW())
     ]]>
-    and type = #{type}
-    order  by sort_order desc
-  </select>
-
+        and type = #{type}
+        order by sort_order desc
+    </select>
 
 
 </mapper>

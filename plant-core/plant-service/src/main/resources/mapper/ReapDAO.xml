@@ -45,9 +45,10 @@
 
     <!-- 基本查询字段 -->
     <sql id="Base_Column_List">
-    id, order_id, order_number,seed_type, user_id, block_id, plant_count,plant_time, pre_profit, pre_amount, pre_reap_time,
-    rec_profit, rec_amount, rec_reap_time, reap_times, `state`,add_time,sale_time, exchange_time
-  </sql>
+        id, order_id, order_number,seed_type, user_id, block_id, plant_count,plant_time, pre_profit, pre_amount,
+        pre_reap_time,
+        rec_profit, rec_amount, rec_reap_time, reap_times, `state`,add_time,sale_time, exchange_time
+    </sql>
 
     <update id="updateStateByRange" parameterType="map">
         update plant_reap
@@ -123,7 +124,7 @@
                 </foreach>
             </if>
             <if test="wq.groupId != null ">
-               AND t3.group_id = #{wq.groupId}
+                AND t3.group_id = #{wq.groupId}
             </if>
         </where>
         order by t1.id desc
@@ -154,13 +155,12 @@
     </select>
 
 
-
     <select id="selectCanReapByTime" resultType="int">
-    select  id from plant_reap
-    where <![CDATA[
+        select id from plant_reap
+        where <![CDATA[
         UNIX_TIMESTAMP(pre_reap_time) = UNIX_TIMESTAMP(#{reapTime})
     ]]>
-    AND state = 0
+        AND state = 0
     </select>
 
     <select id="selectPhoneByRange" resultMap="MessageMap">
@@ -195,7 +195,7 @@
     </select>
 
     <select id="countBlockIdByUserId" resultType="int">
-        select count(*)  from (select block_id from plant_reap where
+        select count(*) from (select block_id from plant_reap where
         user_id = #{userId}
         <![CDATA[
         and state < 3
@@ -212,7 +212,7 @@
 
     <select id="selectListCountByUserId" resultMap="BaseInfoMap">
         select sum(plant_count) as plant_count ,seed_type,t2.class_name as seed_type_name,t2.pic_url from plant_reap t1
-        left join plant_seed_type t2 on t1.seed_type  = t2.id
+        left join plant_seed_type t2 on t1.seed_type = t2.id
         where user_id = #{userId}
         and t1.state = #{state}
         group by t1.seed_type
@@ -295,8 +295,10 @@
     </select>
 
     <select id="selectByIdAndUserId" resultMap="BaseInfoMap">
-        select t1.id, order_id,t1.order_number, t1.seed_type, t1.user_id, t1.pre_profit, t1.pre_amount, t1.pre_reap_time, t1.rec_profit,
-        t1.block_id,t1.rec_amount, t1.rec_reap_time, t1.reap_times,t1.plant_count,t1.plant_time, t1.`state`,t1.add_time ,t1.sale_time,
+        select t1.id, order_id,t1.order_number, t1.seed_type, t1.user_id, t1.pre_profit, t1.pre_amount,
+        t1.pre_reap_time, t1.rec_profit,
+        t1.block_id,t1.rec_amount, t1.rec_reap_time, t1.reap_times,t1.plant_count,t1.plant_time, t1.`state`,t1.add_time
+        ,t1.sale_time,
         t3.grow_days as seed_grow_days,t3.per_price as seed_price,t3.class_name as seed_type_name
         from plant_reap t1
         left join plant_user t2 on t1.user_id = t2.id
@@ -381,12 +383,12 @@
     <!-- 查询兑换蘑菇币记录 -->
     <select id="showReapLog" resultType="com.moguying.plant.core.entity.coin.vo.ExchangeInfo">
         select t2.class_name `name`, t1.plant_count `number`,
-         sum(t1.plant_count * t2.exchange_num) `count`, t1.exchange_time `time`
-         from plant_reap t1
-         left join plant_seed_type t2 on t1.seed_type = t2.id
-         where t1.user_id = #{userId} and t1.state = 4
-         group by t1.id
-         order by t1.exchange_time desc
+        sum(t1.plant_count * t2.exchange_num) `count`, t1.exchange_time `time`
+        from plant_reap t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        where t1.user_id = #{userId} and t1.state = 4
+        group by t1.id
+        order by t1.exchange_time desc
     </select>
 
     <select id="sumPlantWeighByUserId" resultType="java.math.BigDecimal">
@@ -398,7 +400,7 @@
             <if test="states != null">
                 AND state in
                 <foreach collection="states" open="(" close=")" separator="," item="item" index="index">
-                     #{item}
+                    #{item}
                 </foreach>
 
             </if>

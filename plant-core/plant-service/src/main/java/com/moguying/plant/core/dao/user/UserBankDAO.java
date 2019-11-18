@@ -14,5 +14,6 @@ import java.util.List;
 @Repository
 public interface UserBankDAO extends BaseDAO<UserBank> {
     List<UserBank> selectSelective(UserBank bank);
+
     UserBank bankInfoByUserIdAndId(@Param("userId") Integer userId, @Param("id") Integer id);
 }

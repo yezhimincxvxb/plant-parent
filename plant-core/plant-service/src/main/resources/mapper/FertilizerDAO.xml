@@ -34,11 +34,11 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, type_id, amount_min, amount_max, trigger_use_event, trigger_get_event, `count`, 
-    per_count, user_level, fertilizer_amount, fertilizer_amount_is_rate, start_time, 
-    expire_time, use_no_limit, use_in_seed_type, use_in_block, use_in_product, expire_days, 
-    is_single_trigger, add_time, coin_fertilizer
-  </sql>
+        id, type_id, amount_min, amount_max, trigger_use_event, trigger_get_event, `count`,
+        per_count, user_level, fertilizer_amount, fertilizer_amount_is_rate, start_time,
+        expire_time, use_no_limit, use_in_seed_type, use_in_block, use_in_product, expire_days,
+        is_single_trigger, add_time, coin_fertilizer
+    </sql>
 
 
     <select id="selectSelective" resultMap="BaseResultMapInfo">

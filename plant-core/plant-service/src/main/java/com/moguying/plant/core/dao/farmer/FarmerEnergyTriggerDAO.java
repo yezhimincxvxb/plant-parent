@@ -13,5 +13,6 @@ import java.util.List;
 @Repository
 public interface FarmerEnergyTriggerDAO extends BaseDAO<FarmerEnergyTrigger> {
     List<FarmerEnergyTrigger> selectSelective(FarmerEnergyTrigger where);
+
     FarmerEnergyTrigger selectByTriggerEvent(String triggerEvent);
 }

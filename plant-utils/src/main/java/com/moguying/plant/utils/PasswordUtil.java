@@ -13,22 +13,22 @@ public enum PasswordUtil {
     INSTANCE;
 
 
-    public String encode(byte[] source){
-        return encode(source,16);
+    public String encode(byte[] source) {
+        return encode(source, 16);
     }
 
 
-    public String encode(byte[] source,Integer length) {
+    public String encode(byte[] source, Integer length) {
         String s = null;
-        char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                'a', 'b', 'c', 'd', 'e', 'f' };
+        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             java.security.MessageDigest md = java.security.MessageDigest
                     .getInstance("MD5");
             md.update(source);
             byte tmp[] = md.digest();
 
-            if(null == length)
+            if (null == length)
                 length = tmp.length;
 
             char str[] = new char[length * 2];

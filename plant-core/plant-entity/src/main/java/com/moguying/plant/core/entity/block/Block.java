@@ -14,7 +14,8 @@ import java.util.Date;
 
 /**
  * plant_block
- * @author 
+ *
+ * @author
  */
 @TableName("plant_block")
 @Data
@@ -39,14 +40,14 @@ public class Block implements Serializable {
     @TableField
     private Integer seedType;
 
-    @JSONField(deserialize = false,ordinal = 4)
+    @JSONField(deserialize = false, ordinal = 4)
     @TableField(exist = false)
     private String seedTypeName;
 
     /**
      * 利率
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 5)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 5)
     @TableField
     private BigDecimal interestRates;
 
@@ -61,14 +62,14 @@ public class Block implements Serializable {
     /**
      * 总额度
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 7)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 7)
     @TableField
     private BigDecimal totalAmount;
 
     /**
      * 单价
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 8)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 8)
     @TableField
     private BigDecimal perPrice;
 
@@ -110,7 +111,7 @@ public class Block implements Serializable {
     /**
      * 添加时间
      */
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 14)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss", ordinal = 14)
     @TableField
     private Date addTime;
 

@@ -44,14 +44,13 @@ public class CFCARAUtil {
 
     /******* p1 *********/
     /**
-     *
      * p1消息签名
+     *
      * @param ：message
      * @return
      * @throws Exception
-     *
      */
-    public static String signMessageByP1(String message, String pfxPath, String passWord) throws Exception{
+    public static String signMessageByP1(String message, String pfxPath, String passWord) throws Exception {
         InputStream inputStream = new ClassPathResource(pfxPath).getInputStream();
         PrivateKey userPriKey = KeyUtil.getPrivateKeyFromPFX(inputStream, passWord);
         Signature signature = new Signature();
@@ -61,25 +60,28 @@ public class CFCARAUtil {
 
     /**
      * p1消息校验(公钥证书验签)
+     *
      * @param ：beforeSignedData
      * @param ：afterSignedData
      * @param :certPath
      * @return
      * @throws Exception
      */
-    public static boolean verifyMessageByP1(String beforeSignedData, String afterSignedData, String certPath) throws Exception{
+    public static boolean verifyMessageByP1(String beforeSignedData, String afterSignedData, String certPath) throws Exception {
         InputStream file = new ClassPathResource(certPath).getInputStream();
         X509Cert cert = new X509Cert(file);
         PublicKey publicKey = cert.getPublicKey();
         Signature signature = new Signature();
         return signature.p1VerifyMessage(Mechanism.SHA256_RSA, beforeSignedData.getBytes("UTF-8"), afterSignedData.getBytes("UTF-8"), publicKey, session);
     }
+
     /**
      * p1消息校验(公钥证书验签)
+     *
      * @return
      * @throws Exception
      */
-    public static boolean verifyMessageByP1Location(String beforeSignedData, String afterSignedData, String certPath) throws Exception{
+    public static boolean verifyMessageByP1Location(String beforeSignedData, String afterSignedData, String certPath) throws Exception {
         X509Cert cert = new X509Cert(new FileInputStream(certPath));
         PublicKey publicKey = cert.getPublicKey();
         Signature signature = new Signature();
@@ -87,16 +89,15 @@ public class CFCARAUtil {
     }
 
     /**
-     *
      * p1消息校验(公钥字符串验签)
+     *
      * @param ：beforeSignedData
      * @param ：afterSignedData
      * @param :publicKeyStr
      * @return
      * @throws Exception
-     *
      */
-    public static boolean verifyMessageByP1AndPubKey(String beforeSignedData, String afterSignedData, String publicKeyStr) throws Exception{
+    public static boolean verifyMessageByP1AndPubKey(String beforeSignedData, String afterSignedData, String publicKeyStr) throws Exception {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.decode(publicKeyStr));
         PublicKey publicKey = keyFactory.generatePublic(keySpec);
@@ -106,12 +107,13 @@ public class CFCARAUtil {
 
     /********* RSA_PKCS ***********/
     /**
-     *  RSA证书加密消息
-     *  RSA_PKCS公钥加密
+     * RSA证书加密消息
+     * RSA_PKCS公钥加密
+     *
      * @param ：message
      * @throws Exception
      */
-    public static String encryptMessageByRSA_PKCS(String message, String certPath) throws Exception{
+    public static String encryptMessageByRSA_PKCS(String message, String certPath) throws Exception {
         InputStream file = new ClassPathResource(certPath).getInputStream();
         X509Cert cert = new X509Cert(file);
         PublicKey userPubKey = cert.getPublicKey();
@@ -121,12 +123,13 @@ public class CFCARAUtil {
     }
 
     /**
-     *  RSA证书加密消息
-     *  RSA_PKCS公钥字符串加密
+     * RSA证书加密消息
+     * RSA_PKCS公钥字符串加密
+     *
      * @param ：message
      * @throws Exception
      */
-    public static String encryptMessageByRSA_PKCS_String(String message, String publicKeyStr) throws Exception{
+    public static String encryptMessageByRSA_PKCS_String(String message, String publicKeyStr) throws Exception {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.decode(publicKeyStr));
         PublicKey userPubKey = keyFactory.generatePublic(keySpec);
@@ -142,11 +145,12 @@ public class CFCARAUtil {
     /**
      * RSA证书解密消息
      * RSA_PKCS私钥解密
+     *
      * @param :key
      * @param ：message
      * @throws Exception
      */
-    public static String decryptMessageByRSA_PKCS(String message, String pfxPath, String passWord) throws Exception{
+    public static String decryptMessageByRSA_PKCS(String message, String pfxPath, String passWord) throws Exception {
         InputStream file = new ClassPathResource(pfxPath).getInputStream();
         PrivateKey userPriKey = KeyUtil.getPrivateKeyFromPFX(file, passWord);
         Mechanism mechanism = new Mechanism(Mechanism.RSA_PKCS);
@@ -159,11 +163,12 @@ public class CFCARAUtil {
     /**
      * RSA证书加密消息
      * RC4对称加密
+     *
      * @param ：message
      * @return
      * @throws Exception
      */
-    public static String encryptMessageByRC4(String message, String pfxPath, String passWord) throws Exception{
+    public static String encryptMessageByRC4(String message, String pfxPath, String passWord) throws Exception {
         byte[] data = FileHelper.read(pfxPath);
         Key key = new SecretKeySpec(Base64.decode(Base64.encode(data)), "RC4");
         Mechanism mechanism = new Mechanism(Mechanism.RC4);
@@ -176,11 +181,12 @@ public class CFCARAUtil {
     /**
      * RSA证书解密消息
      * RC4对称解密
+     *
      * @param ：message
      * @return
      * @throws Exception
      */
-    public static String decryptMessageByRC4(String message, String pfxPath, String passWord) throws Exception{
+    public static String decryptMessageByRC4(String message, String pfxPath, String passWord) throws Exception {
         byte[] data = FileHelper.read(pfxPath);
         Key key = new SecretKeySpec(Base64.decode(Base64.encode(data)), "RC4");
         Mechanism mechanism = new Mechanism(Mechanism.RC4);
@@ -213,7 +219,7 @@ public class CFCARAUtil {
     public static String encryptData(String data, String certPath) throws Exception {
         // X509Cert cert = CertUtil.getCertFromPFX(certPath, certPass);
         X509Cert cert = new X509Cert(new FileInputStream(certPath));
-        X509Cert[] recvcerts = new X509Cert[]{ cert };
+        X509Cert[] recvcerts = new X509Cert[]{cert};
         return new String(EnvelopeUtil.envelopeMessage(data.getBytes("UTF8"), Mechanism.RC4, recvcerts, session), "UTF8");
     }
 
@@ -227,24 +233,24 @@ public class CFCARAUtil {
     }
 
 
-
     /**
      * 拼接字符串方法
+     *
      * @param map
      * @param connector
      * @return
      */
-    public static String joinMapValue(Map<String, Object> map, char connector)	{
+    public static String joinMapValue(Map<String, Object> map, char connector) {
         StringBuffer b = new StringBuffer();
-        for (Map.Entry<String, Object> entry : map.entrySet()){
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
             b.append(entry.getKey());
             b.append('=');
-            if (entry.getValue() != null){
+            if (entry.getValue() != null) {
                 b.append(entry.getValue());
             }
             b.append(connector);
         }
-        return b.toString().substring(0, b.length()-1);
+        return b.toString().substring(0, b.length() - 1);
     }
 
 
@@ -262,7 +268,7 @@ public class CFCARAUtil {
         String base64P7SignedData = signMessageByP1(plaintext, pfxPath, password);
         //验签
         boolean verifyByp1 = verifyMessageByP1(plaintext, base64P7SignedData, certPath);
-        System.out.println("p1-cert:"+verifyByp1);
+        System.out.println("p1-cert:" + verifyByp1);
 
         //验签
         String publicKeyStr = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApSC4H4PvPuS9GJq9chCHq"
@@ -273,20 +279,17 @@ public class CFCARAUtil {
                 + "7lFuDvkqSnYnWgVzpv9luWzrvXYOl2K4fvDSl9JIXHUMMz9cELEJjmq7yM+fQIDAQ"
                 + "AB";
         boolean verifyByp1PublicKeyStr = verifyMessageByP1AndPubKey(plaintext, base64P7SignedData, publicKeyStr);
-        System.out.println("p1-PublicKeyStr:"+verifyByp1PublicKeyStr);
+        System.out.println("p1-PublicKeyStr:" + verifyByp1PublicKeyStr);
 
         File file = new File("D:\\certificate\\168885_test.cer");
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        X509Certificate cert = (X509Certificate)cf.generateCertificate(new FileInputStream(file));
+        X509Certificate cert = (X509Certificate) cf.generateCertificate(new FileInputStream(file));
         PublicKey publicKey = cert.getPublicKey();
         String publicKeyString = Base64.toBase64String(publicKey.getEncoded());
         System.out.println("-----------------公钥--------------------");
         System.out.println(publicKeyString);
         System.out.println("-----------------公钥--------------------");
     }
-
-
-
 
 
 }

@@ -8,11 +8,12 @@ import java.io.Serializable;
 
 /**
  * 公共返回信息实体
+ *
  * @param <T>
  */
 public class ResponseData<T> implements Serializable {
 
-    @JSONField(name = "msg",ordinal = 1)
+    @JSONField(name = "msg", ordinal = 1)
     private String message;
 
     @JSONField(ordinal = 2)
@@ -28,7 +29,7 @@ public class ResponseData<T> implements Serializable {
     }
 
     public ResponseData(String message, Integer state) {
-        this(message,state,null);
+        this(message, state, null);
     }
 
     public ResponseData(String message, Integer state, T data) {
@@ -57,7 +58,7 @@ public class ResponseData<T> implements Serializable {
         return state;
     }
 
-    public ResponseData<T>  setState(Integer state) {
+    public ResponseData<T> setState(Integer state) {
         this.state = state;
         return this;
     }
@@ -66,7 +67,7 @@ public class ResponseData<T> implements Serializable {
         return data;
     }
 
-    public ResponseData<T>  setData(T data) {
+    public ResponseData<T> setData(T data) {
         this.data = data;
         return this;
     }
@@ -75,7 +76,7 @@ public class ResponseData<T> implements Serializable {
         return token;
     }
 
-    public ResponseData<T>  setToken(String token) {
+    public ResponseData<T> setToken(String token) {
         this.token = token;
         return this;
     }

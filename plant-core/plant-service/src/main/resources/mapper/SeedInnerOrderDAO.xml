@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.seed.SeedInnerOrderDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.SeedInnerOrder">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
-    <result column="seed_id" jdbcType="INTEGER" property="seedId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="block_id" jdbcType="INTEGER" property="blockId" />
-    <result column="plant_count" jdbcType="INTEGER" property="plantCount" />
-    <result column="plant_amount" jdbcType="DECIMAL" property="plantAmount" />
-    <result column="plant_profit" jdbcType="DECIMAL" property="plantProfit" />
-    <result column="plant_state" jdbcType="BIT" property="plantState" />
-    <result column="plant_time" jdbcType="TIMESTAMP" property="plantTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-  </resultMap>
-  
-  
-  <resultMap id="InnerCountMap" type="com.moguying.plant.core.entity.seed.SeedInnerOrderCount">
-    <result column="seed_id" jdbcType="INTEGER" property="seedId"/>
-    <result column="seed_name" jdbcType="VARCHAR" property="seedName"/>
-    <result column="order_count" jdbcType="INTEGER" property="orderCount"/>
-    <result column="order_time" jdbcType="TIMESTAMP" property="orderTime"/>
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.SeedInnerOrder">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="seed_id" jdbcType="INTEGER" property="seedId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="block_id" jdbcType="INTEGER" property="blockId"/>
+        <result column="plant_count" jdbcType="INTEGER" property="plantCount"/>
+        <result column="plant_amount" jdbcType="DECIMAL" property="plantAmount"/>
+        <result column="plant_profit" jdbcType="DECIMAL" property="plantProfit"/>
+        <result column="plant_state" jdbcType="BIT" property="plantState"/>
+        <result column="plant_time" jdbcType="TIMESTAMP" property="plantTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+    </resultMap>
 
-  <sql id="Base_Column_List">
-    id, order_number, seed_id, user_id, block_id, plant_count, plant_amount, plant_profit, 
-    plant_state, plant_time, end_time
-  </sql>
 
-  <select id="innerOrderCountList" resultMap="InnerCountMap">
-    select t1.seed_id,t2.name as seed_name,sum(t1.plant_count) as order_count,t1.plant_time as order_time from plant_seed_inner_order t1
-    left join plant_seed t2 on t1.seed_id = t2.id
-     group by seed_id
-  </select>
-  
-  
+    <resultMap id="InnerCountMap" type="com.moguying.plant.core.entity.seed.SeedInnerOrderCount">
+        <result column="seed_id" jdbcType="INTEGER" property="seedId"/>
+        <result column="seed_name" jdbcType="VARCHAR" property="seedName"/>
+        <result column="order_count" jdbcType="INTEGER" property="orderCount"/>
+        <result column="order_time" jdbcType="TIMESTAMP" property="orderTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, order_number, seed_id, user_id, block_id, plant_count, plant_amount, plant_profit,
+        plant_state, plant_time, end_time
+    </sql>
+
+    <select id="innerOrderCountList" resultMap="InnerCountMap">
+        select t1.seed_id,t2.name as seed_name,sum(t1.plant_count) as order_count,t1.plant_time as order_time from
+        plant_seed_inner_order t1
+        left join plant_seed t2 on t1.seed_id = t2.id
+        group by seed_id
+    </select>
+
+
 </mapper>

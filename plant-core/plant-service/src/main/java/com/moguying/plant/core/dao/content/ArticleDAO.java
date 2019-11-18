@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ArticleDAO extends BaseDAO<Article> {
-    IPage<Article> selectSelective(Page<Article> page , @Param("wq") Article where);
+    IPage<Article> selectSelective(Page<Article> page, @Param("wq") Article where);
+
     Integer deleteByTypeId(Integer id);
+
     Article selectByPrimaryKeyWithContent(Integer id);
 }

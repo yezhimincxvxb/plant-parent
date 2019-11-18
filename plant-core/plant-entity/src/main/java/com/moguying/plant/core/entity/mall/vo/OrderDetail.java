@@ -43,19 +43,19 @@ public class OrderDetail implements Serializable {
     /**
      * 下单时间
      */
-    @JSONField(ordinal = 8,format = "yyyy.MM.dd HH:mm:ss")
+    @JSONField(ordinal = 8, format = "yyyy.MM.dd HH:mm:ss")
     private Date addTime;
 
     /**
      * 支付时间
      */
-    @JSONField(ordinal = 9,format = "yyyy.MM.dd HH:mm:ss")
+    @JSONField(ordinal = 9, format = "yyyy.MM.dd HH:mm:ss")
     private Date payTime;
 
     /**
      * 商品总价
      */
-    @JSONField(ordinal = 10,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 10, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal productAmount;
 
     /**
@@ -67,13 +67,13 @@ public class OrderDetail implements Serializable {
     /**
      * 运费
      */
-    @JSONField(ordinal = 11,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 11, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal expressFee;
 
     /**
      * 订单总价
      */
-    @JSONField(ordinal = 12,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 12, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal totalAmount;
 
     /**
@@ -85,25 +85,24 @@ public class OrderDetail implements Serializable {
     /**
      * 发货时间
      */
-    @JSONField(ordinal = 14,format = "yyyy.MM.dd HH:mm:ss")
+    @JSONField(ordinal = 14, format = "yyyy.MM.dd HH:mm:ss")
     private Date sendTime;
 
 
-    @JSONField(ordinal = 15,name = "isNotice")
+    @JSONField(ordinal = 15, name = "isNotice")
     private Boolean isNotice;
 
     /**
      * 收货时间
      */
-    @JSONField(ordinal = 16,format = "yyyy.MM.dd HH:mm:ss")
+    @JSONField(ordinal = 16, format = "yyyy.MM.dd HH:mm:ss")
     private Date confirmTime;
 
     /**
      * 取消时间
      */
-    @JSONField(ordinal = 17,format = "yyyy.MM.dd HH:mm:ss")
+    @JSONField(ordinal = 17, format = "yyyy.MM.dd HH:mm:ss")
     private Date closeTime;
-
 
 
     public Integer getOrderId() {

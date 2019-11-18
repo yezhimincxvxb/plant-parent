@@ -37,19 +37,19 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
     @Override
     @DS("write")
     public ResultData<Integer> addArticleType(ArticleType articleType) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        if(null != articleTypeDAO.selectByUrlName(articleType.getUrlName()))
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+        if (null != articleTypeDAO.selectByUrlName(articleType.getUrlName()))
             return resultData;
-       if(articleTypeDAO.insert(articleType) > 0)
-           return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(articleType.getId());
-       return resultData;
+        if (articleTypeDAO.insert(articleType) > 0)
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(articleType.getId());
+        return resultData;
     }
 
     @Override
     @DS("write")
     public ResultData<Integer> deleteArticleType(Integer id) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
-        if(null == articleTypeDAO.selectById(id))
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS, 0);
+        if (null == articleTypeDAO.selectById(id))
             return resultData.setMessageEnum(MessageEnum.ARTICLE_TYPE_NOT_EXIST);
         else if (articleTypeDAO.deleteById(id) <= 0)
             return resultData.setMessageEnum(MessageEnum.ERROR);
@@ -57,10 +57,10 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
         Article where = new Article();
         where.setTypeId(id);
         List<Article> articles = articleDAO.selectList(new QueryWrapper<>(where));
-        if(articles.size() > 0){
-            if(articleContentDAO.deleteByArticleIds(articles) <= 0)
+        if (articles.size() > 0) {
+            if (articleContentDAO.deleteByArticleIds(articles) <= 0)
                 return resultData.setMessageEnum(MessageEnum.DELETE_ARTICLE_CONTENT_FAIL);
-            if(articleDAO.deleteByTypeId(id) <= 0){
+            if (articleDAO.deleteByTypeId(id) <= 0) {
                 return resultData.setMessageEnum(MessageEnum.DELETE_ARTICLE_FAIL);
             }
         }
@@ -70,9 +70,9 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
 
     @Override
     @DS("write")
-    public Integer updateArticleType(Integer id,ArticleType update) {
+    public Integer updateArticleType(Integer id, ArticleType update) {
         ArticleType type = articleTypeDAO.selectById(id);
-        if(type != null){
+        if (type != null) {
             update.setId(id);
             return articleTypeDAO.updateById(update);
         }

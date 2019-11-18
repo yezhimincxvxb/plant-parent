@@ -1,19 +1,19 @@
 package com.moguying.plant.constant;
 
 public enum ApiEnum {
-    AUTH_TOKEN(2,"Auth-Token"),
-    REFRESH_AUTH_TOKEN(3,"Auth-Token-Re"),
+    AUTH_TOKEN(2, "Auth-Token"),
+    REFRESH_AUTH_TOKEN(3, "Auth-Token-Re"),
 
-    LOGIN_USER_ID(1,"userId"),
-    LOGIN_PHONE(3,"phone"),
-    LOGIN_TIME(4,"loginTime"),
+    LOGIN_USER_ID(1, "userId"),
+    LOGIN_PHONE(3, "phone"),
+    LOGIN_TIME(4, "loginTime"),
 
-    TASTE_OPEN(1,"进行中"),
-    TASTE_CLOSE(2,"已结束"),
+    TASTE_OPEN(1, "进行中"),
+    TASTE_CLOSE(2, "已结束"),
 
-    TASTE_APPLY(0,"试吃资格申请"),
-    TASTE_APPLY_SUCCESS(1,"试吃资格成功"),
-    TASTE_APPLY_FAILED(1,"试吃资格失败");
+    TASTE_APPLY(0, "试吃资格申请"),
+    TASTE_APPLY_SUCCESS(1, "试吃资格成功"),
+    TASTE_APPLY_FAILED(1, "试吃资格失败");
 
 
     private Integer type;

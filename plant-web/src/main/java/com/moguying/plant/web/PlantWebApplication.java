@@ -15,7 +15,7 @@ import java.util.TimeZone;
 public class PlantWebApplication {
 
     @PostConstruct
-    private void init(){
+    private void init() {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
     }
 

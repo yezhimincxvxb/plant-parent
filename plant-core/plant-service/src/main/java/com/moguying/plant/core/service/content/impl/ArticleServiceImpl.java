@@ -31,7 +31,7 @@ public class ArticleServiceImpl implements ArticleService {
     @DS("write")
     public Integer addArticle(Article article) {
         article.setAddTime(new Date());
-        if(articleDAO.insert(article) > 0) {
+        if (articleDAO.insert(article) > 0) {
             ArticleContent content = new ArticleContent();
             content.setArticleId(article.getId());
             content.setContent(article.getContent());
@@ -45,32 +45,32 @@ public class ArticleServiceImpl implements ArticleService {
     @DS("read")
     public PageResult<Article> articleList(Integer page, Integer size, Article where) {
         IPage<Article> pageResult = articleDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("write")
     public Integer deleteArticle(Integer id) {
-        if(articleDAO.deleteById(id) > 0 && articleContentDAO.deleteById(id) > 0){
+        if (articleDAO.deleteById(id) > 0 && articleContentDAO.deleteById(id) > 0) {
             return 1;
         }
-        return  -1;
+        return -1;
     }
 
     @Override
     @DS("write")
     public ResultData<Integer> updateArticle(Integer id, Article update) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS, 0);
         Article article = articleDAO.selectById(id);
-        if(article != null){
+        if (article != null) {
             update.setId(id);
-            if(articleDAO.updateById(update) <= 0 )
+            if (articleDAO.updateById(update) <= 0)
                 return resultData.setMessageEnum(MessageEnum.UPDATE_ARTICLE_FAIL);
-            if(update.getContent() != null){
+            if (update.getContent() != null) {
                 ArticleContent content = new ArticleContent();
                 content.setArticleId(id);
                 content.setContent(update.getContent());
-                if( articleContentDAO.updateById(content) <=0 )
+                if (articleContentDAO.updateById(content) <= 0)
                     return resultData.setMessageEnum(MessageEnum.UPDATE_ARTICLE_CONTENT_FAIL);
             }
             return resultData;
@@ -87,6 +87,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     /**
      * 首页显示公告
+     *
      * @return
      */
     @Override

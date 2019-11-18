@@ -21,7 +21,7 @@ public class TraceInfo {
     private String traceNumber;
 
     /**
-     *公司电话
+     * 公司电话
      */
     @JSONField(ordinal = 3)
     private String companyPhone;

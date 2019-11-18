@@ -26,7 +26,7 @@ public interface PlantOrderService {
 
     ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder, boolean isTaste);
 
-    ResultData<Integer> plantReapExchange(Integer userId,ExcReap excReap);
+    ResultData<Integer> plantReapExchange(Integer userId, ExcReap excReap);
 
     PaymentRequest<WebHtmlPayRequest> webHtmlPayRequestData(SeedOrderDetail seedOrderDetail);
 

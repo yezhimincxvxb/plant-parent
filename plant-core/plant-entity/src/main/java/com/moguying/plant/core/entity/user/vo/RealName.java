@@ -10,7 +10,7 @@ public class RealName implements Serializable {
     @JSONField(ordinal = 1)
     private String name;
 
-    @JSONField(serializeUsing = IdCardSerialize.class,ordinal = 2)
+    @JSONField(serializeUsing = IdCardSerialize.class, ordinal = 2)
     private String idCard;
 
     @JSONField(ordinal = 3)

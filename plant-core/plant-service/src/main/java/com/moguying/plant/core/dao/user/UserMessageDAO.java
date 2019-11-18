@@ -16,6 +16,8 @@ import java.util.List;
 @Repository
 public interface UserMessageDAO extends BaseDAO<UserMessage> {
     IPage<UserMessage> messageListByUserId(Page<UserMessage> page, @Param("userId") Integer userId, @Param("isDelete") Boolean isDelete);
+
     Integer countMessageByUserId(Integer userId);
+
     Integer updateMessageByUserIdSelective(UserMessage userMessage);
 }

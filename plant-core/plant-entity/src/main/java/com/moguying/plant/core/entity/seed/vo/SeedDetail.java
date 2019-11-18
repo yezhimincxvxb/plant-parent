@@ -18,7 +18,7 @@ public class SeedDetail implements Serializable {
     @JSONField(ordinal = 3)
     private String picUrl;
 
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal perPrice;
 
     @JSONField(ordinal = 5)

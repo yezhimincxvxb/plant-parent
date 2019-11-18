@@ -15,7 +15,7 @@ public class AdvServiceImpl implements AdvService {
 
     @Override
     public Integer addAdv(Adv adv) {
-        if(advDAO.insert(adv) > 0)
+        if (advDAO.insert(adv) > 0)
             return adv.getId();
         return -1;
     }
@@ -38,9 +38,9 @@ public class AdvServiceImpl implements AdvService {
     }
 
     @Override
-    public Integer updateAdv(Integer id ,Adv update) {
+    public Integer updateAdv(Integer id, Adv update) {
         Adv adv = advDAO.selectById(id);
-        if(adv != null){
+        if (adv != null) {
             update.setId(id);
             return advDAO.updateById(update);
         }

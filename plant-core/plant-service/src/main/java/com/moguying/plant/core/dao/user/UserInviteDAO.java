@@ -17,7 +17,10 @@ import java.util.List;
 @Repository
 public interface UserInviteDAO extends BaseDAO<UserInvite> {
     Integer incUserInviteInfo(UserInvite incInfo);
+
     BigDecimal sumInviteAmount(@Param("field") String field, @Param("inviteUserId") Integer inviteUserId);
+
     Integer countInvite(@Param("inviteUserId") Integer inviteUserId);
+
     IPage<UserInvite> inviteList(Page<UserInvite> page, @Param("inviteUserId") Integer inviteUserId);
 }

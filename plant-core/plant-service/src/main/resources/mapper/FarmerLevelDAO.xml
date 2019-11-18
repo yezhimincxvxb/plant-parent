@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.farmer.FarmerLevelDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerLevel">
-    <id column="level" jdbcType="INTEGER" property="level" />
-    <result column="grow_up_count_min" jdbcType="INTEGER" property="growUpCountMin" />
-    <result column="grow_up_count_max" jdbcType="INTEGER" property="growUpCountMax" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    `level`, grow_up_count_min, grow_up_count_max
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerLevel">
+        <id column="level" jdbcType="INTEGER" property="level"/>
+        <result column="grow_up_count_min" jdbcType="INTEGER" property="growUpCountMin"/>
+        <result column="grow_up_count_max" jdbcType="INTEGER" property="growUpCountMax"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        `level`, grow_up_count_min, grow_up_count_max
+    </sql>
 
-  <select id="selectLevelByGrowUpCount" resultType="int">
-    select level from plant_farmer_level where
-    <![CDATA[
+    <select id="selectLevelByGrowUpCount" resultType="int">
+        select level from plant_farmer_level where
+        <![CDATA[
         grow_up_count_min <= #{growUpCount} and grow_up_count_max >= #{growUpCount}
     ]]>
-  </select>
+    </select>
 </mapper>

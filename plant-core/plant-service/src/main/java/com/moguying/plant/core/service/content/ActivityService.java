@@ -15,24 +15,20 @@ public interface ActivityService extends IService<Activity> {
 
     Activity activityDetail(Integer id);
 
-    
+
     Integer deleteActivityById(Integer id);
 
-    
+
     Integer addActivity(Activity activity);
 
-    
+
     Integer updateActivity(Activity update);
 
-    
+
     PageResult<Activity> activityListForHome(Integer page, Integer size, Date startTime, Date endTime);
 
-    
+
     List<Activity> newestActivity();
-
-
-
-
 
 
 }

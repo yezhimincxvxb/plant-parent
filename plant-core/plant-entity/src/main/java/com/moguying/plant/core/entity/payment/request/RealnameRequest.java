@@ -28,11 +28,11 @@ public class RealnameRequest implements PaymentRequestInterface {
     @JSONField(ordinal = 7)
     private String longTimeOrNoPer = "";
 
-    @JSONField(name = "IDValidity",ordinal = 8)
+    @JSONField(name = "IDValidity", ordinal = 8)
     private String IDValidity = "";
 
     @JSONField(ordinal = 9)
-    private String legalPersonIdphotoa ;
+    private String legalPersonIdphotoa;
 
     @JSONField(ordinal = 10)
     private String legalPersonIdphotob;

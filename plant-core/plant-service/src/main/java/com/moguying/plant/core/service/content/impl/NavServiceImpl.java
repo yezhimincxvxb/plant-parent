@@ -22,7 +22,7 @@ public class NavServiceImpl implements NavService {
 
     @Override
     public Integer addNav(Nav nav) {
-        if(navDAO.insert(nav) > 0)
+        if (navDAO.insert(nav) > 0)
             return nav.getId();
         return -1;
     }
@@ -30,7 +30,7 @@ public class NavServiceImpl implements NavService {
 
     @Override
     public Integer deleteNav(Integer id) {
-        return  navDAO.deleteById(id);
+        return navDAO.deleteById(id);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class NavServiceImpl implements NavService {
     public Integer updateNave(Integer id, Nav update) {
         Nav nav = navDAO.selectById(id);
 
-        if(nav != null){
+        if (nav != null) {
             update.setId(id);
             return navDAO.updateById(update);
         }

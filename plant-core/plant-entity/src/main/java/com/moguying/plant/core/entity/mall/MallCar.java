@@ -10,7 +10,8 @@ import java.io.Serializable;
 
 /**
  * plant_mall_car
- * @author 
+ *
+ * @author
  */
 @Data
 @TableName("plant_mall_car")

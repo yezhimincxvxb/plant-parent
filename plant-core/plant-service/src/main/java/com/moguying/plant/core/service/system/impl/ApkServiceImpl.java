@@ -23,20 +23,20 @@ public class ApkServiceImpl implements ApkService {
 
     @Override
     @DS("read")
-    public PageResult<Apk> apkList(Integer page, Integer size , Apk where) {
+    public PageResult<Apk> apkList(Integer page, Integer size, Apk where) {
         IPage<Apk> pageResult = apkDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where).orderByDesc("id"));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("write")
     public ResultData<Integer> apkDelete(Integer id) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         Apk apk = apkDAO.selectById(id);
-        if(null == apk)
+        if (null == apk)
             return resultData.setMessageEnum(MessageEnum.APK_NOT_EXIST);
 
-        if(apkDAO.deleteById(id) > 0)
+        if (apkDAO.deleteById(id) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;
     }
@@ -44,10 +44,10 @@ public class ApkServiceImpl implements ApkService {
     @Override
     @DS("write")
     public ResultData<Integer> saveApk(Apk where) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,null);
-        if(null == where.getId()){
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+        if (null == where.getId()) {
             where.setAddTime(new Date());
-            if(apkDAO.insert(where) > 0)
+            if (apkDAO.insert(where) > 0)
                 return resultData.setMessageEnum(MessageEnum.SUCCESS);
         } else {
             Apk apk = apkDAO.selectById(where.getId());

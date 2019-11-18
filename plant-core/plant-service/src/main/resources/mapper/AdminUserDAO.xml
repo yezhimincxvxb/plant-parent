@@ -1,56 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.admin.AdminUserDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.admin.AdminUser">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="is_locked" jdbcType="BIT" property="isLocked" />
-    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-    <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
-    <result column="role_id" jdbcType="INTEGER" property="roleId" />
-    <result column="bind_id" jdbcType="INTEGER" property="bindId" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.admin.AdminUser">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="is_locked" jdbcType="BIT" property="isLocked"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
+        <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
+        <result column="role_id" jdbcType="INTEGER" property="roleId"/>
+        <result column="bind_id" jdbcType="INTEGER" property="bindId"/>
+    </resultMap>
 
-  <resultMap id="BaseResultInfo" type="com.moguying.plant.core.entity.admin.AdminUser" extends="BaseResultMap">
-    <result column="phone" jdbcType="VARCHAR" property="phone"/>
-  </resultMap>
-  
-  <resultMap id="BaseInfoWithRole" type="com.moguying.plant.core.entity.admin.AdminUser" extends="BaseResultMap">
-    <collection property="role" ofType="com.moguying.plant.core.entity.admin.AdminRole">
-      <result column="role_name" jdbcType="VARCHAR" property="roleName" />
-      <result column="action_code" jdbcType="VARCHAR" property="actionCode" />
-    </collection>
-  </resultMap>
+    <resultMap id="BaseResultInfo" type="com.moguying.plant.core.entity.admin.AdminUser" extends="BaseResultMap">
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    </resultMap>
+
+    <resultMap id="BaseInfoWithRole" type="com.moguying.plant.core.entity.admin.AdminUser" extends="BaseResultMap">
+        <collection property="role" ofType="com.moguying.plant.core.entity.admin.AdminRole">
+            <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+            <result column="action_code" jdbcType="VARCHAR" property="actionCode"/>
+        </collection>
+    </resultMap>
 
 
-  <sql id="Base_Column_List">
-    id, user_name, `password`, is_locked, last_login_time, last_login_ip, role_id, bind_id
-  </sql>
+    <sql id="Base_Column_List">
+        id, user_name, `password`, is_locked, last_login_time, last_login_ip, role_id, bind_id
+    </sql>
 
-  <select id="selectByNameAndPassword" resultMap="BaseResultMap">
-    select id,user_name,is_locked,role_id,bind_id from plant_admin_user where
-    user_name = #{name} and password = #{password} and is_locked = 0
-  </select>
-  
-  <select id="selectSelective" resultMap="BaseResultInfo">
-    select t1.*,t2.phone
-    from plant_admin_user t1
-    left join plant_user t2 on t1.bind_id = t2.id
-    <where>
-      <if test="wq.userName != null">
-        t1.user_name = #{wq.userName}
-      </if>
-    </where>
-    order by t1.id desc
-  </select>
-  
-  <select id="adminUserInfoById" resultMap="BaseInfoWithRole">
-    select t1.*,t2.* from plant_admin_user t1
-    left join plant_admin_role t2 on t1.role_id = t2.id
-    where t1.id = #{id}
-  </select>
+    <select id="selectByNameAndPassword" resultMap="BaseResultMap">
+        select id,user_name,is_locked,role_id,bind_id from plant_admin_user where
+        user_name = #{name} and password = #{password} and is_locked = 0
+    </select>
 
+    <select id="selectSelective" resultMap="BaseResultInfo">
+        select t1.*,t2.phone
+        from plant_admin_user t1
+        left join plant_user t2 on t1.bind_id = t2.id
+        <where>
+            <if test="wq.userName != null">
+                t1.user_name = #{wq.userName}
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
+
+    <select id="adminUserInfoById" resultMap="BaseInfoWithRole">
+        select t1.*,t2.* from plant_admin_user t1
+        left join plant_admin_role t2 on t1.role_id = t2.id
+        where t1.id = #{id}
+    </select>
 
 
 </mapper>

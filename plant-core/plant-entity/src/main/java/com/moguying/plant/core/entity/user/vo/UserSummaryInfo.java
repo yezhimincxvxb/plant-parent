@@ -19,7 +19,7 @@ public class UserSummaryInfo implements Serializable {
     @JSONField(ordinal = 2)
     private Integer blockCount = 0;
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 3)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 3)
     private BigDecimal availableAmount;
 
     @JSONField(ordinal = 4)

@@ -18,10 +18,16 @@ import java.util.List;
 @Repository
 public interface MallCarDAO extends BaseDAO<MallCar> {
     IPage<OrderItem> userCarItemList(Page<OrderItem> page, @Param("userId") Integer userId);
+
     Integer addCarItemCount(@Param("id") Integer id, @Param("count") Integer count);
+
     MallCar selectByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
+
     Integer deleteItemByRange(@Param("items") List<OrderItem> items, @Param("userId") Integer userId);
+
     BigDecimal sumCheckedItemAmount(Integer userId);
+
     Integer checkItems(@Param("items") List<OrderItem> items, @Param("userId") Integer userId, @Param("check") Boolean check);
+
     Integer countByCheckState(@Param("check") Boolean check, @Param("userId") Integer userId);
 }

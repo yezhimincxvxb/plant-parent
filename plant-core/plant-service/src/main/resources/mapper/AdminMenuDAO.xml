@@ -1,82 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.admin.AdminMenuDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.admin.AdminMenu">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
-    <result column="always_show" jdbcType="INTEGER" property="alwaysShow" />
-    <result column="component" jdbcType="VARCHAR" property="component" />
-    <result column="path" jdbcType="VARCHAR" property="path" />
-    <result column="redirect" jdbcType="VARCHAR" property="redirect" />
-    <result column="hidden" jdbcType="INTEGER" property="hidden" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="parent_name" jdbcType="VARCHAR" property="parentName"/>
-    <collection property="meta" ofType="com.moguying.plant.core.entity.admin.AdminMenuMeta">
-      <result column="menu_id" property="menuId"/>
-      <result column="title" property="title"/>
-      <result column="icon" property="icon"/>
-      <result column="no_cache" property="noCache"/>
-    </collection>
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.admin.AdminMenu">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="always_show" jdbcType="INTEGER" property="alwaysShow"/>
+        <result column="component" jdbcType="VARCHAR" property="component"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="redirect" jdbcType="VARCHAR" property="redirect"/>
+        <result column="hidden" jdbcType="INTEGER" property="hidden"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="parent_name" jdbcType="VARCHAR" property="parentName"/>
+        <collection property="meta" ofType="com.moguying.plant.core.entity.admin.AdminMenuMeta">
+            <result column="menu_id" property="menuId"/>
+            <result column="title" property="title"/>
+            <result column="icon" property="icon"/>
+            <result column="no_cache" property="noCache"/>
+        </collection>
+    </resultMap>
 
-  <sql id="Base_Column_List">
-    id, parent_id, always_show, component, `path`, redirect, hidden,name
-  </sql>
+    <sql id="Base_Column_List">
+        id, parent_id, always_show, component, `path`, redirect, hidden,name
+    </sql>
 
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select t1.*,t2.*,t3.title as parent_name from plant_admin_menu t1
-    left join plant_admin_menu_meta t2 on t2.menu_id = t1.id
-    left join plant_admin_menu_meta t3 on t3.menu_id = t1.parent_id
-    <where>
-      <if test="wq.id != null">
-        t1.id = #{wq.id}
-      </if>
-      <if test="wq.parentId != null">
-        AND parent_id = #{wq.parentId}
-      </if>
-      <if test="wq.alwaysShow != null">
-        AND always_show = #{wq.alwaysShow}
-      </if>
-      <if test="wq.component != null">
-        AND component = #{wq.component}
-      </if>
-      <if test="wq.path != null">
-        AND path = #{wq.path}
-      </if>
-      <if test="wq.hidden != null">
-        AND hidden = #{wq.hidden}
-      </if>
-    </where>
-    order by t1.id desc
-  </select>
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select t1.*,t2.*,t3.title as parent_name from plant_admin_menu t1
+        left join plant_admin_menu_meta t2 on t2.menu_id = t1.id
+        left join plant_admin_menu_meta t3 on t3.menu_id = t1.parent_id
+        <where>
+            <if test="wq.id != null">
+                t1.id = #{wq.id}
+            </if>
+            <if test="wq.parentId != null">
+                AND parent_id = #{wq.parentId}
+            </if>
+            <if test="wq.alwaysShow != null">
+                AND always_show = #{wq.alwaysShow}
+            </if>
+            <if test="wq.component != null">
+                AND component = #{wq.component}
+            </if>
+            <if test="wq.path != null">
+                AND path = #{wq.path}
+            </if>
+            <if test="wq.hidden != null">
+                AND hidden = #{wq.hidden}
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
 
 
+    <delete id="deleteByMenuIds" parameterType="int">
+        delete from plant_admin_menu
+        <where>
+            <if test="ids != null">
+                id in
+                <foreach collection="ids" open="(" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </delete>
 
-  <delete id="deleteByMenuIds" parameterType="int">
-    delete from plant_admin_menu
-    <where>
-      <if test="ids != null">
-        id in
-        <foreach collection="ids" open="(" close=")" item="item" separator=",">
-          #{item}
-        </foreach>
-      </if>
-    </where>
-  </delete>
+    <select id="selectByMenuStringIds" resultMap="BaseResultMap">
+        select t1.*,t2.* from plant_admin_menu t1
+        left join plant_admin_menu_meta t2 on t2.menu_id = t1.id
+        <where>
+            <if test="ids != null">
+                id in
+                <foreach collection="ids" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by id desc
+    </select>
 
-  <select id="selectByMenuStringIds" resultMap="BaseResultMap">
-    select t1.*,t2.* from plant_admin_menu t1
-    left join plant_admin_menu_meta t2 on t2.menu_id = t1.id
-    <where>
-      <if test="ids != null">
-        id in
-        <foreach collection="ids" open="(" close=")" separator="," item="item">
-          #{item}
-        </foreach>
-      </if>
-    </where>
-    order by id desc
-  </select>
-  
-  
+
 </mapper>

@@ -31,11 +31,11 @@ public class ReapExcLog {
     @TableField
     private Integer reapId;
 
-    @JSONField(ordinal = 5,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal excWeigh;
 
-    @JSONField(ordinal = 6,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 6, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 

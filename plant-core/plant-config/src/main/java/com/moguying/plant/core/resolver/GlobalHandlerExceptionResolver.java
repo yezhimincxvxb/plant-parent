@@ -13,7 +13,7 @@ public class GlobalHandlerExceptionResolver implements HandlerExceptionResolver 
     //TODO 发送邮件
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
-       e.printStackTrace();
-       return null;
+        e.printStackTrace();
+        return null;
     }
 }

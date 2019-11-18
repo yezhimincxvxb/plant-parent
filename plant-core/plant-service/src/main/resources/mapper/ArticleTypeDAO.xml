@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.content.ArticleTypeDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.ArticleType">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="url_name" jdbcType="VARCHAR" property="urlName" />
-    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, `name`,url_name,order_number
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.ArticleType">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="url_name" jdbcType="VARCHAR" property="urlName"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `name`,url_name,order_number
+    </sql>
 
 
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_article_type
-    <where>
-      <if test="name != null">
-        <bind name="nameLike" value="'%' + name + '%'"/>
-        name like #{nameLike}
-      </if>
-    </where>
-    order by order_number desc
-  </select>
-  
-  <select id="selectByUrlName" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_article_type
-    where url_name = #{urlName}
-  </select>
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_article_type
+        <where>
+            <if test="name != null">
+                <bind name="nameLike" value="'%' + name + '%'"/>
+                name like #{nameLike}
+            </if>
+        </where>
+        order by order_number desc
+    </select>
+
+    <select id="selectByUrlName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_article_type
+        where url_name = #{urlName}
+    </select>
 
 </mapper>

@@ -15,7 +15,7 @@ public class UserMallOrder {
     @JSONField(ordinal = 1)
     private Integer id;
 
-    @JSONField(ordinal = 2,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 2, format = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
 
     @JSONField(ordinal = 3)
@@ -24,13 +24,13 @@ public class UserMallOrder {
     @JSONField(ordinal = 4)
     private String stateStr;
 
-    @JSONField(ordinal = 5,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal totalAmount;
 
-    @JSONField(ordinal = 6,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 6, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal buyAmount;
 
-    @JSONField(ordinal = 7,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 7, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal feeAmount;
 
     @JSONField(ordinal = 11)
@@ -42,7 +42,7 @@ public class UserMallOrder {
     @JSONField(ordinal = 9)
     private List<OrderItem> orderItems;
 
-    @JSONField(ordinal = 10,name = "isNotice")
+    @JSONField(ordinal = 10, name = "isNotice")
     private Boolean isNotice;
 
     public Integer getId() {

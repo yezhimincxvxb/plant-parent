@@ -5,7 +5,10 @@ import com.moguying.plant.core.entity.content.AdvType;
 
 public interface AdvTypeService {
     AdvType advType(Integer id);
+
     Integer addAdvType(AdvType advType);
+
     PageResult<AdvType> advTypeList(Integer page, Integer size, AdvType advType);
+
     Integer updateAdvType(Integer id, AdvType advType);
 }

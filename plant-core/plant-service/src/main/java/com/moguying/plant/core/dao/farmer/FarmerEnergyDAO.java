@@ -13,5 +13,6 @@ import java.util.List;
 @Repository
 public interface FarmerEnergyDAO extends BaseDAO<FarmerEnergy> {
     List<FarmerEnergy> selectSelective(FarmerEnergy where);
+
     FarmerEnergy selectByIdAndUserId(FarmerEnergy where);
 }

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
- * @author  Qinhir
+ * @author Qinhir
  */
 @Component
 public class IdCardSerialize implements ObjectSerializer {
@@ -19,12 +19,12 @@ public class IdCardSerialize implements ObjectSerializer {
             StringBuilder sb = new StringBuilder();
             String idCard = (String) value;
             int length = idCard.length();
-            if(length >= 15) {
+            if (length >= 15) {
                 sb.append(idCard, 0, 3)
                         .append("***")
                         .append(idCard, length - 4, length);
                 jsonSerializer.write(sb.toString());
-            } else if(length == 11) {
+            } else if (length == 11) {
                 sb.append(idCard, 0, 3)
                         .append("****")
                         .append(idCard, length - 4, length);

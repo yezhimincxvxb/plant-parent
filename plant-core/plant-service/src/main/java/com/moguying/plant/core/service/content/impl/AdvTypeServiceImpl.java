@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdvTypeServiceImpl implements AdvTypeService {
 
-    Logger log  = LoggerFactory.getLogger(AdvTypeServiceImpl.class);
-
+    Logger log = LoggerFactory.getLogger(AdvTypeServiceImpl.class);
 
 
     @Autowired
@@ -21,7 +20,7 @@ public class AdvTypeServiceImpl implements AdvTypeService {
 
     @Override
     public Integer addAdvType(AdvType advType) {
-        if(advTypeDAO.insert(advType) > 0)
+        if (advTypeDAO.insert(advType) > 0)
             return advType.getId();
         return -1;
     }
@@ -39,10 +38,10 @@ public class AdvTypeServiceImpl implements AdvTypeService {
     }
 
     @Override
-    public Integer updateAdvType(Integer id ,AdvType update) {
+    public Integer updateAdvType(Integer id, AdvType update) {
         AdvType advType = advTypeDAO.selectById(id);
 
-        if( advType != null) {
+        if (advType != null) {
             update.setId(id);
             return advTypeDAO.updateById(update);
         }

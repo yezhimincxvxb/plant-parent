@@ -7,39 +7,39 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class TraceDataInfo implements Serializable , Comparable<TraceDataInfo>{
+public class TraceDataInfo implements Serializable, Comparable<TraceDataInfo> {
 
     private static final long serialVersionUID = -4475601683393624059L;
 
     /**
-     *物流内容
+     * 物流内容
      */
     private String context;
 
     /**
-     *原始时间
+     * 原始时间
      */
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 
     /**
-     *格式化时间
+     * 格式化时间
      */
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date ftime;
 
     /**
-     *签收状态
+     * 签收状态
      */
     private String status;
 
     /**
-     *行政区域的编码
+     * 行政区域的编码
      */
     private String areaCode;
 
     /**
-     *行政区域的名称
+     * 行政区域的名称
      */
     private String areaName;
 

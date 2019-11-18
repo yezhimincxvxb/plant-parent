@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface FarmerNoticeDAO extends BaseDAO<FarmerNotice> {
     Integer countNewNotice(FarmerNotice where);
+
     List<FarmerNotice> selectSelective(FarmerNotice where);
+
     Integer updateStateByUserId(@Param("userId") Integer userId, @Param("state") Integer state);
 }

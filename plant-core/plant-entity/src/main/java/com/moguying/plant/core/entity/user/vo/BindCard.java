@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class BindCard implements Serializable {
 
-    @JSONField(ordinal = 1,serializeUsing = IdCardSerialize.class)
+    @JSONField(ordinal = 1, serializeUsing = IdCardSerialize.class)
     private String bankNumber;
 
     @JSONField(serialize = false)
@@ -16,10 +16,10 @@ public class BindCard implements Serializable {
     @JSONField(serialize = false)
     private String seqNo;
 
-    @JSONField(ordinal = 2,serializeUsing = IdCardSerialize.class)
+    @JSONField(ordinal = 2, serializeUsing = IdCardSerialize.class)
     private String phone;
 
-    @JSONField(ordinal = 3,deserialize = false)
+    @JSONField(ordinal = 3, deserialize = false)
     private Boolean state;
 
     public Boolean getState() {

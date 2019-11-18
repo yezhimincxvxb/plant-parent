@@ -17,11 +17,11 @@ public class BigDecimalSerialize implements ObjectSerializer {
     public void write(JSONSerializer jsonSerializer, Object value, Object filedName, Type type, int i) throws IOException {
 
         String typeName = type.getTypeName();
-        if(typeName.equals(BigDecimal.class.getTypeName())){
+        if (typeName.equals(BigDecimal.class.getTypeName())) {
             DecimalFormat decimalFormat = new DecimalFormat("#0.00");
             String price = decimalFormat.format(value);
             jsonSerializer.write(price);
-        }else {
+        } else {
             jsonSerializer.write(value);
         }
     }

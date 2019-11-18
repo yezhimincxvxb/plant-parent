@@ -139,7 +139,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
                 .setUserId(userId)
                 .setSeedTypeId(seedType.getId())
                 .setAddTime(new Date());
-         userActivityLogDAO.insert(log);
+        userActivityLogDAO.insert(log);
     }
 
     @Override

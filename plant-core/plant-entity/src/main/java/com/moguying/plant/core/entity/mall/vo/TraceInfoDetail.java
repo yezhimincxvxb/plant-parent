@@ -4,9 +4,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.Date;
 
-public class TraceInfoDetail implements Comparable<TraceInfoDetail>{
+public class TraceInfoDetail implements Comparable<TraceInfoDetail> {
 
-    @JSONField(ordinal = 1,format = "yyyy.MM.dd HH:mm")
+    @JSONField(ordinal = 1, format = "yyyy.MM.dd HH:mm")
     private Date traceTime;
 
     @JSONField(ordinal = 2)

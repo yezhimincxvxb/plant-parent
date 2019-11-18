@@ -15,7 +15,8 @@ import java.util.List;
 @Repository
 public interface AdminMenuDAO extends BaseDAO<AdminMenu> {
 
-    IPage<AdminMenu> selectSelective(Page<AdminMenu> page,@Param("wq") AdminMenu where);
+    IPage<AdminMenu> selectSelective(Page<AdminMenu> page, @Param("wq") AdminMenu where);
+
     List<AdminMenu> selectSelective(@Param("wq") AdminMenu where);
 
 

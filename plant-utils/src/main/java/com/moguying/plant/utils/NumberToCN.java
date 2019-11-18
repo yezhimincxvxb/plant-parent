@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 /**
  * 数字转换为汉语中人民币的大写
  */
-public enum  NumberToCN {
+public enum NumberToCN {
     INSTANCE;
 
     NumberToCN() {
@@ -20,25 +20,25 @@ public enum  NumberToCN {
     /**
      * 汉语中货币单位大写，这样的设计类似于占位符
      */
-    private  final String[] CN_UPPER_MONETRAY_UNIT = {"分", "角", "元",
+    private final String[] CN_UPPER_MONETRAY_UNIT = {"分", "角", "元",
             "拾", "佰", "仟", "万", "拾", "佰", "仟", "亿", "拾", "佰", "仟", "兆", "拾",
             "佰", "仟"};
     /**
      * 特殊字符：整
      */
-    private  final String CN_FULL = "整";
+    private final String CN_FULL = "整";
     /**
      * 特殊字符：负
      */
-    private  final String CN_NEGATIVE = "负";
+    private final String CN_NEGATIVE = "负";
     /**
      * 金额的精度，默认值为2
      */
-    private  final int MONEY_PRECISION = 2;
+    private final int MONEY_PRECISION = 2;
     /**
      * 特殊字符：零元整
      */
-    private  final String CN_ZEOR_FULL = "零元" + CN_FULL;
+    private final String CN_ZEOR_FULL = "零元" + CN_FULL;
 
     /**
      * 把输入的金额转换为汉语中人民币的大写
@@ -46,7 +46,7 @@ public enum  NumberToCN {
      * @param numberOfMoney 输入的金额
      * @return 对应的汉语大写
      */
-    public  String number2CNMontrayUnit(BigDecimal numberOfMoney) {
+    public String number2CNMontrayUnit(BigDecimal numberOfMoney) {
         StringBuffer sb = new StringBuffer();
         // -1, 0, or 1 as the value of this BigDecimal is negative, zero, or
         // positive.

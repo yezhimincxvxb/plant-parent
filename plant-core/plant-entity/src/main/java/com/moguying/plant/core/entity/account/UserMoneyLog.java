@@ -15,7 +15,8 @@ import java.util.Date;
 
 /**
  * plant_user_money_log
- * @author 
+ *
+ * @author
  */
 @TableName("plant_user_money_log")
 @Data
@@ -28,7 +29,7 @@ public class UserMoneyLog implements Serializable {
     private Long id;
 
     /**
-     * 用户id 
+     * 用户id
      */
     @JSONField(ordinal = 1)
     @TableField
@@ -44,7 +45,7 @@ public class UserMoneyLog implements Serializable {
      * 影响金额
      */
     @Excel(name = "操作金额")
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 3)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 3)
     @TableField
     private BigDecimal affectMoney;
 
@@ -52,7 +53,7 @@ public class UserMoneyLog implements Serializable {
      * 可用金额
      */
     @Excel(name = "可用金额")
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 4)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 4)
     @TableField
     private BigDecimal availableMoney;
 
@@ -60,7 +61,7 @@ public class UserMoneyLog implements Serializable {
      * 冻结金额
      */
     @Excel(name = "冻结金额")
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 5)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 5)
     @TableField
     private BigDecimal freezeMoney;
 
@@ -68,7 +69,7 @@ public class UserMoneyLog implements Serializable {
      * 待收金额
      */
     @Excel(name = "待收金额")
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 6)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 6)
     @TableField
     private BigDecimal collectMoney;
 
@@ -76,7 +77,7 @@ public class UserMoneyLog implements Serializable {
      * 待收本金
      */
     @Excel(name = "待收本金")
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 7)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 7)
     @TableField
     private BigDecimal collectCapital;
 
@@ -84,7 +85,7 @@ public class UserMoneyLog implements Serializable {
      * 待收利息
      */
     @Excel(name = "待收利息")
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 8)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 8)
     @TableField
     private BigDecimal collectInterest;
 
@@ -99,8 +100,8 @@ public class UserMoneyLog implements Serializable {
     /**
      * 操作时间
      */
-    @Excel(name = "操作时间",format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss:SSS",ordinal = 10)
+    @Excel(name = "操作时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss:SSS", ordinal = 10)
     @TableField
     private Date affectTime;
 

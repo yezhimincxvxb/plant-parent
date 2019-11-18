@@ -11,7 +11,8 @@ import java.io.Serializable;
 
 /**
  * plant_user_inner
- * @author 
+ *
+ * @author
  */
 @TableName("plant_user_inner")
 @Data

@@ -22,7 +22,7 @@ public class SeedDaysServiceImpl implements SeedDaysService {
     @DS("read")
     public PageResult<SeedDays> seedDaysList(Integer page, Integer size) {
         IPage<SeedDays> pageResult = seedDaysDAO.selectPage(new Page<>(page, size), new QueryWrapper<>());
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override

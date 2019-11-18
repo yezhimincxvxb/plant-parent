@@ -15,7 +15,8 @@ import java.math.BigDecimal;
 
 /**
  * plant_seed_order
- * @author 
+ *
+ * @author
  */
 @TableName("plant_seed_order")
 @Data
@@ -73,7 +74,7 @@ public class SeedOrder implements Serializable {
      * 购买总价
      */
     @Excel(name = "购买总价")
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 7)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 7)
     @TableField
     private BigDecimal buyAmount;
 

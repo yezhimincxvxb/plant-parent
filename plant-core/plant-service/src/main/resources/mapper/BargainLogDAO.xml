@@ -16,8 +16,8 @@
 
     <!-- 基本查询字段 -->
     <sql id="BaseColumnList">
-   id, user_id, share_id, product_id, detail_id, help_amount, message, help_time
-  </sql>
+        id, user_id, share_id, product_id, detail_id, help_amount, message, help_time
+    </sql>
 
     <!-- 同一用户是否已帮 -->
     <select id="getBargainCount" resultType="java.lang.Integer">

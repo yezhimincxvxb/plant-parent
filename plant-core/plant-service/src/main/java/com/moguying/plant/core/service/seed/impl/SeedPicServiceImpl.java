@@ -27,7 +27,7 @@ public class SeedPicServiceImpl implements SeedPicService {
         //未删除
         seedPic.setIsDelete(new Byte("0"));
         IPage<SeedPic> pageResult = seedPicDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(seedPic));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -40,10 +40,10 @@ public class SeedPicServiceImpl implements SeedPicService {
     @DS("write")
     public SeedPic seedPicDelete(Long id) {
         SeedPic deletePic = seedPicDAO.selectById(id);
-        if( deletePic == null)
+        if (deletePic == null)
             return null;
 
-        if(seedPicDAO.deleteById(id) > 0 ) {
+        if (seedPicDAO.deleteById(id) > 0) {
             //TODO 更新菌包关联的图片
             return deletePic;
         }
@@ -60,7 +60,7 @@ public class SeedPicServiceImpl implements SeedPicService {
     @Override
     @DS("read")
     public List<SeedPic> seedPicByRange(List<Integer> range) {
-        return seedPicDAO.selectBatchIds(range).stream().filter((x)->x.getIsDelete() != 0).collect(Collectors.toList());
+        return seedPicDAO.selectBatchIds(range).stream().filter((x) -> x.getIsDelete() != 0).collect(Collectors.toList());
     }
 
     @Override

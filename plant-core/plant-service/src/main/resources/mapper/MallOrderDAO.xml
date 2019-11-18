@@ -47,14 +47,15 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, order_number, user_id, buy_amount, total_coins, buy_mark, fee_amount, `state`, address_id,
-    add_time, pay_time, close_time, send_time, is_notice, confirm_time, express_order_number, express_com_code,
-    cancel_reason, seq_no,car_pay_amount,account_pay_amount,reduce_pay_amount,notice_time
-  </sql>
+        id, order_number, user_id, buy_amount, total_coins, buy_mark, fee_amount, `state`, address_id,
+        add_time, pay_time, close_time, send_time, is_notice, confirm_time, express_order_number, express_com_code,
+        cancel_reason, seq_no,car_pay_amount,account_pay_amount,reduce_pay_amount,notice_time
+    </sql>
 
 
     <select id="userOrderListByState" resultMap="OrderListMap">
-        select id,add_time,fee_amount,buy_amount,state,sum(buy_amount + fee_amount) as total_amount,is_notice, total_coins
+        select id,add_time,fee_amount,buy_amount,state,sum(buy_amount + fee_amount) as total_amount,is_notice,
+        total_coins
         from plant_mall_order
         where user_id = #{userId}
         <choose>
@@ -91,7 +92,8 @@
     </select>
 
     <select id="findByIdAndNum" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/>
+        select
+        <include refid="Base_Column_List"/>
         from plant_mall_order
         <where>
             user_id = #{userId}

@@ -38,14 +38,14 @@ public class SeedType implements Serializable {
     /**
      * 每份价格
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 4)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 4)
     @TableField
     private BigDecimal perPrice;
 
     /**
      * 利率
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 5)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 5)
     @TableField
     private BigDecimal interestRates;
 
@@ -132,7 +132,7 @@ public class SeedType implements Serializable {
      * 分组名
      */
     @TableField(exist = false)
-    @JSONField(ordinal =  17)
+    @JSONField(ordinal = 17)
     private String groupName;
 
 
@@ -155,7 +155,7 @@ public class SeedType implements Serializable {
     /**
      * 兑换的每份商品值多少重量
      */
-    @JSONField(ordinal = 20,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal exMallWeigh;
 

@@ -11,8 +11,8 @@
     </resultMap>
 
     <sql id="baseSQL">
-    id, affect_money, affect_type, affect_time, detail_id
-  </sql>
+        id, affect_money, affect_type, affect_time, detail_id
+    </sql>
 
     <!-- 获取用户资金明细 -->
     <select id="findUserMoney" resultMap="baseResultMap">

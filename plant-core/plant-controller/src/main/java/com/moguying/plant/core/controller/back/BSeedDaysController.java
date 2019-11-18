@@ -26,61 +26,65 @@ public class BSeedDaysController {
 
     /**
      * 菌包周期列表
+     *
      * @param page
      * @param size
      * @return
      */
     @GetMapping(value = "/list")
     @ApiOperation("菌包周期列表")
-    public PageResult<SeedDays> seedDaysList(@RequestParam(value = "page",defaultValue = "1",required = false) Integer page,
-                                             @RequestParam(value = "size",defaultValue = "10",required = false) Integer size){
-        return seedDaysService.seedDaysList(page,size);
+    public PageResult<SeedDays> seedDaysList(@RequestParam(value = "page", defaultValue = "1", required = false) Integer page,
+                                             @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
+        return seedDaysService.seedDaysList(page, size);
     }
 
 
     /**
      * 添加菌包周期
+     *
      * @return_
      */
     @PostMapping(value = "/add")
     @ApiOperation("添加菌包周期")
-    public ResponseData seedDaysAdd(@RequestBody SeedDays days){
-        if(days.getGrowDays() == null || days.getGrowDays() == 0 || days.getGrowDays() < 0 || StringUtils.isEmpty(days.getGrowDaysName()))
-            return new ResponseData(MessageEnum.PARAMETER_ERROR.getMessage(),MessageEnum.PARAMETER_ERROR.getState());
+    public ResponseData seedDaysAdd(@RequestBody SeedDays days) {
+        if (days.getGrowDays() == null || days.getGrowDays() == 0 || days.getGrowDays() < 0 || StringUtils.isEmpty(days.getGrowDaysName()))
+            return new ResponseData(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
         try {
             if (seedDaysService.seedDaysAdd(days) > 0)
                 return new ResponseData(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
         } catch (DuplicateKeyException exception) {
-            return new ResponseData(MessageEnum.DAYS_EXISTS_ERROR.getMessage(),MessageEnum.DAYS_EXISTS_ERROR.getState());
+            return new ResponseData(MessageEnum.DAYS_EXISTS_ERROR.getMessage(), MessageEnum.DAYS_EXISTS_ERROR.getState());
         }
-        return new ResponseData(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        return new ResponseData(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
 
     /**
      * 菌包周期删除
+     *
      * @return
      */
     @DeleteMapping(value = "/delete/{id}")
     @ApiOperation("菌包周期删除")
-    public ResponseData seedDaysDelete(@PathVariable Integer id){
-        if(seedDaysService.seedDaysDelete(id) < 1)
-            return new ResponseData(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
-        return new ResponseData(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+    public ResponseData seedDaysDelete(@PathVariable Integer id) {
+        if (seedDaysService.seedDaysDelete(id) < 1)
+            return new ResponseData(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        return new ResponseData(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 
     /**
      * 编辑菌包周期
+     *
      * @param seedDays
      * @return
      */
     @PutMapping(value = "/edit")
     @ApiOperation("编辑菌包周期")
-    public ResponseData seedDaysEdit(@RequestBody SeedDays seedDays){
-        if(seedDaysService.seedDaysEdit(seedDays) < 1)
-            return new ResponseData(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
-        return new ResponseData(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+    public ResponseData seedDaysEdit(@RequestBody SeedDays seedDays) {
+        if (seedDaysService.seedDaysEdit(seedDays) < 1)
+            return new ResponseData(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        return new ResponseData(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 }

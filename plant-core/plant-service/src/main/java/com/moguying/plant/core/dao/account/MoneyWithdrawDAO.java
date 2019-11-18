@@ -17,7 +17,10 @@ import java.util.List;
 @Repository
 public interface MoneyWithdrawDAO extends BaseDAO<MoneyWithdraw> {
     IPage<MoneyWithdraw> selectSelective(Page<MoneyWithdraw> page, @Param("wq") MoneyWithdraw where);
+
     List<MoneyWithdraw> selectSelective(@Param("wq") MoneyWithdraw where);
+
     MoneyWithdraw selectByOrderNumber(String orderNumber);
+
     BigDecimal withdrawDailyCountByUserId(@Param("userId") Integer userId, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }

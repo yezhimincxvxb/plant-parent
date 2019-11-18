@@ -74,7 +74,7 @@ public class AdminUser implements Serializable {
      * 前台用户手机号
      */
     @TableField(exist = false)
-    private String  phone;
+    private String phone;
 
     @TableField(exist = false)
     private Boolean hasNewMessage;

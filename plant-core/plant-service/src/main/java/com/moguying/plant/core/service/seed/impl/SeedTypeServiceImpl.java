@@ -40,15 +40,15 @@ public class SeedTypeServiceImpl implements SeedTypeService {
     @DS("write")
     public ResultData<Integer> seedTypeSave(SeedType seedType) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
-        if(null != seedType.getContent().getContractContent())
+        if (null != seedType.getContent().getContractContent())
             seedType.getContent().setContractContent(appendStr.concat(seedType.getContent().getContractContent()));
-        if(null != seedType.getContent().getSeedIntroduce())
+        if (null != seedType.getContent().getSeedIntroduce())
             seedType.getContent().setSeedIntroduce(appendStr.concat(seedType.getContent().getSeedIntroduce()));
 
-        if(seedType.getExMallDefault())
+        if (seedType.getExMallDefault())
             setExMallDefault(seedType.getId());
 
-        if(null == seedType.getId()) {
+        if (null == seedType.getId()) {
             if (seedTypeDAO.insert(seedType) > 0) {
                 if (null != seedType.getContent()) {
                     seedType.getContent().setSeedType(seedType.getId());
@@ -57,8 +57,8 @@ public class SeedTypeServiceImpl implements SeedTypeService {
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(seedType.getId());
             }
         } else {
-            if(seedTypeDAO.updateById(seedType) > 0){
-                if(null != seedType.getContent()){
+            if (seedTypeDAO.updateById(seedType) > 0) {
+                if (null != seedType.getContent()) {
                     seedType.getContent().setSeedType(seedType.getId());
                     seedContentDAO.updateById(seedType.getContent());
                 }
@@ -72,9 +72,9 @@ public class SeedTypeServiceImpl implements SeedTypeService {
     private void setExMallDefault(Integer id) {
         SeedType update = new SeedType();
         update.setExMallDefault(false);
-        seedTypeDAO.update(update,new QueryWrapper<>());
+        seedTypeDAO.update(update, new QueryWrapper<>());
         update.setExMallDefault(true);
-        seedTypeDAO.update(update,new QueryWrapper<SeedType>().lambda().eq(SeedType::getId,id));
+        seedTypeDAO.update(update, new QueryWrapper<SeedType>().lambda().eq(SeedType::getId, id));
     }
 
 
@@ -82,14 +82,14 @@ public class SeedTypeServiceImpl implements SeedTypeService {
     @DS("read")
     public PageResult<SeedType> seedTypeList(Integer page, Integer size, SeedType seedClass) {
         IPage<SeedType> pageResult = seedTypeDAO.selectSelective(new Page<>(page, size), seedClass);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("write")
     public Integer seedTypeDelete(Integer id) {
         //删除对应
-        if(null != seedContentDAO.selectById(id)){
+        if (null != seedContentDAO.selectById(id)) {
             seedContentDAO.deleteById(id);
         }
 
@@ -112,14 +112,14 @@ public class SeedTypeServiceImpl implements SeedTypeService {
     @Override
     @DS("write")
     public ResultData<Boolean> saveSeedGroup(SeedGroup seedGroup) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
         boolean success = false;
-        if(null != seedGroup.getId())
+        if (null != seedGroup.getId())
             success = seedGroupDAO.updateById(seedGroup) > 0;
         else
             success = seedGroupDAO.insert(seedGroup) > 0;
 
-        if(success)
+        if (success)
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
         return resultData;
 

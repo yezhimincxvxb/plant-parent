@@ -2,15 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.reap.ReapFeeParamDAO">
 
-  <select id="selectSelective" resultType="ReapFeeParam">
-    select t1.id,t1.invite_uid,t1.first_plant_rate,t1.plant_rate,t1.seed_type,
-    t2.phone,t3.class_name
-    from plant_reap_fee_param t1
-    left join plant_user t2 on t1.invite_uid = t2.id
-    left join plant_seed_type t3 on t1.seed_type = t3.id
-    order by id desc
-  </select>
-  
-  
-  
+    <select id="selectSelective" resultType="ReapFeeParam">
+        select t1.id,t1.invite_uid,t1.first_plant_rate,t1.plant_rate,t1.seed_type,
+        t2.phone,t3.class_name
+        from plant_reap_fee_param t1
+        left join plant_user t2 on t1.invite_uid = t2.id
+        left join plant_seed_type t3 on t1.seed_type = t3.id
+        order by id desc
+    </select>
+
+
 </mapper>

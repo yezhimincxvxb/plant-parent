@@ -30,6 +30,7 @@ public class BAdminRoleController {
 
     /**
      * 角色列表
+     *
      * @param search
      * @return
      */
@@ -37,12 +38,13 @@ public class BAdminRoleController {
     @ResponseBody
     @ApiOperation("角色列表")
     public PageResult<AdminRole> adminRoleList(@RequestBody PageSearch<AdminRole> search) {
-        return adminRoleService.roleList(search.getPage(),search.getSize(),search.getWhere());
+        return adminRoleService.roleList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 修改/添加角色
+     *
      * @param role
      * @return
      */
@@ -50,35 +52,34 @@ public class BAdminRoleController {
     @ResponseBody
     @ApiOperation("修改/添加角色")
     public ResponseData<Integer> saveAdminRole(@RequestBody AdminRole role) {
-        if(adminRoleService.saveRole(role) <= 0)
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+        if (adminRoleService.saveRole(role) <= 0)
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
-
 
 
     @GetMapping("/{id}")
     @ResponseBody
     @ApiOperation("角色菜单树")
-    public ResponseData<AdminRole> roleMenuTree(@PathVariable Integer id){
+    public ResponseData<AdminRole> roleMenuTree(@PathVariable Integer id) {
         ResultData<AdminRole> resultData = adminRoleService.role(id);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(), Optional.ofNullable(resultData.getData()).orElse(null));
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), Optional.ofNullable(resultData.getData()).orElse(null));
     }
-
 
 
     /**
      * 删除角色
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/{id}")
     @ResponseBody
     @ApiOperation("删除角色")
-    public ResponseData<Integer> delAdminRole(@PathVariable Integer id){
-        if(adminRoleService.delRole(id) <= 0)
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+    public ResponseData<Integer> delAdminRole(@PathVariable Integer id) {
+        if (adminRoleService.delRole(id) <= 0)
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 

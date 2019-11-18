@@ -16,6 +16,7 @@ import java.util.List;
 public interface UserMoneyDAO extends BaseDAO<UserMoney> {
 
     IPage<UserMoney> selectSelective(Page<UserMoney> page, @Param("wq") UserMoney money);
+
     List<UserMoney> selectSelective(@Param("wq") UserMoney money);
 
     /**

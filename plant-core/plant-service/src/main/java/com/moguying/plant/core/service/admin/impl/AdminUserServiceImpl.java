@@ -42,12 +42,11 @@ public class AdminUserServiceImpl implements AdminUserService {
     private AdminMenuDAO adminMenuDAO;
 
 
-
     @Override
     @DS("write")
     public AdminUser login(String name, String password) {
-        AdminUser adminUser = adminUserDAO.selectByNameAndPassword(name,password);
-        if(null == adminUser) return null;
+        AdminUser adminUser = adminUserDAO.selectByNameAndPassword(name, password);
+        if (null == adminUser) return null;
         else {
             AdminUser update = new AdminUser();
             update.setId(adminUser.getId());
@@ -65,7 +64,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         List<String> ids = Arrays.asList(user.getRole().getActionCode().split(","));
         List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuDAO.selectByMenuStringIds(ids));
         user.setRouters(menus);
-        return  user;
+        return user;
     }
 
     @Override
@@ -79,26 +78,26 @@ public class AdminUserServiceImpl implements AdminUserService {
     @DS("read")
     public PageResult<AdminMessage> adminMessageList(Integer page, Integer size, AdminMessage where) {
         IPage<AdminMessage> pageResult = adminMessageDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @DS("write")
     @Override
     public Integer saveAdminUser(AdminUser adminUser) {
-        if(null != adminUser.getPhone()){
+        if (null != adminUser.getPhone()) {
             User where = new User();
             where.setPhone(adminUser.getPhone());
             User user = userDAO.selectOne(new QueryWrapper<>(where));
-            if(null != user ){
+            if (null != user) {
                 adminUser.setBindId(user.getId());
             }
         }
 
-        if(null != adminUser.getPassword()) {
+        if (null != adminUser.getPassword()) {
             adminUser.setPassword(PasswordUtil.INSTANCE.encode(adminUser.getPassword().getBytes()));
         }
 
-        if(null != adminUser.getId()){
+        if (null != adminUser.getId()) {
             return adminUserDAO.updateById(adminUser);
         } else {
             return adminUserDAO.insert(adminUser);
@@ -109,12 +108,12 @@ public class AdminUserServiceImpl implements AdminUserService {
     @DS("read")
     public PageResult<AdminUser> adminUserList(Integer page, Integer size, AdminUser where) {
         IPage<AdminUser> pageResult = adminUserDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @DS("write")
     @Override
     public Integer readMessage(Integer userId) {
-        return adminMessageDAO.updateUserMessage(userId,1);
+        return adminMessageDAO.updateUserMessage(userId, 1);
     }
 }

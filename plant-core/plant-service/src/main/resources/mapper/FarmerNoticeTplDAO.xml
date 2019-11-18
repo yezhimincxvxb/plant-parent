@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.farmer.FarmerNoticeTplDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerNoticeTpl">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="trigger_event" jdbcType="VARCHAR" property="triggerEvent" />
-    <result column="message_tpl" jdbcType="VARCHAR" property="messageTpl" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, trigger_event, message_tpl
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.farmer.FarmerNoticeTpl">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="trigger_event" jdbcType="VARCHAR" property="triggerEvent"/>
+        <result column="message_tpl" jdbcType="VARCHAR" property="messageTpl"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, trigger_event, message_tpl
+    </sql>
 
-  <select id="selectByTriggerEvent" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_farmer_notice_tpl
-    where trigger_event = #{triggerEvent}
-  </select>
+    <select id="selectByTriggerEvent" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_farmer_notice_tpl
+        where trigger_event = #{triggerEvent}
+    </select>
 </mapper>

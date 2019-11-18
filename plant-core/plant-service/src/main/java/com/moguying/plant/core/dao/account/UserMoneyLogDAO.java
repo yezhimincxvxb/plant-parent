@@ -18,7 +18,9 @@ import java.util.List;
 @Repository
 public interface UserMoneyLogDAO extends BaseDAO<UserMoneyLog> {
     IPage<UserMoneyLog> selectSelective(Page<UserMoneyLog> page, @Param("wq") UserMoneyLog where);
+
     List<UserMoneyLog> selectSelective(@Param("wq") UserMoneyLog where);
+
     BigDecimal fieldSumByTypeUserId(@Param("field") String field, @Param("userId") Integer userId,
                                     @Param("types") List<MoneyOpEnum> types,
                                     @Param("startTime") Date startTime,

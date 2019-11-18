@@ -11,16 +11,16 @@ spring:
     pathmatch:
       use-suffix-pattern: true
   http:
-      encoding:
-        charset: UTF-8
-        force: true
+    encoding:
+      charset: UTF-8
+      force: true
   thymeleaf:
-      encoding: UTF-8
-      prefix: classpath:/views/
-      mode: HTML
-      servlet:
-        content-type: text/html
-      cache: false
+    encoding: UTF-8
+    prefix: classpath:/views/
+    mode: HTML
+    servlet:
+      content-type: text/html
+    cache: false
   servlet:
     multipart:
       enabled: true
@@ -237,6 +237,9 @@ spring:
       port: 27017
       username: activityAdmin
       password: Is&1+KVb[0
+  rabbitmq:
+    host: 192.168.5.180
+    port: 5672
 #上传host
 upload:
   save-path: /pages/upload
@@ -268,7 +271,6 @@ swagger:
     modelRef: string
     parameterType: header
     require: true
-
 
 ---
 debug: false

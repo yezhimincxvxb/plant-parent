@@ -35,6 +35,7 @@ public class BSeedInnerController {
 
     /**
      * 内购人员
+     *
      * @param seedId
      * @param innerCount
      * @param userCount
@@ -42,13 +43,14 @@ public class BSeedInnerController {
      */
     @GetMapping(value = "/user/list")
     public ResponseData<List<UserInner>> innerUserList(@RequestParam(name = "seed_id") Integer seedId, @RequestParam("icount") Integer innerCount, @RequestParam(name = "ucount") Integer userCount) {
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),
-                    seedInnerService.seedInnerUserList(seedId, innerCount, userCount));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
+                seedInnerService.seedInnerUserList(seedId, innerCount, userCount));
     }
 
 
     /**
      * 内购订单
+     *
      * @param seedInnerBuy
      * @return
      */

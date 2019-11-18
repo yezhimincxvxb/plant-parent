@@ -38,16 +38,16 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     @DS("read")
     public PageResult<AdminRole> roleList(Integer page, Integer size, AdminRole where) {
         IPage<AdminRole> pageResult = roleDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @DS("write")
     @Override
     public Integer saveRole(AdminRole role) {
-        if(null != role.getActionIds() && role.getActionIds().size() > 0){
-            role.setActionCode(StringUtils.join(role.getActionIds(),','));
+        if (null != role.getActionIds() && role.getActionIds().size() > 0) {
+            role.setActionCode(StringUtils.join(role.getActionIds(), ','));
         }
-        if(null != role.getId()){
+        if (null != role.getId()) {
             return roleDAO.updateById(role);
         } else {
             return roleDAO.insert(role);
@@ -64,9 +64,9 @@ public class AdminRoleServiceImpl implements AdminRoleService {
     @Override
     @DS("read")
     public ResultData<AdminRole> role(Integer id) {
-        ResultData<AdminRole> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<AdminRole> resultData = new ResultData<>(MessageEnum.ERROR, null);
         AdminRole role = roleDAO.selectById(id);
-        if(null == role)
+        if (null == role)
             return resultData.setMessageEnum(MessageEnum.ADMIN_ROLE_NOT_EXIST);
         List<String> strings = Arrays.asList(role.getActionCode().split(","));
         List<AdminMenu> menus = adminMenuDAO.selectByMenuStringIds(strings);

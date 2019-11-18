@@ -42,7 +42,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 购买总价
      */
-    @JSONField(ordinal = 4 ,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal buyAmount;
 
@@ -63,7 +63,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 订单快递费
      */
-    @JSONField(ordinal = 6,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 6, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal feeAmount;
 
@@ -84,28 +84,28 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 下单时间
      */
-    @JSONField(ordinal = 9,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 
     /**
      * 支付时间
      */
-    @JSONField(ordinal = 10,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 10, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date payTime;
 
     /**
      * 关单时间
      */
-    @JSONField(ordinal = 11,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 11, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date closeTime;
 
     /**
      * 发货时间
      */
-    @JSONField(ordinal = 12,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 12, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date sendTime;
 
@@ -119,7 +119,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 确认收货时间
      */
-    @JSONField(ordinal = 14,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 14, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date confirmTime;
 
@@ -154,14 +154,14 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 卡支付金额
      */
-    @JSONField(ordinal = 18,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 18, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal carPayAmount;
 
     /**
      * 余额支付金额
      */
-    @JSONField(ordinal = 19,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 19, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal accountPayAmount;
 
@@ -169,7 +169,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 优惠金额
      */
-    @JSONField(ordinal = 25,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 25, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal reducePayAmount;
 
@@ -181,7 +181,7 @@ public class MallOrder implements Serializable, PayOrder {
     @TableField(exist = false)
     private String phone;
 
-    @JSONField(ordinal = 21,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 21, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date noticeTime;
 

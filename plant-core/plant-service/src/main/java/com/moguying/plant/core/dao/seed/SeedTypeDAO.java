@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public interface SeedTypeDAO extends BaseDAO<SeedType> {
     IPage<SeedType> selectSelective(Page<SeedType> page, @Param("wq") SeedType where);
+
     List<SeedType> selectSelective(SeedType where);
 
     SeedType selectByPrimaryKeyWithBLOB(Integer id);

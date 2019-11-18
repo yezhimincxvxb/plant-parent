@@ -35,14 +35,14 @@ public class Fertilizer implements Serializable {
     /**
      * 券最小金额
      */
-    @JSONField(ordinal = 3,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 3, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal amountMin;
 
     /**
      * 券最大金额
      */
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal amountMax;
 
@@ -55,7 +55,6 @@ public class Fertilizer implements Serializable {
 
     /**
      * 券可使用的用户等级
-     *
      */
     @JSONField(ordinal = 6)
     @TableField
@@ -64,7 +63,7 @@ public class Fertilizer implements Serializable {
     /**
      * 有效期
      */
-    @JSONField(ordinal = 10,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 10, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date expireTime;
 
@@ -92,7 +91,7 @@ public class Fertilizer implements Serializable {
     /**
      * 添加时间
      */
-    @JSONField(ordinal = 14,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 14, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 
@@ -120,7 +119,7 @@ public class Fertilizer implements Serializable {
     /**
      * 券开始时间
      */
-    @JSONField(ordinal = 18,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 18, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date startTime;
 
@@ -156,7 +155,7 @@ public class Fertilizer implements Serializable {
     @TableField
     private Boolean isSingleTrigger;
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 26)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 26)
     @TableField
     private BigDecimal fertilizerAmount;
 

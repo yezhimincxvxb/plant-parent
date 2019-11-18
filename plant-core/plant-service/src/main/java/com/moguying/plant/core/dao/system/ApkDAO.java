@@ -13,5 +13,6 @@ import java.util.List;
 @Repository
 public interface ApkDAO extends BaseDAO<Apk> {
     List<Apk> selectSelective(Apk where);
+
     Apk newestApkInfo();
 }

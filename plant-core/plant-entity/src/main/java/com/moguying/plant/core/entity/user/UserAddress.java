@@ -13,7 +13,8 @@ import java.util.Date;
 
 /**
  * plant_user_address
- * @author 
+ *
+ * @author
  */
 @TableName("plant_user_address")
 @Data
@@ -21,11 +22,11 @@ public class UserAddress implements Serializable {
 
     private static final long serialVersionUID = 625780986065033763L;
 
-    @JSONField(deserialize = false,ordinal = 1)
+    @JSONField(deserialize = false, ordinal = 1)
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @JSONField(deserialize = false,ordinal = 2)
+    @JSONField(deserialize = false, ordinal = 2)
     @TableField
     private Integer userId;
 
@@ -71,15 +72,15 @@ public class UserAddress implements Serializable {
     @TableField
     private String detailAddress;
 
-    @JSONField(ordinal = 9,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 
-    @JSONField(name = "default",ordinal = 10)
+    @JSONField(name = "default", ordinal = 10)
     @TableField
     private Boolean isDefault;
 
-    @JSONField(name = "isDelete",ordinal = 11)
+    @JSONField(name = "isDelete", ordinal = 11)
     @TableField
     private Boolean isDelete;
 }

@@ -16,8 +16,11 @@ import java.util.List;
  */
 @Repository
 public interface ActivityDAO extends BaseDAO<Activity> {
-    IPage<Activity> activityListForHome(Page<Activity> page,@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    IPage<Activity> activityListForHome(Page<Activity> page, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
     List<Activity> newestActivity();
+
     List<Activity> activityList();
+
     List<Activity> selectSelective(Activity activity);
 }

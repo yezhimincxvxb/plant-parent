@@ -50,13 +50,14 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, type_id,pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count, summary_desc,
-    is_show,is_hot delivery_info, consume_coins, bargain_count, bargain_number, bargain_limit, is_limit, add_time
-   </sql>
+        id, type_id,pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
+        summary_desc,
+        is_show,is_hot delivery_info, consume_coins, bargain_count, bargain_number, bargain_limit, is_limit, add_time
+    </sql>
 
     <sql id="Blob_Column_List">
-    product_desc
-   </sql>
+        product_desc
+    </sql>
 
     <select id="selectSelective" parameterType="com.moguying.plant.core.entity.mall.MallProduct"
             resultMap="BaseResultMap">
@@ -84,10 +85,10 @@
     </select>
 
     <update id="updateProductHasCountById" parameterType="int">
-    update plant_mall_product set
-    has_count = has_count + #{count}
-    where id = #{productId}
-  </update>
+        update plant_mall_product set
+        has_count = has_count + #{count}
+        where id = #{productId}
+    </update>
 
     <select id="selectProductForApp" resultMap="AppHomeMallProduct">
         select id,thumb_pic_url,name,price,old_price,has_count from plant_mall_product
@@ -106,14 +107,15 @@
     </select>
 
     <select id="selectProductDetailForApp" resultMap="AppHomeMallProductDetail">
-    select id,pic_url,thumb_pic_url,name,price,old_price,has_count,summary_desc,product_desc,left_count from plant_mall_product
-    where id = #{id} and is_show = 1
-  </select>
+        select id,pic_url,thumb_pic_url,name,price,old_price,has_count,summary_desc,product_desc,left_count from
+        plant_mall_product
+        where id = #{id} and is_show = 1
+    </select>
 
     <select id="productCountEnough" resultType="int">
-    select id from plant_mall_product where
-    left_count >= #{count} and id = #{productId}
-  </select>
+        select id from plant_mall_product where
+        left_count >= #{count} and id = #{productId}
+    </select>
 
     <!-- 兑换实物列表 -->
     <select id="showProducts" resultType="com.moguying.plant.core.entity.coin.vo.ExchangeInfo">
@@ -154,7 +156,8 @@
 
     <!-- 砍价商品详情 -->
     <select id="productInfo" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
-        select id `productId`, `name` `productName`, summary_desc `productInfo`, sum(price * bargain_number) `productPrice`, pic_url `picUrl`
+        select id `productId`, `name` `productName`, summary_desc `productInfo`, sum(price * bargain_number)
+        `productPrice`, pic_url `picUrl`
         from plant_mall_product
         where id = #{productId}
         group by id

@@ -10,6 +10,6 @@ public interface SaleCoinLogService {
     /**
      * 添加蘑菇币日志信息
      */
-    
+
     int insertSaleCoinLog(SaleCoinLog saleCoinLog);
 }

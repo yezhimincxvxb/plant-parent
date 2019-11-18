@@ -54,7 +54,7 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="selectSelective"  resultType="com.moguying.plant.core.entity.seed.SeedType">
+    <select id="selectSelective" resultType="com.moguying.plant.core.entity.seed.SeedType">
         select
         t1.id, class_name, grow_days, per_price, interest_rates, order_number, is_delete, plant_type,
         reap_type,t1.pic_url,t1.thumb_pic_url,exchange_num,group_id,group_name,is_for_new,ex_mall_product,t3.name as
@@ -71,7 +71,7 @@
                 AND class_name = #{wq.className}
             </if>
             <if test="wq.orderNumber != null">
-            AND order_number = #{wq.orderNumber}
+                AND order_number = #{wq.orderNumber}
             </if>
             <if test="wq.perPrice != null">
                 AND per_price = #{wq.perPrice}

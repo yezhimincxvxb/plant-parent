@@ -14,7 +14,7 @@ public class CarItemList {
     private Integer count;
 
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 3)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 3)
     private BigDecimal checkedAmount;
 
     @JSONField(ordinal = 4)

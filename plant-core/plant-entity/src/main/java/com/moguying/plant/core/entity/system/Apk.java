@@ -44,7 +44,7 @@ public class Apk implements Serializable {
     /**
      * 添加时间
      */
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss",ordinal = 5)
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss", ordinal = 5)
     @TableField
     private Date addTime;
 

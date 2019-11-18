@@ -42,8 +42,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate<?,?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<Object,Object> template = new RedisTemplate<>();
+    public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
         FastJsonRedisSerializer<JSON> jsonFastJsonRedisSerializer = new FastJsonRedisSerializer<>(JSON.class);
         template.setConnectionFactory(redisConnectionFactory);
         template.setValueSerializer(jsonFastJsonRedisSerializer);
@@ -56,13 +56,13 @@ public class RedisConfig extends CachingConfigurerSupport {
 
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory connectionFactory){
+    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory);
         FastJsonRedisSerializer<Object> jsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisSerializationContext.SerializationPair<Object> pair = RedisSerializationContext.SerializationPair.fromSerializer(jsonRedisSerializer);
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(pair);
         cacheConfiguration = cacheConfiguration.entryTtl(Duration.ofSeconds(ttl));
-        RedisCacheManager cacheManager = new RedisCacheManager(redisCacheWriter,cacheConfiguration);
+        RedisCacheManager cacheManager = new RedisCacheManager(redisCacheWriter, cacheConfiguration);
         ParserConfig.getGlobalInstance().addAccept("com.moguying.plant.entity.");
         return cacheManager;
     }

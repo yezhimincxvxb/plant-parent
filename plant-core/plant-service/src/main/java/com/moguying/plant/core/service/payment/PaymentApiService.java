@@ -8,6 +8,6 @@ import com.moguying.plant.core.entity.user.User;
 
 public interface PaymentApiService {
 
-    
+
     ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, PayOrder orderDetail, User userInfo);
 }

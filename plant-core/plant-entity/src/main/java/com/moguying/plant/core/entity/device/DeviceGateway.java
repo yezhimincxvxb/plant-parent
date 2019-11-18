@@ -13,7 +13,8 @@ import java.io.Serializable;
 
 /**
  * plant_device_gateway
- * @author 
+ *
+ * @author
  */
 @Data
 @NoArgsConstructor

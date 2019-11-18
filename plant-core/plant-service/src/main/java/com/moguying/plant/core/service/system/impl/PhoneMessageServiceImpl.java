@@ -64,37 +64,37 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     @Override
     @DS("write")
     public ResultData<Integer> sendCodeMessage(SendMessage sendMessage) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         String code = CommonUtil.INSTANCE.messageCode();
         long inTime = (Long.parseLong(time) / 1000) / 60;
         String codeContent = codeContentTpl.replace("code", code);
-        if(messageByPhone(sendMessage.getPhone()) != null){
+        if (messageByPhone(sendMessage.getPhone()) != null) {
             MessageEnum messageEnum = MessageEnum.CAN_NOT_REPEAT_SEND_MESSAGE;
-            messageEnum.setMessage(messageEnum.getMessage().replace("time",String.valueOf(inTime)));
+            messageEnum.setMessage(messageEnum.getMessage().replace("time", String.valueOf(inTime)));
             return resultData.setMessageEnum(messageEnum);
         }
         Integer addId = -1;
-        if(( addId = send(sendMessage.getPhone(),codeContent,code)) > 0)
+        if ((addId = send(sendMessage.getPhone(), codeContent, code)) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(addId);
         return resultData;
     }
 
 
-    private Integer send(String phone,String content,String code){
-        return send(phone,content,code,account);
+    private Integer send(String phone, String content, String code) {
+        return send(phone, content, code, account);
     }
 
 
     @Override
     @DS("write")
     public ResultData<Integer> sendSaleMessage(String phone) {
-        Integer result = send(phone,fertilizerSendContentTpl,null,saleAccount);
-        if(result > 0)
-             return new ResultData<>(MessageEnum.SUCCESS,result);
-        return new ResultData<>(MessageEnum.ERROR,result);
+        Integer result = send(phone, fertilizerSendContentTpl, null, saleAccount);
+        if (result > 0)
+            return new ResultData<>(MessageEnum.SUCCESS, result);
+        return new ResultData<>(MessageEnum.ERROR, result);
     }
 
-    private Integer send(String phone, String content, String code, String account){
+    private Integer send(String phone, String content, String code, String account) {
         try {
             ResultData<Integer> sendResult = MessageSendService.INSTANCE.send(sendUrl, account, password, phone, content);
             if (sendResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
@@ -118,11 +118,10 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     }
 
 
-
     @Override
     @DS("write")
     public ResultData<Integer> sendOtherMessage(InnerMessage message, Integer typeId) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         String messageContent = "";
         switch (typeId) {
             case 3:
@@ -140,8 +139,8 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
                 break;
 
         }
-        if(send(message.getPhone(),messageContent,null) > 0)
-                return resultData.setMessageEnum(MessageEnum.SUCCESS);
+        if (send(message.getPhone(), messageContent, null) > 0)
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;
     }
 
@@ -150,7 +149,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     public PhoneMessage messageByPhone(String phone) {
         //1分钟内有效
         Long inTime = (System.currentTimeMillis() - Long.parseLong(time)) / 1000;
-        return phoneMessageDAO.selectByPhoneInTime(phone,String.valueOf(inTime));
+        return phoneMessageDAO.selectByPhoneInTime(phone, String.valueOf(inTime));
     }
 
     @Override
@@ -166,7 +165,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     @DS("write")
     public Integer validateMessage(String phone, String code) {
         PhoneMessage message = messageByPhone(phone);
-        if(message == null)
+        if (message == null)
             return -1;
         setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
         return message.getCode().equals(code) ? 1 : -1;

@@ -264,10 +264,10 @@ public class ASeedController {
      */
     @PostMapping(value = "/reap/exchange")
     @ApiOperation("兑换实物")
-    public ResponseData<Integer> exchangeReap(@LoginUserId Integer userId,@RequestBody ExcReap excReap) {
-        ResultData<Integer> resultData = plantOrderService.plantReapExchange(userId,excReap);
-        ResponseData<Integer> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) responseData.setData(resultData.getData());
+    public ResponseData<Integer> exchangeReap(@LoginUserId Integer userId, @RequestBody ExcReap excReap) {
+        ResultData<Integer> resultData = plantOrderService.plantReapExchange(userId, excReap);
+        ResponseData<Integer> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) responseData.setData(resultData.getData());
         return responseData;
 
     }
@@ -275,17 +275,18 @@ public class ASeedController {
 
     /**
      * 用户实物兑换记录
+     *
      * @param userId
      * @param search
      * @return
      */
     @PostMapping("/reap/exc/log")
     @ApiOperation("用户实物兑换记录")
-    public PageResult<ReapExcLog> reapExchangeLog(@LoginUserId Integer userId,@RequestBody PageSearch<ReapExcLog> search) {
-        if(null == search.getWhere())
+    public PageResult<ReapExcLog> reapExchangeLog(@LoginUserId Integer userId, @RequestBody PageSearch<ReapExcLog> search) {
+        if (null == search.getWhere())
             search.setWhere(new ReapExcLog());
         search.getWhere().setUserId(userId);
-        return reapExcLogService.reapExcLogPageResult(search.getPage(),search.getSize(),search.getWhere());
+        return reapExcLogService.reapExcLogPageResult(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
@@ -485,12 +486,13 @@ public class ASeedController {
 
     /**
      * 获取菌包分组信息
+     *
      * @return
      */
     @GetMapping("/group/list")
     @NoLogin
     @ApiOperation("获取菌包分组信息")
-    public ResponseData<List<SeedGroup>> seedGroupList(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),seedTypeService.seedGroupList());
+    public ResponseData<List<SeedGroup>> seedGroupList() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), seedTypeService.seedGroupList());
     }
 }

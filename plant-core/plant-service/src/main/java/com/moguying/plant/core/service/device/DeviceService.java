@@ -17,6 +17,7 @@ public interface DeviceService {
     PageResult<DeviceGateway> deviceGatewayList(Integer page, Integer size, DeviceGateway deviceGateway);
 
     String sendService(String method) throws AxisFault;
+
     String sendService(String method, String gateway) throws AxisFault;
 
 

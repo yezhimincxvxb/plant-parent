@@ -9,5 +9,5 @@ public interface ReapFeeParamService extends IService<ReapFeeParam> {
 
     ResultData<Boolean> saveParam(ReapFeeParam param);
 
-    PageResult<ReapFeeParam> reapFeeParamPageResult(Integer page,Integer size,ReapFeeParam where);
+    PageResult<ReapFeeParam> reapFeeParamPageResult(Integer page, Integer size, ReapFeeParam where);
 }

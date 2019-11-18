@@ -27,11 +27,11 @@ public class BackInterceptor implements HandlerInterceptor {
 
 
         HandlerMethod method = (HandlerMethod) handler;
-        if(method.getMethod().getAnnotation(NoLogin.class) != null)
+        if (method.getMethod().getAnnotation(NoLogin.class) != null)
             return true;
 
         AdminUser adminUser = (AdminUser) request.getSession().getAttribute(SessionAdminUser.sessionKey);
-        if(adminUser == null) {
+        if (adminUser == null) {
             String responseStr = JSON.toJSONString(new ResponseData<String>(MessageEnum.NEED_LOGIN.getMessage(), MessageEnum.NEED_LOGIN.getState()));
             response.setStatus(HttpStatus.OK.value());
             response.setHeader("Content-Type", "application/json");

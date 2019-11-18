@@ -27,19 +27,18 @@ public class AShippingCarController {
     private MallCarService mallCarService;
 
 
-
     /**
      * 添加入购物车
      */
     @PostMapping
     @ApiOperation("添加入购物车")
-    public ResponseData<Integer> addToCar(@RequestBody BuyProduct itemToCar, @LoginUserId Integer userId){
+    public ResponseData<Integer> addToCar(@RequestBody BuyProduct itemToCar, @LoginUserId Integer userId) {
         MallCar mallCar = new MallCar();
         mallCar.setUserId(userId);
         mallCar.setProductCount(itemToCar.getBuyCount());
         mallCar.setProductId(itemToCar.getProductId());
         ResultData<Integer> resultData = mallCarService.addItemToCar(mallCar);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
 
@@ -48,17 +47,17 @@ public class AShippingCarController {
      */
     @GetMapping
     @ApiOperation("购物车列表")
-    public ResponseData<CarItemList> carItems(@LoginUserId Integer userId, @RequestParam(value = "page",defaultValue = "1") Integer page,
-                                              @RequestParam(value = "size",defaultValue = "10") Integer size
-                                         ){
+    public ResponseData<CarItemList> carItems(@LoginUserId Integer userId, @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                              @RequestParam(value = "size", defaultValue = "10") Integer size
+    ) {
 
         CarItemList carItemList = new CarItemList();
-        PageResult<OrderItem> pageResult = mallCarService.userCarItems(page,size,userId);
+        PageResult<OrderItem> pageResult = mallCarService.userCarItems(page, size, userId);
         carItemList.setCheckedAmount(mallCarService.getCheckedItemAmount(userId));
         carItemList.setItems(pageResult.getData());
         carItemList.setCount(pageResult.getCount());
         carItemList.setCheckAll(mallCarService.isAllCheck(userId));
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),carItemList);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), carItemList);
     }
 
 
@@ -67,12 +66,12 @@ public class AShippingCarController {
      */
     @PostMapping("/delete")
     @ApiOperation("删除购物车中的商品")
-    public ResponseData<ModifyItemResponse> deleteItems(@LoginUserId Integer userId, @RequestBody List<OrderItem> ids){
-        ResultData<Boolean> resultData = mallCarService.removeItemFromCar(ids,userId);
+    public ResponseData<ModifyItemResponse> deleteItems(@LoginUserId Integer userId, @RequestBody List<OrderItem> ids) {
+        ResultData<Boolean> resultData = mallCarService.removeItemFromCar(ids, userId);
         ResponseData<ModifyItemResponse> responseData = new ResponseData<>();
         responseData.setMessage(resultData.getMessageEnum().getMessage())
                 .setState(resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
             return responseData.setData(new ModifyItemResponse(mallCarService.getCheckedItemAmount(userId),
                     mallCarService.isAllCheck(userId)));
         return responseData;
@@ -85,10 +84,10 @@ public class AShippingCarController {
      */
     @PostMapping("/count")
     @ApiOperation("修改购物车数量")
-    public ResponseData<ModifyItemResponse> plushItemCount(@LoginUserId Integer userId,@RequestBody OrderItem orderItem){
+    public ResponseData<ModifyItemResponse> plushItemCount(@LoginUserId Integer userId, @RequestBody OrderItem orderItem) {
         ResultData<Integer> resultData = mallCarService.modifyItemCount(orderItem);
-        ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+        ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
             return responseData.setData(new ModifyItemResponse(mallCarService.getCheckedItemAmount(userId),
                     mallCarService.isAllCheck(userId)));
         return responseData;
@@ -97,22 +96,22 @@ public class AShippingCarController {
 
     /**
      * 勾选
+     *
      * @param userId
      * @param checkItems
      * @return
      */
     @PostMapping("/check")
     @ApiOperation("勾选")
-    public ResponseData<ModifyItemResponse> checkItem(@LoginUserId Integer userId,@RequestBody CheckItems checkItems){
-        ResultData<Integer> resultData = mallCarService.checkItems(checkItems.getItems(),userId,checkItems.getCheck());
-        ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+    public ResponseData<ModifyItemResponse> checkItem(@LoginUserId Integer userId, @RequestBody CheckItems checkItems) {
+        ResultData<Integer> resultData = mallCarService.checkItems(checkItems.getItems(), userId, checkItems.getCheck());
+        ResponseData<ModifyItemResponse> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
             return responseData.setData(new ModifyItemResponse(mallCarService.getCheckedItemAmount(userId),
                     mallCarService.isAllCheck(userId)
-                    ));
+            ));
         return responseData;
     }
-
 
 
 }

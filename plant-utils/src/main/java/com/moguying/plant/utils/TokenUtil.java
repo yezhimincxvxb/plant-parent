@@ -21,23 +21,23 @@ public enum TokenUtil {
 
     Algorithm algorithm = Algorithm.HMAC256("1%39(]Si*B1+2*JKsmwNv");
 
-    public String addToken(Map<String,String> claims){
+    public String addToken(Map<String, String> claims) {
         SetParams params = new SetParams();
-        params.ex(expire.intValue()/1000);
+        params.ex(expire.intValue() / 1000);
         params.nx();
-        return setToRedis(params,claims);
+        return setToRedis(params, claims);
 
     }
 
-    public String updateToken(Map<String,String> claims){
+    public String updateToken(Map<String, String> claims) {
         SetParams params = new SetParams();
-        params.ex(expire.intValue()/1000);
+        params.ex(expire.intValue() / 1000);
         params.xx();
-        return setToRedis(params,claims);
+        return setToRedis(params, claims);
     }
 
-    private String setToRedis(SetParams params,Map<String,String> claims){
-       return  generateToken(claims);
+    private String setToRedis(SetParams params, Map<String, String> claims) {
+        return generateToken(claims);
         /*
         IOS进程退出后会将token数据清除，暂时无法做单用户登录
         RedisUtil redisUtil = new RedisUtil();
@@ -47,12 +47,12 @@ public enum TokenUtil {
          */
     }
 
-    private String generateToken(Map<String,String> claims){
+    private String generateToken(Map<String, String> claims) {
         long expireTime = System.currentTimeMillis() + expire;
         return JWT.create()
-                .withClaim(ApiEnum.LOGIN_USER_ID.getTypeStr(),claims.get(ApiEnum.LOGIN_USER_ID.getTypeStr()))
-                .withClaim(ApiEnum.LOGIN_PHONE.getTypeStr(),claims.get(ApiEnum.LOGIN_PHONE.getTypeStr()))
-                .withClaim(ApiEnum.LOGIN_TIME.getTypeStr(),claims.get(ApiEnum.LOGIN_TIME.getTypeStr()))
+                .withClaim(ApiEnum.LOGIN_USER_ID.getTypeStr(), claims.get(ApiEnum.LOGIN_USER_ID.getTypeStr()))
+                .withClaim(ApiEnum.LOGIN_PHONE.getTypeStr(), claims.get(ApiEnum.LOGIN_PHONE.getTypeStr()))
+                .withClaim(ApiEnum.LOGIN_TIME.getTypeStr(), claims.get(ApiEnum.LOGIN_TIME.getTypeStr()))
                 .withIssuedAt(new Date())
                 .withNotBefore(new Date())
                 .withExpiresAt(new Date(expireTime))

@@ -19,19 +19,19 @@ public class BuyOrderResponse implements Serializable {
     @JSONField(ordinal = 2)
     private Integer growDays;
 
-    @JSONField(ordinal = 3,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 3, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal perPrice;
 
     @JSONField(ordinal = 4)
     private Integer buyCount;
 
-    @JSONField(ordinal = 5,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal buyAmount;
 
     @JSONField(ordinal = 6)
     private Integer orderId;
 
-    @JSONField(ordinal = 7,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 7, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal availableMoney;
 
     @JSONField(ordinal = 8)
@@ -40,7 +40,7 @@ public class BuyOrderResponse implements Serializable {
     @JSONField(ordinal = 9)
     private String orderNumber;
 
-    @JSONField(ordinal = 10,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 10, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal perWeigh;
 
     @JSONField(ordinal = 11)

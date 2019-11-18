@@ -15,11 +15,18 @@ import java.util.List;
 @Repository
 public interface SeedOrderDetailDAO extends BaseDAO<SeedOrderDetail> {
     IPage<SeedOrderDetail> selectSelective(Page<SeedOrderDetail> page, @Param("wq") SeedOrderDetail where);
+
     List<SeedOrderDetail> selectSelective(@Param("wq") SeedOrderDetail where);
-    IPage<SeedOrderDetail> selectListByUserIdAndState(Page<SeedOrderDetail> page,@Param("userId") Integer userId, @Param("state") Integer state);
-    IPage<SeedOrderDetail> selectUserPayListByUserId(Page<SeedOrderDetail> page,@Param("userId") Integer userId);
+
+    IPage<SeedOrderDetail> selectListByUserIdAndState(Page<SeedOrderDetail> page, @Param("userId") Integer userId, @Param("state") Integer state);
+
+    IPage<SeedOrderDetail> selectUserPayListByUserId(Page<SeedOrderDetail> page, @Param("userId") Integer userId);
+
     Integer sumOrderCountBySeedId(@Param("seedId") Integer seedId, @Param("state") Integer state);
+
     Integer findPlantBlockIdById(Integer id);
+
     SeedOrderDetail selectByIdAndUserIdWithSeedTypeInfo(@Param("id") Integer id, @Param("userId") Integer userId);
+
     SeedOrderDetail selectByOrderNumber(String orderNumber);
 }

@@ -21,7 +21,7 @@
                 available_profit = available_profit + #{availableProfit},
             </if>
         </set>
-        where  user_id = #{userId}
+        where user_id = #{userId}
     </update>
 
     <update id="decField">
@@ -43,7 +43,7 @@
                 available_profit = available_profit - #{availableProfit},
             </if>
         </set>
-        where  user_id = #{userId}
+        where user_id = #{userId}
     </update>
 
 </mapper>

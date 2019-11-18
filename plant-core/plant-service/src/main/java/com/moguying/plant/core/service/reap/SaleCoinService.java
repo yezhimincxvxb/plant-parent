@@ -11,19 +11,19 @@ public interface SaleCoinService {
     /**
      * id查询
      */
-    
+
     SaleCoin findById(Integer userId);
 
     /**
      * 添加用户-蘑菇币信息
      */
-    
+
     int insertSaleCoin(SaleCoin saleCoin);
 
     /**
      * 更新蘑菇币
      */
-    
+
     UserSaleCoin updateSaleCoin(UserSaleCoin saleCoin);
 
 }

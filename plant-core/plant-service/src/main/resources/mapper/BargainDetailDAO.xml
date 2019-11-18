@@ -23,9 +23,9 @@
 
     <!-- 基本查询字段 -->
     <sql id="BaseColumnList">
-   id, user_id, product_id, product_count, total_amount, bargain_amount, left_amount,
-   total_count, bargain_count, state, add_time, bargain_time, close_time, symbol, order_number
-  </sql>
+        id, user_id, product_id, product_count, total_amount, bargain_amount, left_amount,
+        total_count, bargain_count, state, add_time, bargain_time, close_time, symbol, order_number
+    </sql>
 
     <!-- 用户砍价详情 -->
     <select id="getOneByOpen" resultMap="BaseResultMap">

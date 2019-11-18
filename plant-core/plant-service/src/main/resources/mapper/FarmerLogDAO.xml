@@ -12,8 +12,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, user_id, incr_grow_up_count, grow_up_count, add_time, incr_way
-  </sql>
+        id, user_id, incr_grow_up_count, grow_up_count, add_time, incr_way
+    </sql>
 
     <select id="farmerLogList" resultMap="BaseResultMap">
         select

@@ -31,5 +31,4 @@ public class AdminRole implements Serializable {
     private List<AdminMenu> tree;
 
 
-
 }

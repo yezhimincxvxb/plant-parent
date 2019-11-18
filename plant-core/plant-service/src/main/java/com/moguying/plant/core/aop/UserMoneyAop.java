@@ -17,11 +17,12 @@ public class UserMoneyAop {
     private SaleCoinLogService saleCoinLogService;
 
     @Pointcut("execution(* com.moguying.plant.core.service.reap.SaleCoinService.updateSaleCoin(..))")
-    public void userMoneyLog(){}
+    public void userMoneyLog() {
+    }
 
-    @AfterReturning( returning = "result",pointcut = "userMoneyLog()")
-    public void addUserMoneyLog(Object result){
-        if (result != null){
+    @AfterReturning(returning = "result", pointcut = "userMoneyLog()")
+    public void addUserMoneyLog(Object result) {
+        if (result != null) {
             UserSaleCoin userSaleCoin = (UserSaleCoin) result;
             if (userSaleCoin.getAffectCoin() == 0) return;
             SaleCoinLog saleCoinLog = new SaleCoinLog();

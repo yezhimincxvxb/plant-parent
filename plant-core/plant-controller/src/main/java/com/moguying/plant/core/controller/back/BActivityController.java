@@ -22,71 +22,72 @@ public class BActivityController {
 
     /**
      * 活动列表
+     *
      * @return
      */
     @PostMapping("/list")
     @ApiOperation("活动列表")
-    public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search){
-        return activityService.activityList(search.getPage(),search.getSize(),search.getWhere());
+    public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search) {
+        return activityService.activityList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 活动详情
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation("活动详情")
-    public ResponseData<Activity> activityDetail(@PathVariable Integer id){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),activityService.activityDetail(id));
+    public ResponseData<Activity> activityDetail(@PathVariable Integer id) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.activityDetail(id));
     }
 
 
     /**
      * 添加活动
+     *
      * @param addActivity
      * @return
      */
     @PostMapping
     @ApiOperation("添加活动")
-    public ResponseData<Integer> addActivity(@RequestBody Activity addActivity){
+    public ResponseData<Integer> addActivity(@RequestBody Activity addActivity) {
         Integer id = activityService.addActivity(addActivity);
-        if(id > 0)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),id);
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        if (id > 0)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), id);
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
     /**
      * 编辑活动
+     *
      * @param updateActivity
      * @return
      */
     @PutMapping("/{id}")
     @ApiOperation("编辑活动")
-    public ResponseData<Integer> updateActivity(@RequestBody Activity updateActivity, @PathVariable Integer id){
+    public ResponseData<Integer> updateActivity(@RequestBody Activity updateActivity, @PathVariable Integer id) {
         updateActivity.setId(id);
         Integer rows = activityService.updateActivity(updateActivity);
-        if(rows > 0)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        if (rows > 0)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
-
-
-
 
 
     /**
      * 删除活动
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/{id}")
     @ApiOperation("删除活动")
-    public ResponseData<Integer> deleteActivity(@PathVariable Integer id){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),activityService.deleteActivityById(id));
+    public ResponseData<Integer> deleteActivity(@PathVariable Integer id) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.deleteActivityById(id));
     }
-
 
 
 }

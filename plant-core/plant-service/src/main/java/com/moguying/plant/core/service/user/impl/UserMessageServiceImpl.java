@@ -30,39 +30,39 @@ public class UserMessageServiceImpl implements UserMessageService {
     @DS("write")
     public Integer addMessage(InnerMessage message, String actionCode) {
 
-            Integer userId =  message.getUserId();
-            User userInfo = userDao.userInfoById(userId);
-            if (null == userInfo)
-                return 0;
-            UserMessageTpl tpl = messageTplDAO.selectById(actionCode);
-            if(null == tpl)
-                return 0;
-            String messageTpl = tpl.getMessageTpl();
-            UserMessage addMessage = new UserMessage();
-            addMessage.setUserId(userId);
-            String messageContent = messageTpl.replace("{userName}",message.getPhone());
-
-            if(messageContent.contains("{seedTypeName}"))
-                messageContent = messageContent.replace("{seedTypeName}", message.getSeedTypeName());
-
-            if(messageContent.contains("{amount}"))
-                messageContent = messageContent.replace("{amount}", message.getAmount());
-
-            if(messageContent.contains("{block}"))
-                messageContent = messageContent.replace("{block}",message.getBlockNumber());
-
-            if(messageContent.contains("{time}"))
-                messageContent = messageContent.replace("{time}",message.getTime());
-
-            if(messageContent.contains("{count}"))
-                messageContent = messageContent.replace("{count}",message.getCount());
-
-            addMessage.setMessage(messageContent);
-            addMessage.setTitle(tpl.getMessageTitle());
-            addMessage.setAddTime(new Date());
-            if(userMessageDAO.insert(addMessage) > 0)
-                return addMessage.getId();
+        Integer userId = message.getUserId();
+        User userInfo = userDao.userInfoById(userId);
+        if (null == userInfo)
             return 0;
+        UserMessageTpl tpl = messageTplDAO.selectById(actionCode);
+        if (null == tpl)
+            return 0;
+        String messageTpl = tpl.getMessageTpl();
+        UserMessage addMessage = new UserMessage();
+        addMessage.setUserId(userId);
+        String messageContent = messageTpl.replace("{userName}", message.getPhone());
+
+        if (messageContent.contains("{seedTypeName}"))
+            messageContent = messageContent.replace("{seedTypeName}", message.getSeedTypeName());
+
+        if (messageContent.contains("{amount}"))
+            messageContent = messageContent.replace("{amount}", message.getAmount());
+
+        if (messageContent.contains("{block}"))
+            messageContent = messageContent.replace("{block}", message.getBlockNumber());
+
+        if (messageContent.contains("{time}"))
+            messageContent = messageContent.replace("{time}", message.getTime());
+
+        if (messageContent.contains("{count}"))
+            messageContent = messageContent.replace("{count}", message.getCount());
+
+        addMessage.setMessage(messageContent);
+        addMessage.setTitle(tpl.getMessageTitle());
+        addMessage.setAddTime(new Date());
+        if (userMessageDAO.insert(addMessage) > 0)
+            return addMessage.getId();
+        return 0;
     }
 
 
@@ -71,12 +71,6 @@ public class UserMessageServiceImpl implements UserMessageService {
     public Boolean setMessageState(UserMessage userMessage) {
         return userMessageDAO.updateMessageByUserIdSelective(userMessage) > 0;
     }
-
-
-
-
-
-
 
 
 }

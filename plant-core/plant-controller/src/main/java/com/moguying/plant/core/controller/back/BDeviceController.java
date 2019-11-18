@@ -23,13 +23,14 @@ public class BDeviceController {
 
     /**
      * 刷新设备网关数据
+     *
      * @return
      */
     @PostMapping("/refresh")
     @ApiOperation("刷新设备网关数据")
     public ResponseData<Integer> refreshDevice() {
         ResultData<Integer> resultData = deviceService.curAllData();
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 }

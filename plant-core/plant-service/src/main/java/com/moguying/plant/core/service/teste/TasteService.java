@@ -17,6 +17,7 @@ public interface TasteService {
 
     /**
      * 购买体验包
+     *
      * @param buyOrder
      * @param userId
      * @return
@@ -30,6 +31,7 @@ public interface TasteService {
 
     /**
      * 添加免费试吃项
+     *
      * @param taste
      * @return
      */
@@ -38,17 +40,19 @@ public interface TasteService {
 
     /**
      * 免费试吃项列表
+     *
      * @param page
      * @param size
      * @param where
      * @return
      */
-    PageResult<Taste> tastePageResult(Integer page,Integer size,Taste where);
+    PageResult<Taste> tastePageResult(Integer page, Integer size, Taste where);
 
-    PageResult<Taste> tastePageResult(Integer page,Integer size,Taste where,Integer userId);
+    PageResult<Taste> tastePageResult(Integer page, Integer size, Taste where, Integer userId);
 
     /**
      * 删除试吃项
+     *
      * @param id
      * @return
      */
@@ -57,6 +61,7 @@ public interface TasteService {
 
     /**
      * 设置试吃项上下架
+     *
      * @param id
      * @return
      */
@@ -67,15 +72,17 @@ public interface TasteService {
 
     /**
      * 添加试吃申请
+     *
      * @param userId
      * @param taste
      * @return
      */
-    ResultData<Boolean> addTasteApply(Integer userId,Taste taste);
+    ResultData<Boolean> addTasteApply(Integer userId, Taste taste);
 
 
     /**
      * 查询申请状态
+     *
      * @param userId
      * @param taste
      * @return
@@ -84,22 +91,25 @@ public interface TasteService {
 
     /**
      * 查询申请记录
+     *
      * @param page
      * @param size
      * @param where
      * @return
      */
-    PageResult<TasteApply> tasteApplyPageResult(Integer page,Integer size,TasteApply where);
+    PageResult<TasteApply> tasteApplyPageResult(Integer page, Integer size, TasteApply where);
 
 
     /**
      * 新手体验礼包券
+     *
      * @return
      */
     List<Fertilizer> tasteGiftList();
 
     /**
-     *  领取礼包
+     * 领取礼包
+     *
      * @param userId
      * @return
      */

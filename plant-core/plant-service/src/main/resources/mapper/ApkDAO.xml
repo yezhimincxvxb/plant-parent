@@ -11,7 +11,7 @@
         <result column="update_desc" jdbcType="VARCHAR" property="updateDesc"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, version, download_url, is_show, add_time,version_name,update_desc
+        id, version, download_url, is_show, add_time,version_name,update_desc
     </sql>
 
     <select id="selectSelective" resultMap="BaseResultMap">

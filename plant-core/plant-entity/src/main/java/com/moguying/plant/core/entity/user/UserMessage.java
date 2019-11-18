@@ -12,7 +12,8 @@ import java.util.Date;
 
 /**
  * plant_user_message
- * @author 
+ *
+ * @author
  */
 @TableName("plant_user_message")
 @Data
@@ -67,7 +68,7 @@ public class UserMessage implements Serializable {
     /**
      * 添加时间
      */
-    @JSONField(format = "yyyy.MM.dd HH:mm",ordinal = 8)
+    @JSONField(format = "yyyy.MM.dd HH:mm", ordinal = 8)
     @TableField
     private Date addTime;
 

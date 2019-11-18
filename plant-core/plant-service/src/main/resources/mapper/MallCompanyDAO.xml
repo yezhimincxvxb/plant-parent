@@ -10,8 +10,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, com_name, com_code, com_phone
-  </sql>
+        id, com_name, com_code, com_phone
+    </sql>
 
     <!-- 根据公司编码获取公司详情-->
     <select id="findByCode" parameterType="java.lang.String" resultMap="BaseResultMap">

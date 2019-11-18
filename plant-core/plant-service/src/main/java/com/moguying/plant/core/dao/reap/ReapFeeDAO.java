@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public interface ReapFeeDAO extends BaseDAO<ReapFee> {
     IPage<ReapFee> selectSelective(Page<ReapFee> page, @Param("wq") ReapFee where);
+
     List<ReapFee> selectSelective(@Param("wq") ReapFee where);
 
 }

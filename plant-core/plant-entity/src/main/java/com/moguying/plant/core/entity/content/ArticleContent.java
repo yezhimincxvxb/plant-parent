@@ -9,7 +9,8 @@ import java.io.Serializable;
 
 /**
  * plant_article_content
- * @author 
+ *
+ * @author
  */
 @Data
 @TableName("plant_article_content")

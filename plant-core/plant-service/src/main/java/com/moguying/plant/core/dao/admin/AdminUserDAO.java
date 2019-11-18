@@ -15,7 +15,10 @@ import java.util.List;
 @Repository
 public interface AdminUserDAO extends BaseDAO<AdminUser> {
     AdminUser selectByNameAndPassword(@Param("name") String name, @Param("password") String password);
+
     IPage<AdminUser> selectSelective(Page<AdminUser> page, @Param("wq") AdminUser where);
+
     List<AdminUser> selectSelective(@Param("wq") AdminUser where);
+
     AdminUser adminUserInfoById(Integer id);
 }

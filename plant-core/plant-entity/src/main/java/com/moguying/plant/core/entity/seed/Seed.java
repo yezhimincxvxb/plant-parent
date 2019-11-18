@@ -15,7 +15,8 @@ import java.util.Date;
 
 /**
  * plant_seed
- * @author 
+ *
+ * @author
  */
 @TableName("plant_seed")
 @Data
@@ -36,7 +37,7 @@ public class Seed implements Serializable {
     private String name;
 
     /**
-     * 副标题 
+     * 副标题
      */
     @JSONField
     @TableField
@@ -159,7 +160,7 @@ public class Seed implements Serializable {
     /**
      * 种植类型[1:成交日种植，2:T+1种植，3:T+2种植,4:成立时种植]
      */
-    @Excel(name = "种植类型",replace = {"成交日种植_1","T+1种植_2","T+2种植_3","成立时种植_4"})
+    @Excel(name = "种植类型", replace = {"成交日种植_1", "T+1种植_2", "T+2种植_3", "成立时种植_4"})
     @TableField
     private Integer plantType;
 
@@ -190,7 +191,7 @@ public class Seed implements Serializable {
     /**
      * 添加时间
      */
-    @Excel(name = "添加时间",format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "添加时间", format = "yyyy-MM-dd HH:mm:ss")
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
@@ -249,7 +250,7 @@ public class Seed implements Serializable {
     /**
      * 售罄时间
      */
-    @Excel(name = "售罄时间",format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "售罄时间", format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date fullTime;
 

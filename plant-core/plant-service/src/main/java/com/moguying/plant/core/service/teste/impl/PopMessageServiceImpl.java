@@ -31,7 +31,7 @@ public class PopMessageServiceImpl implements PopMessageService {
 
     @Override
     public ResultData<Boolean> savePopMessage(PopMessage message) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
         if (null == message.getIcon())
             return resultData.setMessageEnum(MessageEnum.POP_MESSAGE_ICON_EMPTY);
         mongoTemplate.save(message);
@@ -40,43 +40,43 @@ public class PopMessageServiceImpl implements PopMessageService {
 
     @Override
     public ResultData<Boolean> deletePopMessage(String id) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
         DeleteResult result = mongoTemplate.remove(new Query(Criteria.where("id").is(id)), PopMessage.class);
-        if(result.getDeletedCount() > 0)
+        if (result.getDeletedCount() > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
         return resultData;
     }
 
     @Override
-    public PageResult<PopMessage> popMessagePageResult(Integer page,Integer size,PopMessage where) {
+    public PageResult<PopMessage> popMessagePageResult(Integer page, Integer size, PopMessage where) {
         Optional<PopMessage> optional = Optional.ofNullable(where);
-        Query query = new Query().with(PageRequest.of(page-1,size));
-        if(optional.map(PopMessage::isUsed).isPresent())
+        Query query = new Query().with(PageRequest.of(page - 1, size));
+        if (optional.map(PopMessage::isUsed).isPresent())
             query.addCriteria(Criteria.where("isUsed").is(where.isUsed()));
-        List<PopMessage> items = mongoTemplate.find(query,PopMessage.class);
+        List<PopMessage> items = mongoTemplate.find(query, PopMessage.class);
 
-        long count = mongoTemplate.count(query,PopMessage.class);
-        return new PageResult<>(count,items);
+        long count = mongoTemplate.count(query, PopMessage.class);
+        return new PageResult<>(count, items);
     }
 
     @Override
     public PopMessage usedPopMessage() {
-       return mongoTemplate.findOne(new Query(Criteria.where("isUsed").is(true)), PopMessage.class);
+        return mongoTemplate.findOne(new Query(Criteria.where("isUsed").is(true)), PopMessage.class);
     }
 
     @Override
     public ResultData<Boolean> setUseState(String id) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
         Query query = new Query(Criteria.where("id").is(id));
-        PopMessage popMessage = mongoTemplate.findOne(query,PopMessage.class);
+        PopMessage popMessage = mongoTemplate.findOne(query, PopMessage.class);
         Optional<PopMessage> optional = Optional.ofNullable(popMessage);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             boolean state = optional.map(PopMessage::isUsed).get();
-            UpdateResult isUsed = mongoTemplate.updateFirst(query, Update.update("isUsed", !state),PopMessage.class);
+            UpdateResult isUsed = mongoTemplate.updateFirst(query, Update.update("isUsed", !state), PopMessage.class);
             if (isUsed.getMatchedCount() > 0) {
-                if(!state){
+                if (!state) {
                     //只能存在一个使用状态的弹幕
-                    mongoTemplate.updateMulti(new Query(Criteria.where("isUsed").is(true).and("id").ne(id)),Update.update("isUsed",false),PopMessage.class);
+                    mongoTemplate.updateMulti(new Query(Criteria.where("isUsed").is(true).and("id").ne(id)), Update.update("isUsed", false), PopMessage.class);
                 }
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
             }

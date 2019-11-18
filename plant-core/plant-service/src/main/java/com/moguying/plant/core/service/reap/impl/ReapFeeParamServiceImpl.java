@@ -30,12 +30,12 @@ public class ReapFeeParamServiceImpl extends ServiceImpl<ReapFeeParamDAO, ReapFe
 
     @Override
     public ResultData<Boolean> saveParam(ReapFeeParam entity) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
         User user = userDAO.selectById(entity.getInviteUid());
-        if(!user.getIsChannel())
+        if (!user.getIsChannel())
             return resultData.setMessageEnum(MessageEnum.IS_NOT_A_CHANNEL);
         SeedType seedType = seedTypeDAO.selectById(entity.getSeedType());
-        if(null == seedType)
+        if (null == seedType)
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(saveOrUpdate(entity));
     }
@@ -44,6 +44,6 @@ public class ReapFeeParamServiceImpl extends ServiceImpl<ReapFeeParamDAO, ReapFe
     @Override
     public PageResult<ReapFeeParam> reapFeeParamPageResult(Integer page, Integer size, ReapFeeParam where) {
         IPage<ReapFeeParam> pageResult = reapFeeParamDAO.selectSelective(new Page(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 }

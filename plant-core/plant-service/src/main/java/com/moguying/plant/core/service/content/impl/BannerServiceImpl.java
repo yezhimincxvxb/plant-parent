@@ -32,20 +32,20 @@ public class BannerServiceImpl implements BannerService {
     @DS("read")
     public PageResult<Banner> bannerList(Integer page, Integer size, Banner where) {
         IPage<Banner> pageResult = bannerDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("write")
     public ResultData<Integer> addBanner(Banner banner) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         Banner where = new Banner();
         where.setName(banner.getName());
         Integer count = bannerDAO.selectCount(new QueryWrapper<>(where));
-        if(null != count  && count > 0)
+        if (null != count && count > 0)
             return resultData.setMessageEnum(MessageEnum.BANNER_NAME_EXISTS);
         banner.setAddTime(new Date());
-        if(bannerDAO.insert(banner) > 0)
+        if (bannerDAO.insert(banner) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(banner.getId());
         return resultData;
     }
@@ -53,17 +53,17 @@ public class BannerServiceImpl implements BannerService {
     @Override
     @DS("write")
     public ResultData<Integer> updateBanner(Integer id, Banner update) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
-        if(bannerDAO.selectById(id) == null)
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
+        if (bannerDAO.selectById(id) == null)
             return resultData.setMessageEnum(MessageEnum.BANNER_NOT_EXISTS);
         Banner where = new Banner();
         where.setName(update.getName());
-        Integer count  = bannerDAO.selectCount(new QueryWrapper<>(where));
-        if(null != count && count > 0)
+        Integer count = bannerDAO.selectCount(new QueryWrapper<>(where));
+        if (null != count && count > 0)
             return resultData.setMessageEnum(MessageEnum.BANNER_NAME_EXISTS);
 
         update.setId(id);
-        if(bannerDAO.updateById(update) > 0)
+        if (bannerDAO.updateById(update) > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(id);
         return resultData;
     }
@@ -71,7 +71,7 @@ public class BannerServiceImpl implements BannerService {
     @Override
     @DS("write")
     public Integer deleteBanner(Integer id) {
-        if(bannerDAO.deleteById(id) > 0)
+        if (bannerDAO.deleteById(id) > 0)
             return id;
         return -1;
     }
@@ -80,7 +80,7 @@ public class BannerServiceImpl implements BannerService {
     @DS("write")
     public Boolean setBannerShowState(Integer id) {
         Banner banner = bannerDAO.selectById(id);
-        if(banner == null)
+        if (banner == null)
             return false;
         Banner update = new Banner();
         update.setId(id);

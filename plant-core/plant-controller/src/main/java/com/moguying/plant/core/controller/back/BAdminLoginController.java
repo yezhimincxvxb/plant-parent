@@ -33,40 +33,40 @@ public class BAdminLoginController {
     @NoLogin
     @ApiOperation("图形验证码")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        CaptchaUtil.out(5,request,response);
+        CaptchaUtil.out(5, request, response);
     }
 
     @PostMapping(value = "/login")
     @NoLogin
     @ApiOperation("登录")
-    public ResponseData<String> login(@RequestBody AdminUser adminUser, HttpServletRequest request){
+    public ResponseData<String> login(@RequestBody AdminUser adminUser, HttpServletRequest request) {
 
 
-        if(StringUtils.isEmpty(adminUser.getUserName()) || StringUtils.isEmpty(adminUser.getPassword())
+        if (StringUtils.isEmpty(adminUser.getUserName()) || StringUtils.isEmpty(adminUser.getPassword())
                 || StringUtils.isEmpty(adminUser.getCode()))
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState(),"");
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "");
         //检测code是否相同
-        if(!CaptchaUtil.ver(adminUser.getCode(),request)) {
+        if (!CaptchaUtil.ver(adminUser.getCode(), request)) {
             CaptchaUtil.clear(request);
-            return new ResponseData<>(MessageEnum.CODE_ERROR.getMessage(),MessageEnum.CODE_ERROR.getState(),"");
+            return new ResponseData<>(MessageEnum.CODE_ERROR.getMessage(), MessageEnum.CODE_ERROR.getState(), "");
         }
 
         String password = PasswordUtil.INSTANCE.encode(adminUser.getPassword().getBytes());
-        AdminUser user = adminUserService.login(adminUser.getUserName(),password);
-        if(user != null) {
-            request.getSession().setAttribute(SessionAdminUser.sessionKey,user);
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+        AdminUser user = adminUserService.login(adminUser.getUserName(), password);
+        if (user != null) {
+            request.getSession().setAttribute(SessionAdminUser.sessionKey, user);
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
         }
-        return new ResponseData<>(MessageEnum.LOGIN_ERROR.getMessage(),MessageEnum.LOGIN_ERROR.getState(),"");
+        return new ResponseData<>(MessageEnum.LOGIN_ERROR.getMessage(), MessageEnum.LOGIN_ERROR.getState(), "");
     }
 
 
     @PostMapping(value = "/logout")
     @ApiOperation("退出")
-    public ResponseData<String> logout(HttpServletRequest request){
-        request.setAttribute(SessionAdminUser.sessionKey,null);
+    public ResponseData<String> logout(HttpServletRequest request) {
+        request.setAttribute(SessionAdminUser.sessionKey, null);
 
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),"");
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), "");
     }
 
 }

@@ -18,6 +18,6 @@ public class MallOrderDetailServiceImpl implements MallOrderDetailService {
     @Override
     @DS("read")
     public List<OrderItem> orderItemListByOrderIdAndUserId(Integer orderId, Integer userId) {
-        return mallOrderDetailDAO.selectDetailListByOrderId(orderId,userId);
+        return mallOrderDetailDAO.selectDetailListByOrderId(orderId, userId);
     }
 }

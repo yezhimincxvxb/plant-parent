@@ -11,10 +11,10 @@ public class InviteStatistics implements Serializable {
     @JSONField(ordinal = 1)
     private Integer inviteCount;
 
-    @JSONField(ordinal = 2,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 2, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal invitePlantAmount;
 
-    @JSONField(ordinal = 3,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 3, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal inviteAward;
 
     @JSONField(ordinal = 4)

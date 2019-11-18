@@ -21,7 +21,7 @@ public interface MallOrderDAO extends BaseDAO<MallOrder> {
 
     List<MallOrder> selectSelective(@Param("wq") MallOrderSearch where);
 
-    IPage<UserMallOrder> userOrderListByState(Page<MallOrder> page,@Param("userId") Integer userId, @Param("state") Integer state);
+    IPage<UserMallOrder> userOrderListByState(Page<MallOrder> page, @Param("userId") Integer userId, @Param("state") Integer state);
 
     MallOrder findByIdAndNum(@Param("userId") Integer userId, @Param("number") String number);
 

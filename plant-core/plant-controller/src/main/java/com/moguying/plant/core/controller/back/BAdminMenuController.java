@@ -29,21 +29,22 @@ public class BAdminMenuController {
 
     /**
      * 菜单列表
+     *
      * @param search
      * @return
      */
     @PostMapping("/list")
     @ApiOperation("菜单列表")
-    public PageResult<AdminMenu> menuList(@RequestBody PageSearch<AdminMenu> search){
-        if(null == search.getWhere())
+    public PageResult<AdminMenu> menuList(@RequestBody PageSearch<AdminMenu> search) {
+        if (null == search.getWhere())
             search.setWhere(new AdminMenu());
-        return adminMenuService.menuList(search.getPage(),search.getSize(),search.getWhere());
+        return adminMenuService.menuList(search.getPage(), search.getSize(), search.getWhere());
     }
-
 
 
     /**
      * 添加或修改菜单
+     *
      * @param user
      * @param menu
      * @return
@@ -52,50 +53,52 @@ public class BAdminMenuController {
     @ApiOperation("添加或修改菜单")
     public ResponseData<Integer> saveMenu(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user, @RequestBody AdminMenu menu) {
         ResultData<Integer> resultData = adminMenuService.saveAdminMenu(menu);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 
     /**
      * 删除菜单
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/{id}")
     @ApiOperation("删除菜单")
-    public ResponseData<Integer> deleteMenu(@PathVariable Integer id){
-        ResultData<Integer> resultData  = adminMenuService.deleteMenu(id);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    public ResponseData<Integer> deleteMenu(@PathVariable Integer id) {
+        ResultData<Integer> resultData = adminMenuService.deleteMenu(id);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 
     /**
      * 获取指定id的菜单信息
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation("获取指定id的菜单信息")
-    public ResponseData<AdminMenu> adminMenu(@PathVariable Integer id){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),adminMenuService.adminMenu(id));
+    public ResponseData<AdminMenu> adminMenu(@PathVariable Integer id) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), adminMenuService.adminMenu(id));
     }
-
-
 
 
     /**
      * 获取父级菜单
+     *
      * @return
      */
     @GetMapping("/parent")
     @ApiOperation("获取父级菜单")
-    public ResponseData<List<AdminMenu>> parentMenu(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),adminMenuService.parentMenu());
+    public ResponseData<List<AdminMenu>> parentMenu() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), adminMenuService.parentMenu());
     }
 
 
     /**
      * 路由表
+     *
      * @return
      */
     @GetMapping("/tree")
@@ -104,10 +107,8 @@ public class BAdminMenuController {
         MenuTree tree = new MenuTree();
         List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuService.menus(new AdminMenu()));
         tree.setTree(menus);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),tree);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), tree);
     }
-
-
 
 
 }

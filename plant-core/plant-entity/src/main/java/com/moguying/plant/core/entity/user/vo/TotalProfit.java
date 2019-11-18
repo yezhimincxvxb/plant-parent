@@ -12,21 +12,21 @@ public class TotalProfit implements Profit, Serializable {
     /**
      * 总利润
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 1)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 1)
     private BigDecimal totalProfit;
 
 
     /**
      * 种植中的利润
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 2)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 2)
     private BigDecimal plantingProfit;
 
 
     /**
      * 已完成利润
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 3)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 3)
     private BigDecimal plantedProfit;
 
 

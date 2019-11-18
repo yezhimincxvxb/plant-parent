@@ -38,28 +38,27 @@ public class PaymentController {
     @RequestMapping("/upload/image/{id}")
     @ResponseBody
     @ApiOperation("实名上传照片")
-    public ResponseData<String> uploadImage(HttpServletRequest request, @PathVariable String id){
+    public ResponseData<String> uploadImage(HttpServletRequest request, @PathVariable String id) {
         String path = request.getServletContext().getRealPath("/upload/default1.jpg");
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageUploadRequest imageUploadRequest = new ImageUploadRequest();
 
             BufferedImage bi = ImageIO.read(new File(path));
-            ImageIO.write(bi,"jpg",baos);
-            String image = Base64.encodeBase64String(baos.toByteArray(),true);
+            ImageIO.write(bi, "jpg", baos);
+            String image = Base64.encodeBase64String(baos.toByteArray(), true);
             imageUploadRequest.setImage(image);
             imageUploadRequest.setMerchantNo(id);
             PaymentResponse<ImageUploadResponse> paymentResponse = paymentService.imageUpload(imageUploadRequest);
             ImageUploadResponse imageUploadResponse = paymentResponse.getData();
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),imageUploadResponse.getFileNum());
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), imageUploadResponse.getFileNum());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-       return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
-
 
 
 }

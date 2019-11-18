@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ResultData<T> {
 
-   private MessageEnum messageEnum;
+    private MessageEnum messageEnum;
 
-   private T data;
+    private T data;
 }

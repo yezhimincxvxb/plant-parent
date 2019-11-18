@@ -1,81 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.account.UserMoneyDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.UserMoney">
-    <id column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="available_money" jdbcType="DECIMAL" property="availableMoney" />
-    <result column="freeze_money" jdbcType="DECIMAL" property="freezeMoney" />
-    <result column="collect_money" jdbcType="DECIMAL" property="collectMoney" />
-    <result column="collect_capital" jdbcType="DECIMAL" property="collectCapital" />
-    <result column="collect_interest" jdbcType="DECIMAL" property="collectInterest" />
-  </resultMap>
-  
-  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.UserMoney" extends="BaseResultMap">
-    <result column="phone" jdbcType="VARCHAR" property="phone"/>
-    <result column="real_name" jdbcType="VARCHAR" property="realName"/>
-    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
-  </resultMap>
-  
-  <sql id="Base_Column_List">
-    user_id, available_money, freeze_money, collect_money, collect_capital, collect_interest
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.UserMoney">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="available_money" jdbcType="DECIMAL" property="availableMoney"/>
+        <result column="freeze_money" jdbcType="DECIMAL" property="freezeMoney"/>
+        <result column="collect_money" jdbcType="DECIMAL" property="collectMoney"/>
+        <result column="collect_capital" jdbcType="DECIMAL" property="collectCapital"/>
+        <result column="collect_interest" jdbcType="DECIMAL" property="collectInterest"/>
+    </resultMap>
+
+    <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.UserMoney" extends="BaseResultMap">
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id, available_money, freeze_money, collect_money, collect_capital, collect_interest
+    </sql>
 
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.core.entity.account.UserMoney">
-    update plant_user_money
-    <set>
-      <if test="availableMoney != null">
-        available_money = #{availableMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="freezeMoney != null">
-        freeze_money = #{freezeMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="collectMoney != null">
-        collect_money = #{collectMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="collectCapital != null">
-        collect_capital = #{collectCapital,jdbcType=DECIMAL},
-      </if>
-      <if test="collectInterest != null">
-        collect_interest = #{collectInterest,jdbcType=DECIMAL},
-      </if>
-    </set>
-    where user_id = #{userId,jdbcType=INTEGER}
-  </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.moguying.plant.core.entity.account.UserMoney">
+        update plant_user_money
+        <set>
+            <if test="availableMoney != null">
+                available_money = #{availableMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="freezeMoney != null">
+                freeze_money = #{freezeMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="collectMoney != null">
+                collect_money = #{collectMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="collectCapital != null">
+                collect_capital = #{collectCapital,jdbcType=DECIMAL},
+            </if>
+            <if test="collectInterest != null">
+                collect_interest = #{collectInterest,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
 
-  <select id="selectSelective" resultMap="BaseInfoMap">
-    select <include refid="Base_Column_List"/>,t2.phone,t2.real_name,sum(t1.available_money + t1.freeze_money + t1.collect_money) as total_amount from plant_user_money t1
-    left join plant_user t2 on t1.user_id = t2.id
-    <where>
-      <if test="wq.userId != null">
-        user_id = #{wq.userId}
-      </if>
-      <if test="wq.phone != null">
-        <bind value="'%' + wq.phone + '%'" name="phoneLike"/>
-        AND t2.phone like #{phoneLike}
-      </if>
-      <if test="wq.realName != null">
-        <bind value="'%' + wq.realName + '%'" name="realNameLike"/>
-        AND t2.real_name like #{realNameLike}
-      </if>
-      <if test="wq.availableMoney != null">
-        AND available_money = #{wq.availableMoney}
-      </if>
-      <if test="wq.freezeMoney != null">
-        AND freeze_money = #{wq.freezeMoney}
-      </if>
-      <if test="wq.collectMoney != null">
-        AND collect_money = #{wq.collectMoney}
-      </if>
-      <if test="wq.collectCapital != null">
-        AND collect_capital = #{wq.collectCapital}
-      </if>
-      <if test="wq.collectInterest != null">
-        AND collect_interest = #{wq.collectInterest}
-      </if>
-    </where>
-    group by user_id
-    order by user_id desc
-  </select>
+    <select id="selectSelective" resultMap="BaseInfoMap">
+        select<include refid="Base_Column_List"/>,t2.phone,t2.real_name,sum(t1.available_money + t1.freeze_money +
+        t1.collect_money) as total_amount from plant_user_money t1
+        left join plant_user t2 on t1.user_id = t2.id
+        <where>
+            <if test="wq.userId != null">
+                user_id = #{wq.userId}
+            </if>
+            <if test="wq.phone != null">
+                <bind value="'%' + wq.phone + '%'" name="phoneLike"/>
+                AND t2.phone like #{phoneLike}
+            </if>
+            <if test="wq.realName != null">
+                <bind value="'%' + wq.realName + '%'" name="realNameLike"/>
+                AND t2.real_name like #{realNameLike}
+            </if>
+            <if test="wq.availableMoney != null">
+                AND available_money = #{wq.availableMoney}
+            </if>
+            <if test="wq.freezeMoney != null">
+                AND freeze_money = #{wq.freezeMoney}
+            </if>
+            <if test="wq.collectMoney != null">
+                AND collect_money = #{wq.collectMoney}
+            </if>
+            <if test="wq.collectCapital != null">
+                AND collect_capital = #{wq.collectCapital}
+            </if>
+            <if test="wq.collectInterest != null">
+                AND collect_interest = #{wq.collectInterest}
+            </if>
+        </where>
+        group by user_id
+        order by user_id desc
+    </select>
 
 </mapper>

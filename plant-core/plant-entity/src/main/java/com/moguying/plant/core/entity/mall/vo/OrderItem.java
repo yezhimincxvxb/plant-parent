@@ -38,7 +38,7 @@ public class OrderItem implements Serializable {
     /**
      * 商品单价
      */
-    @JSONField(ordinal = 5,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal productPrice;
 
     /**

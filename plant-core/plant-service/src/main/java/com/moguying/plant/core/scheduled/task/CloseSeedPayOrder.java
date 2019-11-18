@@ -11,8 +11,8 @@ public class CloseSeedPayOrder extends CloseOrderItem {
     private Logger log = LoggerFactory.getLogger(CloseSeedPayOrder.class);
 
 
-    public CloseSeedPayOrder(Integer id,Long expireTime) {
-        super(id,(int)(expireTime / 60));
+    public CloseSeedPayOrder(Integer id, Long expireTime) {
+        super(id, (int) (expireTime / 60));
     }
 
     public CloseSeedPayOrder(Integer id, int loop) {
@@ -21,8 +21,8 @@ public class CloseSeedPayOrder extends CloseOrderItem {
 
     @Override
     public void run() {
-        log.debug("close seed pay order:{}",toString());
+        log.debug("close seed pay order:{}", toString());
         SeedOrderDetailService seedOrderDetailService = ApplicationContextUtil.getBean(SeedOrderDetailService.class);
-        seedOrderDetailService.seedOrderCancel(id,null);
+        seedOrderDetailService.seedOrderCancel(id, null);
     }
 }

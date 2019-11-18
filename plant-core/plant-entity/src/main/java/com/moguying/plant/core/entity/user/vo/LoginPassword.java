@@ -2,7 +2,7 @@ package com.moguying.plant.core.entity.user.vo;
 
 import java.io.Serializable;
 
-public class LoginPassword  implements Serializable {
+public class LoginPassword implements Serializable {
 
     private String oldPassword;
 

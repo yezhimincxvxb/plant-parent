@@ -7,7 +7,7 @@ import lombok.Data;
  * 快捷注册发送短信
  */
 @Data
-public class SendRegSmsCodeRequest implements PaymentRequestInterface{
+public class SendRegSmsCodeRequest implements PaymentRequestInterface {
 
     private String merType;
 

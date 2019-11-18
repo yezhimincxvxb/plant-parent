@@ -1,91 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.account.UserMoneyLogDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.UserMoneyLog">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="affect_money" jdbcType="DECIMAL" property="affectMoney" />
-    <result column="available_money" jdbcType="DECIMAL" property="availableMoney" />
-    <result column="freeze_money" jdbcType="DECIMAL" property="freezeMoney" />
-    <result column="collect_money" jdbcType="DECIMAL" property="collectMoney" />
-    <result column="collect_capital" jdbcType="DECIMAL" property="collectCapital" />
-    <result column="collect_interest" jdbcType="DECIMAL" property="collectInterest" />
-    <result column="affect_type" jdbcType="TINYINT" property="affectType" />
-    <result column="affect_time" jdbcType="TIMESTAMP" property="affectTime" />
-    <result column="affect_ip" jdbcType="VARCHAR" property="affectIp" />
-    <result column="detail_id" jdbcType="VARCHAR" property="detailId" />
-    <result column="affect_info" jdbcType="VARCHAR" property="affectInfo" />
-  </resultMap>
-  
-  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.UserMoneyLog" extends="BaseResultMap">
-    <result column="phone" property="phone" jdbcType="VARCHAR"/>
-    <result column="real_name" property="realName" jdbcType="VARCHAR"/>
-  </resultMap>
-  
-  <sql id="Base_Column_List">
-    id, user_id, affect_money, available_money, freeze_money, collect_money, collect_capital, 
-    collect_interest, affect_type, affect_time, affect_ip, detail_id, affect_info
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.UserMoneyLog">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="affect_money" jdbcType="DECIMAL" property="affectMoney"/>
+        <result column="available_money" jdbcType="DECIMAL" property="availableMoney"/>
+        <result column="freeze_money" jdbcType="DECIMAL" property="freezeMoney"/>
+        <result column="collect_money" jdbcType="DECIMAL" property="collectMoney"/>
+        <result column="collect_capital" jdbcType="DECIMAL" property="collectCapital"/>
+        <result column="collect_interest" jdbcType="DECIMAL" property="collectInterest"/>
+        <result column="affect_type" jdbcType="TINYINT" property="affectType"/>
+        <result column="affect_time" jdbcType="TIMESTAMP" property="affectTime"/>
+        <result column="affect_ip" jdbcType="VARCHAR" property="affectIp"/>
+        <result column="detail_id" jdbcType="VARCHAR" property="detailId"/>
+        <result column="affect_info" jdbcType="VARCHAR" property="affectInfo"/>
+    </resultMap>
+
+    <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.UserMoneyLog" extends="BaseResultMap">
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, affect_money, available_money, freeze_money, collect_money, collect_capital,
+        collect_interest, affect_type, affect_time, affect_ip, detail_id, affect_info
+    </sql>
 
 
-  <select id="selectSelective" resultMap="BaseInfoMap">
-    select  t1.id, user_id, affect_money, available_money, freeze_money, collect_money, collect_capital,
-    collect_interest, affect_type, affect_time, affect_ip, detail_id, affect_info,t2.phone,t2.real_name from plant_user_money_log t1
-    left join plant_user t2 on t1.user_id = t2.id
-    <where>
-        <if test="wq.userId != null">
-          user_id = #{wq.userId}
-        </if>
-        <if test="'' != wq.phone and wq.phone != null">
-          <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
-          AND t2.phone like #{phoneLike}
-        </if>
-      <if test="wq.realName != null and wq.realName != ''">
-        <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
-        AND t2.real_name like #{realNameLike}
-      </if>
-        <if test="wq.affectType != null">
-          AND affect_type = #{wq.affectType}
-        </if>
+    <select id="selectSelective" resultMap="BaseInfoMap">
+        select t1.id, user_id, affect_money, available_money, freeze_money, collect_money, collect_capital,
+        collect_interest, affect_type, affect_time, affect_ip, detail_id, affect_info,t2.phone,t2.real_name from
+        plant_user_money_log t1
+        left join plant_user t2 on t1.user_id = t2.id
+        <where>
+            <if test="wq.userId != null">
+                user_id = #{wq.userId}
+            </if>
+            <if test="'' != wq.phone and wq.phone != null">
+                <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
+                AND t2.phone like #{phoneLike}
+            </if>
+            <if test="wq.realName != null and wq.realName != ''">
+                <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
+                AND t2.real_name like #{realNameLike}
+            </if>
+            <if test="wq.affectType != null">
+                AND affect_type = #{wq.affectType}
+            </if>
 
-        <if test="wq.startTime != null">
-          <![CDATA[
+            <if test="wq.startTime != null">
+                <![CDATA[
             AND UNIX_TIMESTAMP(affect_time) <= UNIX_TIMESTAMP(#{wq.startTime})
           ]]>
-        </if>
-        <if test="wq.endTime != null">
-          <![CDATA[
+            </if>
+            <if test="wq.endTime != null">
+                <![CDATA[
               AND UNIX_TIMESTAMP(affect_time) <= UNIX_TIMESTAMP(#{wq.endTime})
             ]]>
-        </if>
-        <if test="wq.detailId != null and wq.detailId != ''">
-          AND detail_id = #{wq.detailId}
-        </if>
+            </if>
+            <if test="wq.detailId != null and wq.detailId != ''">
+                AND detail_id = #{wq.detailId}
+            </if>
 
-    </where>
-    order by id desc
-  </select>
+        </where>
+        order by id desc
+    </select>
 
-  <select id="fieldSumByTypeUserId" resultType="java.math.BigDecimal">
-    select COALESCE(sum(ABS(${field})),0) from plant_user_money_log
-    <where>
-      <if test="userId != null">
-        user_id = #{userId}
-      </if>
-      <if test="types != null">
-        AND affect_type in
-        <foreach collection="types" open="(" close=")" separator="," item="item">
-          #{item.type}
-        </foreach>
-      </if>
-      <if test="startTime != null and endTime != null">
-        <![CDATA[
+    <select id="fieldSumByTypeUserId" resultType="java.math.BigDecimal">
+        select COALESCE(sum(ABS(${field})),0) from plant_user_money_log
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="types != null">
+                AND affect_type in
+                <foreach collection="types" open="(" close=")" separator="," item="item">
+                    #{item.type}
+                </foreach>
+            </if>
+            <if test="startTime != null and endTime != null">
+                <![CDATA[
         AND affect_time >= #{startTime} AND affect_time <= #{endTime}
         ]]>
-      </if>
-    </where>
-  </select>
-  
+            </if>
+        </where>
+    </select>
 
 
 </mapper>

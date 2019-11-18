@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.system.TriggerEventDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.fertilizer.TriggerEvent">
-    <id column="trigger_event" jdbcType="VARCHAR" property="triggerEvent" />
-    <result column="mark" jdbcType="VARCHAR" property="mark" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    trigger_event, mark
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.fertilizer.TriggerEvent">
+        <id column="trigger_event" jdbcType="VARCHAR" property="triggerEvent"/>
+        <result column="mark" jdbcType="VARCHAR" property="mark"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        trigger_event, mark
+    </sql>
 
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_trigger_event
-    <where>
-      <if test="triggerEvent != null">
-        trigger_event = #{triggerEvent}
-      </if>
-      <if test="mark != null">
-        AND mark = #{mark}
-      </if>
-    </where>
-  </select>
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_trigger_event
+        <where>
+            <if test="triggerEvent != null">
+                trigger_event = #{triggerEvent}
+            </if>
+            <if test="mark != null">
+                AND mark = #{mark}
+            </if>
+        </where>
+    </select>
 </mapper>

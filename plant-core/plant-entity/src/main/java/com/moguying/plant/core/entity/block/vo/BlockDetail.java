@@ -24,7 +24,7 @@ public class BlockDetail implements Serializable {
     private String seedTypeName;
 
     //棚区总额
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal blockAmount;
 
     //菌包生长周期
@@ -32,7 +32,7 @@ public class BlockDetail implements Serializable {
     private Integer seedGrowDays;
 
     //菌包单价
-    @JSONField(ordinal = 6,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 6, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal seedPrice;
 
     //棚区剩余份数
@@ -40,7 +40,7 @@ public class BlockDetail implements Serializable {
     private Integer blockLeftCount;
 
     //一份出售价格
-    @JSONField(ordinal = 8,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 8, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal saleAmount;
 
     //最低种植份数

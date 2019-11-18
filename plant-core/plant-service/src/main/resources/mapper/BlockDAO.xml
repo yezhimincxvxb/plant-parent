@@ -1,104 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.block.BlockDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.block.Block">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="number" jdbcType="VARCHAR" property="number" />
-    <result column="seed_type" jdbcType="INTEGER" property="seedType" />
-    <result column="level" jdbcType="INTEGER" property="level" />
-    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
-    <result column="per_price" jdbcType="DECIMAL" property="perPrice" />
-    <result column="grow_days" jdbcType="INTEGER" property="growDays" />
-    <result column="interest_rates" jdbcType="INTEGER" property="interestRates" />
-    <result column="total_count" jdbcType="INTEGER" property="totalCount" />
-    <result column="left_count" jdbcType="INTEGER" property="leftCount" />
-    <result column="has_count" jdbcType="INTEGER" property="hasCount" />
-    <result column="is_show" jdbcType="BIT" property="isShow" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
-    <result column="is_delete" jdbcType="BIT" property="isDelete" />
-    <result column="max_plant" jdbcType="INTEGER" property="maxPlant" />
-    <result column="min_plant" jdbcType="INTEGER" property="minPlant" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl" />
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.block.Block">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="number" jdbcType="VARCHAR" property="number"/>
+        <result column="seed_type" jdbcType="INTEGER" property="seedType"/>
+        <result column="level" jdbcType="INTEGER" property="level"/>
+        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
+        <result column="per_price" jdbcType="DECIMAL" property="perPrice"/>
+        <result column="grow_days" jdbcType="INTEGER" property="growDays"/>
+        <result column="interest_rates" jdbcType="INTEGER" property="interestRates"/>
+        <result column="total_count" jdbcType="INTEGER" property="totalCount"/>
+        <result column="left_count" jdbcType="INTEGER" property="leftCount"/>
+        <result column="has_count" jdbcType="INTEGER" property="hasCount"/>
+        <result column="is_show" jdbcType="BIT" property="isShow"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="is_delete" jdbcType="BIT" property="isDelete"/>
+        <result column="max_plant" jdbcType="INTEGER" property="maxPlant"/>
+        <result column="min_plant" jdbcType="INTEGER" property="minPlant"/>
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
 
-  </resultMap>
-  
-  <resultMap id="ResultMapWithTypeName" type="com.moguying.plant.core.entity.block.Block" extends="BaseResultMap">
-    <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
-  </resultMap>
+    </resultMap>
 
-  <sql id="Base_Column_List">
-    id, `number`, seed_type, `level`, total_amount, per_price, total_count, left_count, interest_rates,
-    has_count, is_show, `state`, add_time, is_delete,grow_days,max_plant,min_plant,pic_url,thumb_pic_url
-  </sql>
+    <resultMap id="ResultMapWithTypeName" type="com.moguying.plant.core.entity.block.Block" extends="BaseResultMap">
+        <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
+    </resultMap>
 
-  <update id="deleteById" parameterType="java.lang.Integer">
-    update plant_block set is_delete = 1
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <select id="selectSelective" resultMap="ResultMapWithTypeName">
-    select t1.id, `number`, seed_type, `level`, total_amount, t1.per_price, total_count, left_count,t1.interest_rates,t1.pic_url,
-    t1.thumb_pic_url,has_count, is_show, `state`, add_time, t1.grow_days,t1.max_plant,t1.min_plant,
-    t2.class_name as seed_type_name from plant_block t1
-    left join plant_seed_type t2 on t1.seed_type = t2.id
-    <where>
-      <if test="wq.number != null">
-        number = #{wq.number}
-      </if>
-      <if test="wq.seedType !=null">
-        AND seed_type = #{wq.seedType}
-      </if>
-      <if test="wq.level != null ">
-        AND level = #{wq.level}
-      </if>
-      <if test="wq.isShow != null">
-        AND is_show = #{wq.isShow}
-      </if>
-      <if test="wq.state != null">
-        AND state = #{wq.state}
-      </if>
-      AND t1.is_delete = 0
-    </where>
-    order by add_time desc
-  </select>
-  
-  
-  <select id="selectById" resultMap="ResultMapWithTypeName">
-    select t1.id, `number`, seed_type, `level`, total_amount, t1.per_price, total_count, left_count,t1.interest_rates,
-    t1.pic_url,t1.thumb_pic_url,has_count, is_show, `state`, add_time, t1.grow_days,t1.max_plant,t1.min_plant,
-    t2.class_name as seed_type_name from plant_block t1
-    left join plant_seed_type t2 on t1.seed_type = t2.id
-    where t1.id = #{id}
-  </select>
-  
+    <sql id="Base_Column_List">
+        id, `number`, seed_type, `level`, total_amount, per_price, total_count, left_count, interest_rates,
+        has_count, is_show, `state`, add_time, is_delete,grow_days,max_plant,min_plant,pic_url,thumb_pic_url
+    </sql>
 
-  <select id="selectBlockByNumber" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_block
-    where number = #{number} AND is_show = 1
-  </select>
+    <update id="deleteById" parameterType="java.lang.Integer">
+        update plant_block set is_delete = 1
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectSelective" resultMap="ResultMapWithTypeName">
+        select t1.id, `number`, seed_type, `level`, total_amount, t1.per_price, total_count,
+        left_count,t1.interest_rates,t1.pic_url,
+        t1.thumb_pic_url,has_count, is_show, `state`, add_time, t1.grow_days,t1.max_plant,t1.min_plant,
+        t2.class_name as seed_type_name from plant_block t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        <where>
+            <if test="wq.number != null">
+                number = #{wq.number}
+            </if>
+            <if test="wq.seedType !=null">
+                AND seed_type = #{wq.seedType}
+            </if>
+            <if test="wq.level != null ">
+                AND level = #{wq.level}
+            </if>
+            <if test="wq.isShow != null">
+                AND is_show = #{wq.isShow}
+            </if>
+            <if test="wq.state != null">
+                AND state = #{wq.state}
+            </if>
+            AND t1.is_delete = 0
+        </where>
+        order by add_time desc
+    </select>
 
 
-  <select id="blockIsFree" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-    select count(*) from plant_reap t1
-    left join plant_seed_order t2 on t1.order_id = t2.id
-    left join plant_block t3 on t1.block_id = t3.id
-    where t1.state <![CDATA[ < 2 ]]> and t1.block_id = #{id}
-  </select>
+    <select id="selectById" resultMap="ResultMapWithTypeName">
+        select t1.id, `number`, seed_type, `level`, total_amount, t1.per_price, total_count,
+        left_count,t1.interest_rates,
+        t1.pic_url,t1.thumb_pic_url,has_count, is_show, `state`, add_time, t1.grow_days,t1.max_plant,t1.min_plant,
+        t2.class_name as seed_type_name from plant_block t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        where t1.id = #{id}
+    </select>
 
-  <select id="blockRecommend" resultType="com.moguying.plant.core.entity.block.vo.BlockDetail">
-    select t1.id as block_id,number as block_number,total_amount as block_amount,left_count as block_left_count,total_count as totalCount,
-    t1.has_count as hasCount,
-    t2.class_name as seed_type_name ,t1.pic_url,t2.grow_days as seed_grow_days,t2.per_price as seed_price, t2.interest_rates
-    from plant_block t1
-    left join plant_seed_type t2 on t1.seed_type = t2.id
-    where t1.is_show = 1 and t1.is_delete = 0 and t1.state = 1
-  </select>
 
-  <select id="selectBySeedType" resultMap="BaseResultMap">
-     select <include refid="Base_Column_List"/> from plant_block
-     where seed_type = #{seedType}
-  </select>
+    <select id="selectBlockByNumber" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_block
+        where number = #{number} AND is_show = 1
+    </select>
+
+
+    <select id="blockIsFree" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*) from plant_reap t1
+        left join plant_seed_order t2 on t1.order_id = t2.id
+        left join plant_block t3 on t1.block_id = t3.id
+        where t1.state <![CDATA[ < 2 ]]> and t1.block_id = #{id}
+    </select>
+
+    <select id="blockRecommend" resultType="com.moguying.plant.core.entity.block.vo.BlockDetail">
+        select t1.id as block_id,number as block_number,total_amount as block_amount,left_count as
+        block_left_count,total_count as totalCount,
+        t1.has_count as hasCount,
+        t2.class_name as seed_type_name ,t1.pic_url,t2.grow_days as seed_grow_days,t2.per_price as seed_price,
+        t2.interest_rates
+        from plant_block t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        where t1.is_show = 1 and t1.is_delete = 0 and t1.state = 1
+    </select>
+
+    <select id="selectBySeedType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_block
+        where seed_type = #{seedType}
+    </select>
 
 </mapper>

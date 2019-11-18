@@ -1,218 +1,222 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.seed.SeedDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.Seed">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="small_name" jdbcType="VARCHAR" property="smallName" />
-    <result column="per_price" jdbcType="DECIMAL" property="perPrice" />
-    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
-    <result column="grow_days" jdbcType="INTEGER" property="growDays" />
-    <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" />
-    <result column="interest_rates" jdbcType="DECIMAL" property="interestRates" />
-    <result column="seed_type" jdbcType="INTEGER" property="seedType" />
-    <result column="total_count" jdbcType="INTEGER" property="totalCount" />
-    <result column="left_count" jdbcType="INTEGER" property="leftCount" />
-    <result column="open_time" jdbcType="TIMESTAMP" property="openTime" />
-    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
-    <result column="pic_ids" jdbcType="VARCHAR" property="picIds" />
-    <result column="state" jdbcType="TINYINT" property="state" />
-    <result column="is_show" jdbcType="BIT" property="isShow" />
-    <result column="plant_level" jdbcType="TINYINT" property="plantLevel" />
-    <result column="reap_type" jdbcType="TINYINT" property="reapType" />
-    <result column="plant_type" jdbcType="TINYINT" property="plantType" />
-    <result column="review_mark" jdbcType="VARCHAR" property="reviewMark" />
-    <result column="add_uid" jdbcType="INTEGER" property="addUid" />
-    <result column="review_uid" jdbcType="INTEGER" property="reviewUid" />
-    <result column="review_time" jdbcType="TIMESTAMP" property="reviewTime" />
-    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
-    <result column="total_interest" jdbcType="DECIMAL" property="totalInterest" />
-    <result column="reap_amount" jdbcType="DECIMAL" property="reapAmount" />
-    <result column="reap_interest" jdbcType="DECIMAL" property="reapInterest" />
-    <result column="inner_count" jdbcType="INTEGER" property="innerCount"/>
-    <result column="real_amount" jdbcType="INTEGER" property="realAmount"/>
-    <result column="real_interest" jdbcType="INTEGER" property="realInterest"/>
-    <result column="order_number" jdbcType="INTEGER" property="orderNumber"/>
-    <result column="full_time" jdbcType="INTEGER" property="fullTime"/>
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.Seed">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="small_name" jdbcType="VARCHAR" property="smallName"/>
+        <result column="per_price" jdbcType="DECIMAL" property="perPrice"/>
+        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
+        <result column="grow_days" jdbcType="INTEGER" property="growDays"/>
+        <result column="serial_number" jdbcType="VARCHAR" property="serialNumber"/>
+        <result column="interest_rates" jdbcType="DECIMAL" property="interestRates"/>
+        <result column="seed_type" jdbcType="INTEGER" property="seedType"/>
+        <result column="total_count" jdbcType="INTEGER" property="totalCount"/>
+        <result column="left_count" jdbcType="INTEGER" property="leftCount"/>
+        <result column="open_time" jdbcType="TIMESTAMP" property="openTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="pic_ids" jdbcType="VARCHAR" property="picIds"/>
+        <result column="state" jdbcType="TINYINT" property="state"/>
+        <result column="is_show" jdbcType="BIT" property="isShow"/>
+        <result column="plant_level" jdbcType="TINYINT" property="plantLevel"/>
+        <result column="reap_type" jdbcType="TINYINT" property="reapType"/>
+        <result column="plant_type" jdbcType="TINYINT" property="plantType"/>
+        <result column="review_mark" jdbcType="VARCHAR" property="reviewMark"/>
+        <result column="add_uid" jdbcType="INTEGER" property="addUid"/>
+        <result column="review_uid" jdbcType="INTEGER" property="reviewUid"/>
+        <result column="review_time" jdbcType="TIMESTAMP" property="reviewTime"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="total_interest" jdbcType="DECIMAL" property="totalInterest"/>
+        <result column="reap_amount" jdbcType="DECIMAL" property="reapAmount"/>
+        <result column="reap_interest" jdbcType="DECIMAL" property="reapInterest"/>
+        <result column="inner_count" jdbcType="INTEGER" property="innerCount"/>
+        <result column="real_amount" jdbcType="INTEGER" property="realAmount"/>
+        <result column="real_interest" jdbcType="INTEGER" property="realInterest"/>
+        <result column="order_number" jdbcType="INTEGER" property="orderNumber"/>
+        <result column="full_time" jdbcType="INTEGER" property="fullTime"/>
+    </resultMap>
 
 
-  <resultMap id="SeedMapWithSeedType" type= "Seed" extends="BaseResultMap">
-    <collection property="typeInfo" ofType="SeedType">
-      <result column="per_weigh" property="perWeigh"/>
-      <result column="is_for_new" property="isForNew"/>
-    </collection>
-  </resultMap>
+    <resultMap id="SeedMapWithSeedType" type="Seed" extends="BaseResultMap">
+        <collection property="typeInfo" ofType="SeedType">
+            <result column="per_weigh" property="perWeigh"/>
+            <result column="is_for_new" property="isForNew"/>
+        </collection>
+    </resultMap>
 
 
-  <resultMap id="ContentSeedMap" type="com.moguying.plant.core.entity.seed.Seed" extends="BaseResultMap">
-    <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
-    <collection property="content" ofType="com.moguying.plant.core.entity.seed.SeedContent">
-      <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
-      <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
-    </collection>
-  </resultMap>
-  
-  
-  <resultMap id="ResultSeedListForHome" type="com.moguying.plant.core.entity.common.vo.HomeSeed">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="left_count" jdbcType="INTEGER" property="leftCount" />
-    <result column="per_price" jdbcType="DECIMAL" property="perPrice" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="interest_rates" jdbcType="DECIMAL" property="interestRates" />
-    <result column="grow_days" jdbcType="INTEGER" property="growDays" />
-    <result column="total_interest" jdbcType="DECIMAL" property="totalInterest" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-  </resultMap>
-  
-  
-  <resultMap id="AppSeedDetailMap" type="com.moguying.plant.core.entity.seed.vo.SeedDetail">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="seed_name" jdbcType="VARCHAR" property="seedName" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="left_count" jdbcType="VARCHAR" property="leftCount" />
-    <result column="per_price" jdbcType="VARCHAR" property="perPrice" />
-    <result column="grow_days" jdbcType="INTEGER" property="growDays" />
-    <collection property="content" ofType="com.moguying.plant.core.entity.seed.SeedContent">
-      <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
-      <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
-    </collection>
-  </resultMap>
-  
-  
-  
-  <sql id="Base_Column_List">
-    id, `name`, small_name, per_price, total_amount, grow_days, serial_number, interest_rates, 
-    seed_type, total_count, left_count, open_time,
-    close_time, pic_ids, `state`, is_show, plant_level, reap_type, plant_type,
-    review_mark, add_uid, review_uid, review_time, add_time, total_interest, reap_amount, 
-    reap_interest,inner_count,real_amount,real_interest,order_number,full_time
-  </sql>
+    <resultMap id="ContentSeedMap" type="com.moguying.plant.core.entity.seed.Seed" extends="BaseResultMap">
+        <result column="seed_type_name" property="seedTypeName" jdbcType="VARCHAR"/>
+        <collection property="content" ofType="com.moguying.plant.core.entity.seed.SeedContent">
+            <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
+            <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
 
 
-  <select id="selectSelective" parameterType="com.moguying.plant.core.entity.seed.Seed" resultMap="BaseResultMap" >
-    select <include refid="Base_Column_List" /> from plant_seed
-    <where>
-      <if test="wq.id != null">
-        id = #{id}
-      </if>
-      <if test="wq.name != null and wq.name != ''">
-      <bind value="'%' + wq.name + '%'" name="nameLike"/>
-        AND name like #{nameLike}
-      </if>
-      <if test="wq.state != null">
-        AND state = #{wq.state}
-      </if>
-      <if test="wq.openTime != null">
-      <![CDATA[
+    <resultMap id="ResultSeedListForHome" type="com.moguying.plant.core.entity.common.vo.HomeSeed">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="left_count" jdbcType="INTEGER" property="leftCount"/>
+        <result column="per_price" jdbcType="DECIMAL" property="perPrice"/>
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="interest_rates" jdbcType="DECIMAL" property="interestRates"/>
+        <result column="grow_days" jdbcType="INTEGER" property="growDays"/>
+        <result column="total_interest" jdbcType="DECIMAL" property="totalInterest"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+    </resultMap>
+
+
+    <resultMap id="AppSeedDetailMap" type="com.moguying.plant.core.entity.seed.vo.SeedDetail">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="seed_name" jdbcType="VARCHAR" property="seedName"/>
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="left_count" jdbcType="VARCHAR" property="leftCount"/>
+        <result column="per_price" jdbcType="VARCHAR" property="perPrice"/>
+        <result column="grow_days" jdbcType="INTEGER" property="growDays"/>
+        <collection property="content" ofType="com.moguying.plant.core.entity.seed.SeedContent">
+            <result column="contract_content" property="contractContent" jdbcType="VARCHAR"/>
+            <result column="seed_introduce" property="seedIntroduce" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id, `name`, small_name, per_price, total_amount, grow_days, serial_number, interest_rates,
+        seed_type, total_count, left_count, open_time,
+        close_time, pic_ids, `state`, is_show, plant_level, reap_type, plant_type,
+        review_mark, add_uid, review_uid, review_time, add_time, total_interest, reap_amount,
+        reap_interest,inner_count,real_amount,real_interest,order_number,full_time
+    </sql>
+
+
+    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.seed.Seed" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_seed
+        <where>
+            <if test="wq.id != null">
+                id = #{id}
+            </if>
+            <if test="wq.name != null and wq.name != ''">
+                <bind value="'%' + wq.name + '%'" name="nameLike"/>
+                AND name like #{nameLike}
+            </if>
+            <if test="wq.state != null">
+                AND state = #{wq.state}
+            </if>
+            <if test="wq.openTime != null">
+                <![CDATA[
         AND UNIX_TIMESTAMP(open_time) <= UNIX_TIMESTAMP(#{wq.openTime})
       ]]>
-      </if>
-      <if test="wq.closeTime != null">
-      <![CDATA[
+            </if>
+            <if test="wq.closeTime != null">
+                <![CDATA[
         AND UNIX_TIMESTAMP(close_time) >= UNIX_TIMESTAMP(#{wq.closeTime})
       ]]>
-      </if>
-    </where>
-    order by id desc
-  </select>
-  
-  <select id="selectByPrimaryKeyWithBLOB" resultMap="ContentSeedMap" parameterType="java.lang.Integer">
-    select t1.id, t1.`name`, t1.small_name, t1.per_price, t1.total_amount, t1.grow_days,
-    t1.serial_number, t1.interest_rates, t1.seed_type, t1.total_count, t1.left_count, t1.open_time,
-    t1.close_time, t1.pic_ids, t1.`state`, t1.is_show, t1.plant_level,t1.reap_type, t1.plant_type,
-    t2.*,
-    t3.class_name as seed_type_name from plant_seed t1
-    left join plant_seed_content t2 on t1.seed_type = t2.seed_type
-    left join plant_seed_type t3 on t1.seed_type = t3.id
-    where t1.id = #{id}
-  </select>
+            </if>
+        </where>
+        order by id desc
+    </select>
 
-  <update id="incrByPrimaryKey" >
-    update plant_seed
-    <set>
-      <if test="reapAmount != null">
-        reap_amount = reap_amount + #{reapAmount},
-      </if>
-      <if test="reapInterest != null">
-        reap_interest = reap_interest + #{reapInterest},
-      </if>
-      <if test="innerCount != null">
-        inner_count = inner_count + #{innerCount},
-      </if>
-      <if test="realAmount != null">
-        real_amount = real_amount + #{realAmount},
-      </if>
-      <if test="realInterest != null">
-        real_interest = real_interest + #{realInterest},
-      </if>
-    </set>
-    where id = #{id}
-  </update>
+    <select id="selectByPrimaryKeyWithBLOB" resultMap="ContentSeedMap" parameterType="java.lang.Integer">
+        select t1.id, t1.`name`, t1.small_name, t1.per_price, t1.total_amount, t1.grow_days,
+        t1.serial_number, t1.interest_rates, t1.seed_type, t1.total_count, t1.left_count, t1.open_time,
+        t1.close_time, t1.pic_ids, t1.`state`, t1.is_show, t1.plant_level,t1.reap_type, t1.plant_type,
+        t2.*,
+        t3.class_name as seed_type_name from plant_seed t1
+        left join plant_seed_content t2 on t1.seed_type = t2.seed_type
+        left join plant_seed_type t3 on t1.seed_type = t3.id
+        where t1.id = #{id}
+    </select>
 
-  
-  <select id="selectSeedListForHome" resultType="HomeSeed">
-    select t1.id, t1.name, left_count, t1.per_price, t1.interest_rates, t1.grow_days,
-    t1.total_interest, t2.pic_url_thumb as pic_url, t1.state, t3.per_weigh, t3.is_for_new
-    from plant_seed t1
-    left join plant_seed_pic t2 on t1.pic_ids = t2.id
-    left join plant_seed_type t3 on t1.seed_type = t3.id
-    <where>
-      t1.state = 1 AND t1.is_show = 1
-      <![CDATA[
+    <update id="incrByPrimaryKey">
+        update plant_seed
+        <set>
+            <if test="reapAmount != null">
+                reap_amount = reap_amount + #{reapAmount},
+            </if>
+            <if test="reapInterest != null">
+                reap_interest = reap_interest + #{reapInterest},
+            </if>
+            <if test="innerCount != null">
+                inner_count = inner_count + #{innerCount},
+            </if>
+            <if test="realAmount != null">
+                real_amount = real_amount + #{realAmount},
+            </if>
+            <if test="realInterest != null">
+                real_interest = real_interest + #{realInterest},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <select id="selectSeedListForHome" resultType="HomeSeed">
+        select t1.id, t1.name, left_count, t1.per_price, t1.interest_rates, t1.grow_days,
+        t1.total_interest, t2.pic_url_thumb as pic_url, t1.state, t3.per_weigh, t3.is_for_new
+        from plant_seed t1
+        left join plant_seed_pic t2 on t1.pic_ids = t2.id
+        left join plant_seed_type t3 on t1.seed_type = t3.id
+        <where>
+            t1.state = 1 AND t1.is_show = 1
+            <![CDATA[
         AND UNIX_TIMESTAMP(t1.close_time) >= UNIX_TIMESTAMP(NOW())
     ]]>
-      <if test="wq.isForNew != null">
-        AND t3.is_for_new = #{wq.isForNew}
-      </if>
-    </where>
-    order by t1.order_number desc
-  </select>
-  
-  <select id="seedDetail" resultMap="AppSeedDetailMap">
-    select t1.id,t1.name as seed_name,t3.pic_url,t1.per_price,t1.left_count,t2.seed_introduce,t2.contract_content,t1.grow_days
-    from plant_seed t1
-    left join plant_seed_content t2 on t2.seed_type = t1.seed_type
-    left join plant_seed_pic t3 on t1.pic_ids = t3.id
-    where t1.id = #{id}
-  </select>
+            <if test="wq.isForNew != null">
+                AND t3.is_for_new = #{wq.isForNew}
+            </if>
+        </where>
+        order by t1.order_number desc
+    </select>
+
+    <select id="seedDetail" resultMap="AppSeedDetailMap">
+        select t1.id,t1.name as
+        seed_name,t3.pic_url,t1.per_price,t1.left_count,t2.seed_introduce,t2.contract_content,t1.grow_days
+        from plant_seed t1
+        left join plant_seed_content t2 on t2.seed_type = t1.seed_type
+        left join plant_seed_pic t3 on t1.pic_ids = t3.id
+        where t1.id = #{id}
+    </select>
 
 
-  <update id="decrSeedLeftCount">
-    update plant_seed set
-    left_count = left_count - #{count}
-    where
-    <![CDATA[
+    <update id="decrSeedLeftCount">
+        update plant_seed set
+        left_count = left_count - #{count}
+        where
+        <![CDATA[
         left_count >= #{count}
     ]]>
-     and id = #{id}
-  </update>
-  
-  <select id="recommendSeed" resultMap="ResultSeedListForHome">
-    select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state
-    from plant_seed t1
-    left join plant_seed_pic t2 on t1.pic_ids = t2.id
-    where t1.state = 1 and is_show = 1 and is_hot = 1
-    <![CDATA[
+        and id = #{id}
+    </update>
+
+    <select id="recommendSeed" resultMap="ResultSeedListForHome">
+        select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as
+        pic_url,t1.state
+        from plant_seed t1
+        left join plant_seed_pic t2 on t1.pic_ids = t2.id
+        where t1.state = 1 and is_show = 1 and is_hot = 1
+        <![CDATA[
     AND UNIX_TIMESTAMP(t1.close_time) >= UNIX_TIMESTAMP(NOW())
     ]]>
-    order by t1.left_count desc limit 2
-  </select>
+        order by t1.left_count desc limit 2
+    </select>
 
-  <select id="selectOneFullSeed" resultType="HomeSeed">
-    select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as pic_url,t1.state
-    from plant_seed t1
-    left join plant_seed_pic t2 on t1.pic_ids = t2.id
-    where t1.state = 2 and is_show = 1
-    order by t1.full_time  desc limit 1
-  </select>
+    <select id="selectOneFullSeed" resultType="HomeSeed">
+        select t1.id,t1.name,left_count,per_price,interest_rates,grow_days,t1.total_interest,t2.pic_url_thumb as
+        pic_url,t1.state
+        from plant_seed t1
+        left join plant_seed_pic t2 on t1.pic_ids = t2.id
+        where t1.state = 2 and is_show = 1
+        order by t1.full_time desc limit 1
+    </select>
 
-  <select id="seedInfoWithTypeById" resultMap="SeedMapWithSeedType">
-    select  t1.*,t2.* from plant_seed t1
-    left join plant_seed_type t2 on t1.seed_type = t2.id
-    where t1.id = #{id}
-  </select>
+    <select id="seedInfoWithTypeById" resultMap="SeedMapWithSeedType">
+        select t1.*,t2.* from plant_seed t1
+        left join plant_seed_type t2 on t1.seed_type = t2.id
+        where t1.id = #{id}
+    </select>
 
 
 </mapper>

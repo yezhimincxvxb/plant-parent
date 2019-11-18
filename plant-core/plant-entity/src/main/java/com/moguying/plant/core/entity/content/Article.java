@@ -76,7 +76,7 @@ public class Article implements Serializable {
     /**
      * 添加时间
      */
-    @JSONField(serialize = false,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(serialize = false, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 

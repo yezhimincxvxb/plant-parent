@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.seed.SeedContentDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.SeedContent">
-    <id column="seed_type" jdbcType="INTEGER" property="seedType" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.seed.SeedContent">
-    <result column="seed_introduce" jdbcType="LONGVARCHAR" property="seedIntroduce" />
-    <result column="contract_content" jdbcType="LONGVARCHAR" property="contractContent" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    seed_type
-  </sql>
-  <sql id="Blob_Column_List">
-    seed_introduce, contract_content
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.SeedContent">
+        <id column="seed_type" jdbcType="INTEGER" property="seedType"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.seed.SeedContent">
+        <result column="seed_introduce" jdbcType="LONGVARCHAR" property="seedIntroduce"/>
+        <result column="contract_content" jdbcType="LONGVARCHAR" property="contractContent"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        seed_type
+    </sql>
+    <sql id="Blob_Column_List">
+        seed_introduce, contract_content
+    </sql>
 
 
 </mapper>

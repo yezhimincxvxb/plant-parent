@@ -24,5 +24,5 @@ public class PaymentResponse<T extends PaymentResponseInterface> {
      * 辅助字段，因第三方传回的responseParameters是字符串，直
      * 接无法转对象
      */
-    private T data ;
+    private T data;
 }

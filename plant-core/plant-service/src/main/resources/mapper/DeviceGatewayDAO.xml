@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.device.DeviceGatewayDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.device.DeviceGateway">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="gateway_logo" jdbcType="VARCHAR" property="gatewayLogo" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, gateway_logo
-  </sql>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.device.DeviceGateway">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="gateway_logo" jdbcType="VARCHAR" property="gatewayLogo"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, gateway_logo
+    </sql>
 
 
-  <select id="selectByGatewayLogo" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_device_gateway
-    where gateway_logo = #{gatewayLogo}
-  </select>
-  
-  
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_device_gateway
-    <where>
-      <if test="gatewayLogo != null">
-        gateway_logo = #{gatewayLogo,jdbcType=VARCHAR}
-      </if>
-    </where>
-    order by id desc
-  </select>
+    <select id="selectByGatewayLogo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_device_gateway
+        where gateway_logo = #{gatewayLogo}
+    </select>
+
+
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_device_gateway
+        <where>
+            <if test="gatewayLogo != null">
+                gateway_logo = #{gatewayLogo,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by id desc
+    </select>
 </mapper>

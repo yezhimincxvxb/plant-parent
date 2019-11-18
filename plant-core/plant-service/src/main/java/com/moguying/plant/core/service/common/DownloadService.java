@@ -47,10 +47,10 @@ public class DownloadService<T extends BaseDAO, K> implements Runnable {
             if (data.size() <= 0) return;
             String fileName = downloadInfo.getFileName();
             ServletContext servletContext = downloadInfo.getContext();
-            File savePath =  new File(servletContext.getRealPath(downloadInfo.getSavePath()));
-            log.debug("file save path ====>{}",savePath);
+            File savePath = new File(servletContext.getRealPath(downloadInfo.getSavePath()));
+            log.debug("file save path ====>{}", savePath);
             Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(fileName, fileName, ExcelType.HSSF), classes, data);
-            if(!savePath.exists())
+            if (!savePath.exists())
                 savePath.mkdirs();
             String saveFile = fileName.concat(RandomStringUtils.randomNumeric(8)).concat(".xls");
             FileOutputStream fos = new FileOutputStream(savePath.getPath().concat("/").concat(saveFile));

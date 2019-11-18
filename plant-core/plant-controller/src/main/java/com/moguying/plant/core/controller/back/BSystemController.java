@@ -29,47 +29,50 @@ public class BSystemController {
 
     @GetMapping("/trigger/event")
     @ApiOperation("触发事件列表")
-    public ResponseData<List<TriggerEvent>> triggerEventList(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),triggerEventService.triggerEventList());
+    public ResponseData<List<TriggerEvent>> triggerEventList() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), triggerEventService.triggerEventList());
     }
 
 
     /**
      * apk列表
+     *
      * @param page
      * @param size
      * @return
      */
     @GetMapping("/apk")
     @ApiOperation("apk列表")
-    public PageResult<Apk> apkList(@RequestParam(value = "page",defaultValue = "1") Integer page,
-                                   @RequestParam(value = "size",defaultValue = "10") Integer size){
-        return apkService.apkList(page,size,null);
+    public PageResult<Apk> apkList(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                   @RequestParam(value = "size", defaultValue = "10") Integer size) {
+        return apkService.apkList(page, size, null);
     }
 
 
     /**
      * 删除apk
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/apk/{id}")
     @ApiOperation("删除apk")
-    public ResponseData<Integer> deleteApk(@PathVariable Integer id){
+    public ResponseData<Integer> deleteApk(@PathVariable Integer id) {
         ResultData<Integer> resultData = apkService.apkDelete(id);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
     /**
      * 添加/上架apk
+     *
      * @param update
      * @return
      */
     @PutMapping("/apk")
     @ApiOperation("添加/上架apk")
-    public ResponseData<Integer> showApk(@RequestBody Apk update){
+    public ResponseData<Integer> showApk(@RequestBody Apk update) {
         ResultData<Integer> resultData = apkService.saveApk(update);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 }

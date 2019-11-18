@@ -9,7 +9,8 @@ import java.io.Serializable;
 
 /**
  * plant_farmer_level
- * @author 
+ *
+ * @author
  */
 @Data
 @TableName("plant_farmer_level")

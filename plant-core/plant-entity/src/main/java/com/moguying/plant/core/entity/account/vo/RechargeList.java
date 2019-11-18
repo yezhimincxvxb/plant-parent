@@ -8,13 +8,12 @@ import com.moguying.plant.utils.BigDecimalSerialize;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class RechargeList  implements Serializable {
+public class RechargeList implements Serializable {
 
     private static final long serialVersionUID = -9219778224717227027L;
 
     @JSONField(serializeUsing = BigDecimalSerialize.class)
-    private BigDecimal  sumRecharge;
-
+    private BigDecimal sumRecharge;
 
 
     private PageResult<MoneyRecharge> pageResult;

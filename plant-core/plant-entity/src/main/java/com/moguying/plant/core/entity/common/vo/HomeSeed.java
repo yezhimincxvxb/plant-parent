@@ -22,23 +22,23 @@ public class HomeSeed implements Serializable {
     @JSONField(ordinal = 3)
     private Integer leftCount;
 
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal perPrice;
 
     @JSONField(ordinal = 5)
     private String picUrl;
 
-    @JSONField(ordinal = 6,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 6, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal interestRates;
 
     @JSONField(ordinal = 7)
     private Integer growDays;
 
-    @JSONField(ordinal = 8,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 8, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal totalInterest;
 
     //每百份获利
-    @JSONField(ordinal = 9,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 9, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal perHundredProfit;
 
     @JSONField(ordinal = 10)

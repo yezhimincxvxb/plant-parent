@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class ReapWeighServiceImpl implements ReapWeighService {
 
     @Autowired
-    private  ReapWeighDAO reapWeighDAO;
+    private ReapWeighDAO reapWeighDAO;
 
     @Autowired
     private ReapDAO reapDAO;
@@ -21,9 +21,9 @@ public class ReapWeighServiceImpl implements ReapWeighService {
 
     @Override
     public ResultData<ReapWeigh> userReapWeighInfo(Integer userId) {
-        ResultData<ReapWeigh> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<ReapWeigh> resultData = new ResultData<>(MessageEnum.ERROR, null);
         ReapWeigh reapWeighInfo = reapWeighDAO.selectById(userId);
-        if(null == reapWeighInfo) return resultData.setMessageEnum(MessageEnum.USER_REAP_WEIGH_INFO_NOT_EXISTS);
+        if (null == reapWeighInfo) return resultData.setMessageEnum(MessageEnum.USER_REAP_WEIGH_INFO_NOT_EXISTS);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(reapWeighInfo);
     }
 

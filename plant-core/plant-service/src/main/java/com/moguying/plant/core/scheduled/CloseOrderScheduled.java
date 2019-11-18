@@ -27,7 +27,7 @@ public class CloseOrderScheduled {
     private static final List<Set<CloseOrderItem>> CLOSE_LOOP = Collections.synchronizedList(new ArrayList<>(60));
 
     static {
-        for(int i = 0;i< 60;i++){
+        for (int i = 0; i < 60; i++) {
             CLOSE_LOOP.add(new HashSet<>());
         }
     }
@@ -47,24 +47,24 @@ public class CloseOrderScheduled {
      * 启动时，加载数据库中记录
      */
     @PostConstruct
-    public void initCloseLoop(){
+    public void initCloseLoop() {
         List<SeedOrderDetail> needPayList = seedOrderDetailService.needPayOrderList();
-        for(SeedOrderDetail order : needPayList){
+        for (SeedOrderDetail order : needPayList) {
             long left = expireTime - ((new Date().getTime() - order.getAddTime().getTime()) / 1000);
-            if(left <= 0) {
+            if (left <= 0) {
                 seedOrderDetailService.seedOrderCancel(order.getId(), null);
             } else {
-                addCloseItem(new CloseSeedPayOrder(order.getId(),(int)(left / 60)),(int)(left % 60));
+                addCloseItem(new CloseSeedPayOrder(order.getId(), (int) (left / 60)), (int) (left % 60));
             }
         }
 
         List<MallOrder> mallOrders = mallOrderService.needPayOrders();
-        for(MallOrder mallOrder : mallOrders){
-            long left = expireTime  - ((new Date().getTime() - mallOrder.getAddTime().getTime()) / 1000);
-            if(left <=0){
-                mallOrderService.cancelOrder(new CancelOrder(mallOrder.getId(), MessageEnum.MALL_ORDER_TIMEOUT_CLOSED.getMessage()),null);
+        for (MallOrder mallOrder : mallOrders) {
+            long left = expireTime - ((new Date().getTime() - mallOrder.getAddTime().getTime()) / 1000);
+            if (left <= 0) {
+                mallOrderService.cancelOrder(new CancelOrder(mallOrder.getId(), MessageEnum.MALL_ORDER_TIMEOUT_CLOSED.getMessage()), null);
             } else {
-                addCloseItem(new CloseMallPayOrder(mallOrder.getId(),(int)(left / 60)),(int)(left % 60));
+                addCloseItem(new CloseMallPayOrder(mallOrder.getId(), (int) (left / 60)), (int) (left % 60));
             }
 
         }
@@ -75,9 +75,9 @@ public class CloseOrderScheduled {
      * 每秒向环中移一格查找要关闭的order
      */
     @Scheduled(fixedRate = 1000)
-    public void close(){
+    public void close() {
         currentIndex = currentIndex % 60;
-        if(CLOSE_LOOP.size() > 0) {
+        if (CLOSE_LOOP.size() > 0) {
             Set<CloseOrderItem> closeOrderItems = CLOSE_LOOP.get(currentIndex);
             if (null != closeOrderItems && !closeOrderItems.isEmpty()) {
                 for (CloseOrderItem item : closeOrderItems) {
@@ -86,7 +86,7 @@ public class CloseOrderScheduled {
                         taskThread.start();
                         closeOrderItems.remove(item);
                     } else {
-                        log.debug("item:{}",item);
+                        log.debug("item:{}", item);
                         item.setLoop(item.getLoop() - 1);
                     }
                 }
@@ -95,32 +95,33 @@ public class CloseOrderScheduled {
         currentIndex++;
     }
 
-    public void addCloseItem(CloseOrderItem item){
-        addCloseItem(item,currentIndex % 60);
+    public void addCloseItem(CloseOrderItem item) {
+        addCloseItem(item, currentIndex % 60);
     }
 
     /**
      * 添加关单对象
+     *
      * @param item
      */
-    public void addCloseItem(CloseOrderItem item,int currentIndex ){
+    public void addCloseItem(CloseOrderItem item, int currentIndex) {
         Set<CloseOrderItem> closeOrderItems = CLOSE_LOOP.get(currentIndex);
-        if(null != closeOrderItems) {
+        if (null != closeOrderItems) {
             closeOrderItems.add(item);
-            log.debug("add to index:{}",currentIndex);
-            CLOSE_LOOP.set(currentIndex,closeOrderItems);
+            log.debug("add to index:{}", currentIndex);
+            CLOSE_LOOP.set(currentIndex, closeOrderItems);
         }
     }
 
 
     /**
      * 删除关单对象
+     *
      * @param item
      */
-    public void removeCloseItem(CloseOrderItem item){
+    public void removeCloseItem(CloseOrderItem item) {
 
     }
-
 
 
 }

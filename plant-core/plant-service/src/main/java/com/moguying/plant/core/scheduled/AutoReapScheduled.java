@@ -18,12 +18,12 @@ public class AutoReapScheduled {
     private ReapService reapService;
 
     @Scheduled(cron = "0 30 8 * * ?")
-    public void autoReap(){
+    public void autoReap() {
         Date today = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if(reapService.autoReap(today) > 0)
-            log.debug("{}自动采摘成功",sdf.format(today));
-         else
-            log.debug("{}自动采摘失败",sdf.format(today));
+        if (reapService.autoReap(today) > 0)
+            log.debug("{}自动采摘成功", sdf.format(today));
+        else
+            log.debug("{}自动采摘失败", sdf.format(today));
     }
 }

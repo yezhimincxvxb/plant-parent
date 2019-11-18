@@ -9,14 +9,15 @@ import java.io.Serializable;
 
 /**
  * plant_user_message_tpl
- * @author 
+ *
+ * @author
  */
 @TableName("plant_user_message_tpl")
 @Data
 public class UserMessageTpl implements Serializable {
     private static final long serialVersionUID = -5989123744034073741L;
     /**
-     * 模版方法值 
+     * 模版方法值
      */
     @TableId
     private String actionCode;

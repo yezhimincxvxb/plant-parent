@@ -32,10 +32,9 @@ public class BReapFeeController {
     private ReapFeeParamService reapFeeParamService;
 
 
-
-
     /**
      * 查询运营费用列表
+     *
      * @param search
      * @return
      */
@@ -43,13 +42,14 @@ public class BReapFeeController {
     @ApiOperation("查询运营费用列表")
     public PageResult<ReapFee> reapFeePageResult(@RequestBody PageSearch<ReapFee> search) {
 
-        return reapFeeService.reapFeeList(search.getPage(),search.getSize(),search.getWhere());
+        return reapFeeService.reapFeeList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 合作渠道查询
      * 费用列表
+     *
      * @param search
      * @return
      */
@@ -58,15 +58,16 @@ public class BReapFeeController {
     public PageResult<ReapFee> reapFeeCopPageResult(@RequestBody PageSearch<ReapFee> search,
                                                     @SessionAttribute(SessionAdminUser.sessionKey) AdminUser user) {
         ReapFee reapFee = search.getWhere();
-        if(null == reapFee)
+        if (null == reapFee)
             reapFee = new ReapFee();
         reapFee.setInviteUid(user.getBindId());
-        return reapFeeService.reapFeeList(search.getPage(),search.getSize(),reapFee);
+        return reapFeeService.reapFeeList(search.getPage(), search.getSize(), reapFee);
     }
 
 
     /**
      * 渠道商导出表
+     *
      * @param user
      * @param search
      * @param request
@@ -75,19 +76,20 @@ public class BReapFeeController {
     @PostMapping(value = "/cop/excel")
     @ApiOperation("渠道商导出表")
     public ResponseData<Integer> copDownloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                                  @RequestBody PageSearch<ReapFee> search, HttpServletRequest request){
+                                                  @RequestBody PageSearch<ReapFee> search, HttpServletRequest request) {
         ReapFee reapFee = search.getWhere();
-        if(null == reapFee)
+        if (null == reapFee)
             reapFee = new ReapFee();
         reapFee.setInviteUid(user.getBindId());
         search.setWhere(reapFee);
-        downloadExcel(user,search,request);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+        downloadExcel(user, search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 
     /**
      * 导出表
+     *
      * @param user
      * @param search
      * @param request
@@ -96,48 +98,51 @@ public class BReapFeeController {
     @PostMapping(value = "/excel")
     @ApiOperation("渠道导出表")
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                               @RequestBody PageSearch<ReapFee> search, HttpServletRequest request){
-        reapFeeService.downloadExcel(user.getId(),search,request);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+                                               @RequestBody PageSearch<ReapFee> search, HttpServletRequest request) {
+        reapFeeService.downloadExcel(user.getId(), search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 
     /**
      * 结算参数列表
+     *
      * @param search
      * @return
      */
     @PostMapping("/param/list")
     @ApiOperation("结算参数列表")
-    public PageResult<ReapFeeParam> reapFeeParamList(@RequestBody PageSearch<ReapFeeParam> search){
-       return reapFeeParamService.reapFeeParamPageResult(search.getPage(),search.getSize(),search.getWhere());
+    public PageResult<ReapFeeParam> reapFeeParamList(@RequestBody PageSearch<ReapFeeParam> search) {
+        return reapFeeParamService.reapFeeParamPageResult(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
     /**
      * 添加或修改结算参数
+     *
      * @param param
      * @return
      */
     @PostMapping("/param")
     @ApiOperation("添加或修改结算参数")
-    public ResponseData<Integer> saveFeeParam(@RequestBody ReapFeeParam param){
+    public ResponseData<Integer> saveFeeParam(@RequestBody ReapFeeParam param) {
         ResultData<Boolean> resultData = reapFeeParamService.saveParam(param);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 
     /**
      * 删除参数
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/param/{id}")
     @ApiOperation("删除参数")
     public ResponseData<Integer> deleteFeeParam(@PathVariable Integer id) {
-        if(reapFeeParamService.removeById(id))
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        if (reapFeeParamService.removeById(id))
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
 

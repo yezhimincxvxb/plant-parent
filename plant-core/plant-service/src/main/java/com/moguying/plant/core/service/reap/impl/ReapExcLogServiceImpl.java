@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReapExcLogServiceImpl  implements ReapExcLogService {
+public class ReapExcLogServiceImpl implements ReapExcLogService {
 
     @Autowired
     private ReapExcLogDAO reapExcLogDAO;
@@ -18,6 +18,6 @@ public class ReapExcLogServiceImpl  implements ReapExcLogService {
     @Override
     public PageResult<ReapExcLog> reapExcLogPageResult(Integer page, Integer size, ReapExcLog where) {
         IPage<ReapExcLog> reapExcLogIPage = reapExcLogDAO.selectSelective(new Page(page, size), where);
-        return new PageResult<>(reapExcLogIPage.getTotal(),reapExcLogIPage.getRecords());
+        return new PageResult<>(reapExcLogIPage.getTotal(), reapExcLogIPage.getRecords());
     }
 }

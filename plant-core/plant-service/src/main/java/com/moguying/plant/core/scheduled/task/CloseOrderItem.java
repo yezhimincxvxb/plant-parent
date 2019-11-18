@@ -1,6 +1,6 @@
 package com.moguying.plant.core.scheduled.task;
 
-public abstract class CloseOrderItem implements Runnable{
+public abstract class CloseOrderItem implements Runnable {
 
 
     public CloseOrderItem(Integer id, int loop) {

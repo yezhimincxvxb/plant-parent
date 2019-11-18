@@ -8,7 +8,10 @@ import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.block.vo.BlockDetail;
-import com.moguying.plant.core.entity.common.vo.*;
+import com.moguying.plant.core.entity.common.vo.Calculation;
+import com.moguying.plant.core.entity.common.vo.HomeProduct;
+import com.moguying.plant.core.entity.common.vo.HomeProductDetail;
+import com.moguying.plant.core.entity.common.vo.HomeSeed;
 import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.entity.content.Article;
 import com.moguying.plant.core.entity.content.Banner;
@@ -32,6 +35,7 @@ import com.moguying.plant.utils.InterestUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,17 +81,16 @@ public class AHomeController {
     private ReapService reapService;
 
 
-    /**
-     * 更新用户产量信息
-     * 仅用一次
-     * @return
-     */
-    @ApiOperation("更新用户产量信息")
-    @PostMapping("/reap/weigh")
-    public ResponseData<Boolean> updateReapWeighInfo(){
-        reapService.updatePlantWeigh();
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
+
+    @PostMapping("/send")
+    public void send() {
+        amqpTemplate.convertAndSend("moguying.phone.message","hello");
     }
+
+
 
 
     /**
@@ -184,14 +187,14 @@ public class AHomeController {
     @PostMapping(value = "/block/list")
     public PageResult<Block> blockList(@RequestBody PageSearch<Block> search) {
         //必须是上架的大棚
-        if(null == search.getWhere()) {
+        if (null == search.getWhere()) {
             Block where = new Block();
             where.setIsShow(true);
             search.setWhere(where);
         } else {
             search.getWhere().setIsShow(true);
         }
-         return blockService.blockList(search.getPage(), search.getSize(), search.getWhere());
+        return blockService.blockList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
@@ -236,8 +239,8 @@ public class AHomeController {
     @ApiOperation("菌包市场")
     @PostMapping(value = "/index/seed")
     public PageResult<HomeSeed> seedList(@RequestBody PageSearch<HomeSeed> search) {
-        if(null == search.getWhere())  search.setWhere(new HomeSeed());
-        PageResult<HomeSeed> pageResult = seedService.seedListForHome(search.getPage(), search.getSize(),search.getWhere());
+        if (null == search.getWhere()) search.setWhere(new HomeSeed());
+        PageResult<HomeSeed> pageResult = seedService.seedListForHome(search.getPage(), search.getSize(), search.getWhere());
         List<HomeSeed> homeSeeds = pageResult.getData();
         //如果都已售罄，先一个售罄的显示
         if (search.getPage() == 1 && homeSeeds.size() == 0) {
@@ -280,14 +283,14 @@ public class AHomeController {
 
     /**
      * 商品类型列表
+     *
      * @return
      */
     @ApiOperation("商品类型列表")
     @GetMapping("/index/mall/types")
-    public ResponseData<List<MallProductType>> productTypeList(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),mallProductTypeService.typeList(null));
+    public ResponseData<List<MallProductType>> productTypeList() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallProductTypeService.typeList(null));
     }
-
 
 
     /**
@@ -370,36 +373,37 @@ public class AHomeController {
 
     /**
      * 设备列表
+     *
      * @param pageSearch
      * @return
      */
     @ApiOperation("设备列表")
     @PostMapping("/device/gateway")
-    public PageResult<DeviceGateway> gatewayList(@RequestBody PageSearch<DeviceGateway> pageSearch){
-        return deviceService.deviceGatewayList(pageSearch.getPage(),pageSearch.getSize(),pageSearch.getWhere());
+    public PageResult<DeviceGateway> gatewayList(@RequestBody PageSearch<DeviceGateway> pageSearch) {
+        return deviceService.deviceGatewayList(pageSearch.getPage(), pageSearch.getSize(), pageSearch.getWhere());
     }
 
 
     /**
      * 指定设备信息
+     *
      * @param where
      * @return
      */
     @ApiOperation("指定设备信息")
     @PostMapping("/device/data")
-    public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where){
+    public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where) {
         ResultData<List<DeviceGatewayData>> resultData = deviceService.gatewayData(where.getGatewayLogo());
 
         ResponseData<List<DeviceGatewayData>> responseData = new ResponseData<>();
         responseData.setMessage(resultData.getMessageEnum().getMessage()).setState(resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             //只取一组数据
             return responseData.setData(resultData.getData().stream().filter((x) -> x.getSensorName().equals("1")
                     || x.getSensorName().equals("6")).collect(Collectors.toList()));
         }
         return responseData;
     }
-
 
 
 }

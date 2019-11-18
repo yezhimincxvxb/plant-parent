@@ -18,10 +18,10 @@ public class HomeProductDetail implements Serializable {
     @JSONField(ordinal = 2)
     private String picUrl;
 
-    @JSONField(ordinal = 3,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 3, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal price;
 
-    @JSONField(ordinal = 4,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal oldPrice;
 
     @JSONField(ordinal = 5)

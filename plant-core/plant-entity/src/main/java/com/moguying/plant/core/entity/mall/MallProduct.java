@@ -43,18 +43,18 @@ public class MallProduct implements Serializable {
     @TableField
     private String name;
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 5)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 5)
     @TableField
     private BigDecimal price;
 
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 6)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 6)
     @TableField
     private BigDecimal oldPrice;
 
     /**
      * 快递费
      */
-    @JSONField(serializeUsing = BigDecimalSerialize.class,ordinal = 7)
+    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 7)
     @TableField
     private BigDecimal fee;
 
@@ -107,7 +107,7 @@ public class MallProduct implements Serializable {
     @TableField
     private String productDesc;
 
-    @JSONField(ordinal = 15,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 15, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 

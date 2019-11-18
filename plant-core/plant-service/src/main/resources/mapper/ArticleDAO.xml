@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.content.ArticleDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.Article">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="type_id" jdbcType="INTEGER" property="typeId" />
-    <result column="seo_key" jdbcType="VARCHAR" property="seoKey" />
-    <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime" />
-    <result column="is_show" jdbcType="BIT" property="isShow" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl" />
-    <result column="read_count" jdbcType="INTEGER" property="readCount" />
-    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
-    <result column="is_recommend" jdbcType="INTEGER" property="isRecommend" />
-    <result column="summary" jdbcType="VARCHAR" property="summary" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.Article">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+        <result column="seo_key" jdbcType="VARCHAR" property="seoKey"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="is_show" jdbcType="BIT" property="isShow"/>
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
+        <result column="read_count" jdbcType="INTEGER" property="readCount"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="is_recommend" jdbcType="INTEGER" property="isRecommend"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+    </resultMap>
 
-  <resultMap id="ArticleWithContent" type="com.moguying.plant.core.entity.content.Article" extends="BaseResultMap">
-    <result column="content" jdbcType="VARCHAR" property="content"/>
-  </resultMap>
-
-
-  <resultMap id="BaseArticleInfo" type="com.moguying.plant.core.entity.content.Article" extends="BaseResultMap">
-    <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
-    <result column="type_url_name" jdbcType="VARCHAR" property="typeUrlName"/>
-  </resultMap>
-
-  <sql id="Base_Column_List">
-    id, title, type_id, seo_key, publish_time, is_show, pic_url,thumb_pic_url, read_count, add_time,is_recommend,summary
-  </sql>
+    <resultMap id="ArticleWithContent" type="com.moguying.plant.core.entity.content.Article" extends="BaseResultMap">
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+    </resultMap>
 
 
+    <resultMap id="BaseArticleInfo" type="com.moguying.plant.core.entity.content.Article" extends="BaseResultMap">
+        <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
+        <result column="type_url_name" jdbcType="VARCHAR" property="typeUrlName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, title, type_id, seo_key, publish_time, is_show, pic_url,thumb_pic_url, read_count,
+        add_time,is_recommend,summary
+    </sql>
 
 
-  <select id="selectSelective" resultMap="BaseArticleInfo">
-    select t1.id, title, type_id, seo_key, publish_time, is_show, pic_url,thumb_pic_url, read_count, add_time,is_recommend,summary,
-    t2.name as type_name,t2.url_name as type_url_name
-     from plant_article t1
-     left join plant_article_type t2 on t1.type_id = t2.id
-    <where>
-      <if test="wq.title != null">
-        <bind name="titleLike" value="'%' + wq.title + '%'"/>
-        title = #{titleLike}
-      </if>
-      <if test="wq.typeId != null">
-        AND type_id = #{wq.typeId}
-      </if>
-      <if test="wq.isShow != null">
-        AND is_show = #{wq.isShow}
-      </if>
-      <if test="wq.isRecommend != null">
-        AND is_recommend = #{wq.isRecommend}
-      </if>
-    </where>
-    order by add_time desc ,publish_time desc
-  </select>
+    <select id="selectSelective" resultMap="BaseArticleInfo">
+        select t1.id, title, type_id, seo_key, publish_time, is_show, pic_url,thumb_pic_url, read_count,
+        add_time,is_recommend,summary,
+        t2.name as type_name,t2.url_name as type_url_name
+        from plant_article t1
+        left join plant_article_type t2 on t1.type_id = t2.id
+        <where>
+            <if test="wq.title != null">
+                <bind name="titleLike" value="'%' + wq.title + '%'"/>
+                title = #{titleLike}
+            </if>
+            <if test="wq.typeId != null">
+                AND type_id = #{wq.typeId}
+            </if>
+            <if test="wq.isShow != null">
+                AND is_show = #{wq.isShow}
+            </if>
+            <if test="wq.isRecommend != null">
+                AND is_recommend = #{wq.isRecommend}
+            </if>
+        </where>
+        order by add_time desc ,publish_time desc
+    </select>
 
-  <delete id="deleteByTypeId" parameterType="java.lang.Integer">
-    delete from plant_article where type_id = #{typeId}
-  </delete>
+    <delete id="deleteByTypeId" parameterType="java.lang.Integer">
+        delete from plant_article where type_id = #{typeId}
+    </delete>
 
 
-  <select id="selectByPrimaryKeyWithContent" parameterType="java.lang.Integer" resultMap="ArticleWithContent">
-    select <include refid="Base_Column_List"/>,content from plant_article t1
-    left join plant_article_content t2 on t1.id = t2.article_id
-    where id = #{id}
-  </select>
+    <select id="selectByPrimaryKeyWithContent" parameterType="java.lang.Integer" resultMap="ArticleWithContent">
+        select<include refid="Base_Column_List"/>,content from plant_article t1
+        left join plant_article_content t2 on t1.id = t2.article_id
+        where id = #{id}
+    </select>
 
 
 </mapper>

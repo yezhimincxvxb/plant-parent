@@ -13,11 +13,11 @@ public class BankCarSerialize implements ObjectSerializer {
             StringBuffer sb = new StringBuffer();
             String bankCar = (String) value;
             int length = bankCar.length();
-            if(length > 0 ) {
+            if (length > 0) {
                 sb.append("····").append(" ")
                         .append("····").append(" ")
                         .append("····").append(" ")
-                        .append(bankCar.substring(length - 4,length));
+                        .append(bankCar.substring(length - 4, length));
 
                 jsonSerializer.write(sb.toString());
             } else {

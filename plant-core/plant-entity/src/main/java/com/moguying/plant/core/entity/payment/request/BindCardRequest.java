@@ -4,7 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 @Data
-public class BindCardRequest implements PaymentRequestInterface{
+public class BindCardRequest implements PaymentRequestInterface {
 
     @JSONField(ordinal = 1)
     private String seqNo;

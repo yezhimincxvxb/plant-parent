@@ -22,7 +22,7 @@ public enum PaymentRequestUrlEnum {
     PAY_TO_PAY_HTML("/pay/toPayHtml");
 
 
-//    private final String baseUrl = "http://shoudan.95epay.com:9000/api/api";
+    //    private final String baseUrl = "http://shoudan.95epay.com:9000/api/api";
     private final String baseUrl = "https://qyfapi.95epay.com/api/api";
     private String url;
 
@@ -34,7 +34,7 @@ public enum PaymentRequestUrlEnum {
         return baseUrl + url;
     }
 
-    public String getUrlWithoutBaseUrl(){
+    public String getUrlWithoutBaseUrl() {
         return url;
     }
 

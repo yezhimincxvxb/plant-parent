@@ -25,7 +25,7 @@ public class BargainVo {
     /**
      * 用户名
      */
-    @JSONField(ordinal = 3,serializeUsing = IdCardSerialize.class)
+    @JSONField(ordinal = 3, serializeUsing = IdCardSerialize.class)
     private String phone;
 
     /**
@@ -109,13 +109,13 @@ public class BargainVo {
     /**
      * 开始时间
      */
-    @JSONField(ordinal = 17,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 17, format = "yyyy-MM-dd HH:mm:ss")
     private Date beginTime;
 
     /**
      * 结束时间
      */
-    @JSONField(ordinal = 18,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 18, format = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     /**

@@ -1,6 +1,7 @@
 <div style="padding: 0 15px">
     <h1 style="text-align: center;font-size: 16px;line-height: 40px;">委托购买菌包服务协议</h1>
-    <p style="text-align: center;font-size: 12px;color: #666;margin-bottom: 20px;">协议编号：MGY-WTGM-<span th:text="${#dates.format(orderDetail.addTime,'yyyyMMddHHmmss')}"></span></p>
+    <p style="text-align: center;font-size: 12px;color: #666;margin-bottom: 20px;">协议编号：MGY-WTGM-<span
+            th:text="${#dates.format(orderDetail.addTime,'yyyyMMddHHmmss')}"></span></p>
     <p style="line-height: 30px;">
         <label style="width: 100px;display: inline-block;color: #666;font-size: 14px;">甲方：</label>
         <label style="line-height: 30px;vertical-align: middle;font-size: 14px;">深圳蘑菇营科技有限公司</label>
@@ -23,7 +24,8 @@
         <label th:text="${userInfo.phone}" style="line-height: 30px;vertical-align: middle;font-size: 14px;"></label>
     </p>
     <br>
-    <p style="font-size: 14px;line-height: 26px;color: #666;">依照《中华人民共和国合同法》及有关法律、法规的规定，甲、乙双方在平等、自愿、协商一致的基础上，就乙方委托甲方购买拟种植的食用菌菌包（以下简称委托购买菌包）的有关事宜，达成如下协议:</p>
+    <p style="font-size: 14px;line-height: 26px;color: #666;">
+        依照《中华人民共和国合同法》及有关法律、法规的规定，甲、乙双方在平等、自愿、协商一致的基础上，就乙方委托甲方购买拟种植的食用菌菌包（以下简称委托购买菌包）的有关事宜，达成如下协议:</p>
     <p style="font-size: 16px;line-height: 30px;margin-top: 10px">一 、委托购买菌包种类、数量及金额。</p>
     <table style="width: 100%;margin-top: 10px;border-collapse: collapse;border-spacing: 0;">
         <tr>
@@ -33,20 +35,26 @@
             <th style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;">购买总价/元</th>
         </tr>
         <tr>
-            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span th:text="${orderDetail.seedTypeName}"></span></td>
-            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span th:text="${orderDetail.buyCount}"></span></td>
-            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span th:text="${orderDetail.seedPrice}"></span></td>
-            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span th:text="${orderDetail.buyAmount}"></span></td>
+            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span
+                    th:text="${orderDetail.seedTypeName}"></span></td>
+            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span
+                    th:text="${orderDetail.buyCount}"></span></td>
+            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span
+                    th:text="${orderDetail.seedPrice}"></span></td>
+            <td style="line-height: 30px;text-align: center;border: 1px solid #f0f0f0;font-size: 12px;"><span
+                    th:text="${orderDetail.buyAmount}"></span></td>
         </tr>
     </table>
     <p style="font-size: 16px;line-height: 30px;margin-top: 10px">二、合作方式：</p>
-    <p style="font-size: 14px;line-height: 26px;color: #666;">乙方同意作为委托方支付购买资金，委托甲方公司购买食用菌菌包并进行种植，最终按照约定方式获取相应利益；甲方接受乙方委托，使用乙方资金代乙方购买食用菌菌包，待种植完成后按照约定提供给乙方以下几种获取利益形式：</p>
+    <p style="font-size: 14px;line-height: 26px;color: #666;">
+        乙方同意作为委托方支付购买资金，委托甲方公司购买食用菌菌包并进行种植，最终按照约定方式获取相应利益；甲方接受乙方委托，使用乙方资金代乙方购买食用菌菌包，待种植完成后按照约定提供给乙方以下几种获取利益形式：</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">2.1 兑换甲方平台商城券</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">2.2 向乙方提供其委托种植的食用菌由乙方自行处置</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">2.3 受乙方委托代为销售并且将对价款项划转至乙方的平台账户中</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">上述方式选择由乙方购买时确认为准。</p>
     <p style="font-size: 16px;line-height: 30px;margin-top: 10px">三、甲方的权利及义务；</p>
-    <p style="font-size: 14px;line-height: 26px;color: #666;">3.1 甲方应及时将乙方成功认购的食用菌菌包交由受托的食用菌种植公司进行种植，并应保证食用菌种植公司具有相应的能力及资质来保证该批食用菌菌包的品质和数量。</p>
+    <p style="font-size: 14px;line-height: 26px;color: #666;">3.1
+        甲方应及时将乙方成功认购的食用菌菌包交由受托的食用菌种植公司进行种植，并应保证食用菌种植公司具有相应的能力及资质来保证该批食用菌菌包的品质和数量。</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">3.2 甲方保证受托购买的食用菌菌包均与平台描述相符，为合格产品并可以按照乙方要求提供相应的专利资质证书。</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">3.3 甲方保证向乙方提供的各项资料及信息真实准确、完整及有效。</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">3.4 种植结束后，甲方按照与乙方约定的方式进行运输或者代为销售，并且负责承担运输和销售过程中所产生的费用。</p>
@@ -54,15 +62,19 @@
     <p style="font-size: 14px;line-height: 26px;color: #666;">4.1 按照本协议约定乙方应及时向甲方支付购买食用菌菌包的资金。</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">4.2 乙方有权监督受托食用菌种植的种植过程。</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">4.3 乙方有权要求甲方出示食用菌菌包销售公司相应的资质。</p>
-    <p style="font-size: 14px;line-height: 26px;color: #666;">4.4 乙方应保证其购买资金来源合法，且为该资金的合法所有人。如果因其资金的归属及合法性问题与第三方发生争议的，由乙方自行解决；因此给甲方造成任何直接或间接损失的，乙方应予以赔偿。</p>
+    <p style="font-size: 14px;line-height: 26px;color: #666;">4.4
+        乙方应保证其购买资金来源合法，且为该资金的合法所有人。如果因其资金的归属及合法性问题与第三方发生争议的，由乙方自行解决；因此给甲方造成任何直接或间接损失的，乙方应予以赔偿。</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">4.5 非经甲方书面同意，乙方无权单方修改、解除或终止本协议。</p>
     <p style="font-size: 16px;line-height: 30px;margin-top: 10px">五、不可抗力</p>
-    <p style="font-size: 14px;line-height: 26px;color: #666;">5.1 “不可抗力”是指本协议双方不能合理控制、不可预见或即使预见亦无法避免的事件，该事件使任何一方根据本协议履行其全部或部分义务已不可能。该事件包括但不限于政府行为、政策变化、地震、台风、洪水、火灾或其它天灾、战争或任何其它类似事件。</p>
+    <p style="font-size: 14px;line-height: 26px;color: #666;">5.1
+        “不可抗力”是指本协议双方不能合理控制、不可预见或即使预见亦无法避免的事件，该事件使任何一方根据本协议履行其全部或部分义务已不可能。该事件包括但不限于政府行为、政策变化、地震、台风、洪水、火灾或其它天灾、战争或任何其它类似事件。</p>
     <p style="font-size: 16px;line-height: 30px;margin-top: 10px">六、争议解决</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">6.1 本协议的签订、履行、终止、解释均适用中华人民共和国法律。</p>
-    <p style="font-size: 14px;line-height: 26px;color: #666;">6.2 由本协议产生的争议，双方应共同协商解决，协商不成的，任意一方可向甲方所在地有管辖权的人民法院提起诉讼。因实现债权产生的费用由违约方承担，包括不限于诉讼费、保全费、保全保险费、公证费、评估审计费、律师费、必要的交通食宿费等。</p>
+    <p style="font-size: 14px;line-height: 26px;color: #666;">6.2
+        由本协议产生的争议，双方应共同协商解决，协商不成的，任意一方可向甲方所在地有管辖权的人民法院提起诉讼。因实现债权产生的费用由违约方承担，包括不限于诉讼费、保全费、保全保险费、公证费、评估审计费、律师费、必要的交通食宿费等。</p>
     <p style="font-size: 16px;line-height: 30px;margin-top: 10px">七、其他</p>
-    <p style="font-size: 14px;line-height: 26px;color: #666;">本协议一式<u style="text-decoration: underline"> 贰 </u>份，双方各执<u style="text-decoration: underline"> 一 </u>份，均具有同等法律效力。本协议自双方签字盖章后生效。</p>
+    <p style="font-size: 14px;line-height: 26px;color: #666;">本协议一式<u style="text-decoration: underline"> 贰 </u>份，双方各执<u
+            style="text-decoration: underline"> 一 </u>份，均具有同等法律效力。本协议自双方签字盖章后生效。</p>
     <p style="font-size: 14px;line-height: 26px;color: #666;">(以下无正文)</p>
     <br>
     <br>

@@ -23,5 +23,5 @@ public interface SaleCoinLogDao extends BaseDAO<SaleCoinLog> {
     /**
      * 显示兑换券记录
      */
-    IPage<ExchangeInfo> showFertilizerLog(Page<ExchangeInfo> page , @Param("userId") Integer userId);
+    IPage<ExchangeInfo> showFertilizerLog(Page<ExchangeInfo> page, @Param("userId") Integer userId);
 }

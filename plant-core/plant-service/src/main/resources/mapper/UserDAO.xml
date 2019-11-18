@@ -26,15 +26,16 @@
         <result column="is_channel" jdbcType="INTEGER" property="isChannel"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, phone, real_name, is_real_name, is_bind_card, `password`, pay_password, avatars_id, 
-    id_card, reg_time, reg_ip, reg_source, invite_code, invite_uid, user_state, last_login_time,is_long_time,id_expire_time,
-    payment_account,payment_state,is_channel
-  </sql>
+        id, phone, real_name, is_real_name, is_bind_card, `password`, pay_password, avatars_id,
+        id_card, reg_time, reg_ip, reg_source, invite_code, invite_uid, user_state,
+        last_login_time,is_long_time,id_expire_time,
+        payment_account,payment_state,is_channel
+    </sql>
 
     <sql id="List_User">
-        id, phone, real_name, is_real_name, is_bind_card,  avatars_id,`password`, pay_password,
-    id_card, reg_time, reg_ip, reg_source, invite_code, invite_uid, user_state,is_long_time,id_expire_time,
-    payment_account,payment_state,is_channel
+        id, phone, real_name, is_real_name, is_bind_card, avatars_id,`password`, pay_password,
+        id_card, reg_time, reg_ip, reg_source, invite_code, invite_uid, user_state,is_long_time,id_expire_time,
+        payment_account,payment_state,is_channel
     </sql>
 
 
@@ -66,7 +67,7 @@
                 AND t1.user_state = #{wq.userState}
             </if>
             <if test="wq.startTime != null and wq.endTime != null">
-              <![CDATA[
+                <![CDATA[
                 AND UNIX_TIMESTAMP(#{wq.startTime}) >= UNIX_TIMESTAMP(t1.reg_time)
                 AND UNIX_TIMESTAMP(#{wq.endTime}) <= UNXIX_TIMESTAMP(t1.reg_time)
               ]]>
@@ -84,8 +85,10 @@
 
 
     <select id="userInfoById" parameterType="int" resultMap="BaseResultMap">
-     select t1.id,t1.phone,t1.real_name,t1.is_real_name,t1.is_bind_card,t1.avatars_id,t1.password,t1.pay_password,t1.payment_account,
-        t1.id_card,t1.reg_time,t1.reg_ip,t1.reg_source,t1.invite_code,t1.user_state,t2.phone as invite_name,t1.payment_state,t1.is_long_time,
+        select
+        t1.id,t1.phone,t1.real_name,t1.is_real_name,t1.is_bind_card,t1.avatars_id,t1.password,t1.pay_password,t1.payment_account,
+        t1.id_card,t1.reg_time,t1.reg_ip,t1.reg_source,t1.invite_code,t1.user_state,t2.phone as
+        invite_name,t1.payment_state,t1.is_long_time,
         t1.id_expire_time,t1.invite_uid,t1.is_channel
         from plant_user t1
         left join plant_user t2 on t1.invite_uid = t2.id
@@ -107,13 +110,14 @@
     </select>
 
     <select id="inviteUser" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/>
+        select
+        <include refid="Base_Column_List"/>
         from plant_user
         <where>
             <if test="inviteId != null">
                 invite_uid = #{inviteId}
             </if>
-            <if test="startTime != null" >
+            <if test="startTime != null">
                 AND UNIX_TIMESTAMP(#{startTime}) &lt; UNIX_TIMESTAMP(reg_time)
             </if>
         </where>
