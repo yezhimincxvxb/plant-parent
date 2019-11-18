@@ -158,24 +158,13 @@ public class SeedOrderServiceImpl implements SeedOrderService {
         Seed seed = seedDAO.selectById(ActivityEnum.FREE_SEED_30DAY.getState());
         if (Objects.isNull(seed)) return null;
 
-        // 是否购买过同类型的菌包
-        QueryWrapper<SeedOrder> queryWrapper = new QueryWrapper<SeedOrder>()
-                .eq("user_id", userId)
-                .eq("seed_type", seed.getId());
-        List<SeedOrder> seedOrders = seedOrderDAO.selectList(queryWrapper);
-        if (Objects.isNull(seedOrders) || seedOrders.isEmpty()) {
-            SeedOrder order = new SeedOrder();
-            order.setSeedType(seed.getId());
-            order.setUserId(userId);
-            order.setBuyCount(1);
-            order.setBuyAmount(seed.getPerPrice());
-            if (seedOrderDAO.insert(order) <= 0) return null;
-        } else {
-            SeedOrder order = seedOrders.get(0);
-            order.setBuyCount(order.getBuyCount() + 1);
-            order.setBuyAmount(new BigDecimal(order.getBuyCount()).multiply(seed.getPerPrice()));
-            if (seedOrderDAO.updateById(order) <= 0) return null;
-        }
-        return seed;
+        SeedOrderDetail seedOrderDetail = new SeedOrderDetail();
+        seedOrderDetail.setSeedId(seed.getId());
+        seedOrderDetail.setUserId(userId);
+        seedOrderDetail.setBuyCount(1);
+        seedOrderDetail.setBuyAmount(seed.getPerPrice());
+
+        Integer integer = incrSeedOrder(seedOrderDetail);
+        return integer > 0 ? seed : null;
     }
 }

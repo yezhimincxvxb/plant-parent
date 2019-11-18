@@ -288,7 +288,7 @@ public class ABargainLoginController {
     @ApiOperation("是否帮过")
     public ResponseData<Integer> isHelp(@LoginUserId Integer userId, @RequestBody BargainVo bargainVo) {
 
-        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),1);
 
         if (Objects.isNull(bargainVo) || Objects.isNull(bargainVo.getSymbol()))
             return responseData
@@ -303,20 +303,14 @@ public class ABargainLoginController {
                     .setMessage(MessageEnum.NOT_BARGAIN_DETAIL.getMessage())
                     .setState(MessageEnum.NOT_BARGAIN_DETAIL.getState());
 
-        if (userId.equals(detail.getUserId()))
-            return responseData
-                    .setMessage(MessageEnum.SUCCESS.getMessage())
-                    .setState(MessageEnum.SUCCESS.getState())
-                    .setState(1);
+        if (userId.equals(detail.getUserId()) || detail.getState())
+            return responseData;
 
         Integer count = bargainLogService.getBargainCount(userId, detail.getId());
         if (count >= 1)
-            return responseData
-                    .setMessage(MessageEnum.SUCCESS.getMessage())
-                    .setState(MessageEnum.SUCCESS.getState())
-                    .setState(1);
+            return responseData;
 
-        return responseData;
+        return responseData.setMessage(MessageEnum.ERROR.getMessage()).setState(MessageEnum.ERROR.getState());
     }
 
 }
