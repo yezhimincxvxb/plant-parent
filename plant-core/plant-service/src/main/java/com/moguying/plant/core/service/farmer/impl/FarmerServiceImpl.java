@@ -584,8 +584,8 @@ public class FarmerServiceImpl implements FarmerService {
             // 新用户赠50助力成长值、现金礼包
             if (idList.contains(userId)) {
                 // 发5元现金券
-                resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                        new TriggerEventResult().setUserId(userId), ActivityEnum.MONEY_5RMB.getState());
+                resultData = fertilizerService.distributeFertilizer(FieldEnum.MONEY5_FERTILIZER.getField(),
+                        new TriggerEventResult().setUserId(userId));
                 if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
 
                 // 发价值95元的种植券(不发了)

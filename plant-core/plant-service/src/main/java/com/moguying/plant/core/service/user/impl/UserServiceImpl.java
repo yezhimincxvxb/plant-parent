@@ -7,14 +7,16 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
+import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapWeighDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
 import com.moguying.plant.core.dao.user.*;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
+import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
-import com.moguying.plant.core.entity.seed.SeedType;
+import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
@@ -75,6 +77,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SeedOrderService seedOrderService;
+
+    @Autowired
+    private FertilizerDAO fertilizerDAO;
 
     @Value("${excel.download.dir}")
     private String downloadDir;
@@ -540,6 +545,7 @@ public class UserServiceImpl implements UserService {
                 userActivityLog.setUserId(userId);
                 userActivityLog.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
                 userActivityLog.setFriendId(user.getId());
+                Fertilizer fertilizer;
                 switch (i) {
                     case 0:
                         // 一份12.5的菌包
@@ -548,12 +554,16 @@ public class UserServiceImpl implements UserService {
                         break;
                     case 1:
                         // 5折酒水满减券
-                        userActivityLog.setFertilizerId(ActivityEnum.WINE_FERTILIZER.getState());
+                        fertilizer = getFertilizer(FieldEnum.WINE_FERTILIZER.getField());
+                        if (Objects.isNull(fertilizer)) return null;
+                        userActivityLog.setFertilizerId(fertilizer.getId());
                         userActivityLog.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
                         break;
                     case 2:
                         // 商城食品满减券
-                        userActivityLog.setFertilizerId(ActivityEnum.MALL_FOOL_FERTILIZER.getState());
+                        fertilizer = getFertilizer(FieldEnum.MALL_FOOL_FERTILIZER.getField());
+                        if (Objects.isNull(fertilizer)) return null;
+                        userActivityLog.setFertilizerId(fertilizer.getId());
                         userActivityLog.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
                         break;
                     default:
@@ -577,6 +587,16 @@ public class UserServiceImpl implements UserService {
         return userActivityLogVos;
     }
 
+    /**
+     * 根据触发事件获取对应的券
+     */
+    private Fertilizer getFertilizer(String event) {
+        QueryWrapper<Fertilizer> queryWrapper = new QueryWrapper<Fertilizer>().eq("trigger_get_event", event);
+        List<Fertilizer> fertilizers = fertilizerDAO.selectList(queryWrapper);
+        if (Objects.isNull(fertilizers) || fertilizers.size() != 1) return null;
+        return fertilizers.get(0);
+    }
+
     @Override
     @DS("write")
     @Transactional
@@ -592,19 +612,19 @@ public class UserServiceImpl implements UserService {
         // 领取
         if (Objects.equals(userActivityLog.getName(), ActivityEnum.FREE_SEED_30DAY.getMessage())) {
             // 一份12.5的菌包
-            SeedType seedType = seedOrderService.getSeedType(userId);
-            if (Objects.isNull(seedType)) return resultData;
+            Seed seed = seedOrderService.getSeedType(userId);
+            if (Objects.isNull(seed)) return resultData;
 
         } else if (Objects.equals(userActivityLog.getName(), ActivityEnum.WINE_FERTILIZER.getMessage())) {
             // 5折酒水满减券
-            resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                    new TriggerEventResult().setUserId(userId), ActivityEnum.WINE_FERTILIZER.getState());
+            resultData = fertilizerService.distributeFertilizer(FieldEnum.WINE_FERTILIZER.getField(),
+                    new TriggerEventResult().setUserId(userId), userActivityLog.getFertilizerId());
             if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
 
         } else if (Objects.equals(userActivityLog.getName(), ActivityEnum.MALL_FOOL_FERTILIZER.getMessage())) {
             // 商城食物满减券
-            resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                    new TriggerEventResult().setUserId(userId), ActivityEnum.MALL_FOOL_FERTILIZER.getState());
+            resultData = fertilizerService.distributeFertilizer(FieldEnum.MALL_FOOL_FERTILIZER.getField(),
+                    new TriggerEventResult().setUserId(userId), userActivityLog.getFertilizerId());
             if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
 
         }

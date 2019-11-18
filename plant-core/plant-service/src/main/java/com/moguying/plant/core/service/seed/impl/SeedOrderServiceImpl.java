@@ -138,14 +138,15 @@ public class SeedOrderServiceImpl implements SeedOrderService {
             return resultData.setMessageEnum(MessageEnum.PICK_UP_SEED);
 
         // 发菌包
-        SeedType seedType = getSeedType(userId);
-        if (Objects.isNull(seedType)) return resultData;
+        Seed seed = getSeedType(userId);
+        if (Objects.isNull(seed))
+            return resultData.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
 
         // 添加活动奖励记录
         UserActivityLog log = new UserActivityLog()
                 .setNumber(OrderPrefixEnum.FREE_JUN_BAO.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate())
                 .setUserId(userId)
-                .setSeedTypeId(seedType.getId())
+                .setSeedTypeId(seed.getId())
                 .setState(true)
                 .setAddTime(new Date())
                 .setReceiveTime(new Date());
@@ -156,29 +157,29 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Override
     @DS("write")
     @Transactional
-    public SeedType getSeedType(Integer userId) {
+    public Seed getSeedType(Integer userId) {
         // 获取价值12.50元的30天菌包
-        SeedType seedType = seedTypeDAO.selectById(ActivityEnum.FREE_SEED_30DAY.getState());
-        if (Objects.isNull(seedType)) return null;
+        Seed seed = seedDAO.selectById(ActivityEnum.FREE_SEED_30DAY.getState());
+        if (Objects.isNull(seed)) return null;
 
         // 是否购买过同类型的菌包
         QueryWrapper<SeedOrder> queryWrapper = new QueryWrapper<SeedOrder>()
                 .eq("user_id", userId)
-                .eq("seed_type", seedType.getId());
+                .eq("seed_type", seed.getId());
         List<SeedOrder> seedOrders = seedOrderDAO.selectList(queryWrapper);
         if (Objects.isNull(seedOrders) || seedOrders.isEmpty()) {
             SeedOrder order = new SeedOrder();
-            order.setSeedType(seedType.getId());
+            order.setSeedType(seed.getId());
             order.setUserId(userId);
             order.setBuyCount(1);
-            order.setBuyAmount(seedType.getPerPrice());
+            order.setBuyAmount(seed.getPerPrice());
             if (seedOrderDAO.insert(order) <= 0) return null;
         } else {
             SeedOrder order = seedOrders.get(0);
             order.setBuyCount(order.getBuyCount() + 1);
-            order.setBuyAmount(new BigDecimal(order.getBuyCount()).multiply(seedType.getPerPrice()));
+            order.setBuyAmount(new BigDecimal(order.getBuyCount()).multiply(seed.getPerPrice()));
             if (seedOrderDAO.updateById(order) <= 0) return null;
         }
-        return seedType;
+        return seed;
     }
 }

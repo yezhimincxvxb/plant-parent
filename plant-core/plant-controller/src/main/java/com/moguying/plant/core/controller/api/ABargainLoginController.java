@@ -22,6 +22,7 @@ import com.moguying.plant.core.service.bargain.BargainLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -178,7 +179,7 @@ public class ABargainLoginController {
                     .setState(MessageEnum.SHARE_NOT_FOUND.getState());
 
         // 砍价口令
-        if (!Objects.equals(bargainDetail.getSymbol(), detail.getSymbol()))
+        if (StringUtils.isNotEmpty(bargainDetail.getSymbol()) && !bargainDetail.getSymbol().contains(detail.getSymbol()))
             return responseData
                     .setMessage(MessageEnum.BARGAIN_SYMBOL_ERROR.getMessage())
                     .setState(MessageEnum.BARGAIN_SYMBOL_ERROR.getState());

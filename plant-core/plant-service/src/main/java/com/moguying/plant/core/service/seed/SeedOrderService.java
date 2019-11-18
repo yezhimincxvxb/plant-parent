@@ -3,9 +3,9 @@ package com.moguying.plant.core.service.seed;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
-import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.vo.UserSeedOrder;
 
@@ -26,5 +26,5 @@ public interface SeedOrderService {
 
     ResultData<Integer> sendSeedSuccess(Integer userId);
 
-    SeedType getSeedType(Integer userId);
+    Seed getSeedType(Integer userId);
 }
