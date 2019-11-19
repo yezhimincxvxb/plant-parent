@@ -394,7 +394,7 @@ public class AHomeController {
         responseData.setMessage(resultData.getMessageEnum().getMessage()).setState(resultData.getMessageEnum().getState());
         if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             //只取一组数据
-            return responseData.setData(resultData.getData().stream().filter((x) -> x.getSensorName().equals("1")
+            return responseData.setData(resultData.getData().stream().filter((x) -> x.getSensorName().equals("3")
                     || x.getSensorName().equals("6")).collect(Collectors.toList()));
         }
         return responseData;

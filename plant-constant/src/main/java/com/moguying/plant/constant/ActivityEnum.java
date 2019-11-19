@@ -2,7 +2,7 @@ package com.moguying.plant.constant;
 
 public enum ActivityEnum {
 
-    FREE_SEED_30DAY(12,"30天菌包"),
+    FREE_SEED_30DAY(18,"30天菌包"),
     WINE_FERTILIZER(1,"5折酒水满减券"),
     MALL_FOOL_FERTILIZER(1,"商城食品满减券"),
 

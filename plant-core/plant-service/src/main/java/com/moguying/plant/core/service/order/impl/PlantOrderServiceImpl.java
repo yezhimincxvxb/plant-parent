@@ -637,7 +637,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @Override
     @Transactional
     @DS("write")
-    public ResultData<Integer> payOrderSuccess(SeedOrderDetail orderDetail, User userInfo) {
+    public synchronized ResultData<Integer> payOrderSuccess(SeedOrderDetail orderDetail, User userInfo) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         SeedOrderDetail update = new SeedOrderDetail();
         update.setId(orderDetail.getId());
