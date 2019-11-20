@@ -66,17 +66,25 @@ public class BackBargainDetailVo {
     @JSONField(ordinal = 8)
     private Integer bargainNumber;
 
-    /**
-     * 结束时间
-     */
-    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
-    private Date closeTime;
+
 
     /**
      * 剩余时间
      */
     @JSONField(ordinal = 10)
     private String leftTime;
+
+    /**
+     * 添加时间
+     */
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
+    private Date addTime;
+
+    /**
+     * 结束时间
+     */
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
+    private Date closeTime;
 
     /**
      * 收货地址
@@ -87,7 +95,7 @@ public class BackBargainDetailVo {
     /**
      * 状态
      */
-    @JSONField(ordinal = 12)
+    @JSONField(ordinal = 12, serialize = false)
     private Integer state;
 
     /**

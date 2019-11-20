@@ -20,7 +20,7 @@ public class BBargainController {
      * 后台砍价详情列表
      */
     @PostMapping("/list")
-    public PageResult<BackBargainDetailVo> bargainList(@RequestBody PageSearch<?> search) {
-        return bargainDetailService.bargainList(search.getPage(), search.getSize());
+    public PageResult<BackBargainDetailVo> bargainList(@RequestBody PageSearch<BackBargainDetailVo> search) {
+        return bargainDetailService.bargainList(search.getPage(), search.getSize(), search.getWhere());
     }
 }

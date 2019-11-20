@@ -200,6 +200,16 @@
         left join plant_user t4 on t1.user_id = t4.id
         left join plant_mall_product t5 on t1.product_id = t5.id
         left join plant_user_address t6 on t3.address_id = t6.id
+        <where>
+            <if test="bargain != null">
+                <if test="bargain.phone != null">
+                    t4.phone = #{bargain.phone}
+                </if>
+                <if test="bargain.productName != null">
+                    and instr(t5.name, #{bargain.productName})
+                </if>
+            </if>
+        </where>
         group by t1.id
         order by t1.add_time desc
     </select>
