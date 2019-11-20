@@ -209,6 +209,7 @@ public class Reap implements Serializable {
     /**
      * 用户真实姓名
      */
+    @Excel(name = "姓名",orderNum = "5")
     @JSONField(ordinal = 27)
     @TableField(exist = false)
     private String realName;
