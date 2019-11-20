@@ -39,13 +39,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -391,33 +389,4 @@ public class ReapServiceImpl<T> implements ReapService {
         return saleCoinService.updateSaleCoin(userSaleCoin) != null;
     }
 
-
-    @Override
-    public Boolean updatePlantWeigh() {
-        List<Reap> reaps = reapDAO.selectList(new QueryWrapper<>());
-        reaps.forEach(reap -> {
-            SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());
-            Reap update = new Reap();
-            update.setId(reap.getId());
-            update.setPlantWeigh(seedType.getPerWeigh().multiply(new BigDecimal(reap.getPlantCount())));
-            reapDAO.updateById(update);
-        });
-
-        List<User> users = userDAO.selectList(new QueryWrapper<>());
-        users.forEach(user -> {
-            BigDecimal totalWeigh = reapDAO.sumPlantWeighByUserId(user.getId(), null);
-
-            BigDecimal hasProfit = reapDAO.sumProfitByUserId(user.getId(), Arrays.asList(ReapEnum.SALE_DONE.getState()));
-            BigDecimal availableProfit = reapDAO.sumProfitByUserId(user.getId(), Arrays.asList(ReapEnum.REAP_DONE.getState()));
-            ReapWeigh reapWeigh = new ReapWeigh(user.getId());
-            reapWeigh.setTotalWeigh(totalWeigh);
-            reapWeigh.setHasProfit(hasProfit);
-            reapWeigh.setAvailableProfit(availableProfit);
-            reapWeighDAO.insert(reapWeigh);
-
-        });
-
-
-        return true;
-    }
 }
