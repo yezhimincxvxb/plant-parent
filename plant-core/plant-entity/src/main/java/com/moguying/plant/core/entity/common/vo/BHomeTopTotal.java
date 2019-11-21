@@ -26,6 +26,9 @@ public class BHomeTopTotal implements Serializable {
     @JSONField(ordinal = 3,serializeUsing = BigDecimalSerialize.class)
     private BigDecimal plantProfits;
 
+    /**
+     * 订单总笔数
+     */
     @JSONField(ordinal = 4)
     private Integer orderNum;
 
