@@ -420,4 +420,16 @@ public class ReapServiceImpl<T> implements ReapService {
 
         return true;
     }
+
+    @Override
+    public BigDecimal getPlantProfits() {
+        return reapDAO.getPlantProfits();
+    }
+
+    @Override
+    public BigDecimal getPlantLines() {
+        return reapDAO.getPlantLines();
+    }
+
+
 }

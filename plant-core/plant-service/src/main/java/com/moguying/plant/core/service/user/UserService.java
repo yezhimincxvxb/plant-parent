@@ -5,6 +5,8 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
+import com.moguying.plant.core.entity.common.vo.BHomeTotal;
+import com.moguying.plant.core.entity.common.vo.BHomeTotalSearch;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
@@ -15,6 +17,7 @@ import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
 import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 public interface UserService {
@@ -74,4 +77,15 @@ public interface UserService {
     List<UserActivityLogVo> inviteUser(Integer userId);
 
     ResultData<Integer> pickUpReward(Integer userId, Integer id);
+
+    Integer regUserTotal();
+
+
+
+
+
+
+
+
+
 }

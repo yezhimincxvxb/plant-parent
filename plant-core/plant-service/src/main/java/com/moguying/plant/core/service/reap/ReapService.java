@@ -82,4 +82,17 @@ public interface ReapService {
 
     Boolean updatePlantWeigh();
 
+    /**
+     * 获取种植总利润
+     */
+    BigDecimal getPlantProfits();
+
+
+    /**
+     * 获取种植总额
+     */
+    BigDecimal getPlantLines();
+
+
+
 }

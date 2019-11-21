@@ -120,5 +120,23 @@
         order by reg_time asc
     </select>
 
+    <select id="regUserTotal" resultType="Integer">
+        select count(1) from plant_user where t1.user_state =1;
+        <where>
+            <if test="userState != null">
+                user_state = #{userState}
+            </if>
+            <if test="isRealName != null">
+                is_real_name = #{isRealName}
+            </if>
+            <if test="startTime != null" >
+                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(reg_time)
+            </if>
+            <if test="endTime != null" >
+                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(reg_time)
+            </if>
+        </where>
+    </select>
+
 
 </mapper>
