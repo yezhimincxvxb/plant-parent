@@ -44,5 +44,5 @@ public interface BargainDetailService {
 
     Integer getNumber(Integer productId);
 
-    PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size);
+    PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size, BackBargainDetailVo backBargainDetailVo);
 }

@@ -16,4 +16,6 @@ public interface ExShopPicDAO extends BaseDAO<ExShopPic> {
 
     @Override
     List<ExShopPic> selectSelective(ExShopPic where);
+
+    List<ExShopPic> getPicByIdList(@Param("idList") List<Integer> idList);
 }

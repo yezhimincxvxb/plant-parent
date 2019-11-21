@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.exshop.ExShopPicDAO">
-  <resultMap id="BaseResultMap" type="ExShopPic">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="shop_id" jdbcType="INTEGER" property="shopId" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl" />
-  </resultMap>
-  <sql id="Base_Column_List">
+
+    <resultMap id="BaseResultMap" type="ExShopPic">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="shop_id" jdbcType="INTEGER" property="shopId"/>
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
+        <result column="thumb_pic_url" jdbcType="VARCHAR" property="thumbPicUrl"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     id, shop_id, pic_url, thumb_pic_url
   </sql>
 
+    <insert id="insertBatch">
+        insert into plant_ex_shop_pic (shop_id, pic_url)
+        values
+        <foreach collection="pics" item="item" separator=",">
+            (#{item.shopId},#{item.picUrl})
+        </foreach>
+    </insert>
 
-  <insert id="insertBatch">
-    insert into plant_ex_shop_pic (shop_id, pic_url)
-    values
-    <foreach collection="pics" item="item" separator=",">
-      (#{item.shopId},#{item.picUrl})
-    </foreach>
-  </insert>
-  
-  <select id="selectSelective" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List" /> from plant_ex_shop_pic
-    <where>
-      <if test="shopId != null">
-        shop_id = #{shopId}
-      </if>
-    </where>
-    order by id desc
-  </select>
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_ex_shop_pic
+        <where>
+            <if test="shopId != null">
+                shop_id = #{shopId}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="getPicByIdList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_ex_shop_pic
+        <where>
+            <if test="idList != null and idList.size() > 0 ">
+                shop_id in
+                <foreach collection="idList" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
 </mapper>

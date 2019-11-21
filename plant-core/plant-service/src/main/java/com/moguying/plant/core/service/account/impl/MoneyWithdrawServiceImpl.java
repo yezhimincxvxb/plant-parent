@@ -43,7 +43,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -98,16 +97,16 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @Override
     @DS("read")
     public PageResult<MoneyWithdraw> apiMoneyWithdrawList(Integer page, Integer size, MoneyWithdraw where) {
-        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectPage(new Page<>(page,size),new QueryWrapper<>(where));
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where).orderByDesc("withdraw_time"));
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
 
     @Override
     @DS("read")
     public PageResult<MoneyWithdraw> moneyWithdrawList(Integer page, Integer size, MoneyWithdraw where) {
-        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectSelective(new Page<>(page,size),where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectSelective(new Page<>(page, size), where);
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -116,17 +115,17 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
         if (moneyWithdraw.getWithdrawMoney().compareTo(new BigDecimal(withdrawMin)) < 0
-            || moneyWithdraw.getWithdrawMoney().compareTo(new BigDecimal(withdrawMax)) > 0) {
+                || moneyWithdraw.getWithdrawMoney().compareTo(new BigDecimal(withdrawMax)) > 0) {
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_MONEY_ERROR);
         }
 
         BigDecimal totalWithdraw = moneyWithdrawDAO.withdrawDailyCountByUserId(moneyWithdraw.getUserId(),
-                DateUtil.INSTANCE.todayBegin(),DateUtil.INSTANCE.todayEnd());
+                DateUtil.INSTANCE.todayBegin(), DateUtil.INSTANCE.todayEnd());
 
-        if(null == totalWithdraw)
+        if (null == totalWithdraw)
             totalWithdraw = BigDecimal.ZERO;
 
-        if(totalWithdraw.compareTo(new BigDecimal(withdrawDailyMax)) > 0)
+        if (totalWithdraw.compareTo(new BigDecimal(withdrawDailyMax)) > 0)
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_MONEY_OUT_RANGE);
 
         UserMoney account = userMoneyDAO.selectById(moneyWithdraw.getUserId());
@@ -134,7 +133,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
             return resultData.setMessageEnum(MessageEnum.USER_MONEY_NOT_ENOUGH);
 
         UserBank bank;
-        if((bank = userBankDAO.bankInfoByUserIdAndId(moneyWithdraw.getUserId(),bankId)) == null)
+        if ((bank = userBankDAO.bankInfoByUserIdAndId(moneyWithdraw.getUserId(), bankId)) == null)
             return resultData.setMessageEnum(MessageEnum.USER_BANK_CARD_NOT_EXISTS);
         moneyWithdraw.setBankNumber(bank.getBankNumber());
         moneyWithdraw.setBankPhone(bank.getBankPhone());
@@ -163,7 +162,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @Override
     @DS("write")
     public ResultData<PaymentResponse> reviewMoneyWithdraw(Integer id, Integer state) {
-        return reviewMoneyWithdraw(id,state,null);
+        return reviewMoneyWithdraw(id, state, null);
     }
 
     @Override
@@ -178,7 +177,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
         //初步审核
         MoneyWithdraw update = new MoneyWithdraw();
         update.setId(id);
-        if(null != verifyUserId) {
+        if (null != verifyUserId) {
             update.setVerifyUser(verifyUserId);
         }
         if (state.equals(MoneyStateEnum.WITHDRAW_SUCCESS.getState())) {
@@ -204,11 +203,11 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
                     message.setTime(sdf.format(new Date()));
                     phoneMessageService.sendOtherMessage(message, SystemEnum.PHONE_MESSAGE_WITHDRAW_SUCCESS_TYPE.getState());
                     resultData.setMessageEnum(MessageEnum.SUCCESS).setData(paymentResponse);
-                } else if(null != paymentResponse) {
+                } else if (null != paymentResponse) {
                     resultData.setMessageEnum(MessageEnum.ERROR).setData(paymentResponse);
                 }
             }
-        } else if(state.equals(MoneyStateEnum.WITHDRAW_FAILED.getState())) {
+        } else if (state.equals(MoneyStateEnum.WITHDRAW_FAILED.getState())) {
             //退还提现金额
             update.setState(MoneyStateEnum.WITHDRAW_FAILED.getState());
             update.setVerifyMark(markMap.get(false));
@@ -219,9 +218,9 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
             userMoney.setAvailableMoney(withdraw.getWithdrawMoney());
             userMoney.setFreezeMoney(withdraw.getWithdrawMoney().negate());
             operator.setUserMoney(userMoney);
-            if(null != moneyService.updateAccount(operator))
+            if (null != moneyService.updateAccount(operator))
                 resultData.setMessageEnum(MessageEnum.SUCCESS);
-        } else if(state.equals(MoneyStateEnum.WITHDRAW_IN_ACCOUNT.getState())) {
+        } else if (state.equals(MoneyStateEnum.WITHDRAW_IN_ACCOUNT.getState())) {
             update.setState(MoneyStateEnum.WITHDRAW_IN_ACCOUNT.getState());
             update.setSuccessTime(new Date());
             //减去提现金额
@@ -238,7 +237,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
 
         if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS) && moneyWithdrawDAO.updateById(update) > 0) {
             //发送失败短信
-            if(state.equals(MoneyStateEnum.WITHDRAW_FAILED.getState())){
+            if (state.equals(MoneyStateEnum.WITHDRAW_FAILED.getState())) {
                 User user = userDAO.userInfoById(withdraw.getUserId());
                 InnerMessage message = new InnerMessage();
                 message.setPhone(user.getPhone());
@@ -266,12 +265,12 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @Override
     @DS("write")
     public ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> sendWithdrawSms(MoneyWithdraw moneyWithdraw) {
-        ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MoneyWithdraw withdraw = moneyWithdrawDAO.selectOne(new QueryWrapper<>(moneyWithdraw));
         if (null == withdraw)
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NOT_EXISTS);
 
-        if(!withdraw.getState().equals(MoneyStateEnum.WITHDRAW_SUCCESS.getState()))
+        if (!withdraw.getState().equals(MoneyStateEnum.WITHDRAW_SUCCESS.getState()))
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NO_SUCCESS);
         User userInfo = userDAO.userInfoById(withdraw.getUserId());
         SendWithdrawSmsCodeRequest sendCodeRequest = new SendWithdrawSmsCodeRequest();
@@ -281,9 +280,9 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
         sendCodeRequest.setCardNo(withdraw.getBankNumber());
         sendCodeRequest.setPhone(withdraw.getBankPhone());
         PaymentResponse<SendWithdrawSmsCodeResponse> smsResponse = paymentService.sendWithdrawSmsCode(sendCodeRequest);
-        if(null != smsResponse && smsResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())){
+        if (null != smsResponse && smsResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
 
-            if(smsResponse.getData().getMerMerOrderNo().equals(withdraw.getOrderNumber())) {
+            if (smsResponse.getData().getMerMerOrderNo().equals(withdraw.getOrderNumber())) {
                 MoneyWithdraw update = new MoneyWithdraw();
                 update.setId(withdraw.getId());
                 update.setSeqNo(smsResponse.getData().getSeqNo());
@@ -294,7 +293,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
                 return resultData.setMessageEnum(MessageEnum.WITHDRAW_PAYMENT_RETURN_NOT_MATCH);
             }
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(smsResponse);
-        } else if(null != smsResponse) {
+        } else if (null != smsResponse) {
             return resultData.setData(smsResponse);
         }
         return resultData;
@@ -304,11 +303,11 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @Override
     @DS("write")
     public ResultData<PaymentResponse<WithdrawMoneyResponse>> withdrawToAccount(MoneyWithdraw moneyWithdraw, String smsCode) {
-        ResultData<PaymentResponse<WithdrawMoneyResponse>> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<PaymentResponse<WithdrawMoneyResponse>> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MoneyWithdraw withdraw = moneyWithdrawDAO.selectOne(new QueryWrapper<>(moneyWithdraw));
-        if(null == withdraw)
+        if (null == withdraw)
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NOT_EXISTS);
-        if(!withdraw.getState().equals(MoneyStateEnum.WITHDRAW_SUCCESS.getState()))
+        if (!withdraw.getState().equals(MoneyStateEnum.WITHDRAW_SUCCESS.getState()))
             return resultData.setMessageEnum(MessageEnum.WITHDRAW_NO_SUCCESS);
         User userInfo = userDAO.userInfoById(withdraw.getUserId());
         WithdrawMoneyRequest withdrawMoneyRequest = new WithdrawMoneyRequest();
@@ -320,19 +319,19 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
         withdrawMoneyRequest.setSeqNo(withdraw.getSeqNo());
         withdrawMoneyRequest.setSmsCode(smsCode);
         PaymentResponse<WithdrawMoneyResponse> withdrawResponse = paymentService.withdrawMoney(withdrawMoneyRequest);
-        if(null != withdrawResponse && withdrawResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())){
-            if(withdrawResponse.getData().getMerMerOrderNo().equals(withdraw.getOrderNumber()) &&
+        if (null != withdrawResponse && withdrawResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
+            if (withdrawResponse.getData().getMerMerOrderNo().equals(withdraw.getOrderNumber()) &&
                     withdraw.getToAccountMoney().compareTo(new BigDecimal(withdrawResponse.getData().getAmount())) == 0) {
                 MoneyWithdraw update = new MoneyWithdraw();
                 update.setId(withdraw.getId());
                 update.setState(MoneyStateEnum.WITHDRAW_ACCOUNT_ING.getState());
-                if(moneyWithdrawDAO.updateById(update) <= 0) {
+                if (moneyWithdrawDAO.updateById(update) <= 0) {
                     return resultData.setMessageEnum(MessageEnum.WITHDRAW_UPDATE_STATE_ERROR);
                 }
             } else
                 return resultData.setMessageEnum(MessageEnum.WITHDRAW_PAYMENT_RETURN_NOT_MATCH);
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(withdrawResponse);
-        } else if(null != withdrawResponse)
+        } else if (null != withdrawResponse)
             return resultData.setData(withdrawResponse);
         return resultData;
     }

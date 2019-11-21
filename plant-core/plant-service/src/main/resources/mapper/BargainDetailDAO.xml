@@ -136,7 +136,7 @@
     <!-- 砍价成功记录 -->
     <select id="ownLog" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
         select t2.id `id`, t3.name `productName`, t3.summary_desc `productInfo`, t3.pic_url `picUrl`, t2.add_time
-        `endTime`, t3.id `productId`
+        `endTime`, t3.id `productId`, t1.id `orderId`
         from plant_bargain_detail t1
         left join plant_mall_order t2 on t1.order_number = t2.order_number
         left join plant_mall_product t3 on t1.product_id = t3.id
@@ -200,6 +200,16 @@
         left join plant_user t4 on t1.user_id = t4.id
         left join plant_mall_product t5 on t1.product_id = t5.id
         left join plant_user_address t6 on t3.address_id = t6.id
+        <where>
+            <if test="bargain != null">
+                <if test="bargain.phone != null">
+                    t4.phone = #{bargain.phone}
+                </if>
+                <if test="bargain.productName != null">
+                    and instr(t5.name, #{bargain.productName})
+                </if>
+            </if>
+        </where>
         group by t1.id
         order by t1.add_time desc
     </select>
