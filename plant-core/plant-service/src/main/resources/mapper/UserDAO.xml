@@ -66,7 +66,7 @@
                 AND t1.user_state = #{wq.userState}
             </if>
             <if test="wq.startTime != null and wq.endTime != null">
-              <![CDATA[
+                <![CDATA[
                 AND UNIX_TIMESTAMP(#{wq.startTime}) >= UNIX_TIMESTAMP(t1.reg_time)
                 AND UNIX_TIMESTAMP(#{wq.endTime}) <= UNXIX_TIMESTAMP(t1.reg_time)
               ]]>
@@ -107,13 +107,14 @@
     </select>
 
     <select id="inviteUser" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/>
+        select
+        <include refid="Base_Column_List"/>
         from plant_user
         <where>
             <if test="inviteId != null">
                 invite_uid = #{inviteId}
             </if>
-            <if test="startTime != null" >
+            <if test="startTime != null">
                 AND UNIX_TIMESTAMP(#{startTime}) &lt; UNIX_TIMESTAMP(reg_time)
             </if>
         </where>
@@ -121,21 +122,7 @@
     </select>
 
     <select id="regUserTotal" resultType="Integer">
-        select count(1) from plant_user where t1.user_state =1;
-        <where>
-            <if test="userState != null">
-                user_state = #{userState}
-            </if>
-            <if test="isRealName != null">
-                is_real_name = #{isRealName}
-            </if>
-            <if test="startTime != null" >
-                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(reg_time)
-            </if>
-            <if test="endTime != null" >
-                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(reg_time)
-            </if>
-        </where>
+        select count(1) from plant_user where t1.user_state =1
     </select>
 
 
