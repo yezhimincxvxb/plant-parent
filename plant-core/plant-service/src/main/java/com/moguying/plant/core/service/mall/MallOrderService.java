@@ -58,4 +58,6 @@ public interface MallOrderService {
 
     
     Boolean orderSuccess(MallOrder order, UserSaleCoin userSaleCoin);
+
+    Integer getMallOrderNum();
 }

@@ -15,6 +15,9 @@ import java.util.GregorianCalendar;
 public enum DateUtil {
     INSTANCE;
 
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public String orderNumberWithDate() {
         return DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss").concat(RandomStringUtils.randomNumeric(6));
@@ -35,45 +38,51 @@ public enum DateUtil {
         return DateFormatUtils.format(now, "yyyy-MM-dd HH:mm:ss");
     }
 
-
+    /**
+     * 本月第一天
+     */
     public Date firstDayOfMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            return simpleDateFormat.parse(localDate.toString());
+            return DATE_FORMAT.parse(localDate.toString());
         } catch (ParseException e) {
             return null;
         }
     }
 
+    /**
+     * 下个月第一天
+     */
     public Date fistDayOfNextMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.firstDayOfNextMonth());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            return simpleDateFormat.parse(localDate.toString());
+            return DATE_FORMAT.parse(localDate.toString());
         } catch (ParseException e) {
             return null;
         }
     }
 
-
+    /**
+     * 本月最后一天
+     */
     public Date lastDayOfMonth() {
         LocalDate localDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            return sdf.parse(localDate.toString());
+            return DATE_FORMAT.parse(localDate.toString());
         } catch (ParseException e) {
             return null;
         }
     }
 
+    /**
+     * 下个月最后一天
+     */
     public Date lastDayOfNextMonth() {
         LocalDateTime localDateTime = LocalDateTime.now().with(TemporalAdjusters.firstDayOfNextMonth());
         LocalDate localDate = LocalDate.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth())
                 .with(TemporalAdjusters.lastDayOfMonth());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            return sdf.parse(localDate.toString());
+            return DATE_FORMAT.parse(localDate.toString());
         } catch (ParseException e) {
             return null;
         }
@@ -178,9 +187,8 @@ public enum DateUtil {
      * 时间字符串转化成Date类型
      */
     public Date stringToDate(String string) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            return dateFormat.parse(string);
+            return DATE_TIME_FORMAT.parse(string);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -188,6 +196,6 @@ public enum DateUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(DateUtil.INSTANCE.todayEnd(DateUtil.INSTANCE.lastDayOfNextMonth()));
+
     }
 }

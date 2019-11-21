@@ -114,4 +114,16 @@
         </where>
     </update>
 
+    <select id="getMallOrderNum" resultType="Integer">
+        select count(1) from plant_mall_order t1 ,plant_user t2 where t1.user_id = t2.id
+        <where>
+            <if test="startTime != null" >
+                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(t1.add_time)
+            </if>
+            <if test="endTime != null" >
+                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(t1.add_time)
+            </if>
+        </where>
+    </select>
+
 </mapper>

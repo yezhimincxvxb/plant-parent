@@ -80,4 +80,17 @@ public interface ReapService {
     Boolean exchangeFertilizer(Integer userId, Integer fertilizerId, SaleCoin saleCoin, Fertilizer fertilizer);
 
 
+    /**
+     * 获取种植总利润
+     */
+    BigDecimal getPlantProfits();
+
+
+    /**
+     * 获取种植总额
+     */
+    BigDecimal getPlantLines();
+
+
+
 }

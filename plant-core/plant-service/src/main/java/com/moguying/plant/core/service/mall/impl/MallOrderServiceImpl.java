@@ -360,4 +360,10 @@ public class MallOrderServiceImpl implements MallOrderService {
         order.setPayTime(new Date());
         return mallOrderDAO.updateById(order) > 0;
     }
+
+    @Override
+    @DS("read")
+    public Integer getMallOrderNum() {
+        return mallOrderDAO.getMallOrderNum();
+    }
 }

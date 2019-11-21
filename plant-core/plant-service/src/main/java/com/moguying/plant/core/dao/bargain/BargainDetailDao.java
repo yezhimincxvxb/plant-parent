@@ -40,6 +40,6 @@ public interface BargainDetailDao extends BaseMapper<BargainDetail> {
 
     Integer getNumber(@Param("productId") Integer productId);
 
-    IPage<BackBargainDetailVo> bargainList(Page<BackBargainDetailVo> page, @Param("bargain") BackBargainDetailVo backBargainDetailVo);
+    IPage<BackBargainDetailVo> bargainList(Page<BackBargainDetailVo> page, @Param("bargain") BargainVo bargainVo);
 
 }

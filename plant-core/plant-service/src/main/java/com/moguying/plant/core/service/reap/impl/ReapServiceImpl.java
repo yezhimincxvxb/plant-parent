@@ -389,4 +389,16 @@ public class ReapServiceImpl<T> implements ReapService {
         return saleCoinService.updateSaleCoin(userSaleCoin) != null;
     }
 
+
+    @Override
+    public BigDecimal getPlantProfits() {
+        return reapDAO.getPlantProfits();
+    }
+
+    @Override
+    public BigDecimal getPlantLines() {
+        return reapDAO.getPlantLines();
+    }
+
+
 }

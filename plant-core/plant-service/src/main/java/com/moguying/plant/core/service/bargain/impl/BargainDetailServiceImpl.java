@@ -398,9 +398,9 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
     @Override
     @DS("read")
-    public PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size, BackBargainDetailVo backBargainDetailVo) {
+    public PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size, BargainVo bargain) {
         // 订单详情
-        IPage<BackBargainDetailVo> iPage = bargainDetailDao.bargainList(new Page<>(page, size), backBargainDetailVo);
+        IPage<BackBargainDetailVo> iPage = bargainDetailDao.bargainList(new Page<>(page, size), bargain);
         List<BackBargainDetailVo> records = iPage.getRecords();
 
         List<Integer> idList = records.stream().map(BackBargainDetailVo::getOrderId).collect(Collectors.toList());

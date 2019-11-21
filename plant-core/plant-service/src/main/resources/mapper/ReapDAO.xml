@@ -421,4 +421,32 @@
             </if>
         </where>
     </select>
+
+
+    <select id="getPlantProfits" resultType="java.math.BigDecimal">
+        select sum(pre_profit) from plant_reap
+        <where>
+            user_id in (select id from  plant_user)
+            <if test="startTime != null" >
+                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(plant_time)
+            </if>
+            <if test="endTime != null" >
+                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(plant_time)
+            </if>
+        </where>
+    </select>
+
+    <select id="getPlantLines" resultType="java.math.BigDecimal">
+        select sum(preAmount) from plant_reap
+        <where>
+            user_id in (select id from  plant_user)
+            <if test="startTime != null" >
+                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(plant_time)
+            </if>
+            <if test="endTime != null" >
+                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(plant_time)
+            </if>
+        </where>
+    </select>
+
 </mapper>
