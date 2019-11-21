@@ -193,7 +193,8 @@
     <select id="bargainList" resultType="com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo">
         select t1.id `orderId`, t4.phone `phone`, t5.name `productName`, t1.total_amount `productPrice`,
         t1.bargain_amount `bargainPrice`, t1.total_count `bargainCount`, t1.bargain_count `bargainNumber`,
-        t1.close_time `closeTime`, t6.detail_address `address`, t3.state `state`
+        t1.close_time `closeTime`, t6.detail_address `address`, t3.state `state`, t1.add_time `addTime`,
+        t1.bargain_time `bargainTime`
         from plant_bargain_detail t1
         left join plant_bargain_log t2 on t1.id = t2.detail_id
         left join plant_mall_order t3 on t1.order_number = t3.order_number
@@ -207,6 +208,14 @@
                 </if>
                 <if test="bargain.productName != null">
                     and instr(t5.name, #{bargain.productName})
+                </if>
+                <if test="bargain.beginTime != null">
+                    and t1.total_count = t1.bargain_count
+                    and unix_timestamp(t1.bargain_time) &gt; unix_timestamp(#{bargain.beginTime})
+                </if>
+                <if test="bargain.endTime != null">
+                    and t1.total_count = t1.bargain_count
+                    and unix_timestamp(t1.bargain_time) &lt; unix_timestamp(#{bargain.endTime})
                 </if>
             </if>
         </where>
