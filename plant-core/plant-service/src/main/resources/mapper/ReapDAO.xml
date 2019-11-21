@@ -123,7 +123,7 @@
                 </foreach>
             </if>
             <if test="wq.groupId != null ">
-               AND t3.group_id = #{wq.groupId}
+                AND t3.group_id = #{wq.groupId}
             </if>
         </where>
         order by t1.id desc
@@ -152,7 +152,6 @@
         </where>
         order by t1.state
     </select>
-
 
 
     <select id="selectCanReapByTime" resultType="int">
@@ -398,7 +397,7 @@
             <if test="states != null">
                 AND state in
                 <foreach collection="states" open="(" close=")" separator="," item="item" index="index">
-                     #{item}
+                    #{item}
                 </foreach>
 
             </if>
@@ -422,31 +421,12 @@
         </where>
     </select>
 
-
     <select id="getPlantProfits" resultType="java.math.BigDecimal">
-        select sum(pre_profit) from plant_reap
-        <where>
-            user_id in (select id from  plant_user)
-            <if test="startTime != null" >
-                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(plant_time)
-            </if>
-            <if test="endTime != null" >
-                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(plant_time)
-            </if>
-        </where>
+        select sum(pre_profit) from plant_reap where user_id in (select id from  plant_user)
     </select>
 
     <select id="getPlantLines" resultType="java.math.BigDecimal">
-        select sum(preAmount) from plant_reap
-        <where>
-            user_id in (select id from  plant_user)
-            <if test="startTime != null" >
-                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(plant_time)
-            </if>
-            <if test="endTime != null" >
-                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(plant_time)
-            </if>
-        </where>
+        select sum(preAmount) from plant_reap where user_id in (select id from  plant_user)
     </select>
 
 </mapper>

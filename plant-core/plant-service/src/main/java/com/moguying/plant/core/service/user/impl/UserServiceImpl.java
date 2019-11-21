@@ -14,8 +14,6 @@ import com.moguying.plant.core.dao.seed.SeedOrderDAO;
 import com.moguying.plant.core.dao.user.*;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.common.vo.BHomeTotal;
-import com.moguying.plant.core.entity.common.vo.BHomeTotalSearch;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.seed.Seed;
@@ -641,23 +639,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer regUserTotal() {
-        return userDAO.regUserTotal(1,null,null,null);
+        return userDAO.selectCount(new QueryWrapper<>(new User().setUserState(true)));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

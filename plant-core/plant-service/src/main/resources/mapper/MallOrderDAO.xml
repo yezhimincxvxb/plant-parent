@@ -54,7 +54,8 @@
 
 
     <select id="userOrderListByState" resultMap="OrderListMap">
-        select id,add_time,fee_amount,buy_amount,state,sum(buy_amount + fee_amount) as total_amount,is_notice, total_coins
+        select id,add_time,fee_amount,buy_amount,state,sum(buy_amount + fee_amount) as total_amount,is_notice,
+        total_coins
         from plant_mall_order
         where user_id = #{userId}
         <choose>
@@ -91,7 +92,8 @@
     </select>
 
     <select id="findByIdAndNum" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/>
+        select
+        <include refid="Base_Column_List"/>
         from plant_mall_order
         <where>
             user_id = #{userId}
@@ -116,14 +118,6 @@
 
     <select id="getMallOrderNum" resultType="Integer">
         select count(1) from plant_mall_order t1 ,plant_user t2 where t1.user_id = t2.id
-        <where>
-            <if test="startTime != null" >
-                AND UNIX_TIMESTAMP(#{startTime}) &gt; UNIX_TIMESTAMP(t1.add_time)
-            </if>
-            <if test="endTime != null" >
-                AND UNIX_TIMESTAMP(#{endTime}) &lt; UNIX_TIMESTAMP(t1.add_time)
-            </if>
-        </where>
     </select>
 
 </mapper>

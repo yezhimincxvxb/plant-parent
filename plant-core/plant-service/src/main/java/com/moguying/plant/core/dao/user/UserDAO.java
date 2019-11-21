@@ -28,8 +28,5 @@ public interface UserDAO extends BaseDAO<User> {
 
     List<User> inviteUser(@Param("startTime") Date startTime, @Param("inviteId") Integer inviteId);
 
-    Integer regUserTotal(@Param("userState") Integer userState, @Param("isRealName") Integer isRealName,@Param("startTime") String startTime,@Param("endTime") String endTime);
-
-
 
 }

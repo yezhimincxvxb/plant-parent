@@ -1,11 +1,8 @@
 package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.common.vo.BHomeTopTotal;
-import com.moguying.plant.core.entity.common.vo.BHomeTotal;
-import com.moguying.plant.core.entity.common.vo.BHomeTotalSearch;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.user.UserService;
@@ -32,16 +29,14 @@ public class BHomeController {
      */
     @GetMapping("/top/total")
     @ApiOperation("顶部统计")
-    public ResponseData<BHomeTopTotal>homeTopTotal(){
+    public ResponseData<BHomeTopTotal> homeTopTotal() {
         BHomeTopTotal homeTopTotal = new BHomeTopTotal();
         homeTopTotal.setRegNum(userService.regUserTotal());
         homeTopTotal.setOrderNum(mallOrderService.getMallOrderNum());
         homeTopTotal.setPlantLines(reapService.getPlantLines());
         homeTopTotal.setPlantProfits(reapService.getPlantProfits());
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(), homeTopTotal);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), homeTopTotal);
     }
-
-
 
 
 }
