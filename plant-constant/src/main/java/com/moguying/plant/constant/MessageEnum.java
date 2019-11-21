@@ -183,7 +183,6 @@ public enum  MessageEnum {
     REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10179);
 
 
-
     private String message;
     private Integer state;
 

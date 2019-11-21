@@ -11,6 +11,7 @@ import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.service.common.message.MessageSendService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.CommonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class PhoneMessageServiceImpl implements PhoneMessageService {
-    Logger logger = LoggerFactory.getLogger(PhoneMessageService.class);
 
     @Value("${message.code}")
     private String codeContentTpl;
@@ -80,7 +81,16 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     }
 
 
-    private Integer send(String phone,String content,String code){
+    @Override
+    public Integer send(String phone, String template, String code,String... params) {
+
+        for(int i = 1; i <= params.length ; i++) {
+            template = template.replace("{param" + i + "}", params[i - 1]);
+        }
+        return send(phone,template,code);
+    }
+
+    private Integer send(String phone, String content, String code){
         return send(phone,content,code,account);
     }
 
@@ -93,6 +103,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
              return new ResultData<>(MessageEnum.SUCCESS,result);
         return new ResultData<>(MessageEnum.ERROR,result);
     }
+
 
     private Integer send(String phone, String content, String code, String account){
         try {
@@ -111,7 +122,6 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
             }
             return -1;
         } catch (Exception e) {
-            logger.info("Message Send Error");
             return -1;
         }
 

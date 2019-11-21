@@ -10,6 +10,7 @@ import com.moguying.plant.core.entity.account.MoneyRecharge;
 import com.moguying.plant.core.entity.account.MoneyWithdraw;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.account.UserMoneyLog;
+import com.moguying.plant.core.entity.account.vo.RechargeReview;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
@@ -20,7 +21,6 @@ import com.moguying.plant.core.service.account.UserMoneyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,11 +107,46 @@ public class BUserAccountController {
      * 充值列表
      * @return
      */
-    @GetMapping(value = "/recharge")
+    @PostMapping(value = "/recharge/list")
     @ApiOperation("充值列表")
     public PageResult<MoneyRecharge> rechargeList(@RequestBody PageSearch<MoneyRecharge> search){
         return moneyRechargeService.moneyRechargeList(search.getPage(),search.getSize(),search.getWhere());
     }
+
+
+
+    /**
+     * 充值
+     *
+     * @return
+     */
+    @PostMapping("/recharge")
+    @ApiOperation("充值")
+    public ResponseData<Integer> recharge(@RequestBody MoneyRecharge recharge) {
+        ResultData<Integer> addResult = moneyRechargeService.addMoneyRecharge(recharge);
+        return new ResponseData<>(addResult.getMessageEnum().getMessage(), addResult.getMessageEnum().getState());
+    }
+
+
+    @PostMapping("/recharge/review/code")
+    @ApiOperation("充值审核验证")
+    public ResponseData<Integer> rechargeCode(@RequestBody RechargeReview review) {
+        ResultData<Integer> reviewCode = moneyRechargeService.reviewCode(review);
+        return new ResponseData<>(reviewCode.getMessageEnum().getMessage(),reviewCode.getMessageEnum().getState());
+    }
+
+    /**
+     * 充值审核
+     *
+     * @return
+     */
+    @PostMapping("/recharge/review")
+    @ApiOperation("充值审核")
+    public ResponseData<Integer> rechargeReview(@RequestBody RechargeReview recharge) {
+        ResultData<Integer> addResult = moneyRechargeService.reviewRecharge(recharge);
+        return new ResponseData<>(addResult.getMessageEnum().getMessage(), addResult.getMessageEnum().getState());
+    }
+
 
 
 

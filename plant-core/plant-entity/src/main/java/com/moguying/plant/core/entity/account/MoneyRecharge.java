@@ -24,16 +24,14 @@ public class MoneyRecharge implements Serializable {
     /**
      * 用户id
      */
-    @JSONField(name = "user_id")
     @TableField
     private Integer userId;
 
-    @JSONField(name = "user_name",deserialize = false)
+
 
     @TableField(exist = false)
-    private String userName;
+    private String phone;
 
-    @JSONField(name = "order_number")
     @TableField
     private String orderNumber;
 
@@ -53,28 +51,28 @@ public class MoneyRecharge implements Serializable {
     /**
      * 充值时间
      */
-    @JSONField(name = "recharge_time",format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date rechargeTime;
 
     /**
      * 到账时间
      */
-    @JSONField(name = "to_account_time",format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date toAccountTime;
 
     /**
      * 到账金额
      */
-    @JSONField(name = "to_account_money",serializeUsing = BigDecimalSerialize.class)
+    @JSONField(serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal toAccountMoney;
 
     /**
      * 充值手续费
      */
-    @JSONField(name = "fee",serializeUsing = BigDecimalSerialize.class)
+    @JSONField(serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal fee;
 
