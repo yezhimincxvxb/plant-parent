@@ -58,7 +58,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
     @Value("${recharge.review.phone}")
     private String reviewPhone;
 
-    private final String reviewTemple = "{param1}正在充值{param2}元，此次审核码为{param3}";
+    private final String reviewTemple = "{param1}手机号为{param2}正在充值{param3}元，此次审核码为{param4} ";
     private final String inAccount = "亲爱的{param1}用户您好：您充值的{param2}元现已到账，您可点击账户查询详情，祝您在蘑菇营购物愉快！";
 
 
@@ -156,7 +156,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
         if(!moneyRecharge.isPresent())
             return resultData.setMessageEnum(MessageEnum.RECHARGE_NOT_EXISTS);
         String code = CommonUtil.INSTANCE.messageCode();
-        Integer send = phoneMessageService.send(reviewPhone, reviewTemple, code, moneyRecharge.get().getPhone(), moneyRecharge.get().getMoney().toString(), code);
+        Integer send = phoneMessageService.send(reviewPhone, reviewTemple, code,moneyRecharge.get().getRealName(), moneyRecharge.get().getPhone(), moneyRecharge.get().getMoney().toString(), code);
         if(send > 0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;

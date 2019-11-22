@@ -1,10 +1,7 @@
 package com.moguying.plant.core.entity.account;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
@@ -31,6 +28,9 @@ public class MoneyRecharge implements Serializable {
 
     @TableField(exist = false)
     private String phone;
+
+    @TableField(exist = false)
+    private String realName;
 
     @TableField
     private String orderNumber;

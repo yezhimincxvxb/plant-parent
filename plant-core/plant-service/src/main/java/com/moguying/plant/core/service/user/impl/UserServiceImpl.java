@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
@@ -14,8 +15,6 @@ import com.moguying.plant.core.dao.seed.SeedOrderDAO;
 import com.moguying.plant.core.dao.user.*;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.common.vo.BHomeTotal;
-import com.moguying.plant.core.entity.common.vo.BHomeTotalSearch;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.seed.Seed;
@@ -641,23 +640,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer regUserTotal() {
-        return userDAO.regUserTotal(1,null,null,null);
+        return userDAO.selectCount(new QueryWrapper<User>().lambda().eq(User::getUserState,UserEnum.BANK_IN_USED));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

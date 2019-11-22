@@ -99,4 +99,8 @@ public class Taste {
     @JSONField(ordinal = 12)
     private long applyCount;
 
+
+    @JSONField(ordinal = 13)
+    private Date addTime;
+
 }

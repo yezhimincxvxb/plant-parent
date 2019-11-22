@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: pro-master
   aop:
     proxy-target-class: true
     auto: true
@@ -197,6 +197,10 @@ upload:
     host: 192.168.5.220
   host: 192.168.5.220
 
+recharge:
+  review:
+    phone: 13450184621
+
 ---
 debug: false
 server:
@@ -280,7 +284,63 @@ debug: false
 server:
   port: 9000
 spring:
-  profiles: pro
+  profiles: pro-master
+  datasource:
+    dynamic:
+      primary: write
+      datasource:
+        write:
+          username: dbManager
+          password: Ld1*7@&13Ai+ab
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.18.146.179:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+        read:
+          username: dbManager
+          password: Ld1*7@&13Ai+ab
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://172.18.146.178:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+      hikari:
+        max-pool-size: 100
+        min-idle: 20
+        idle-timeout: 1000
+  redis:
+    host: 172.18.146.177
+    port: 6869
+    password: AEnz2DF\Od,GWD#C*+
+    database: 0
+    timeout: 4000
+    lettuce:
+      pool:
+        min-idle: 20
+        max-idle: 120
+        max-wait: 2000
+  data:
+    mongodb:
+      host: 172.18.146.177
+      port: 27589
+      database: activity
+      username: activityAdmin
+      password: Is&1+KVb[0
+
+#上传host
+upload:
+  save-path: /pages/upload
+  editor:
+    host: https://image.zymoguying.com
+  host: https://image.zymoguying.com
+
+recharge:
+  review:
+    phone: 13823239796
+
+
+
+---
+debug: false
+server:
+  port: 9000
+spring:
+  profiles: pro-slave
   datasource:
     dynamic:
       primary: write
