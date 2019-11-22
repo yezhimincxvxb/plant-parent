@@ -479,3 +479,9 @@ CREATE TABLE `plant_user_symbol` (
   `add_time` datetime DEFAULT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/** 线下体验店新增city城市字段 **/
+ALTER TABLE `moguying`.`plant_ex_shop`
+ADD COLUMN `city` varchar(255) DEFAULT NULL COMMENT '体验店城市';
+
+

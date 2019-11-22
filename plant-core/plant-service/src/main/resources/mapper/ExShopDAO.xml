@@ -6,6 +6,7 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
         <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
         <result column="open_time" jdbcType="VARCHAR" property="openTime"/>
         <result column="location" jdbcType="VARCHAR" property="location"/>
@@ -21,7 +22,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, shop_name, address, phone, open_time,location, add_time
+        id, shop_name, address, city, phone, open_time,location, add_time
     </sql>
 
     <select id="selectSelective" resultMap="BaseResultMap">
