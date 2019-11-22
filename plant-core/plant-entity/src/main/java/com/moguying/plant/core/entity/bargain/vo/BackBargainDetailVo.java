@@ -163,6 +163,12 @@ public class BackBargainDetailVo {
             return MallEnum.ORDER_HAS_PAY.getStateStr();
         } else if (state.equals(MallEnum.ORDER_HAS_SEND.getState())) {
             return MallEnum.ORDER_HAS_SEND.getStateStr();
+        } else if (state.equals(MallEnum.ORDER_HAS_DONE.getState())) {
+            return MallEnum.ORDER_HAS_DONE.getStateStr();
+        } else if (state.equals(MallEnum.ORDER_HAS_CLOSE.getState())) {
+            return MallEnum.ORDER_HAS_CLOSE.getStateStr();
+        } else if (state.equals(MallEnum.ORDER_HAS_CANCEL.getState())) {
+            return MallEnum.ORDER_HAS_CANCEL.getStateStr();
         }
         return "无";
     }

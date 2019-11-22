@@ -37,6 +37,12 @@ public class ExShop implements Serializable {
     private String address;
 
     /**
+     * 体验店城市
+     */
+    @TableField
+    private String city;
+
+    /**
      * 体验店电话
      */
     @TableField

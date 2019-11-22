@@ -121,9 +121,5 @@
         order by reg_time asc
     </select>
 
-    <select id="regUserTotal" resultType="Integer">
-        select count(1) from plant_user where t1.user_state =1
-    </select>
-
 
 </mapper>

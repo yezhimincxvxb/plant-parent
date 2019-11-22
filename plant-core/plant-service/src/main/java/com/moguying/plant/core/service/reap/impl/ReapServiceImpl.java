@@ -92,14 +92,14 @@ public class ReapServiceImpl<T> implements ReapService {
     @DS("read")
     public PageResult<Reap> reapList(Integer page, Integer size, Reap where) {
         IPage<Reap> pageResult = reapDAO.selectSelective(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
     @DS("read")
     public PageResult<Reap> userReapList(Integer page, Integer size, Reap where) {
         IPage<Reap> pageResult = reapDAO.userReapList(new Page<>(page, size), where);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
@@ -358,7 +358,7 @@ public class ReapServiceImpl<T> implements ReapService {
     @DS("read")
     public PageResult<ExchangeInfo> showReapLog(Integer page, Integer size, Integer userId) {
         IPage<ExchangeInfo> pageResult = reapDAO.showReapLog(new Page<>(page, size), userId);
-        return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override

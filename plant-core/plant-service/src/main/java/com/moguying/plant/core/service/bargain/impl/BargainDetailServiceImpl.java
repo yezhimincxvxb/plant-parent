@@ -390,6 +390,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         return true;
     }
 
+
     @Override
     @DS("read")
     public Integer getNumber(Integer productId) {
@@ -424,5 +425,6 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
         return new PageResult<>(iPage.getTotal(), records);
     }
+
 
 }

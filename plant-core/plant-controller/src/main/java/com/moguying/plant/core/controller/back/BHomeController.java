@@ -31,13 +31,13 @@ public class BHomeController {
      */
     @GetMapping("/top/total")
     @ApiOperation("顶部统计")
-    public ResponseData<BHomeTopTotal>homeTopTotal(){
+    public ResponseData<BHomeTopTotal> homeTopTotal() {
         BHomeTopTotal homeTopTotal = new BHomeTopTotal();
         homeTopTotal.setRegNum(userService.regUserTotal());
         homeTopTotal.setOrderNum(mallOrderService.getMallOrderNum());
         homeTopTotal.setPlantLines(reapService.getPlantLines());
         homeTopTotal.setPlantProfits(reapService.getPlantProfits());
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(), homeTopTotal);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), homeTopTotal);
     }
 
 

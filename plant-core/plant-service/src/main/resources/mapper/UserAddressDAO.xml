@@ -74,7 +74,7 @@
 
     <select id="getDefaultNum" resultType="java.lang.Integer">
     select count(id) from plant_user_address
-    where user_id = #{userId} and is_default = 1
+    where user_id = #{userId} and is_default = 1 and is_delete = 0
   </select>
 
 </mapper>
