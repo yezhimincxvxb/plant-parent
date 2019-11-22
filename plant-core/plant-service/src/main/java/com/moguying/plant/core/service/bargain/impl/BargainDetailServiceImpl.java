@@ -426,5 +426,4 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         return new PageResult<>(iPage.getTotal(), records);
     }
 
-
 }

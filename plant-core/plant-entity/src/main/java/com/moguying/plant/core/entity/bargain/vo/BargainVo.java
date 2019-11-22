@@ -137,6 +137,11 @@ public class BargainVo {
     private String symbol;
 
     /**
+     * 状态
+     */
+    private Integer state;
+
+    /**
      * 用户id
      */
     private Integer userId;

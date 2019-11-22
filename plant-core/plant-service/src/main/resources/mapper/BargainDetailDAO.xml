@@ -217,10 +217,16 @@
                     and t1.total_count = t1.bargain_count
                     and unix_timestamp(t1.bargain_time) &lt; unix_timestamp(#{bargain.endTime})
                 </if>
+                <if test="bargain.state != null and bargain.state == 0">
+                    and t3.state = 0
+                </if>
+                <if test="bargain.state != null and bargain.state != 0">
+                    and t3.state &gt;= 1
+                </if>
             </if>
         </where>
         group by t1.id
-        order by t1.add_time desc
+        order by (t1.bargain_amount / t1.total_amount) desc
     </select>
 
 </mapper>
