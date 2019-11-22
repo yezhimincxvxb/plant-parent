@@ -649,4 +649,6 @@ public class FarmerServiceImpl implements FarmerService {
                 .setAddTime(new Date());
         return farmerNoticeDAO.insert(notice);
     }
+
+
 }
