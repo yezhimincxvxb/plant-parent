@@ -242,10 +242,7 @@ public class ReapServiceImpl<T> implements ReapService {
     @Override
     @DS("read")
     public Reap reapInfoByIdAndUserId(Integer id, Integer userId) {
-        Reap where = new Reap();
-        where.setId(id);
-        where.setUserId(userId);
-        return reapDAO.selectOne(new QueryWrapper<>(where));
+        return reapDAO.selectByIdAndUserId(id,userId);
     }
 
     @Override

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: pro-master
+    active: dev
   aop:
     proxy-target-class: true
     auto: true

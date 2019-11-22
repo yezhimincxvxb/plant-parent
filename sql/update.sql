@@ -479,3 +479,7 @@ CREATE TABLE `plant_user_symbol` (
   `add_time` datetime DEFAULT NULL COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `moguying`.`plant_money_recharge`
+ADD COLUMN `review_uid` int(0) NOT NULL COMMENT '审核人id' AFTER `source`;
