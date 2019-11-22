@@ -482,6 +482,6 @@ CREATE TABLE `plant_user_symbol` (
 
 /** 线下体验店新增city城市字段 **/
 ALTER TABLE `moguying`.`plant_ex_shop`
-ADD COLUMN `city` varchar(255) DEFAULT NULL COMMENT '体验店城市';
+ADD COLUMN `city` varchar(255) DEFAULT NULL COMMENT '体验店城市' AFTER `address`;
 
 
