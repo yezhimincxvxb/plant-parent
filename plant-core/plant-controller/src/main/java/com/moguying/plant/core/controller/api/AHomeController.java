@@ -72,23 +72,7 @@ public class AHomeController {
 
     @Autowired
     private MallProductTypeService mallProductTypeService;
-
-    @Autowired
-    private ReapService reapService;
-
-
-    /**
-     * 更新用户产量信息
-     * 仅用一次
-     * @return
-     */
-    @ApiOperation("更新用户产量信息")
-    @PostMapping("/reap/weigh")
-    public ResponseData<Boolean> updateReapWeighInfo(){
-        reapService.updatePlantWeigh();
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
-    }
-
+    
 
     /**
      * 首页banner列表

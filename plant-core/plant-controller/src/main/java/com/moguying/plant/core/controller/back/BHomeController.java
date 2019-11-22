@@ -1,7 +1,7 @@
 package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.entity.*;
+import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.common.vo.BHomeTopTotal;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.reap.ReapService;
@@ -9,7 +9,9 @@ import com.moguying.plant.core.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -37,6 +39,8 @@ public class BHomeController {
         homeTopTotal.setPlantProfits(reapService.getPlantProfits());
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), homeTopTotal);
     }
+
+
 
 
 }

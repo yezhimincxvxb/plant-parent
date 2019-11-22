@@ -80,8 +80,6 @@ public interface ReapService {
     Boolean exchangeFertilizer(Integer userId, Integer fertilizerId, SaleCoin saleCoin, Fertilizer fertilizer);
 
 
-    Boolean updatePlantWeigh();
-
     /**
      * 获取种植总利润
      */

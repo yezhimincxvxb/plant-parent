@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
@@ -639,8 +640,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer regUserTotal() {
-        return userDAO.selectCount(new QueryWrapper<>(new User().setUserState(true)));
+        return userDAO.selectCount(new QueryWrapper<User>().lambda().eq(User::getUserState,UserEnum.BANK_IN_USED));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

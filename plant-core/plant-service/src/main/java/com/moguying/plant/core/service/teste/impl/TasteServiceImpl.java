@@ -35,9 +35,10 @@ import com.moguying.plant.core.entity.taste.vo.TasteReap;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.order.PlantOrderService;
-import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.service.teste.TasteService;
+import com.moguying.plant.utils.CommonUtil;
 import com.moguying.plant.utils.DateUtil;
+import com.moguying.plant.utils.IdCardSerialize;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
@@ -215,6 +216,7 @@ public class TasteServiceImpl implements TasteService {
         taste.setIsShow(false);
         taste.setProductName(product.getName());
         taste.setProductPrice(product.getPrice());
+        taste.setAddTime(new Date());
         mongoTemplate.save(taste);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }
@@ -273,7 +275,10 @@ public class TasteServiceImpl implements TasteService {
         Query query = new Query(Criteria.where("id").is(where.getId()));
         TasteApply apply = mongoTemplate.findOne(query,TasteApply.class);
         if(null != apply) {
-            UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("state", where.getState()), TasteApply.class);
+            Update update = new Update();
+            update.set("state",where.getState());
+            update.set("applyReviewTime",new Date());
+            UpdateResult updateResult = mongoTemplate.updateFirst(query, update, TasteApply.class);
             if(ApiEnum.TASTE_APPLY_SUCCESS.getType().equals(where.getState())) {
                 Taste taste = mongoTemplate.findOne(new Query(Criteria.where("id").is(apply.getTasteId())),Taste.class);
                 Long count = Optional.ofNullable(taste).map(Taste::getTasteCount).orElse(0L);
@@ -316,6 +321,7 @@ public class TasteServiceImpl implements TasteService {
         apply.setProductName(product.getName());
         apply.setApplyTime(new Date());
         apply.setProductPrice(product.getPrice());
+        apply.setTasteTime(tasteInfo.getAddTime());
         mongoTemplate.save(apply);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }
@@ -344,10 +350,30 @@ public class TasteServiceImpl implements TasteService {
         if(optional.map(TasteApply::getState).isPresent())
             query.addCriteria(Criteria.where("state").is(where.getState()));
         List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
+        tasteApplies.forEach(x -> x.setPhone(CommonUtil.INSTANCE.idOrPhoneMask(x.getPhone())));
         long count = mongoTemplate.count(query, TasteApply.class);
         return new PageResult<>(count,tasteApplies);
     }
 
+
+    @Override
+    public PageResult<TasteApply> bTasteApplyPageResult(Integer page, Integer size, TasteApply where) {
+        Query query = new Query().with(PageRequest.of(page-1,size, Sort.Direction.DESC,"applyTime"));
+        Optional<TasteApply> optional = Optional.ofNullable(where);
+        if(optional.map(TasteApply::getState).isPresent())
+            query.addCriteria(Criteria.where("state").is(where.getState()));
+        if(optional.map(TasteApply::getPhone).isPresent())
+            query.addCriteria(Criteria.where("phone").is(where.getPhone()));
+        if(optional.map(TasteApply::getProductName).isPresent())
+            query.addCriteria(Criteria.where("productName").is(where.getProductName()));
+        if(optional.map(TasteApply::getStartTime).isPresent() && optional.map(TasteApply::getEndTime).isPresent())
+            query.addCriteria(Criteria.where("applyReviewTime").gte(where.getStartTime()).lte(where.getEndTime()));
+        if(optional.map(TasteApply::getTasteStartTime).isPresent() && optional.map(TasteApply::getTasteEndTime).isPresent())
+            query.addCriteria(Criteria.where("tasteTime").gte(where.getTasteStartTime()).lte(where.getTasteEndTime()));
+        List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
+        long count = mongoTemplate.count(query, TasteApply.class);
+        return new PageResult<>(count,tasteApplies);
+    }
 
     @Override
     public List<Fertilizer> tasteGiftList() {

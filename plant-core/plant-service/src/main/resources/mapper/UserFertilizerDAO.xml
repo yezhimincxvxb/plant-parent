@@ -126,7 +126,7 @@
                 )
                 or (
                 (t2.amount_max is null)
-                and (t2.amount_min &lt; #{wq.amount})
+                and (t2.amount_min &lt;= #{wq.amount})
                 )
                 )
             </if>

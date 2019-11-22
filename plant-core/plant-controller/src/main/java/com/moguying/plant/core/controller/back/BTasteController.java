@@ -159,7 +159,7 @@ public class BTasteController {
         if(null == search.getWhere()){
             search.setWhere(new TasteApply());
         }
-        return tasteService.tasteApplyPageResult(search.getPage(),search.getSize(),search.getWhere());
+        return tasteService.bTasteApplyPageResult(search.getPage(),search.getSize(),search.getWhere());
     }
 
 }
