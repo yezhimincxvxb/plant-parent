@@ -1,86 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.user.UserAddressDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserAddress">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="province_name" jdbcType="VARCHAR" property="provinceName"/>
-        <result column="city_name" jdbcType="VARCHAR" property="cityName"/>
-        <result column="town_name" jdbcType="VARCHAR" property="townName"/>
-        <result column="receive_user_name" jdbcType="VARCHAR" property="receiveUserName"/>
-        <result column="receive_phone" jdbcType="VARCHAR" property="receivePhone"/>
-        <result column="detail_address" jdbcType="VARCHAR" property="detailAddress"/>
-        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
-        <result column="is_default" jdbcType="BIT" property="isDefault"/>
-        <result column="is_delete" jdbcType="BIT" property="isDelete"/>
-    </resultMap>
-    <sql id="Base_Column_List">
-        id, user_id, province_name, city_name, town_name, receive_user_name, receive_phone,
-        detail_address,add_time,is_default
-    </sql>
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserAddress">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="town_name" jdbcType="VARCHAR" property="townName" />
+    <result column="receive_user_name" jdbcType="VARCHAR" property="receiveUserName" />
+    <result column="receive_phone" jdbcType="VARCHAR" property="receivePhone" />
+    <result column="detail_address" jdbcType="VARCHAR" property="detailAddress" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="is_default" jdbcType="BIT" property="isDefault" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, province_name, city_name, town_name, receive_user_name, receive_phone, 
+    detail_address,add_time,is_default
+  </sql>
 
-    <update id="deleteById" parameterType="java.lang.Integer">
-        update plant_user_address set is_delete = 1
-        where id = #{id,jdbcType=INTEGER}
-    </update>
+  <update id="deleteById" parameterType="java.lang.Integer">
+    update plant_user_address set is_delete = 1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 
-    <select id="selectSelective" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_user_address
-        <where>
-            <if test="userId != null">
-                user_id = #{userId}
-            </if>
-            AND is_delete = 0
-        </where>
-        order by add_time desc
-    </select>
+  <select id="selectSelective" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>  from plant_user_address
+    <where>
+      <if test="userId != null">
+        user_id = #{userId}
+      </if>
+      AND is_delete = 0
+    </where>
+    order by add_time desc
+  </select>
 
-    <update id="setNoDefault" parameterType="int">
-        update plant_user_address
-        set is_default = 0
-        where user_id = #{userId}
-        <![CDATA[
+  <update id="setNoDefault" parameterType="int">
+    update plant_user_address
+    set is_default = 0
+    where user_id = #{userId}
+    <![CDATA[
         and id <> #{id}
     ]]>
-    </update>
+  </update>
 
-    <update id="setDefault" parameterType="int">
-        update plant_user_address
-        set is_default = 1
-        where user_id = #{userId} and id = #{id}
-    </update>
+  <update id="setDefault" parameterType="int">
+    update plant_user_address
+    set is_default = 1
+    where user_id = #{userId} and id = #{id}
+  </update>
 
-    <update id="setDefaultByTime" parameterType="int">
-        update plant_user_address
-        set is_default = 1
-        where user_id = #{userId}
-        order by add_time desc
-        limit 1
-    </update>
+  <update id="setDefaultByTime" parameterType="int">
+    update plant_user_address
+    set is_default = 1
+    where user_id = #{userId}
+    order by add_time desc
+    limit 1
+  </update>
+  
+  <select id="selectByIdAndUserId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_user_address
+    where id = #{id} and user_id = #{userId}
+    <if test="isDelete != null">
+      and is_delete = #{isDelete}
+    </if>
 
-    <select id="selectByIdAndUserId" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_user_address
-        where id = #{id} and user_id = #{userId}
-        <if test="isDelete != null">
-            and is_delete = #{isDelete}
-        </if>
-
-    </select>
-
-    <select id="userDefaultAddress" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_user_address
-        where user_id = #{userId} and is_default = 1 and is_delete = 0
-    </select>
+  </select>
+  
+  <select id="userDefaultAddress" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_user_address
+    where user_id = #{userId} and is_default = 1 and is_delete = 0
+  </select>
 
     <select id="getDefaultNum" resultType="java.lang.Integer">
-        select count(id) from plant_user_address
-        where user_id = #{userId} and is_default = 1
-    </select>
+    select count(id) from plant_user_address
+    where user_id = #{userId} and is_default = 1 and is_delete = 0
+  </select>
 
 </mapper>

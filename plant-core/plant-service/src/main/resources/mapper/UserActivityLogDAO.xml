@@ -11,12 +11,14 @@
         <result column="product_id" property="productId"/>
         <result column="seed_type_id" property="seedTypeId"/>
         <result column="fertilizer_id" property="fertilizerId"/>
+        <result column="state" property="state"/>
         <result column="add_time" property="addTime"/>
+        <result column="receive_time" property="receiveTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, `number`, `name`, user_id, friend_id, product_id, seed_type_id, fertilizer_id, add_time
-    </sql>
+    id, `number`, `name`, user_id, friend_id, product_id, seed_type_id, fertilizer_id, state, add_time, receive_time
+  </sql>
 
     <select id="findOnToday" resultMap="BaseResultMap">
         select
@@ -34,6 +36,42 @@
                 and instr(`number`, #{log.number})
             </if>
         </where>
+    </select>
+
+    <select id="activityLog" resultType="com.moguying.plant.core.entity.user.vo.UserActivityLogVo">
+        select t1.id, t2.phone, t3.phone `invitePhone`, t4.name `productName`,
+        t5.name `seedName`, t7.type_name `fertilizerName`, t6.amount_min,
+        t6.fertilizer_amount, t1.state, t1.receive_time
+        from plant_user_activity_log t1
+        left join plant_user t2 on t1.user_id = t2.id
+        left join plant_user t3 on t1.friend_id = t3.id
+        left join plant_mall_product t4 on t1.product_id = t4.id
+        left join plant_seed t5 on t1.seed_type_id = t5.id
+        left join plant_fertilizer t6 on t1.fertilizer_id = t6.id
+        left join plant_fertilizer_type t7 on t6.type_id = t7.id
+        <where>
+            <if test="activity != null">
+                <if test="activity.id != null">
+                    t1.id = #{activity.id}
+                </if>
+                <if test="activity.phone != null">
+                    and t2.phone = #{activity.phone}
+                </if>
+                <if test="activity.invitePhone != null">
+                    and t3.phone = #{activity.invitePhone}
+                </if>
+                <if test="activity.state != null">
+                    and t1.state = #{activity.state}
+                </if>
+                <if test="activity.startTime != null">
+                    and unix_timestamp(t1.receive_time) &gt; unix_timestamp(#{activity.startTime})
+                </if>
+                <if test="activity.endTime != null">
+                    and unix_timestamp(t1.receive_time) &lt; unix_timestamp(#{activity.endTime})
+                </if>
+            </if>
+        </where>
+        order by t1.id
     </select>
 
 </mapper>

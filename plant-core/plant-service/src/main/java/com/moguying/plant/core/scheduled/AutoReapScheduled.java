@@ -12,6 +12,7 @@ import java.util.Date;
 
 @Component
 @Slf4j
+@Profile("pro-master")
 public class AutoReapScheduled {
 
     @Autowired

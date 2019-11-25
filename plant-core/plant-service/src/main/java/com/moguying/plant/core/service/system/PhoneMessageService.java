@@ -24,4 +24,9 @@ public interface PhoneMessageService {
 
     Integer validateMessage(String phone, String code);
 
+    Integer send(String phone,String template,String code,String... params);
+
+
+
+
 }

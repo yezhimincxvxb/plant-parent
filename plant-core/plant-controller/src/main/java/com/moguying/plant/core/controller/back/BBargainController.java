@@ -3,6 +3,7 @@ package com.moguying.plant.core.controller.back;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo;
+import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class BBargainController {
      * 后台砍价详情列表
      */
     @PostMapping("/list")
-    public PageResult<BackBargainDetailVo> bargainList(@RequestBody PageSearch<?> search) {
-        return bargainDetailService.bargainList(search.getPage(), search.getSize());
+    public PageResult<BackBargainDetailVo> bargainList(@RequestBody PageSearch<BargainVo> search) {
+        return bargainDetailService.bargainList(search.getPage(), search.getSize(), search.getWhere());
     }
 }

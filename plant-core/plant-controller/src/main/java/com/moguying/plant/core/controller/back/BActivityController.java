@@ -5,6 +5,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.content.Activity;
+import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
 import com.moguying.plant.core.service.content.ActivityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -89,5 +90,13 @@ public class BActivityController {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.deleteActivityById(id));
     }
 
+    /**
+     * 品宣部：后台查看，登录送菌包
+     */
+    @PostMapping("/prize/log")
+    @ApiOperation("后台查看，登录送菌包")
+    public PageResult<UserActivityLogVo> sendSeed(@RequestBody PageSearch<UserActivityLogVo> search) {
+        return activityService.activityLog(search.getPage(), search.getSize(), search.getWhere());
+    }
 
 }

@@ -13,4 +13,8 @@ public class Login implements Serializable {
 
     private String password;
 
+    /**
+     * 辅助：领取的奖励名称
+     */
+    private Integer id;
 }

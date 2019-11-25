@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @EnableSwagger2Doc
-@Profile("dev")
+@Profile({"dev", "test"})
 public class SwaggerConfig {
 }

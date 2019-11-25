@@ -136,7 +136,7 @@
     <!-- 砍价成功记录 -->
     <select id="ownLog" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
         select t2.id `id`, t3.name `productName`, t3.summary_desc `productInfo`, t3.pic_url `picUrl`, t2.add_time
-        `endTime`, t3.id `productId`
+        `endTime`, t3.id `productId`, t1.id `orderId`
         from plant_bargain_detail t1
         left join plant_mall_order t2 on t1.order_number = t2.order_number
         left join plant_mall_product t3 on t1.product_id = t3.id
@@ -193,15 +193,40 @@
     <select id="bargainList" resultType="com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo">
         select t1.id `orderId`, t4.phone `phone`, t5.name `productName`, t1.total_amount `productPrice`,
         t1.bargain_amount `bargainPrice`, t1.total_count `bargainCount`, t1.bargain_count `bargainNumber`,
-        t1.close_time `closeTime`, t6.detail_address `address`, t3.state `state`
+        t1.close_time `closeTime`, t6.detail_address `address`, t3.state `state`, t1.add_time `addTime`,
+        t1.bargain_time `bargainTime`
         from plant_bargain_detail t1
         left join plant_bargain_log t2 on t1.id = t2.detail_id
         left join plant_mall_order t3 on t1.order_number = t3.order_number
         left join plant_user t4 on t1.user_id = t4.id
         left join plant_mall_product t5 on t1.product_id = t5.id
         left join plant_user_address t6 on t3.address_id = t6.id
+        <where>
+            <if test="bargain != null">
+                <if test="bargain.phone != null">
+                    t4.phone = #{bargain.phone}
+                </if>
+                <if test="bargain.productName != null">
+                    and instr(t5.name, #{bargain.productName})
+                </if>
+                <if test="bargain.beginTime != null">
+                    and t1.total_count = t1.bargain_count
+                    and unix_timestamp(t1.bargain_time) &gt; unix_timestamp(#{bargain.beginTime})
+                </if>
+                <if test="bargain.endTime != null">
+                    and t1.total_count = t1.bargain_count
+                    and unix_timestamp(t1.bargain_time) &lt; unix_timestamp(#{bargain.endTime})
+                </if>
+                <if test="bargain.state != null and bargain.state == 0">
+                    and t3.state = 0
+                </if>
+                <if test="bargain.state != null and bargain.state != 0">
+                    and t3.state &gt;= 1
+                </if>
+            </if>
+        </where>
         group by t1.id
-        order by t1.add_time desc
+        order by (t1.bargain_amount / t1.total_amount) desc
     </select>
 
 </mapper>

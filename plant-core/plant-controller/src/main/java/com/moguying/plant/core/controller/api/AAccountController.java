@@ -11,10 +11,7 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.account.MoneyRecharge;
 import com.moguying.plant.core.entity.account.MoneyWithdraw;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.account.vo.AccountInfo;
-import com.moguying.plant.core.entity.account.vo.DetailInfo;
-import com.moguying.plant.core.entity.account.vo.InAndOutMoney;
-import com.moguying.plant.core.entity.account.vo.WithdrawRequest;
+import com.moguying.plant.core.entity.account.vo.*;
 import com.moguying.plant.core.entity.common.vo.Profit;
 import com.moguying.plant.core.entity.mall.vo.ProductInfo;
 import com.moguying.plant.core.entity.payment.PayRequestInfo;
@@ -280,6 +277,9 @@ public class AAccountController {
     }
 
 
+
+
+
     /**
      * 利润统计
      *
@@ -325,87 +325,6 @@ public class AAccountController {
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), totalProfit);
         }
 
-    }
-
-    /**
-     * 充值
-     *
-     * @return
-     */
-    @PostMapping("/recharge")
-    @Deprecated
-    public ResponseData<Integer> recharge(@RequestParam("money") String money, @LoginUserId Integer userId) {
-
-        MoneyRecharge moneyRecharge = new MoneyRecharge();
-        moneyRecharge.setMoney(new BigDecimal(money));
-        moneyRecharge.setUserId(userId);
-        moneyRecharge.setOrderNumber(OrderPrefixEnum.RECHARGE_ORDER.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
-        moneyRecharge.setSource("MOBILE");
-
-        moneyRecharge.setFee(new BigDecimal("0"));
-        PayRequestInfo payRequestInfo = new PayRequestInfo();
-        payRequestInfo.setUserId(userId);
-        payRequestInfo.setMerOrderNo(moneyRecharge.getOrderNumber());
-        payRequestInfo.setMoney(money);
-        payRequestInfo.setOrderSubject(MoneyOpEnum.RECHARGE.getTypeStr() + moneyRecharge.getOrderNumber());
-        ResultData<PaymentResponse> resultData = paymentService.sendPayInfo(payRequestInfo, null);
-
-        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
-            if (resultData.getData().getData() instanceof SendPaySmsCodeResponse) {
-                SendPaySmsCodeResponse response = (SendPaySmsCodeResponse) resultData.getData().getData();
-                moneyRecharge.setPaySmsSqNo(response.getSeqNo());
-            }
-        }
-        if (null != moneyRecharge.getPaySmsSqNo()) {
-            ResultData<Integer> addResult = moneyRechargeService.addMoneyRecharge(moneyRecharge);
-            return new ResponseData<>(addResult.getMessageEnum().getMessage(), addResult.getMessageEnum().getState(), addResult.getData());
-        }
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-
-
-    }
-
-
-    /**
-     * 充值支付
-     *
-     * @param recharge
-     * @param userId
-     * @return
-     */
-    @PutMapping("/recharge")
-    @Deprecated
-    public ResponseData<Integer> rechargeDo(@RequestBody PayWithCode recharge, @LoginUserId Integer userId) {
-
-        MoneyRecharge rechargeInfo = moneyRechargeService.rechargeInfoById(recharge.getId());
-        if (null == rechargeInfo || !rechargeInfo.getState().equals(MoneyStateEnum.RECHARGING.getState()))
-            return new ResponseData<>(MessageEnum.RECHARGE_NOT_EXISTS.getMessage(), MessageEnum.RECHARGE_NOT_EXISTS.getState());
-        if (!rechargeInfo.getUserId().equals(userId))
-            return new ResponseData<>(MessageEnum.RECHARGE_NOT_EXISTS.getMessage(), MessageEnum.RECHARGE_NOT_EXISTS.getState());
-        PayRequestInfo payRequestInfo = new PayRequestInfo();
-        payRequestInfo.setUserId(userId);
-        payRequestInfo.setMoney(rechargeInfo.getMoney().toString());
-        payRequestInfo.setMerOrderNo(rechargeInfo.getOrderNumber());
-        payRequestInfo.setOrderSubject(MoneyOpEnum.RECHARGE.getTypeStr() + rechargeInfo.getOrderNumber());
-        payRequestInfo.setSeqNo(rechargeInfo.getPaySmsSqNo());
-        payRequestInfo.setSmsCode(recharge.getCode());
-
-        ResultData<PaymentResponse> payResponse = paymentService.pay(payRequestInfo);
-
-        if (null != payResponse.getData() && payResponse.getData().getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
-            UserMoneyOperator operator = new UserMoneyOperator();
-            operator.setOperationId(rechargeInfo.getOrderNumber());
-            operator.setOpType(MoneyOpEnum.RECHARGE);
-            UserMoney userMoney = new UserMoney(rechargeInfo.getUserId());
-            userMoney.setFreezeMoney(rechargeInfo.getMoney().subtract(rechargeInfo.getFee()));
-            operator.setUserMoney(userMoney);
-            if (moneyService.updateAccount(operator) != null) {
-                return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
-            }
-        } else if (null != payResponse.getData())
-            return new ResponseData<>(payResponse.getData().getMsg(), MessageEnum.ERROR.getState());
-
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
     /**

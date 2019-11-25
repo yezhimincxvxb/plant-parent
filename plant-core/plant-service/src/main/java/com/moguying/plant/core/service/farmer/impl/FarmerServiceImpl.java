@@ -568,28 +568,30 @@ public class FarmerServiceImpl implements FarmerService {
         if (Objects.nonNull(userActivityLogs) && userActivityLogs.size() > 0)
             return resultData.setMessageEnum(MessageEnum.TODAY_HELPED);
 
+
         // 成长值
+        Integer growUpValue = null;
+
         FarmerEnergy farmerEnergy = new FarmerEnergy()
                 .setUserId(userId)
                 .setState(FarmerEnum.ENERGY_HAS_GET.getState())
                 .setIncrWay(FieldEnum.HELP_FRIEND.getField())
                 .setAddTime(new Date());
-
         // 当前登录用户是否是新用户
-        List<User> users = userDAO.inviteUser(userSymbol.getAddTime(), userSymbol.getUserId());
+        List<User> users = userDAO.inviteUser(userSymbol.getAddTime(), null);
         if (Objects.nonNull(users) && users.size() > 0) {
             List<Integer> idList = users.stream().map(User::getId).collect(Collectors.toList());
             // 新用户赠50助力成长值、现金礼包
             if (idList.contains(userId)) {
                 // 发5元现金券
-                resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                        new TriggerEventResult().setUserId(userId), ActivityEnum.MONEY_5RMB.getState());
+                resultData = fertilizerService.distributeFertilizer(FieldEnum.MONEY5_FERTILIZER.getField(),
+                        new TriggerEventResult().setUserId(userId));
                 if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
 
-                // 发价值95元的种植券
-                resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
+                // 发价值95元的种植券(不发了)
+                /*resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
                         new TriggerEventResult().setUserId(userId), ActivityEnum.PLANT_FERTILIZER_95RMB.getState());
-                if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
+                if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;*/
 
                 // 新用户增加成长值
                 farmerEnergy.setIncrGrowUpCount(50);
@@ -598,6 +600,8 @@ public class FarmerServiceImpl implements FarmerService {
                     Integer result = addFarmerNotice(userId, farmerEnergy.getIncrGrowUpCount());
                     if (result <= 0) return resultData.setMessageEnum(MessageEnum.ERROR);
                 }
+
+                growUpValue = farmerEnergy.getIncrGrowUpCount();
             }
         } else {
             // 老用户增加成长值
@@ -607,6 +611,8 @@ public class FarmerServiceImpl implements FarmerService {
                 Integer result = addFarmerNotice(userId, farmerEnergy.getIncrGrowUpCount());
                 if (result <= 0) return resultData.setMessageEnum(MessageEnum.ERROR);
             }
+
+            growUpValue = farmerEnergy.getIncrGrowUpCount();
         }
 
         // 分享者获得成长值(每日20次)
@@ -629,7 +635,7 @@ public class FarmerServiceImpl implements FarmerService {
                 .setNumber(OrderPrefixEnum.FRIEND_HELP.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate())
                 .setAddTime(new Date());
         if (userActivityLogDAO.insert(add) > 0)
-            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(growUpValue);
         return resultData;
     }
 
@@ -643,4 +649,6 @@ public class FarmerServiceImpl implements FarmerService {
                 .setAddTime(new Date());
         return farmerNoticeDAO.insert(notice);
     }
+
+
 }

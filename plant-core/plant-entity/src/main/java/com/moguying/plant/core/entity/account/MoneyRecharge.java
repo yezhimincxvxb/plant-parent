@@ -1,10 +1,7 @@
 package com.moguying.plant.core.entity.account;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
@@ -24,16 +21,17 @@ public class MoneyRecharge implements Serializable {
     /**
      * 用户id
      */
-    @JSONField(name = "user_id")
     @TableField
     private Integer userId;
 
-    @JSONField(name = "user_name", deserialize = false)
+
 
     @TableField(exist = false)
-    private String userName;
+    private String phone;
 
-    @JSONField(name = "order_number")
+    @TableField(exist = false)
+    private String realName;
+
     @TableField
     private String orderNumber;
 
@@ -53,28 +51,28 @@ public class MoneyRecharge implements Serializable {
     /**
      * 充值时间
      */
-    @JSONField(name = "recharge_time", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date rechargeTime;
 
     /**
      * 到账时间
      */
-    @JSONField(name = "to_account_time", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date toAccountTime;
 
     /**
      * 到账金额
      */
-    @JSONField(name = "to_account_money", serializeUsing = BigDecimalSerialize.class)
+    @JSONField(serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal toAccountMoney;
 
     /**
      * 充值手续费
      */
-    @JSONField(name = "fee", serializeUsing = BigDecimalSerialize.class)
+    @JSONField(serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal fee;
 
@@ -82,7 +80,7 @@ public class MoneyRecharge implements Serializable {
     /**
      * 第三方支付短信流水号
      */
-    @JSONField(serialize = false, deserialize = false)
+    @JSONField(serialize = false,deserialize = false)
     @TableField
     private String paySmsSqNo;
 

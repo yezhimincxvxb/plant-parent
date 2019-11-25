@@ -94,4 +94,14 @@ public class SeedOrder implements Serializable {
     @JSONField(ordinal = 9)
     @TableField(exist = false)
     private String realName;
+
+
+    /**
+     * 是否新手
+     */
+    @JSONField(serialize = false)
+    @TableField(exist = false)
+    private Boolean isForNew;
+
+
 }

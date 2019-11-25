@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.exshop.ExShopDAO">
+
+    <resultMap id="BaseResultMap" type="ExShop">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="open_time" jdbcType="VARCHAR" property="openTime"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+    </resultMap>
+
+    <resultMap id="exShopList" type="ExShop" extends="BaseResultMap">
+        <collection property="pics" ofType="ExShopPic">
+            <result column="pic_id" property="id"/>
+            <result column="pic_url" property="picUrl"/>
+            <result column="shop_id" property="shopId"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, shop_name, address, city, phone, open_time,location, add_time
+    </sql>
+
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_ex_shop
+        <where>
+            <if test="shopName != null and shopName != ''">
+                <bind name="nameLike" value="'%'+ showName +'%'"/>
+                show_name like #{nameLike}
+            </if>
+            <if test="address != null and address != ''">
+                <bind name="addressLike" value="'%' + address + '%'"/>
+                address like #{addressLike}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="exShopList" resultType="com.moguying.plant.core.entity.exshop.vo.ExShopVo">
+        select t1.*, t2.content
+        from plant_ex_shop t1
+        left join plant_ex_shop_content t2 on t1.id = t2.shop_id
+        <where>
+            <if test="shop != null">
+                <if test="shop.id != null">
+                    t1.id = #{shop.id}
+                </if>
+                <if test="shop.shopName != null">
+                    and instr(t1.shop_name, #{shop.shopName})
+                </if>
+                <if test="shop.address != null">
+                    and instr(t1.address, #{shop.address})
+                </if>
+                <if test="shop.phone != null">
+                    and t1.phone = #{shop.phone}
+                </if>
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
+
+</mapper>

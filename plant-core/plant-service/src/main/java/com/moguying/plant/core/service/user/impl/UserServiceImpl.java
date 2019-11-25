@@ -4,20 +4,24 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
+import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapWeighDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
 import com.moguying.plant.core.dao.user.*;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
+import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
-import com.moguying.plant.core.entity.seed.SeedType;
+import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
+import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
 import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
@@ -29,6 +33,7 @@ import com.moguying.plant.utils.PasswordUtil;
 import com.moguying.plant.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,6 +78,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SeedOrderService seedOrderService;
+
+    @Autowired
+    private FertilizerDAO fertilizerDAO;
 
     @Value("${excel.download.dir}")
     private String downloadDir;
@@ -515,7 +523,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @DS("write")
     @Transactional
-    public List<UserActivityLog> inviteUser(Integer userId) {
+    public List<UserActivityLogVo> inviteUser(Integer userId) {
 
         // 活动开启时间
         Date startTime = DateUtil.INSTANCE.stringToDate(ActivityEnum.START_ACTIVITY.getMessage());
@@ -525,56 +533,131 @@ public class UserServiceImpl implements UserService {
                 .eq("user_id", userId)
                 .likeRight("number", OrderPrefixEnum.INVITE_REWARD.getPreFix())
                 .orderByAsc("add_time");
-        List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
+        List<UserActivityLog> userActivityLogs = userActivityLogDAO.selectList(wrapper);
 
         // 发奖
         List<User> users = userDAO.inviteUser(startTime, userId);
         if (Objects.isNull(users) || users.size() == 0) return null;
-        for (int i = logs.size(); i < users.size(); i++) {
-            User user = users.get(i);
-            UserActivityLog log = new UserActivityLog();
-            log.setUserId(userId);
-            log.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
-            log.setFriendId(user.getId());
-            switch (i) {
-                case 0:
-                    // 一份12.5的菌包
-                    SeedType seedType = seedOrderService.getSeedType(userId);
-                    if (Objects.isNull(seedType)) return null;
-                    log.setSeedTypeId(seedType.getId());
-                    log.setName(seedType.getClassName());
-                    break;
-                case 1:
-                    // 5折酒水满减券
-                    ResultData<Integer> resultData = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                            new TriggerEventResult().setUserId(userId), ActivityEnum.WINE_FERTILIZER.getState());
-                    if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return null;
-                    log.setFertilizerId(ActivityEnum.WINE_FERTILIZER.getState());
-                    log.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
-                    break;
-                case 2:
-                    // 商城食品满减券
-                    ResultData<Integer> result = fertilizerService.distributeFertilizer(FieldEnum.ACTIVITY_FERTILIZER.getField(),
-                            new TriggerEventResult().setUserId(userId), ActivityEnum.MALL_FOOL_FERTILIZER.getState());
-                    if (result.getMessageEnum().equals(MessageEnum.ERROR)) return null;
-                    log.setFertilizerId(ActivityEnum.MALL_FOOL_FERTILIZER.getState());
-                    log.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
-                    break;
-                default:
-                    break;
+        // 前三个邀请成功才有奖励
+        if (users.size() <= 3) {
+            for (int i = userActivityLogs.size(); i < users.size(); i++) {
+                User user = users.get(i);
+                UserActivityLog userActivityLog = new UserActivityLog();
+                userActivityLog.setUserId(userId);
+                userActivityLog.setNumber(OrderPrefixEnum.INVITE_REWARD.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate());
+                userActivityLog.setFriendId(user.getId());
+                Fertilizer fertilizer;
+                switch (i) {
+                    case 0:
+                        // 一份12.5的菌包
+                        userActivityLog.setSeedTypeId(ActivityEnum.FREE_SEED_30DAY.getState());
+                        userActivityLog.setName(ActivityEnum.FREE_SEED_30DAY.getMessage());
+                        break;
+                    case 1:
+                        // 5折酒水满减券
+                        fertilizer = getFertilizer(FieldEnum.WINE_FERTILIZER.getField());
+                        if (Objects.isNull(fertilizer)) return null;
+                        userActivityLog.setFertilizerId(fertilizer.getId());
+                        userActivityLog.setName(ActivityEnum.WINE_FERTILIZER.getMessage());
+                        break;
+                    case 2:
+                        // 商城食品满减券
+                        fertilizer = getFertilizer(FieldEnum.MALL_FOOL_FERTILIZER.getField());
+                        if (Objects.isNull(fertilizer)) return null;
+                        userActivityLog.setFertilizerId(fertilizer.getId());
+                        userActivityLog.setName(ActivityEnum.MALL_FOOL_FERTILIZER.getMessage());
+                        break;
+                    default:
+                        break;
+                }
+                userActivityLog.setState(false);
+                userActivityLog.setAddTime(user.getRegTime());
+                if (userActivityLogDAO.insert(userActivityLog) <= 0) return null;
+                userActivityLogs.add(userActivityLog);
             }
-            log.setAddTime(new Date());
-            if (userActivityLogDAO.insert(log) <= 0) return null;
-            logs.add(log);
         }
 
-        // 填充手机号
-        users.forEach(user ->
-                logs.stream()
-                        .filter(log -> Objects.equals(user.getId(), log.getFriendId()))
-                        .forEach(log -> log.setPhone(user.getPhone())));
+        // 赋值属性
+        List<UserActivityLogVo> userActivityLogVos = Collections.synchronizedList(new ArrayList<>());
+        userActivityLogs.forEach(userActivityLog -> {
+            UserActivityLogVo userActivityLogVo = new UserActivityLogVo();
+            BeanUtils.copyProperties(userActivityLog, userActivityLogVo);
+            userActivityLogVos.add(userActivityLogVo);
+        });
 
-        return logs;
+        return userActivityLogVos;
     }
+
+    /**
+     * 根据触发事件获取对应的券
+     */
+    private Fertilizer getFertilizer(String event) {
+        QueryWrapper<Fertilizer> queryWrapper = new QueryWrapper<Fertilizer>().eq("trigger_get_event", event);
+        List<Fertilizer> fertilizers = fertilizerDAO.selectList(queryWrapper);
+        if (Objects.isNull(fertilizers) || fertilizers.size() != 1) return null;
+        return fertilizers.get(0);
+    }
+
+    @Override
+    @DS("write")
+    @Transactional
+    public ResultData<Integer> pickUpReward(Integer userId, Integer id) {
+
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+
+        // 已领取
+        UserActivityLog userActivityLog = userActivityLogDAO.selectById(id);
+        if (Objects.isNull(userActivityLog) || userActivityLog.getState())
+            return resultData.setMessageEnum(MessageEnum.INVITE_REWARD);
+
+        // 领取
+        if (Objects.equals(userActivityLog.getName(), ActivityEnum.FREE_SEED_30DAY.getMessage())) {
+            // 一份12.5的菌包
+            Seed seed = seedOrderService.getSeedType(userId);
+            if (Objects.isNull(seed)) return resultData;
+
+        } else if (Objects.equals(userActivityLog.getName(), ActivityEnum.WINE_FERTILIZER.getMessage())) {
+            // 5折酒水满减券
+            resultData = fertilizerService.distributeFertilizer(FieldEnum.WINE_FERTILIZER.getField(),
+                    new TriggerEventResult().setUserId(userId), userActivityLog.getFertilizerId());
+            if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
+
+        } else if (Objects.equals(userActivityLog.getName(), ActivityEnum.MALL_FOOL_FERTILIZER.getMessage())) {
+            // 商城食物满减券
+            resultData = fertilizerService.distributeFertilizer(FieldEnum.MALL_FOOL_FERTILIZER.getField(),
+                    new TriggerEventResult().setUserId(userId), userActivityLog.getFertilizerId());
+            if (resultData.getMessageEnum().equals(MessageEnum.ERROR)) return resultData;
+
+        }
+
+        // 更新状态
+        userActivityLog.setState(true).setReceiveTime(new Date());
+        if (userActivityLogDAO.updateById(userActivityLog) <= 0)
+            return resultData;
+
+        return resultData.setMessageEnum(MessageEnum.SUCCESS);
+    }
+
+    @Override
+    public Integer regUserTotal() {
+        return userDAO.selectCount(new QueryWrapper<User>().lambda().eq(User::getUserState,UserEnum.BANK_IN_USED));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 

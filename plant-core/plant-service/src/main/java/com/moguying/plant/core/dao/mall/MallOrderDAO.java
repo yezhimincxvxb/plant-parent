@@ -1,6 +1,5 @@
 package com.moguying.plant.core.dao.mall;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.BaseDAO;
@@ -26,4 +25,6 @@ public interface MallOrderDAO extends BaseDAO<MallOrder> {
     MallOrder findByIdAndNum(@Param("userId") Integer userId, @Param("number") String number);
 
     Integer closeOrder(@Param("ids") List<Integer> ids);
+
+    Integer getMallOrderNum();
 }

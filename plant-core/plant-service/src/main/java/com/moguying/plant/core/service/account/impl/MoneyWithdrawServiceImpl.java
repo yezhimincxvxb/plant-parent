@@ -43,7 +43,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -98,7 +97,7 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     @Override
     @DS("read")
     public PageResult<MoneyWithdraw> apiMoneyWithdrawList(Integer page, Integer size, MoneyWithdraw where) {
-        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
+        IPage<MoneyWithdraw> pageResult = moneyWithdrawDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where).orderByDesc("withdraw_time"));
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 

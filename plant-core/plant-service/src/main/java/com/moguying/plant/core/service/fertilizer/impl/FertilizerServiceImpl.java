@@ -183,10 +183,10 @@ public class FertilizerServiceImpl implements FertilizerService {
         Fertilizer where = new Fertilizer();
         where.setTriggerGetEvent(triggerGetEvent);
         if (!Objects.isNull(fertilizerId)) where.setId(fertilizerId);
-        // where.setStartTime(new Date());
+         where.setStartTime(new Date());
 
         // 获取可发放的所有券
-        List<Fertilizer> fertilizers = fertilizerDAO.selectList(new QueryWrapper<>(where));
+        List<Fertilizer> fertilizers = fertilizerDAO.selectSelective(where);
         if (null == fertilizers || fertilizers.size() <= 0) return resultData;
 
         for (Fertilizer fertilizer : fertilizers) {

@@ -1,16 +1,15 @@
 package com.moguying.plant.core.service.content.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moguying.plant.core.dao.content.ActivityDAO;
+import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.content.Activity;
+import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
 import com.moguying.plant.core.service.content.ActivityService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,9 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
 
     @Autowired
     private ActivityDAO activityDAO;
+
+    @Autowired
+    private UserActivityLogDAO userActivityLogDAO;
 
     @Value("${meta.content.img}")
     private String appendStr;
@@ -97,5 +99,12 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
     @DS("read")
     public List<Activity> newestActivity() {
         return activityDAO.newestActivity();
+    }
+
+    @Override
+    @DS("read")
+    public PageResult<UserActivityLogVo> activityLog(Integer page, Integer size, UserActivityLogVo userActivityLogVo) {
+        IPage<UserActivityLogVo> iPage = userActivityLogDAO.activityLog(new Page<>(page, size), userActivityLogVo);
+        return new PageResult<>(iPage.getTotal(), iPage.getRecords());
     }
 }

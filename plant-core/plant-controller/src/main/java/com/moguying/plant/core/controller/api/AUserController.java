@@ -2,6 +2,7 @@ package com.moguying.plant.core.controller.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -9,6 +10,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.LoginUserId;
+import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -24,6 +26,7 @@ import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.reap.vo.ReapSearch;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
+import com.moguying.plant.core.entity.system.PhoneMessage;
 import com.moguying.plant.core.entity.user.*;
 import com.moguying.plant.core.entity.user.vo.*;
 import com.moguying.plant.core.service.farmer.FarmerService;
@@ -106,6 +109,9 @@ public class AUserController {
 
     @Autowired
     private FarmerService farmerService;
+
+    @Autowired
+    private UserActivityLogDAO userActivityLogDAO;
 
 
     @Value("${user.invite.bg.image}")
@@ -1052,38 +1058,63 @@ public class AUserController {
     }
 
     /**
-     * 好友分享，获取邀请码
+     * 品宣部-是否已领
      */
-    @GetMapping("/friend/sharing")
-    @ApiOperation("好友分享，获取邀请码")
-    public ResponseData<User> friendSharing(@LoginUserId Integer userId) {
+    @GetMapping("/already/pick/up")
+    @ApiOperation("品宣部-领取菌包")
+    public ResponseData<Boolean> alreadyPickUp(@LoginUserId Integer userId) {
 
-        ResponseData<User> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
+                .eq("user_id", userId)
+                .likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix());
+        List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
+        if (Objects.nonNull(logs) && logs.size() > 0)
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
-        User user = userService.userInfoById(userId);
-        if (Objects.isNull(user)) return responseData;
-
-        return responseData
-                .setMessage(MessageEnum.SUCCESS.getMessage())
-                .setState(MessageEnum.SUCCESS.getState())
-                .setData(new User().setInviteCode(user.getInviteCode()));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
     /**
-     * 邀请成功记录
+     * 品宣部-领取菌包
+     */
+    @PostMapping("/free/seed")
+    @ApiOperation("品宣部-领取菌包")
+    public ResponseData<Integer> freeSeed(@LoginUserId Integer userId, @RequestBody Login login) {
+
+        // 请求参数错误
+        if (Objects.isNull(login) || StringUtils.isEmpty(login.getPhone()) || StringUtils.isEmpty(login.getCode()))
+            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+
+        // 校验手机号格式
+        if (!CommonUtil.INSTANCE.isPhone(login.getPhone()))
+            return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
+
+        // 短信验证
+        PhoneMessage message = messageService.messageByPhone(login.getPhone());
+        if (Objects.isNull(message) || !Objects.equals(message.getCode(), login.getCode()))
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
+        messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
+
+        // 赠送菌包
+        ResultData<Integer> resultData = seedOrderService.sendSeedSuccess(userId);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+    }
+
+    /**
+     * 品宣部-邀请记录
      */
     @GetMapping("/invite/log")
-    @ApiOperation("邀请成功记录")
-    public ResponseData<List<UserActivityLog>> inviteLog(@LoginUserId Integer userId) {
+    @ApiOperation("品宣部-邀请记录")
+    public ResponseData<List<UserActivityLogVo>> inviteLog(@LoginUserId Integer userId) {
 
-        ResponseData<List<UserActivityLog>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-
-        User user = userService.userInfoById(userId);
-        if (Objects.isNull(user)) return responseData;
+        ResponseData<List<UserActivityLogVo>> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
         // 发奖
-        List<UserActivityLog> logs = userService.inviteUser(userId);
-        if (Objects.isNull(logs)) return responseData;
+        List<UserActivityLogVo> logs = userService.inviteUser(userId);
+        if (Objects.isNull(logs) || logs.isEmpty())
+            return responseData
+                    .setMessage(MessageEnum.ONT_INVITE_LOG.getMessage())
+                    .setState(MessageEnum.ONT_INVITE_LOG.getState());
 
         return responseData
                 .setMessage(MessageEnum.SUCCESS.getMessage())
@@ -1092,38 +1123,62 @@ public class AUserController {
     }
 
     /**
-     * 每日分享，获取成长值
+     * 品宣部-领取奖励
+     */
+    @PostMapping("/pick/up/reward")
+    @ApiOperation("品宣部-领取奖励")
+    public ResponseData<Integer> pickUpReward(@LoginUserId Integer userId, @RequestBody Login login) {
+
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+
+        if (Objects.isNull(login.getId()))
+            return responseData;
+
+        // 短信验证
+        if (StringUtils.isNotEmpty(login.getPhone()) && StringUtils.isNotEmpty(login.getCode())) {
+            PhoneMessage message = messageService.messageByPhone(login.getPhone());
+            if (Objects.isNull(message) || !Objects.equals(message.getCode(), login.getCode()))
+                return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
+            messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
+        }
+
+        ResultData<Integer> resultData = userService.pickUpReward(userId, login.getId());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+    }
+
+    /**
+     * 田园种植-每日分享
      */
     @GetMapping("/grow/up/sharing")
-    @ApiOperation("每日分享，获取成长值")
+    @ApiOperation("田园种植-每日分享")
     public ResponseData<Integer> growUpSharing(@LoginUserId Integer userId) {
         ResultData<Integer> resultData = farmerService.getShareReward(userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
     /**
-     * 助力分享
+     * 田园种植-分享标识
      */
-    @GetMapping("/help/share")
-    @ApiOperation("助力分享")
+    @GetMapping("/help/sharing")
+    @ApiOperation("田园种植-分享标识")
     public ResponseData<UserSymbol> helpShare(@LoginUserId Integer userId) {
         ResultData<UserSymbol> resultData = farmerService.addFriendLog(userId);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
     /**
-     * 好友助力
+     * 田园种植-好友助力
      */
     @GetMapping("/friend/help/{symbol}")
-    @ApiOperation("好友助力")
+    @ApiOperation("田园种植-好友助力")
     public ResponseData<Integer> friendHelp(@LoginUserId Integer userId, @PathVariable("symbol") String symbol) {
 
         ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-        if (Objects.isNull(userId) || Objects.isNull(symbol))
+        if (Objects.isNull(userId) || StringUtils.isBlank(symbol))
             return responseData;
 
         ResultData<Integer> resultData = farmerService.friendHelpSuccess(userId, symbol);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
     }
 
 }

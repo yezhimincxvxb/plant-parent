@@ -16,9 +16,6 @@ import java.util.List;
 @Repository
 public interface MoneyRechargeDAO extends BaseDAO<MoneyRecharge> {
 
-    List<MoneyRecharge> selectSelective(MoneyRecharge where);
-
-    MoneyRecharge selectByPrimaryKey(Integer id);
-
-
+    List<MoneyRecharge> selectSelective(@Param("wq") MoneyRecharge where);
+    IPage<MoneyRecharge> selectSelective(Page page,@Param("wq") MoneyRecharge where);
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.constant.MallEnum;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import com.moguying.plant.utils.DateUtil;
-import com.moguying.plant.utils.IdCardSerialize;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -27,7 +26,7 @@ public class BackBargainDetailVo {
     /**
      * 手机号
      */
-    @JSONField(ordinal = 2, serializeUsing = IdCardSerialize.class)
+    @JSONField(ordinal = 2)
     private String phone;
 
     /**
@@ -45,7 +44,7 @@ public class BackBargainDetailVo {
     /**
      * 已砍价格
      */
-    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5, serialize = false, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal bargainPrice;
 
     /**
@@ -67,45 +66,57 @@ public class BackBargainDetailVo {
     private Integer bargainNumber;
 
     /**
-     * 结束时间
-     */
-    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
-    private Date closeTime;
-
-    /**
      * 剩余时间
      */
-    @JSONField(ordinal = 10)
+    @JSONField(ordinal = 9)
     private String leftTime;
+
+    /**
+     * 添加时间
+     */
+    @JSONField(ordinal = 10, format = "yyyy-MM-dd HH:mm:ss")
+    private Date addTime;
+
+    /**
+     * 砍成时间
+     */
+    @JSONField(ordinal = 11, format = "yyyy-MM-dd HH:mm:ss")
+    private Date bargainTime;
+
+    /**
+     * 结束时间
+     */
+    @JSONField(ordinal = 12, serialize = false, format = "yyyy-MM-dd HH:mm:ss")
+    private Date closeTime;
 
     /**
      * 收货地址
      */
-    @JSONField(ordinal = 11)
+    @JSONField(ordinal = 13)
     private String address;
 
     /**
      * 状态
      */
-    @JSONField(ordinal = 12)
+    @JSONField(ordinal = 14, serialize = false)
     private Integer state;
 
     /**
      * 订单状态
      */
-    @JSONField(ordinal = 13)
+    @JSONField(ordinal = 15)
     private String orderState;
 
     /**
      * 发货状态
      */
-    @JSONField(ordinal = 14)
+    @JSONField(ordinal = 16)
     private String sendState;
 
     /**
      * 帮砍用户
      */
-    @JSONField(ordinal = 15)
+    @JSONField(ordinal = 17)
     private List<BargainVo> users;
 
     public String getBargainProgress() {
@@ -152,7 +163,20 @@ public class BackBargainDetailVo {
             return MallEnum.ORDER_HAS_PAY.getStateStr();
         } else if (state.equals(MallEnum.ORDER_HAS_SEND.getState())) {
             return MallEnum.ORDER_HAS_SEND.getStateStr();
+        } else if (state.equals(MallEnum.ORDER_HAS_DONE.getState())) {
+            return MallEnum.ORDER_HAS_DONE.getStateStr();
+        } else if (state.equals(MallEnum.ORDER_HAS_CLOSE.getState())) {
+            return MallEnum.ORDER_HAS_CLOSE.getStateStr();
+        } else if (state.equals(MallEnum.ORDER_HAS_CANCEL.getState())) {
+            return MallEnum.ORDER_HAS_CANCEL.getStateStr();
         }
         return "无";
+    }
+
+    public Date getBargainTime() {
+        if (Objects.nonNull(state)) {
+            return bargainTime;
+        }
+        return null;
     }
 }

@@ -1,54 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.account.MoneyRechargeDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.MoneyRecharge">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
-        <result column="money" jdbcType="DECIMAL" property="money"/>
-        <result column="state" jdbcType="INTEGER" property="state"/>
-        <result column="recharge_time" jdbcType="TIMESTAMP" property="rechargeTime"/>
-        <result column="to_account_time" jdbcType="TIMESTAMP" property="toAccountTime"/>
-        <result column="to_account_money" jdbcType="DECIMAL" property="toAccountMoney"/>
-        <result column="fee" jdbcType="DECIMAL" property="fee"/>
-        <result column="source" jdbcType="VARCHAR" property="source"/>
-        <result column="pay_sms_sq_no" jdbcType="VARCHAR" property="paySmsSqNo"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.MoneyRecharge">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+    <result column="money" jdbcType="DECIMAL" property="money" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="recharge_time" jdbcType="TIMESTAMP" property="rechargeTime" />
+    <result column="to_account_time" jdbcType="TIMESTAMP" property="toAccountTime" />
+    <result column="to_account_money" jdbcType="DECIMAL" property="toAccountMoney" />
+    <result column="fee" jdbcType="DECIMAL" property="fee" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="pay_sms_sq_no" jdbcType="VARCHAR" property="paySmsSqNo" />
+  </resultMap>
 
-    <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.MoneyRecharge" extends="BaseResultMap">
-        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
-    </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, user_id, order_number, money, `state`, recharge_time, to_account_time, to_account_money, 
+    fee, `source`,pay_sms_sq_no
+  </sql>
 
-    <sql id="Base_Column_List">
-        id, user_id, order_number, money, `state`, recharge_time, to_account_time, to_account_money,
-        fee, `source`,pay_sms_sq_no
-    </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_money_recharge
-        where id = #{id,jdbcType=INTEGER}
-    </select>
-
-    <select id="selectSelective" resultMap="BaseInfoMap">
-        select t1.id, user_id, order_number, money, `state`, recharge_time, to_account_time, to_account_money,
-        fee, `source` ,t2.phone as user_name from plant_money_recharge t1
-        left join plant_user t2 on t1.user_id = t2.id
-        <where>
-            <if test="id != null">
-                id = #{id}
-            </if>
-            <if test="userId != null">
-                AND user_id = #{userId}
-            </if>
-            <if test="orderNumber != null">
-                AND order_number = #{orderNumber}
-            </if>
-            <if test="state != null">
-                AND state = #{state}
-            </if>
-        </where>
-        order by recharge_time desc
-    </select>
+  <select id="selectSelective" resultType="MoneyRecharge">
+    select t1.id, user_id, order_number, money, `state`, recharge_time, to_account_time, to_account_money,
+    fee, `source` ,t2.phone,t2.real_name from plant_money_recharge t1
+    left join plant_user t2 on t1.user_id = t2.id
+    <where>
+      <if test="wq.id != null">
+        t1.id = #{wq.id}
+      </if>
+      <if test="wq.phone != null">
+        <bind name="phoneLike" value="'%' + wq.phone + '%'"/>
+        AND t2.phone like #{phoneLike}
+      </if>
+      <if test="wq.userId != null">
+        AND t1.user_id = #{wq.userId}
+      </if>
+      <if test="wq.orderNumber != null">
+        AND t1.order_number = #{wq.orderNumber}
+      </if>
+      <if test="wq.state != null">
+        AND t1.state = #{wq.state}
+      </if>
+    </where>
+    order by t1.recharge_time desc
+  </select>
 
 </mapper>

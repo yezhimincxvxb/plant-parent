@@ -72,4 +72,10 @@ public interface ReapDAO extends BaseDAO<Reap> {
     BigDecimal sumPlantWeighByUserId(@Param("userId") Integer userId, @Param("states") List<Integer> states);
 
     BigDecimal sumProfitByUserId(@Param("userId") Integer userId, @Param("states") List<Integer> states);
+
+    BigDecimal getPlantProfits();
+
+    BigDecimal getPlantLines();
+
+
 }

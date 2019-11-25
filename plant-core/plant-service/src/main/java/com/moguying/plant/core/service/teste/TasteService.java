@@ -101,6 +101,15 @@ public interface TasteService {
 
 
     /**
+     * 后台申请记录列表
+     * @param page
+     * @param size
+     * @param where
+     * @return
+     */
+    PageResult<TasteApply> bTasteApplyPageResult(Integer page, Integer size, TasteApply where);
+
+    /**
      * 新手体验礼包券
      *
      * @return

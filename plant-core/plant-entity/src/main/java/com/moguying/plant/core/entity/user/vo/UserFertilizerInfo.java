@@ -37,31 +37,31 @@ public class UserFertilizerInfo {
     /**
      * 券金额
      */
-    @JSONField(ordinal = 5, serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 5,serializeUsing = BigDecimalSerialize.class)
     private BigDecimal fertilizerAmount;
 
     /**
      * 券满足使用的最小金额
      */
-    @JSONField(ordinal = 6, serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 6,serializeUsing = BigDecimalSerialize.class)
     private BigDecimal amountMin;
 
     /**
      * 券满足使用的最大金额
      */
-    @JSONField(ordinal = 7, serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 7,serializeUsing = BigDecimalSerialize.class)
     private BigDecimal amountMax;
 
     /**
      * 券开始使用时间
      */
-    @JSONField(ordinal = 8, format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 8,format = "yyyy.MM.dd HH:mm:ss")
     private Date startTime;
 
     /**
      * 券结束使用时间
      */
-    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 9 ,format = "yyyy.MM.dd HH:mm:ss")
     private Date expireTime;
 
     /**
@@ -108,7 +108,7 @@ public class UserFertilizerInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof UserFertilizerInfo) {
+        if(obj instanceof UserFertilizerInfo){
             return this.getId().equals(((UserFertilizerInfo) obj).getId());
         }
         return false;

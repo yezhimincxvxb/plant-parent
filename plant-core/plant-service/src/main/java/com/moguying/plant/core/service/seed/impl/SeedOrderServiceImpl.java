@@ -5,20 +5,20 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.ActivityEnum;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.block.BlockDAO;
 import com.moguying.plant.core.dao.seed.SeedDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDAO;
-import com.moguying.plant.core.dao.seed.SeedTypeDAO;
 import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
-import com.moguying.plant.core.entity.seed.SeedType;
 import com.moguying.plant.core.entity.seed.vo.CanPlantOrder;
 import com.moguying.plant.core.entity.user.UserActivityLog;
 import com.moguying.plant.core.entity.user.vo.UserSeedOrder;
@@ -36,6 +36,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -49,9 +50,6 @@ public class SeedOrderServiceImpl implements SeedOrderService {
 
     @Autowired
     private SeedDAO seedDAO;
-
-    @Autowired
-    private SeedTypeDAO seedTypeDAO;
 
     @Autowired
     private UserActivityLogDAO userActivityLogDAO;
@@ -109,7 +107,7 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Override
     @DS("read")
     public List<UserSeedOrder> userSeedOrder(Integer userId) {
-        return seedOrderDAO.userSeedOrderStatistics(userId);
+        return seedOrderDAO.userSeedOrderStatistics(userId).stream().filter(x -> x.getCount() > 0).collect(Collectors.toList());
     }
 
     @Override
@@ -122,54 +120,51 @@ public class SeedOrderServiceImpl implements SeedOrderService {
     @Override
     @DS("write")
     @Transactional
-    public void sendSeedSuccess(Integer userId) {
+    public ResultData<Integer> sendSeedSuccess(Integer userId) {
 
-        // 奖励只发送一次
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
+
+        // 奖励已发
         QueryWrapper<UserActivityLog> wrapper = new QueryWrapper<UserActivityLog>()
-                .and(i -> i.eq("user_id", userId).likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix()));
+                .eq("user_id", userId)
+                .likeRight("number", OrderPrefixEnum.FREE_JUN_BAO.getPreFix());
         List<UserActivityLog> logs = userActivityLogDAO.selectList(wrapper);
-        if (Objects.nonNull(logs) && logs.size() > 0) return;
+        if (Objects.nonNull(logs) && logs.size() > 0)
+            return resultData.setMessageEnum(MessageEnum.PICK_UP_SEED);
 
-        SeedType seedType = getSeedType(userId);
-        if (Objects.isNull(seedType)) return;
+        // 发菌包
+        Seed seed = getSeedType(userId);
+        if (Objects.isNull(seed))
+            return resultData.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
 
         // 添加活动奖励记录
         UserActivityLog log = new UserActivityLog()
                 .setNumber(OrderPrefixEnum.FREE_JUN_BAO.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate())
                 .setUserId(userId)
-                .setSeedTypeId(seedType.getId())
-                .setAddTime(new Date());
-        userActivityLogDAO.insert(log);
+                .setName("登录即送30天菌包一份")
+                .setSeedTypeId(seed.getId())
+                .setState(true)
+                .setAddTime(new Date())
+                .setReceiveTime(new Date());
+        if (userActivityLogDAO.insert(log) <= 0) return resultData;
+        return resultData.setMessageEnum(MessageEnum.SUCCESS);
     }
 
     @Override
     @DS("write")
     @Transactional
-    public SeedType getSeedType(Integer userId) {
+    public Seed getSeedType(Integer userId) {
         // 获取价值12.50元的30天菌包
-        SeedType seedType = seedTypeDAO.selectById(ActivityEnum.FREE_SEED_30DAY.getState());
-        if (Objects.isNull(seedType)) return null;
+        Seed seed = seedDAO.selectById(ActivityEnum.FREE_SEED_30DAY.getState());
+        if (Objects.isNull(seed)) return null;
 
-        // 发送菌包
-        SeedOrder seedOrder = new SeedOrder();
-        seedOrder.setUserId(userId);
-        seedOrder.setSeedType(seedType.getId());
+        SeedOrderDetail seedOrderDetail = new SeedOrderDetail();
+        seedOrderDetail.setSeedId(seed.getId());
+        seedOrderDetail.setUserId(userId);
+        seedOrderDetail.setBuyCount(1);
+        seedOrderDetail.setBuyAmount(seed.getPerPrice());
 
-        // 是否购买过同类型的菌包
-        List<SeedOrder> seedOrders = seedOrderDAO.selectSelective(seedOrder);
-        if (Objects.isNull(seedOrders) || seedOrders.isEmpty()) {
-            SeedOrder order = new SeedOrder();
-            order.setSeedType(seedOrder.getSeedType());
-            order.setUserId(seedOrder.getUserId());
-            order.setBuyCount(1);
-            order.setBuyAmount(seedType.getPerPrice());
-            if (seedOrderDAO.insert(order) <= 0) return null;
-        } else if (seedOrders.size() == 1) {
-            SeedOrder order = seedOrders.get(0);
-            order.setBuyCount(order.getBuyCount() + 1);
-            order.setBuyAmount(new BigDecimal(order.getBuyCount()).multiply(seedType.getPerPrice()));
-            if (seedOrderDAO.updateById(order) <= 0) return null;
-        }
-        return seedType;
+        Integer integer = incrSeedOrder(seedOrderDetail);
+        return integer > 0 ? seed : null;
     }
 }

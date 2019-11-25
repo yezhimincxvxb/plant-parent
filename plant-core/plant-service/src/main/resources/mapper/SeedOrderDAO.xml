@@ -1,116 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.seed.SeedOrderDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.SeedOrder">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="seed_type" jdbcType="INTEGER" property="seedType"/>
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="buy_count" jdbcType="INTEGER" property="buyCount"/>
-        <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount"/>
-        <result column="plant_count" jdbcType="INTEGER" property="plantCount"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.seed.SeedOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="seed_type" jdbcType="INTEGER" property="seedType" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
+    <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount" />
+    <result column="plant_count" jdbcType="INTEGER" property="plantCount" />
+  </resultMap>
 
-    <resultMap id="SeedOrderInfo" type="com.moguying.plant.core.entity.seed.SeedOrder" extends="BaseResultMap">
-        <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName"/>
-        <result column="phone" jdbcType="VARCHAR" property="phone"/>
-        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
-    </resultMap>
+  <resultMap id="SeedOrderInfo" type="com.moguying.plant.core.entity.seed.SeedOrder" extends="BaseResultMap">
+    <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+  </resultMap>
+  
+  <resultMap id="UserSeedOrderStatistic" type="com.moguying.plant.core.entity.user.vo.UserSeedOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="pic_url" jdbcType="INTEGER" property="picUrl" />
+    <result column="seed_type_id" jdbcType="INTEGER" property="seedTypeId" />
+    <result column="is_for_new" property="isForNew" />
+  </resultMap>
 
-    <resultMap id="UserSeedOrderStatistic" type="com.moguying.plant.core.entity.user.vo.UserSeedOrder">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="seed_type_name" jdbcType="VARCHAR" property="seedTypeName"/>
-        <result column="count" jdbcType="INTEGER" property="count"/>
-        <result column="pic_url" jdbcType="INTEGER" property="picUrl"/>
-        <result column="seed_type_id" jdbcType="INTEGER" property="seedTypeId"/>
-        <result column="is_for_new" property="isForNew"/>
-    </resultMap>
-
-    <sql id="Base_Column_List">
-        `id` ,`seed_type` ,`user_id` ,`buy_count`,`buy_amount` ,`plant_count`
-    </sql>
-
-
-    <select id="selectSelective" resultMap="SeedOrderInfo">
-        select t1.id, t1.seed_type, t1.user_id, buy_count, buy_amount, plant_count,
-        t2.class_name as seed_type_name,t3.phone,t3.real_name from plant_seed_order t1
-        left join plant_seed_type t2 on t1.seed_type = t2.id
-        left join plant_user t3 on t1.user_id = t3.id
-        <where>
-            <if test="wq.phone != null">
-                <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
-                t3.phone like #{phoneLike}
-            </if>
-            <if test="wq.seedTypeName != null">
-                AND t2.class_name = #{wq.seedTypeName}
-            </if>
-            <if test="wq.userId != null">
-                AND t1.user_id = #{wq.userId}
-            </if>
-            <if test="wq.seedType != null">
-                AND t1.seed_type = #{wq.seedType}
-            </if>
-        </where>
-        order by (t1.buy_count-t1.plant_count),t1.buy_amonut desc
-    </select>
-
-    <update id="incrSeedOrder" parameterType="com.moguying.plant.core.entity.seed.SeedOrder">
-        update plant_seed_order
-        <set>
-            <if test="buyCount != null">
-                buy_count = buy_count + #{buyCount},
-            </if>
-            <if test="buyAmount != null">
-                buy_amount = buy_amount + #{buyAmount},
-            </if>
-        </set>
-        <where>
-            <if test="id != null">
-                id = #{id}
-            </if>
-            <if test="seedType != null">
-                AND seed_type = #{seedType}
-            </if>
-            <if test="userId != null">
-                AND user_id = #{userId}
-            </if>
-        </where>
-
-    </update>
-
-    <!-- 持有可种植的菌包份数 -->
-    <select id="sumSeedCountByUserId" resultType="int">
-        select sum(buy_count - plant_count) from plant_seed_order
-        where user_id = #{userId}
-    </select>
+  <sql id="Base_Column_List">
+    `id` ,`seed_type` ,`user_id` ,`buy_count`,`buy_amount` ,`plant_count`
+  </sql>
 
 
-    <select id="selectByUserId" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_seed_order
-        where user_id = #{userId}
-    </select>
+  <select id="selectSelective" resultMap="SeedOrderInfo">
+    select t1.id,  t1.seed_type, t1.user_id, buy_count, buy_amount, plant_count,
+    t2.class_name as seed_type_name,t3.phone,t3.real_name  from plant_seed_order t1
+    left join plant_seed_type t2 on t1.seed_type = t2.id
+    left join plant_user t3 on t1.user_id = t3.id
+    <where>
+      <if test="wq.phone != null">
+        <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
+        t3.phone like #{phoneLike}
+      </if>
+      <if test="wq.seedTypeName != null">
+        AND t2.class_name = #{wq.seedTypeName}
+      </if>
+      <if test="wq.userId != null">
+        AND t1.user_id = #{wq.userId}
+      </if>
+      <if test="wq.seedType != null">
+        AND t1.seed_type = #{wq.seedType}
+      </if>
+      <if test="wq.isForNew != null">
+        AND t2.is_for_new = #{wq.isForNew}
+      </if>
+    </where>
+    order by (t1.buy_count-t1.plant_count),t1.buy_amount desc
+  </select>
+
+  <update id="incrSeedOrder" parameterType="com.moguying.plant.core.entity.seed.SeedOrder">
+    update plant_seed_order
+    <set>
+      <if test="buyCount != null">
+        buy_count = buy_count + #{buyCount},
+      </if>
+      <if test="buyAmount != null">
+        buy_amount = buy_amount + #{buyAmount},
+      </if>
+    </set>
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="seedType != null">
+        AND seed_type = #{seedType}
+      </if>
+      <if test="userId != null">
+        AND user_id = #{userId}
+      </if>
+    </where>
+
+  </update>
+
+  <!-- 持有可种植的菌包份数 -->
+  <select id="sumSeedCountByUserId" resultType="int">
+    select sum(buy_count - plant_count) from plant_seed_order
+    where user_id = #{userId}
+  </select>
 
 
-    <select id="selectByIdAndUserId" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from plant_seed_order
-        where id = #{id} and user_id = #{userId}
-    </select>
+  <select id="selectByUserId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_seed_order
+    where user_id = #{userId}
+  </select>
 
-    <select id="sumSeedCountBySeedType" resultType="com.moguying.plant.core.entity.seed.vo.CanPlantOrder">
-        select id as orderId,sum(buy_count - plant_count) as count from plant_seed_order
-        where seed_type = #{seedType}
-        and user_id = #{userId}
-    </select>
 
-    <select id="userSeedOrderStatistics" resultMap="UserSeedOrderStatistic">
-        select t1.id,(t1.buy_count - t1.plant_count) as count,t2.class_name as seed_type_name ,
-        t2.pic_url,t1.seed_type as seed_type_id, t2.is_for_new
-        from plant_seed_order t1
-        left join plant_seed_type t2 on t1.seed_type = t2.id
-        where t1.user_id = #{userId}
-    </select>
+  <select id="selectByIdAndUserId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from plant_seed_order
+    where id = #{id} and user_id = #{userId}
+  </select>
+  
+  <select id="sumSeedCountBySeedType" resultType="com.moguying.plant.core.entity.seed.vo.CanPlantOrder">
+    select id as orderId,sum(buy_count - plant_count) as count from plant_seed_order
+    where seed_type = #{seedType}
+    and user_id = #{userId}
+  </select>
+  
+  <select id="userSeedOrderStatistics" resultMap="UserSeedOrderStatistic">
+    select t1.id,(t1.buy_count - t1.plant_count) as count,t2.class_name as seed_type_name ,
+    t2.pic_url,t1.seed_type as seed_type_id, t2.is_for_new
+    from plant_seed_order t1
+    left join plant_seed_type t2 on t1.seed_type = t2.id
+    where t1.user_id = #{userId}
+  </select>
 
 </mapper>

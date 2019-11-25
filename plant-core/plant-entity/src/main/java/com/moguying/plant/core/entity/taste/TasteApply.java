@@ -17,49 +17,67 @@ import java.util.Date;
 @NoArgsConstructor
 public class TasteApply {
 
-    private String id;
+    protected String id;
 
     /**
      * 申请资格的用户id
      */
     @NonNull
-    private Integer userId;
+    protected Integer userId;
 
-    @JSONField(serializeUsing = IdCardSerialize.class)
+
     private String phone;
 
     /**
      * 申请试吃的项
      */
     @NonNull
-    private String tasteId;
+    protected String tasteId;
 
     /**
      * 申请的状态
      */
     @NonNull
-    private Integer state;
+    protected Integer state;
 
     /**
      * 用户地址
      */
-    private UserAddress userAddress;
+    protected UserAddress userAddress;
 
 
     /**
      * 申请时间
      */
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Date applyTime;
+    protected Date applyTime;
 
     /**
      * 试吃商品名
      */
-    private String productName;
+    protected String productName;
 
 
     @JSONField(serializeUsing = BigDecimalSerialize.class)
-    private BigDecimal productPrice;
+    protected BigDecimal productPrice;
 
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date applyReviewTime;
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date tasteTime;
+
+    @JSONField(serialize = false)
+    private Date startTime;
+
+    @JSONField(serialize = false)
+    private Date endTime;
+
+    @JSONField(serialize = false)
+    private Date tasteStartTime;
+
+    @JSONField(serialize = false)
+    private Date tasteEndTime;
 
 }

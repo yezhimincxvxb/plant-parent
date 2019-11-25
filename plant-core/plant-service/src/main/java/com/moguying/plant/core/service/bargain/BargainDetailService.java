@@ -11,7 +11,6 @@ import com.moguying.plant.core.entity.bargain.vo.SendNumberVo;
 import com.moguying.plant.core.entity.bargain.vo.ShareVo;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallProduct;
-import com.moguying.plant.core.entity.mall.vo.BuyProduct;
 import com.moguying.plant.core.entity.user.UserAddress;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public interface BargainDetailService {
 
     BargainDetail getOneByClose(Integer userId, Integer productId, Boolean state);
 
-    ResultData<ShareVo> shareSuccess(Integer userId, BuyProduct buyProduct, MallProduct product);
+    ResultData<ShareVo> shareSuccess(Integer userId, MallProduct product);
 
     BargainDetail getOneById(Integer id);
 
@@ -44,5 +43,5 @@ public interface BargainDetailService {
 
     Integer getNumber(Integer productId);
 
-    PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size);
+    PageResult<BackBargainDetailVo> bargainList(Integer page, Integer size, BargainVo bargainVo);
 }
