@@ -121,5 +121,28 @@
         order by reg_time asc
     </select>
 
+    <select id="userPlantMoneyList" resultType="com.moguying.plant.core.entity.user.vo.UserPlantMoneyVo">
+        select t1.id `userId`, t1.real_name `userName`, t1.phone, t1.reg_time,
+        IFNULL(sum(t2.buy_count), 0) `buyCount`, IFNULL(sum(t2.plant_count), 0) `plantCount`, IFNULL(sum(t2.buy_amount), 0) `buyMoney`,
+        t3.collect_money
+        from plant_user t1
+        left join plant_seed_order t2 on t1.id = t2.user_id
+        left join plant_user_money t3 on t1.id = t3.user_id
+        <where>
+            <if test="upm != null">
+                <if test="upm.phone != null">
+                   and t1.phone = #{upm.phone}
+                </if>
+                <if test="upm.startTime != null">
+                   and unix_timestamp(t1.reg_time) &gt;= unix_timestamp(#{upm.startTime})
+                </if>
+                <if test="upm.endTime != null">
+                   and unix_timestamp(t1.reg_time) &lt;= unix_timestamp(#{upm.endTime})
+                </if>
+            </if>
+        </where>
+        group by t2.user_id
+        order by t1.reg_time asc
+    </select>
 
 </mapper>
