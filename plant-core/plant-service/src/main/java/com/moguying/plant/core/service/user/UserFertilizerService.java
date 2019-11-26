@@ -39,4 +39,6 @@ public interface UserFertilizerService {
 
     Boolean redPackageSuccess(UserFertilizer userFertilizer);
 
+    UserFertilizer userFertilizer(Integer userId, String orderNumber);
+
 }
