@@ -284,7 +284,7 @@ public class AHomeController {
     @ApiOperation("商品类型列表")
     @GetMapping("/index/mall/types")
     public ResponseData<List<MallProductType>> productTypeList() {
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallProductTypeService.typeList(null));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallProductTypeService.indexTypeList());
     }
 
 

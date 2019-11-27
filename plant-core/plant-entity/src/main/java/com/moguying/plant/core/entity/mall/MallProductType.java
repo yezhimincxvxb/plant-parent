@@ -23,4 +23,9 @@ public class MallProductType implements Serializable {
     @TableField
     private String typeName;
 
+    /**
+     * 分类排序
+     */
+    private Integer typeSort;
+
 }
