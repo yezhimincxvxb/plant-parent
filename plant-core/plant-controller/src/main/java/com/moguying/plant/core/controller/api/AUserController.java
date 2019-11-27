@@ -896,7 +896,7 @@ public class AUserController {
     /**
      * 被邀请人列表
      */
-    @GetMapping("/invite/list")
+    @PostMapping("/invite/list")
     @ApiOperation("被邀请人列表")
     public PageResult<UserInvite> inviteList(@LoginUserId Integer userId, @RequestBody PageSearch search) {
         return userInviteService.inviteList(search.getPage(), search.getSize(), userId);
