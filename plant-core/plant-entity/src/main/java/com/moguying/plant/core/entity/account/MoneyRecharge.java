@@ -91,4 +91,16 @@ public class MoneyRecharge implements Serializable {
     @TableField
     private String source;
 
+    /**
+     * 操作人ID
+     */
+    @TableField(exist = false)
+    private Integer reviewId;
+
+    /**
+     * 操作人姓名
+     */
+    @TableField(exist = false)
+    private String reviewName;
+
 }
