@@ -15,6 +15,7 @@ import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExcReap;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
+import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.PayOrderResponse;
 import com.moguying.plant.core.entity.payment.request.PaymentRequest;
@@ -40,6 +41,7 @@ import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.seed.SeedTypeService;
+import com.moguying.plant.core.service.user.UserFertilizerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/seed")
@@ -100,6 +103,9 @@ public class ASeedController {
 
     @Autowired
     private ReapExcLogService reapExcLogService;
+
+    @Autowired
+    private UserFertilizerService userFertilizerService;
 
     /**
      * 提交菌包订单
@@ -256,6 +262,29 @@ public class ASeedController {
         return responseData;
     }
 
+    /**
+     * 种植返现红包金额
+     */
+    @GetMapping("/return/money/{reapId}")
+    @ApiOperation("种植返现")
+    public ResponseData<BigDecimal> returnMoney(@LoginUserId Integer userId, @PathVariable("reapId") Integer reapId) {
+
+        ResponseData<BigDecimal> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+
+        Reap reap = reapService.reapInfoByIdAndUserId(reapId, userId);
+        if (Objects.isNull(reap))
+            return responseData;
+
+        UserFertilizer userFertilizer = userFertilizerService.userFertilizer(userId, reap.getOrderNumber());
+        if (Objects.isNull(userFertilizer))
+            return responseData;
+
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData(userFertilizer.getFertilizerAmount());
+    }
+
 
     /**
      * 兑换实物
@@ -264,10 +293,10 @@ public class ASeedController {
      */
     @PostMapping(value = "/reap/exchange")
     @ApiOperation("兑换实物")
-    public ResponseData<Integer> exchangeReap(@LoginUserId Integer userId,@RequestBody ExcReap excReap) {
-        ResultData<Integer> resultData = plantOrderService.plantReapExchange(userId,excReap);
-        ResponseData<Integer> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) responseData.setData(resultData.getData());
+    public ResponseData<Integer> exchangeReap(@LoginUserId Integer userId, @RequestBody ExcReap excReap) {
+        ResultData<Integer> resultData = plantOrderService.plantReapExchange(userId, excReap);
+        ResponseData<Integer> responseData = new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) responseData.setData(resultData.getData());
         return responseData;
 
     }
@@ -275,17 +304,18 @@ public class ASeedController {
 
     /**
      * 用户实物兑换记录
+     *
      * @param userId
      * @param search
      * @return
      */
     @PostMapping("/reap/exc/log")
     @ApiOperation("用户实物兑换记录")
-    public PageResult<ReapExcLog> reapExchangeLog(@LoginUserId Integer userId,@RequestBody PageSearch<ReapExcLog> search) {
-        if(null == search.getWhere())
+    public PageResult<ReapExcLog> reapExchangeLog(@LoginUserId Integer userId, @RequestBody PageSearch<ReapExcLog> search) {
+        if (null == search.getWhere())
             search.setWhere(new ReapExcLog());
         search.getWhere().setUserId(userId);
-        return reapExcLogService.reapExcLogPageResult(search.getPage(),search.getSize(),search.getWhere());
+        return reapExcLogService.reapExcLogPageResult(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
@@ -485,12 +515,13 @@ public class ASeedController {
 
     /**
      * 获取菌包分组信息
+     *
      * @return
      */
     @GetMapping("/group/list")
     @NoLogin
     @ApiOperation("获取菌包分组信息")
-    public ResponseData<List<SeedGroup>> seedGroupList(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),seedTypeService.seedGroupList());
+    public ResponseData<List<SeedGroup>> seedGroupList() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), seedTypeService.seedGroupList());
     }
 }

@@ -10,8 +10,10 @@ import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.entity.user.UserBank;
 import com.moguying.plant.core.entity.user.UserMessage;
+import com.moguying.plant.core.entity.user.dto.UserPlantMoneyDto;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
 import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
+import com.moguying.plant.core.entity.user.vo.UserPlantMoneyVo;
 import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,12 +79,6 @@ public interface UserService {
 
     Integer regUserTotal();
 
-
-
-
-
-
-
-
+    PageResult<UserPlantMoneyVo> userPlantMoneyList(Integer page, Integer size, UserPlantMoneyDto userPlantMoneyDto);
 
 }

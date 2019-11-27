@@ -895,17 +895,11 @@ public class AUserController {
 
     /**
      * 被邀请人列表
-     *
-     * @param page
-     * @param size
-     * @return
      */
     @GetMapping("/invite/list")
     @ApiOperation("被邀请人列表")
-    public PageResult<UserInvite> inviteList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                             @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                             @LoginUserId Integer userId) {
-        return userInviteService.inviteList(page, size, userId);
+    public PageResult<UserInvite> inviteList(@LoginUserId Integer userId, @RequestBody PageSearch search) {
+        return userInviteService.inviteList(search.getPage(), search.getSize(), userId);
     }
 
 

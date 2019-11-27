@@ -211,6 +211,9 @@ public class FertilizerServiceImpl implements FertilizerService {
                 if (null != triggerEventResult.getData() && triggerEventResult.getData() instanceof PlantOrderResponse) {
                     PlantOrderResponse plantOrderResponse = (PlantOrderResponse) triggerEventResult.getData();
 
+                    // 发的券跟种植订单关联
+                    userFertilizer.setUseOrderNumber(plantOrderResponse.getOrderNumber());
+
                     // 指定大棚
                     // if (fertilizer.getUseInBlock() == null || !fertilizer.getUseInBlock().equals(plantOrderResponse.getBlockId()))
                     // continue;

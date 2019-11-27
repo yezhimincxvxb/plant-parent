@@ -176,5 +176,16 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         userFertilizer.setState(1);
         return userFertilizerDAO.updateById(userFertilizer) > 0;
     }
+
+    @Override
+    @DS("read")
+    public UserFertilizer userFertilizer(Integer userId, String orderNumber) {
+
+        QueryWrapper<UserFertilizer> queryWrapper = new QueryWrapper<UserFertilizer>()
+                .eq("user_id", userId)
+                .eq("use_order_number", orderNumber);
+
+        return userFertilizerDAO.selectOne(queryWrapper);
+    }
 }
 

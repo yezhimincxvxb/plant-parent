@@ -11,16 +11,16 @@ spring:
     pathmatch:
       use-suffix-pattern: true
   http:
-      encoding:
-        charset: UTF-8
-        force: true
+    encoding:
+      charset: UTF-8
+      force: true
   thymeleaf:
-      encoding: UTF-8
-      prefix: classpath:/views/
-      mode: HTML
-      servlet:
-        content-type: text/html
-      cache: false
+    encoding: UTF-8
+    prefix: classpath:/views/
+    mode: HTML
+    servlet:
+      content-type: text/html
+    cache: false
   servlet:
     multipart:
       enabled: true
@@ -173,7 +173,7 @@ spring:
         min-idle: 20
         idle-timeout: 1000
   redis:
-    host: 192.168.5.220
+    host: 192.168.1.220
     port: 6869
     password: AEnz2DF\Od,GWD#C*+
     database: 0
@@ -186,7 +186,7 @@ spring:
   data:
     mongodb:
       database: activity
-      host: 192.168.5.220
+      host: 192.168.1.220
       port: 27017
       username: activityAdmin
       password: Is&1+KVb[0

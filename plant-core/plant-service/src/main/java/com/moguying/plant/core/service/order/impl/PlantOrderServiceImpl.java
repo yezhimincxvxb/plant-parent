@@ -489,6 +489,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         response.setGrowDays(seedType.getGrowDays());
         response.setPerWeigh(seedType.getPerWeigh());
         response.setReapId(reap.getId());
+        response.setOrderNumber(reap.getOrderNumber());
 
         // 发送站内信
         InnerMessage message = new InnerMessage();

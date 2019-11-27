@@ -114,9 +114,15 @@ public class BackBargainDetailVo {
     private String sendState;
 
     /**
+     * 商品添加时间
+     */
+    @JSONField(ordinal = 17, format = "yyyy-MM-dd HH:mm:ss")
+    private Date productTime;
+
+    /**
      * 帮砍用户
      */
-    @JSONField(ordinal = 17)
+    @JSONField(ordinal = 18)
     private List<BargainVo> users;
 
     public String getBargainProgress() {
