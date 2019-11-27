@@ -271,7 +271,7 @@ public class ASeedController {
 
         ResponseData<BigDecimal> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
-        Reap reap = reapService.reapInfoByIdAndUserId(userId, reapId);
+        Reap reap = reapService.reapInfoByIdAndUserId(reapId, userId);
         if (Objects.isNull(reap))
             return responseData;
 
