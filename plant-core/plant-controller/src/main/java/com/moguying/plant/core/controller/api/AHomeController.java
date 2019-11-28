@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -284,7 +285,9 @@ public class AHomeController {
     @ApiOperation("商品类型列表")
     @GetMapping("/index/mall/types")
     public ResponseData<List<MallProductType>> productTypeList() {
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallProductTypeService.indexTypeList());
+        List<MallProductType> mallProductTypes = mallProductTypeService.typeList(null);
+        mallProductTypes.sort(Comparator.comparing(MallProductType::getTypeSort));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallProductTypes);
     }
 
 

@@ -26,6 +26,7 @@ public class MallProductType implements Serializable {
     /**
      * 分类排序
      */
+    @TableField
     private Integer typeSort;
 
 }

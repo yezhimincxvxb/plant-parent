@@ -79,7 +79,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
 
     @Override
     @DS("write")
-    public ResultData<Integer> reviewRecharge(RechargeReview review) {
+    public ResultData<Integer> reviewRecharge(Integer reviewUid,RechargeReview review) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
         MoneyRecharge recharge = moneyRechargeDAO.selectById(review.getId());
 
@@ -111,6 +111,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
         update.setToAccountTime(new Date());
         update.setToAccountMoney(rechargeMoney);
         update.setState(MoneyStateEnum.RECHARGE_SUCCESS.getState());
+        update.setReviewId(reviewUid);
         operator.setOpType(MoneyOpEnum.RECHARGE_DONE);
         userMoney.setAvailableMoney(rechargeMoney);
         moneyRechargeDAO.updateById(update);
