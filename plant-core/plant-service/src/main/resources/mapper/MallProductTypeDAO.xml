@@ -7,7 +7,7 @@
     <result column="type_sort" jdbcType="INTEGER" property="typeSort" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, type_name
+    id, type_name,type_sort
   </sql>
 
   <select id="selectSelective" resultMap="BaseResultMap">

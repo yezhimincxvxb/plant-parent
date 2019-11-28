@@ -143,7 +143,7 @@ public class BUserAccountController {
     @PostMapping("/recharge/review")
     @ApiOperation("充值审核")
     public ResponseData<Integer> rechargeReview(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,@RequestBody RechargeReview recharge) {
-        ResultData<Integer> addResult = moneyRechargeService.reviewRecharge(recharge);
+        ResultData<Integer> addResult = moneyRechargeService.reviewRecharge(user.getId(),recharge);
         return new ResponseData<>(addResult.getMessageEnum().getMessage(), addResult.getMessageEnum().getState());
     }
 

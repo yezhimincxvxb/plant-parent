@@ -285,7 +285,7 @@ public class AHomeController {
     @ApiOperation("商品类型列表")
     @GetMapping("/index/mall/types")
     public ResponseData<List<MallProductType>> productTypeList() {
-        List<MallProductType> mallProductTypes = mallProductTypeService.typeList(null);
+        List<MallProductType> mallProductTypes = mallProductTypeService.typeList(new MallProductType());
         mallProductTypes.sort(Comparator.comparing(MallProductType::getTypeSort));
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallProductTypes);
     }

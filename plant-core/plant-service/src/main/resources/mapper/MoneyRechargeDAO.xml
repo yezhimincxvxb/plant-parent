@@ -23,10 +23,11 @@
 
     <select id="selectSelective" resultType="MoneyRecharge">
         select t1.id, t1.user_id, order_number, money, `state`, recharge_time, to_account_time, to_account_money,
-        fee, `source`, t2.phone, t2.real_name, t3.real_name `reviewName`, t1.review_uid `reviewId`
+        fee, `source`, t2.phone, t2.real_name, t4.real_name `reviewName`, t1.review_uid
         from plant_money_recharge t1
         left join plant_user t2 on t1.user_id = t2.id
-        left join plant_user t3 on t1.review_uid = t3.id
+        left join plant_admin_user t3 on t1.review_uid = t3.id
+        left join plant_user t4 on t3.bind_id = t4.id
         <where>
             <if test="wq != null">
                 <if test="wq.id != null">

@@ -82,7 +82,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
     public ResultData<Integer> reviewRecharge(Integer reviewUid,RechargeReview review) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
         MoneyRecharge recharge = moneyRechargeDAO.selectById(review.getId());
-
+        recharge.setReviewUid(reviewUid);
         if(phoneMessageService.validateMessage(reviewPhone,review.getCode()) < 0)
             return resultData.setMessageEnum(MessageEnum.MESSAGE_CODE_ERROR);
 
@@ -111,7 +111,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
         update.setToAccountTime(new Date());
         update.setToAccountMoney(rechargeMoney);
         update.setState(MoneyStateEnum.RECHARGE_SUCCESS.getState());
-        update.setReviewId(reviewUid);
+        update.setReviewUid(reviewUid);
         operator.setOpType(MoneyOpEnum.RECHARGE_DONE);
         userMoney.setAvailableMoney(rechargeMoney);
         moneyRechargeDAO.updateById(update);
