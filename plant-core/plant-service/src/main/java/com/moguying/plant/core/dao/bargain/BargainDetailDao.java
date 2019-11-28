@@ -1,8 +1,8 @@
 package com.moguying.plant.core.dao.bargain;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BargainDetailDao extends BaseMapper<BargainDetail> {
+public interface BargainDetailDao extends BaseDAO<BargainDetail> {
 
     List<BargainDetail> getOneByOpen(@Param("userId") Integer userId, @Param("productId") Integer productId, @Param("state") Boolean state);
 
