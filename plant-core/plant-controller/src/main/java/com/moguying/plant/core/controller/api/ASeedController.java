@@ -273,11 +273,15 @@ public class ASeedController {
 
         Reap reap = reapService.reapInfoByIdAndUserId(reapId, userId);
         if (Objects.isNull(reap))
-            return responseData;
+            return responseData
+                    .setMessage(MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getMessage())
+                    .setState(MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getState());
 
         UserFertilizer userFertilizer = userFertilizerService.userFertilizer(userId, reap.getOrderNumber());
         if (Objects.isNull(userFertilizer))
-            return responseData;
+            return responseData
+                    .setMessage(MessageEnum.FERTILIZER_NOT_FOUND.getMessage())
+                    .setState(MessageEnum.FERTILIZER_NOT_FOUND.getState());
 
         return responseData
                 .setMessage(MessageEnum.SUCCESS.getMessage())

@@ -31,49 +31,48 @@ public class ApiInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-//        HandlerMethod method = (HandlerMethod) handler;
-//        if(method.getMethod().getAnnotation(NoLogin.class) != null)
-//            return true;
-//
-//        String token = request.getHeader(ApiEnum.AUTH_TOKEN.getTypeStr());
-//        if(null == token || StringUtils.isEmpty(token)) {
-//            String jsonStr = JSON.toJSONString(new ResponseData<>(MessageEnum.NEED_LOGIN.getMessage(),
-//                    MessageEnum.NEED_LOGIN.getState()));
-//            setErrorResponse(response,jsonStr, HttpStatus.OK);
-//            return false;
-//        }
-//        DecodedJWT decodedJWT;
-//        try{
-//            decodedJWT =  TokenUtil.INSTANCE.verify(token);
-//            Date iat = decodedJWT.getIssuedAt();
-//            long currentTime = System.currentTimeMillis();
-//            long refreshTime = iat.getTime() + TokenUtil.INSTANCE.activeTime;
-//            long expireTime = decodedJWT.getExpiresAt().getTime();
-//
-//            //大于刷新时间且在有效期内，进行刷新token
-//            if(currentTime > refreshTime &&  currentTime < expireTime){
-//                Map<String,String> map = new HashMap<>();
-//                map.put(ApiEnum.LOGIN_USER_ID.getTypeStr(),decodedJWT.getClaim(ApiEnum.LOGIN_USER_ID.getTypeStr()).asString());
-//                map.put(ApiEnum.LOGIN_PHONE.getTypeStr(),decodedJWT.getClaim(ApiEnum.LOGIN_PHONE.getTypeStr()).asString());
-//                map.put(ApiEnum.LOGIN_TIME.getTypeStr(),decodedJWT.getClaim(ApiEnum.LOGIN_TIME.getTypeStr()).asString());
-//                String autoTokenRe = TokenUtil.INSTANCE.updateToken(map);
-//                response.setHeader(ApiEnum.REFRESH_AUTH_TOKEN.getTypeStr(),autoTokenRe);
-//            }
-//
-//            if(currentTime > expireTime) {
-//                throw new JWTVerificationException("Out Of Time");
-//            }
-//
-//            Integer userId =  Integer.parseInt(decodedJWT.getClaim(ApiEnum.LOGIN_USER_ID.getTypeStr()).asString());
-//            request.setAttribute(ApiEnum.LOGIN_USER_ID.getTypeStr(),userId);
-//            return true;
-//        } catch (JWTVerificationException e) {
-//            String jsonStr = JSON.toJSONString(new ResponseData<>(MessageEnum.TOKEN_ERROR.getMessage(),
-//                    MessageEnum.NEED_LOGIN.getState()));
-//            setErrorResponse(response,jsonStr, HttpStatus.OK);
-//            return false;
-//        }
-        return true;
+        HandlerMethod method = (HandlerMethod) handler;
+        if(method.getMethod().getAnnotation(NoLogin.class) != null)
+            return true;
+
+        String token = request.getHeader(ApiEnum.AUTH_TOKEN.getTypeStr());
+        if(null == token || StringUtils.isEmpty(token)) {
+            String jsonStr = JSON.toJSONString(new ResponseData<>(MessageEnum.NEED_LOGIN.getMessage(),
+                    MessageEnum.NEED_LOGIN.getState()));
+            setErrorResponse(response,jsonStr, HttpStatus.OK);
+            return false;
+        }
+        DecodedJWT decodedJWT;
+        try{
+            decodedJWT =  TokenUtil.INSTANCE.verify(token);
+            Date iat = decodedJWT.getIssuedAt();
+            long currentTime = System.currentTimeMillis();
+            long refreshTime = iat.getTime() + TokenUtil.INSTANCE.activeTime;
+            long expireTime = decodedJWT.getExpiresAt().getTime();
+
+            //大于刷新时间且在有效期内，进行刷新token
+            if(currentTime > refreshTime &&  currentTime < expireTime){
+                Map<String,String> map = new HashMap<>();
+                map.put(ApiEnum.LOGIN_USER_ID.getTypeStr(),decodedJWT.getClaim(ApiEnum.LOGIN_USER_ID.getTypeStr()).asString());
+                map.put(ApiEnum.LOGIN_PHONE.getTypeStr(),decodedJWT.getClaim(ApiEnum.LOGIN_PHONE.getTypeStr()).asString());
+                map.put(ApiEnum.LOGIN_TIME.getTypeStr(),decodedJWT.getClaim(ApiEnum.LOGIN_TIME.getTypeStr()).asString());
+                String autoTokenRe = TokenUtil.INSTANCE.updateToken(map);
+                response.setHeader(ApiEnum.REFRESH_AUTH_TOKEN.getTypeStr(),autoTokenRe);
+            }
+
+            if(currentTime > expireTime) {
+                throw new JWTVerificationException("Out Of Time");
+            }
+
+            Integer userId =  Integer.parseInt(decodedJWT.getClaim(ApiEnum.LOGIN_USER_ID.getTypeStr()).asString());
+            request.setAttribute(ApiEnum.LOGIN_USER_ID.getTypeStr(),userId);
+            return true;
+        } catch (JWTVerificationException e) {
+            String jsonStr = JSON.toJSONString(new ResponseData<>(MessageEnum.TOKEN_ERROR.getMessage(),
+                    MessageEnum.NEED_LOGIN.getState()));
+            setErrorResponse(response,jsonStr, HttpStatus.OK);
+            return false;
+        }
     }
 
 

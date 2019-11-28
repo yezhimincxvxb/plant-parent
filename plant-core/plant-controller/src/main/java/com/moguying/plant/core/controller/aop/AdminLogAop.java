@@ -25,7 +25,7 @@ public class AdminLogAop {
     @Autowired
     AdminLogService adminLogService;
 
-    @Pointcut(value = "execution(public * com.moguying.plant.core.controller..*.*(..))")
+    @Pointcut(value = "execution(public * com.moguying.plant.core.controller.back.*.*(..))")
     public void addAdminLog() {
     }
 
