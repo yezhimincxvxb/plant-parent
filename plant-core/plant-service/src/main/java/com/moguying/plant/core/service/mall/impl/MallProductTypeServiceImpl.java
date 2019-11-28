@@ -25,12 +25,6 @@ public class MallProductTypeServiceImpl implements MallProductTypeService {
 
     @Override
     @DS("read")
-    public List<MallProductType> indexTypeList() {
-        return mallProductTypeDAO.selectList(new QueryWrapper<MallProductType>().lambda().orderByAsc(MallProductType::getTypeSort));
-    }
-
-    @Override
-    @DS("read")
     public List<MallProductType> typeList(MallProductType where) {
         return mallProductTypeDAO.selectSelective(where);
     }
@@ -51,6 +45,7 @@ public class MallProductTypeServiceImpl implements MallProductTypeService {
     }
 
     @Override
+    @DS("write")
     public ResultData<Integer> deleteType(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MallProduct where = new MallProduct();

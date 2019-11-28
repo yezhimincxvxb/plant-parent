@@ -11,7 +11,7 @@ public interface MoneyRechargeService {
 
     PageResult<MoneyRecharge> moneyRechargeList(Integer page, Integer size, MoneyRecharge where);
 
-    ResultData<Integer> reviewRecharge(RechargeReview review);
+    ResultData<Integer> reviewRecharge(Integer reviewUid,RechargeReview review);
 
     ResultData<Integer> addMoneyRecharge(MoneyRecharge addRecharge);
 
