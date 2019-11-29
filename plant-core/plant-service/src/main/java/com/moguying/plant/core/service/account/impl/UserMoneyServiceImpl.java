@@ -3,6 +3,7 @@ package com.moguying.plant.core.service.account.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.user.UserMoneyDetailDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
@@ -84,7 +85,12 @@ public class UserMoneyServiceImpl implements UserMoneyService {
                 return null;
             }
             userMoney.setCollectCapital(userMoney.getCollectCapital().add(collectCapital));
-            operator.setAffectMoney(collectCapital);
+            // 出售菌包、出售收入，变动金额是：正数
+            if (operator.getOpType().equals(MoneyOpEnum.SALE_REAP_SEED) || operator.getOpType().equals(MoneyOpEnum.SALE_REAP_SEED_PROFIT)) {
+                operator.setAffectMoney(collectCapital.negate());
+            } else {
+                operator.setAffectMoney(collectCapital);
+            }
         }
 
         BigDecimal collectInterest = operateMoney.getCollectInterest();
@@ -93,7 +99,12 @@ public class UserMoneyServiceImpl implements UserMoneyService {
                 return null;
             }
             userMoney.setCollectInterest(userMoney.getCollectInterest().add(collectInterest));
-            operator.setAffectMoney(collectInterest);
+            // 出售菌包、出售收入，变动金额是：正数
+            if (operator.getOpType().equals(MoneyOpEnum.SALE_REAP_SEED) || operator.getOpType().equals(MoneyOpEnum.SALE_REAP_SEED_PROFIT)) {
+                operator.setAffectMoney(collectInterest.negate());
+            } else {
+                operator.setAffectMoney(collectInterest);
+            }
         }
 
         if (userMoneyDAO.updateByPrimaryKeySelective(userMoney) > 0) {
