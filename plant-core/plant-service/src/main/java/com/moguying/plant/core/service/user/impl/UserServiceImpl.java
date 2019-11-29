@@ -406,7 +406,7 @@ public class UserServiceImpl implements UserService {
         if (addressDAO.deleteById(address.getId()) > 0) {
             // 删除后没有默认地址，则将最近新增的地址设置为默认地址
 
-            if (addressDAO.selectCount(new QueryWrapper<UserAddress>().lambda().eq(UserAddress::getIsDefault,true).eq(UserAddress::getIsDelete,false).ne(UserAddress::getId,address.getId())) == 0) {
+            if (addressDAO.selectCount(new QueryWrapper<UserAddress>().lambda().eq(UserAddress::getUserId,address.getUserId()).eq(UserAddress::getIsDefault,true).eq(UserAddress::getIsDelete,false).ne(UserAddress::getId,address.getId())) == 0) {
                 addressDAO.setDefaultByTime(address.getUserId());
             }
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
