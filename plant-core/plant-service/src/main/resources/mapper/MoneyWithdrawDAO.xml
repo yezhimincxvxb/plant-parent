@@ -1,108 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.account.MoneyWithdrawDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.MoneyWithdraw">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="withdraw_money" jdbcType="DECIMAL" property="withdrawMoney" />
-    <result column="fee" jdbcType="DECIMAL" property="fee" />
-    <result column="to_account_money" jdbcType="DECIMAL" property="toAccountMoney" />
-    <result column="withdraw_time" jdbcType="TIMESTAMP" property="withdrawTime" />
-    <result column="verify_time" jdbcType="TIMESTAMP" property="verifyTime" />
-    <result column="verify_user" jdbcType="INTEGER" property="verifyUser" />
-    <result column="verify_mark" jdbcType="VARCHAR" property="verifyMark" />
-    <result column="bank_number" jdbcType="VARCHAR" property="bankNumber" />
-    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
-    <result column="state" jdbcType="INTEGER" property="state" />
-    <result column="seq_no" jdbcType="INTEGER" property="seqNo" />
-    <result column="success_time" jdbcType="INTEGER" property="seqNo" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.account.MoneyWithdraw">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="withdraw_money" jdbcType="DECIMAL" property="withdrawMoney"/>
+        <result column="fee" jdbcType="DECIMAL" property="fee"/>
+        <result column="to_account_money" jdbcType="DECIMAL" property="toAccountMoney"/>
+        <result column="withdraw_time" jdbcType="TIMESTAMP" property="withdrawTime"/>
+        <result column="verify_time" jdbcType="TIMESTAMP" property="verifyTime"/>
+        <result column="verify_user" jdbcType="INTEGER" property="verifyUser"/>
+        <result column="verify_mark" jdbcType="VARCHAR" property="verifyMark"/>
+        <result column="bank_number" jdbcType="VARCHAR" property="bankNumber"/>
+        <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
+        <result column="seq_no" jdbcType="INTEGER" property="seqNo"/>
+        <result column="success_time" jdbcType="INTEGER" property="seqNo"/>
+    </resultMap>
 
 
-  <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.MoneyWithdraw" extends="BaseResultMap">
-    <result column="real_name" jdbcType="VARCHAR" property="realName"/>
-  </resultMap>
+    <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.account.MoneyWithdraw" extends="BaseResultMap">
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+    </resultMap>
 
-  <sql id="Base_Column_List">
+    <sql id="Base_Column_List">
     id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time, 
     verify_time, verify_user, verify_mark, bank_number, `state`,seq_no,success_time,bank_phone
   </sql>
 
 
+    <select id="selectSelective" resultMap="BaseInfoMap">
+        select t1.id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time, t1.seq_no,
+        verify_time, verify_user, verify_mark, bank_number, bank_phone, t1.`state`, t1.success_time, t2.real_name
+        from plant_money_withdraw t1
+        left join plant_user t2 on t1.user_id = t2.id
+        <where>
+            <if test="wq.id != null ">
+                t1.id = #{wq.id}
+            </if>
+            <if test="wq.userId != null">
+                and t1.user_id = #{wq.userId}
+            </if>
+            <if test="wq.realName != null and wq.realName != ''">
+                and instr(t2.real_name, #{wq.realName})
+            </if>
+            <if test="wq.bankPhone != null and wq.bankPhone != ''">
+                and instr(t1.bank_phone, #{wq.bankPhone})
+            </if>
+            <if test="wq.orderNumber != null and wq.orderNumber != ''">
+                and instr(t1.order_number, #{wq.orderNumber})
+            </if>
+            <if test="wq.bankNumber != null and wq.bankNumber != ''">
+                and instr(t1.bank_number, #{wq.bankNumber})
+            </if>
+            <if test="wq.state != null">
+                and t1.state = #{wq.state}
+            </if>
+            <if test="wq.inState != null">
+                and t1.state in
+                <foreach collection="wq.inState" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="wq.startTime != null and wq.startTime != ''">
+                and unix_timestamp(t1.withdraw_time) &gt;= unix_timestamp(#{wq.startTime})
+            </if>
+            <if test="wq.endTime != null and wq.endTime != ''">
+                and unix_timestamp(t1.withdraw_time) &lt;= unix_timestamp(#{wq.endTime})
+            </if>
+        </where>
+        order by t1.withdraw_time desc
+    </select>
 
-  <select id="selectSelective" resultMap="BaseInfoMap">
-    select  t1.id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time,t1.seq_no,
-    verify_time, verify_user, verify_mark, bank_number, bank_phone,t1.`state`,t1.success_time,t2.real_name
-     from plant_money_withdraw t1
-     left join plant_user t2 on t1.user_id = t2.id
-    <where>
-      <if test="wq.id != null ">
-        t1.id = #{id}
-      </if>
+    <select id="selectByOrderNumber" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plant_money_withdraw
+        where order_number = #{orderNumber}
+    </select>
 
-      <if test="wq.realName != null and wq.realName != ''">
-        <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
-            AND t2.real_name like #{realNameLike}
-      </if>
 
-      <if test="wq.bankPhone != null and wq.bankPhone != ''">
-        <bind name="phoneLike" value="'%'+ bankPhone +'%'"/>
-        AND t1.bank_phone like #{phoneLike}
-      </if>
-      <if test="wq.orderNumber != null and wq.orderNumber != ''">
-        AND t1.order_number = #{orderNumber}
-      </if>
-      <if test="wq.state != null">
-        AND t1.state = #{wq.state}
-      </if>
-      <if test="wq.inState != null">
-        AND t1.state in
-        <foreach collection="wq.inState" open="(" close=")" separator="," item="item">
-            #{item}
-        </foreach>
-      </if>
-      <if test="wq.bankNumber != null and wq.bankNumber != ''">
-        AND t1.bank_number = #{wq.bankNumber}
-      </if>
-      <if test="wq.userId != null">
-        AND t1.user_id = #{wq.userId}
-      </if>
-      <if test="wq.startTime != null">
-        <![CDATA[
-            AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{wq.startTime})
-        ]]>
-      </if>
-      <if test="wq.endTime != null">
-        <![CDATA[
-            AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{wq.endTime})
-        ]]>
-      </if>
-
-    </where>
-    order by t1.withdraw_time desc
-  </select>
-
-  <select id="selectByOrderNumber" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/> from plant_money_withdraw
-    where order_number = #{orderNumber}
-  </select>
-  
-  
-  <select id="withdrawDailyCountByUserId" resultType="DECIMAL">
-    select sum(withdraw_money) from plant_money_withdraw
-    <where>
-      <if test="userId != null">
-        user_id = #{userId}
-      </if>
-      <if test="startTime != null and endTime != null">
-      <![CDATA[
+    <select id="withdrawDailyCountByUserId" resultType="DECIMAL">
+        select sum(withdraw_money) from plant_money_withdraw
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+            <if test="startTime != null and endTime != null">
+                <![CDATA[
         AND UNIX_TIMESTAMP(withdraw_time) >= UNIX_TIMESTAMP(#{startTime})
         AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{endTime})
       ]]>
-      </if>
-    </where>
-    AND state != 2
+            </if>
+        </where>
+        AND state != 2
 
-  </select>
+    </select>
 </mapper>
