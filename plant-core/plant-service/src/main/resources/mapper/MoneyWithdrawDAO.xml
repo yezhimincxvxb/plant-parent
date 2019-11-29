@@ -63,10 +63,10 @@
                     #{item}
                 </foreach>
             </if>
-            <if test="wq.startTime != null and wq.startTime != ''">
+            <if test="wq.startTime != null">
                 and unix_timestamp(t1.withdraw_time) &gt;= unix_timestamp(#{wq.startTime})
             </if>
-            <if test="wq.endTime != null and wq.endTime != ''">
+            <if test="wq.endTime != null">
                 and unix_timestamp(t1.withdraw_time) &lt;= unix_timestamp(#{wq.endTime})
             </if>
         </where>
