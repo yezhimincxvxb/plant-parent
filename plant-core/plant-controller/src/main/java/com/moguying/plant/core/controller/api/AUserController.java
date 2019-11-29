@@ -429,12 +429,12 @@ public class AUserController {
         User user = userService.userInfoById(userId);
         if (user == null)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
-
-        if (null == bindCard.getBankNumber() || null == bindCard.getMsgCode() || null == bindCard.getSeqNo() || null == bindCard.getPhone()
-                || StringUtils.isEmpty(bindCard.getMsgCode()) || StringUtils.isEmpty(bindCard.getBankNumber())
-                || StringUtils.isEmpty(bindCard.getSeqNo()) || StringUtils.isEmpty(bindCard.getPhone())
-        )
-            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+        if (null ==bindCard.getBankNumber() || StringUtils.isEmpty(bindCard.getBankNumber()))
+            return new ResponseData<>(MessageEnum.BANK_NUMBER_IS_EMPTY.getMessage(), MessageEnum.BANK_NUMBER_IS_EMPTY.getState());
+        if (null==bindCard.getMsgCode() || StringUtils.isEmpty(bindCard.getMsgCode()))
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_IS_EMPTY.getMessage(), MessageEnum.MESSAGE_CODE_IS_EMPTY.getState());
+        if (null== bindCard.getPhone() ||StringUtils.isEmpty(bindCard.getPhone()))
+            return new ResponseData<>(MessageEnum.PHONE_IS_EMPTY.getMessage(), MessageEnum.PHONE_IS_EMPTY.getState());
 
         if (!CommonUtil.INSTANCE.isPhone(bindCard.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());

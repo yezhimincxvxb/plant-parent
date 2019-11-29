@@ -180,7 +180,9 @@ public enum  MessageEnum {
     INVITE_REWARD("邀请奖励已领取",10175),
     YI_TI_YAN("已体验，无须重复体验",10176),
     ONT_INVITE_LOG("目前还没有邀请记录，快邀请好友拿大奖",10177),
-    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10179);
+    REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10179),
+    BANK_NUMBER_IS_EMPTY("银行卡号不能为空",10180),
+    PHONE_IS_EMPTY("手机号不能为空",10180);
 
 
     private String message;
