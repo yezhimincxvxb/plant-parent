@@ -1,5 +1,6 @@
 package com.moguying.plant.core.entity.bargain.vo;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import com.moguying.plant.utils.IdCardSerialize;
@@ -25,7 +26,8 @@ public class BargainVo {
     /**
      * 用户名
      */
-    @JSONField(ordinal = 3,serializeUsing = IdCardSerialize.class)
+    @Excel(name = "参与人手机号")
+    @JSONField(ordinal = 3, serializeUsing = IdCardSerialize.class)
     private String phone;
 
     /**
@@ -107,28 +109,30 @@ public class BargainVo {
     private String message;
 
     /**
-     * 开始时间
-     */
-    @JSONField(ordinal = 17,format = "yyyy-MM-dd HH:mm:ss")
-    private Date beginTime;
-
-    /**
-     * 结束时间
-     */
-    @JSONField(ordinal = 18,format = "yyyy-MM-dd HH:mm:ss")
-    private Date endTime;
-
-    /**
      * 百分比
      */
-    @JSONField(ordinal = 19, serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 17, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal rate;
 
     /**
      * 帮砍价格
      */
-    @JSONField(ordinal = 20, serializeUsing = BigDecimalSerialize.class)
+    @Excel(name = "帮砍价格")
+    @JSONField(ordinal = 18, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal helpAmount;
+
+    /**
+     * 开始时间
+     */
+    @Excel(name = "帮砍时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 19, format = "yyyy-MM-dd HH:mm:ss")
+    private Date beginTime;
+
+    /**
+     * 结束时间
+     */
+    @JSONField(ordinal = 20, format = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
 
     /**
      * 砍价口令
