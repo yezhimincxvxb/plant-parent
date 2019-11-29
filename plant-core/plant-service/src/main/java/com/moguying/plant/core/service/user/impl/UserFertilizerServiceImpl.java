@@ -155,7 +155,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         if (type == null)
             return userFertilizerDAO.findByIdAndUserId(userId, id);
 
-        if (type == 4)
+        if (FertilizerEnum.MONEY_FERTILIZER.getState().equals(type))
             return userFertilizerDAO.getUserFertilizer(userId, id, type);
 
         return null;
@@ -180,12 +180,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     @Override
     @DS("read")
     public UserFertilizer userFertilizer(Integer userId, String orderNumber) {
-
-        QueryWrapper<UserFertilizer> queryWrapper = new QueryWrapper<UserFertilizer>()
-                .eq("user_id", userId)
-                .eq("use_order_number", orderNumber);
-
-        return userFertilizerDAO.selectOne(queryWrapper);
+        return userFertilizerDAO.getUserAndNumber(userId, orderNumber, FertilizerEnum.MONEY_FERTILIZER.getState());
     }
 }
 

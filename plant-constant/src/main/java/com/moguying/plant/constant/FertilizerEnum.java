@@ -7,7 +7,8 @@ public enum FertilizerEnum {
 
     COUPON_FERTILIZER(1,"优卖券"),
     FULL_FERTILIZER(2,"满减券"),
-    PLANT_FERTILIZER(3,"种植券");
+    PLANT_FERTILIZER(3,"种植券"),
+    MONEY_FERTILIZER(4,"现金红包");
 
     private Integer state;
     private String stateName;

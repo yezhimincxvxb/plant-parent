@@ -246,4 +246,22 @@
         limit 1
     </select>
 
+    <select id="getUserAndNumber" resultMap="BaseResultMap">
+        select t1.*
+        from plant_user_fertilizer t1
+        left join plant_fertilizer t2 on t1.fertilizer_id = t2.id
+        <where>
+            <if test="userId != null">
+                t1.user_id = #{userId}
+            </if>
+            <if test="orderNumber != null">
+                and t1.use_order_number = #{orderNumber}
+            </if>
+            <if test="type != null">
+                and t2.type_id = #{type}
+            </if>
+        </where>
+        limit 1
+    </select>
+
 </mapper>
