@@ -54,6 +54,7 @@
     update plant_user_address
     set is_default = 1
     where user_id = #{userId}
+    and is_delete = 0
     order by add_time desc
     limit 1
   </update>
