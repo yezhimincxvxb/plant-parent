@@ -149,6 +149,7 @@ public class FertilizerServiceImpl implements FertilizerService {
         UserFertilizer update = new UserFertilizer();
         update.setState(FertilizerEnum.FERTILIZER_USED.getState());
         update.setUseOrderNumber(orderNumber);
+        update.setUseTime(new Date());
         if (userFertilizerDAO.updateStateByIds(fertilizers, update) > 0) {
             BigDecimal affectAmount = BigDecimal.ZERO;
             for (UserFertilizerInfo info : userFertilizerInfos) {

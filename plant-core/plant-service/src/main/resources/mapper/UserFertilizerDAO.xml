@@ -11,6 +11,7 @@
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
         <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
         <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="use_time" jdbcType="TIMESTAMP" property="useTime"/>
     </resultMap>
 
 
@@ -52,36 +53,37 @@
             resultMap="UserFertilizerList">
         select t1.id, t1.user_id, t1.fertilizer_id, t1.`state`,
         t1.use_order_number,t1.add_time,t1.start_time,t1.end_time,t1.fertilizer_amount,
-        t3.type_name,t4.phone,t4.real_name
+        t3.type_name,t4.phone,t4.real_name, t1.use_time
         from plant_user_fertilizer t1
         left join plant_fertilizer t2 on t1.fertilizer_id = t2.id
         left join plant_fertilizer_type t3 on t2.type_id = t3.id
         left join plant_user t4 on t1.user_id = t4.id
         <where>
-            <if test="wq.id != null">
-                t1.id = #{wq.id}
+            <if test="wq != null">
+                <if test="wq.id != null">
+                    t1.id = #{wq.id}
+                </if>
+                <if test="wq.userId != null">
+                    and t1.user_id = #{wq.userId}
+                </if>
+                <if test="wq.fertilizerId != null">
+                    and t1.fertilizer_id = #{wq.fertilizerId}
+                </if>
+                <if test="wq.state != null ">
+                    and t1.state = #{wq.state}
+                </if>
+                <if test="wq.phone != null and wq.phone != ''">
+                    and instr(t4.phone, #{wq.phone})
+                </if>
+                <if test="wq.realName != null and wq.realName != ''">
+                    and instr(t4.real_name, #{wq.realName})
+                </if>
+                <if test="wq.useOrderNumber != null and wq.useOrderNumber != ''">
+                    and instr(t1.use_order_number, #{wq.useOrderNumber})
+                </if>
             </if>
-            <if test="wq.userId != null">
-                AND t1.user_id = #{wq.userId}
-            </if>
-            <if test="wq.fertilizerId != null">
-                AND t1.fertilizer_id = #{wq.fertilizerId}
-            </if>
-            <if test="wq.state != null ">
-                AND t1.state = #{wq.state}
-            </if>
-            <if test="wq.phone != null and wq.phone != ''">
-                AND t4.phone = #{wq.phone}
-            </if>
-            <if test="wq.realName != null and wq.realName != ''">
-                AND t4.real_name = #{wq.realName}
-            </if>
-            <if test="wq.useOrderNumber != null and wq.useOrderNumber != ''">
-                AND t1.use_order_number = #{wq.useOrderNumber}
-            </if>
-
         </where>
-        order by id desc
+        order by t1.id desc
     </select>
 
     <select id="fertilizerIsUsing" resultType="int">
