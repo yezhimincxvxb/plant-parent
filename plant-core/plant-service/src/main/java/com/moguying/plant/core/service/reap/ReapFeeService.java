@@ -12,6 +12,9 @@ public interface ReapFeeService {
     ResultData<Integer> addReapFee(ReapFee reapFee);
 
 
+    ResultData<Boolean> updateState(Integer feeId,Boolean isPass);
+
+
     PageResult<ReapFee> reapFeeList(Integer page, Integer size, ReapFee where);
 
 

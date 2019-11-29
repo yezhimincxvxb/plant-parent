@@ -70,6 +70,18 @@ public class ReapFeeServiceImpl implements ReapFeeService {
         return resultData;
     }
 
+    @Override
+    @DS("write")
+    public ResultData<Boolean> updateState(Integer feeId,Boolean isPass) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        ReapFee fee = new ReapFee();
+        fee.setId(feeId);
+        fee.setState(isPass);
+        if (reapFeeDAO.updateById(fee)>0)
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+        return resultData;
+    }
+
     @DS("read")
     @Override
     public PageResult<ReapFee> reapFeeList(Integer page, Integer size, ReapFee where) {

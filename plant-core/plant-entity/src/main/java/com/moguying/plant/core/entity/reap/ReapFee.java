@@ -56,6 +56,11 @@ public class ReapFee implements Serializable {
     @TableField
     private Boolean isFirst;
 
+    @Excel(name = "审核状态",replace = {"已审核_true","未审核_false"})
+    @TableField
+    private Boolean state;
+
+
     @ExcelEntity
     @TableField(exist = false)
     private User user;

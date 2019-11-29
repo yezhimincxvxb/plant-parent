@@ -146,6 +146,11 @@ public class MoneyWithdraw implements Serializable {
     private Date successTime;
 
 
+    @Excel(name = "注册手机号")
+    @JSONField(ordinal = 18)
+    @TableField(exist = false)
+    private String phone;
+
     /**
      * 查询辅助
      */

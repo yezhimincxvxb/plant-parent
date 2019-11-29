@@ -1,5 +1,6 @@
 package com.moguying.plant.core.entity.mall;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -21,6 +22,7 @@ import java.util.List;
 @TableName("plant_mall_order")
 public class MallOrder implements Serializable, PayOrder {
 
+    @Excel(name = "订单ID")
     @JSONField(ordinal = 1)
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -28,6 +30,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 订单流水号
      */
+    @Excel(name = "订单编号")
     @JSONField(ordinal = 2)
     @TableField
     private String orderNumber;
@@ -42,6 +45,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 购买总价
      */
+    @Excel(name = "商品总价")
     @JSONField(ordinal = 4 ,serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal buyAmount;
@@ -63,6 +67,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 订单快递费
      */
+    @Excel(name = "运费")
     @JSONField(ordinal = 6,serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal feeAmount;
@@ -84,6 +89,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 下单时间
      */
+    @Excel(name = "创建时间")
     @JSONField(ordinal = 9,format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
@@ -177,6 +183,7 @@ public class MallOrder implements Serializable, PayOrder {
      * 后台辅助字段
      * 用户手机号
      */
+    @Excel(name = "用户账号")
     @JSONField(ordinal = 20)
     @TableField(exist = false)
     private String phone;
@@ -189,6 +196,7 @@ public class MallOrder implements Serializable, PayOrder {
      * 后台辅助字段
      * 用户真实姓名
      */
+    @Excel(name = "用户姓名")
     @JSONField(ordinal = 22)
     @TableField(exist = false)
     private String realName;
@@ -208,6 +216,16 @@ public class MallOrder implements Serializable, PayOrder {
     @JSONField(ordinal = 24)
     @TableField(exist = false)
     private List<OrderItem> details;
+
+    /**
+     * 后台导出辅助字段
+     * 订单状态
+     */
+    @Excel(name = "订单状态")
+    @JSONField(ordinal = 25)
+    @TableField(exist = false)
+    private String stateStr;
+
 
 
     @Override
