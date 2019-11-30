@@ -9,12 +9,7 @@ import com.moguying.plant.core.entity.system.vo.InnerMessage;
 public interface PhoneMessageService {
 
 
-    ResultData<Integer> sendCodeMessage(SendMessage seedMessage);
-
-    ResultData<Integer> sendOtherMessage(InnerMessage message, Integer typeId);
-
-    ResultData<Integer> sendSaleMessage(String phone);
-
+    ResultData<Boolean> sendCodeMessage(SendMessage seedMessage);
 
     PhoneMessage messageByPhone(String phone);
 
@@ -24,7 +19,7 @@ public interface PhoneMessageService {
 
     Integer validateMessage(String phone, String code);
 
-    Integer send(String phone,String template,String code,String... params);
+    boolean send(String phone,String template,String code,String... params);
 
 
 

@@ -43,13 +43,6 @@ public class FIndexController {
         if (null == sendMessage.getPhone() || !CommonUtil.INSTANCE.isPhone(sendMessage.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
 
-        /* 去除图形验证码
-        boolean isPass = CaptchaUtil.ver(sendMessage.getCode(),request);
-        CaptchaUtil.clear(request);
-        if(!isPass)
-            return new ResponseData<>(MessageEnum.CODE_ERROR.getMessage(), MessageEnum.CODE_ERROR.getState());
-         */
-
         User user = userService.userInfoByPhone(sendMessage.getPhone(), UserEnum.USER_ACTIVE);
         sendMessage.setIsReg(null == user);
         ResultData<Integer> resultData = messageService.sendCodeMessage(sendMessage);

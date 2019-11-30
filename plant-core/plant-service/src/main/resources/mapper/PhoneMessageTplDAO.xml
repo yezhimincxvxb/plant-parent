@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.system.PhoneMessageTplDAO">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.system.PhoneMessageTpl">
+        <id column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="is_delete" jdbcType="VARCHAR" property="isDelete"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, code, content,is_delete
+    </sql>
+</mapper>

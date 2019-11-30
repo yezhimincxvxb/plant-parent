@@ -6,12 +6,12 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@RabbitListener(queues = "moguying.phone.message")
+@RabbitListener(queues = "moguying.code.message")
 @Slf4j
 public class PhoneMessageReceiver {
 
     @RabbitHandler
-    public void  process(String hello){
-        log.debug("Receive:=========={}",hello);
+    public void  process(String json){
+        log.debug(json);
     }
 }

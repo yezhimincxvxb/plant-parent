@@ -1,19 +1,26 @@
 package com.moguying.plant.core.service.system.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SystemEnum;
+import com.moguying.plant.core.config.RabbitConfig;
 import com.moguying.plant.core.dao.system.PhoneMessageDAO;
+import com.moguying.plant.core.dao.system.PhoneMessageTplDAO;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
 import com.moguying.plant.core.entity.system.PhoneMessage;
+import com.moguying.plant.core.entity.system.PhoneMessageTpl;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.service.common.message.MessageSendService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
+import com.moguying.plant.mq.sender.PhoneMessageSender;
 import com.moguying.plant.utils.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,25 +30,6 @@ import java.util.Date;
 @Service
 @Slf4j
 public class PhoneMessageServiceImpl implements PhoneMessageService {
-
-    @Value("${message.code}")
-    private String codeContentTpl;
-
-
-    @Value("${message.seed.reap}")
-    private String seedReapContentTpl;
-
-    @Value("${message.withdraw.success}")
-    private String withdrawSuccessContentTpl;
-
-    @Value("${message.withdraw.fail}")
-    private String withdrawFailContentTpl;
-
-    @Value("${message.mall.send}")
-    private String mallSendContentTpl;
-
-    @Value("${message.fertilizer.send}")
-    private String fertilizerSendContentTpl;
 
     @Value("${message.time}")
     private String time;
@@ -60,99 +48,53 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
 
 
     @Autowired
-    PhoneMessageDAO phoneMessageDAO;
+    private PhoneMessageDAO phoneMessageDAO;
 
+    @Autowired
+    private PhoneMessageTplDAO tplDAO;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
+    /**
+     * 发送验证码短信
+     * 在规定时间内不可重复发送
+     * @param sendMessage
+     * @return
+     */
     @Override
     @DS("write")
-    public ResultData<Integer> sendCodeMessage(SendMessage sendMessage) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+    public ResultData<Boolean> sendCodeMessage(SendMessage sendMessage) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
         String code = CommonUtil.INSTANCE.messageCode();
         long inTime = (Long.parseLong(time) / 1000) / 60;
-        String codeContent = codeContentTpl.replace("code", code);
+        PhoneMessageTpl codeContent = tplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"code"));
         if(messageByPhone(sendMessage.getPhone()) != null){
             MessageEnum messageEnum = MessageEnum.CAN_NOT_REPEAT_SEND_MESSAGE;
             messageEnum.setMessage(messageEnum.getMessage().replace("time",String.valueOf(inTime)));
             return resultData.setMessageEnum(messageEnum);
         }
-        Integer addId = -1;
-        if(( addId = send(sendMessage.getPhone(),codeContent,code)) > 0)
-            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(addId);
+        if(send(sendMessage.getPhone(),codeContent.getContent(),code,code))
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
         return resultData;
     }
 
 
     @Override
-    public Integer send(String phone, String template, String code,String... params) {
-
+    public boolean send(String phone, String template, String code,String... params) {
         for(int i = 1; i <= params.length ; i++) {
             template = template.replace("{param" + i + "}", params[i - 1]);
         }
-        return send(phone,template,code);
-    }
-
-    private Integer send(String phone, String content, String code){
-        return send(phone,content,code,account);
-    }
-
-
-    @Override
-    @DS("write")
-    public ResultData<Integer> sendSaleMessage(String phone) {
-        Integer result = send(phone,fertilizerSendContentTpl,null,saleAccount);
-        if(result > 0)
-             return new ResultData<>(MessageEnum.SUCCESS,result);
-        return new ResultData<>(MessageEnum.ERROR,result);
-    }
-
-
-    private Integer send(String phone, String content, String code, String account){
-        try {
-            ResultData<Integer> sendResult = MessageSendService.INSTANCE.send(sendUrl, account, password, phone, content);
-            if (sendResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
-                PhoneMessage add = new PhoneMessage();
-                if (null != code) {
-                    add.setCode(code);
-                }
-                add.setMessage(content);
-                add.setPhone(phone);
-                add.setAddTime(new Date());
-                if (phoneMessageDAO.insert(add) > 0)
-                    return add.getId();
-                return -1;
-            }
-            return -1;
-        } catch (Exception e) {
-            return -1;
+        PhoneMessage add = new PhoneMessage();
+        if (null != code) add.setCode(code);
+        add.setMessage(template);
+        add.setPhone(phone);
+        add.setAddTime(new Date());
+        if(phoneMessageDAO.insert(add) > 0) {
+            amqpTemplate.convertAndSend(RabbitConfig.PHONE_MESSAGE, JSON.toJSONString(new PhoneMessageSender(phone, template)));
+            return true;
         }
-
-    }
-
-
-
-    @Override
-    @DS("write")
-    public ResultData<Integer> sendOtherMessage(InnerMessage message, Integer typeId) {
-        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
-        String messageContent = "";
-        switch (typeId) {
-            case 3:
-                messageContent = seedReapContentTpl.replace("phone", message.getPhone())
-                        .replace("count", message.getCount());
-                break;
-            case 4:
-                messageContent = withdrawSuccessContentTpl.replace("time", message.getTime());
-                break;
-            case 5:
-                messageContent = withdrawFailContentTpl.replace("time", message.getTime());
-                break;
-            case 6:
-                messageContent = mallSendContentTpl;
-                break;
-
-        }
-        if(send(message.getPhone(),messageContent,null) > 0)
-                return resultData.setMessageEnum(MessageEnum.SUCCESS);
-        return resultData;
+        return false;
     }
 
     @Override
