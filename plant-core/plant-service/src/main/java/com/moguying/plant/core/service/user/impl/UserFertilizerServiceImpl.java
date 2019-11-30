@@ -174,6 +174,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
 
         // 更新券状态
         userFertilizer.setState(1);
+        userFertilizer.setUseTime(new Date());
         return userFertilizerDAO.updateById(userFertilizer) > 0;
     }
 

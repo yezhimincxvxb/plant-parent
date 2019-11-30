@@ -186,8 +186,9 @@
     </update>
 
     <update id="updateStateByOrderNumber">
-    update plant_user_fertilizer set state = #{state} where
-    use_order_number = #{orderNumber}
+    update plant_user_fertilizer
+    set state = #{state}, use_time = now()
+    where use_order_number = #{orderNumber}
   </update>
 
     <select id="hasFertilizer" resultType="int">
