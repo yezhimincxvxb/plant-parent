@@ -45,7 +45,7 @@ public class FIndexController {
 
         User user = userService.userInfoByPhone(sendMessage.getPhone(), UserEnum.USER_ACTIVE);
         sendMessage.setIsReg(null == user);
-        ResultData<Integer> resultData = messageService.sendCodeMessage(sendMessage);
+        ResultData<Boolean> resultData = messageService.sendCodeMessage(sendMessage);
 
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),
                 sendMessage);

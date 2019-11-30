@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.dao.account.MoneyWithdrawDAO;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
+import com.moguying.plant.core.dao.system.PhoneMessageTplDAO;
 import com.moguying.plant.core.dao.user.UserBankDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.DownloadInfo;
@@ -22,6 +23,7 @@ import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.payment.response.SendWithdrawSmsCodeResponse;
 import com.moguying.plant.core.entity.payment.response.TransferResponse;
 import com.moguying.plant.core.entity.payment.response.WithdrawMoneyResponse;
+import com.moguying.plant.core.entity.system.PhoneMessageTpl;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserBank;
@@ -32,6 +34,7 @@ import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.DateUtil;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -69,6 +72,9 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
 
     @Autowired
     private PhoneMessageService phoneMessageService;
+
+    @Autowired
+    private PhoneMessageTplDAO phoneMessageTplDAO;
 
     @Value("${withdraw.min}")
     private String withdrawMin;
@@ -197,11 +203,10 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
                 transferRequest.setPayeeNo(user.getPaymentAccount());
                 PaymentResponse<TransferResponse> paymentResponse = paymentService.transferAmount(transferRequest);
                 if (null != paymentResponse && paymentResponse.getCode().equals(PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo())) {
-                    InnerMessage message = new InnerMessage();
-                    message.setPhone(user.getPhone());
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                    message.setTime(sdf.format(new Date()));
-                    phoneMessageService.sendOtherMessage(message, SystemEnum.PHONE_MESSAGE_WITHDRAW_SUCCESS_TYPE.getState());
+                    phoneMessageService.send(user.getPhone(),
+                            phoneMessageTplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"withdraw_success")).getContent(),
+                            null, sdf.format(new Date()));
                     resultData.setMessageEnum(MessageEnum.SUCCESS).setData(paymentResponse);
                 } else if (null != paymentResponse) {
                     resultData.setMessageEnum(MessageEnum.ERROR).setData(paymentResponse);
@@ -243,7 +248,9 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
                 message.setPhone(user.getPhone());
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 message.setTime(sdf.format(new Date()));
-                phoneMessageService.sendOtherMessage(message, SystemEnum.PHONE_MESSAGE_WITHDRAW_FAIL_TYPE.getState());
+                phoneMessageService.send(user.getPhone(),
+                        phoneMessageTplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"withdraw_fail")).getContent(),
+                        null, sdf.format(new Date()));
             }
             return resultData;
         }

@@ -157,8 +157,8 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
         if(!moneyRecharge.isPresent())
             return resultData.setMessageEnum(MessageEnum.RECHARGE_NOT_EXISTS);
         String code = CommonUtil.INSTANCE.messageCode();
-        Integer send = phoneMessageService.send(reviewPhone, reviewTemple, code,moneyRecharge.get().getRealName(), moneyRecharge.get().getPhone(), moneyRecharge.get().getMoney().toString(), code);
-        if(send > 0)
+        ResultData<Boolean> send = phoneMessageService.send(reviewPhone, reviewTemple, code,moneyRecharge.get().getRealName(), moneyRecharge.get().getPhone(), moneyRecharge.get().getMoney().toString(), code);
+        if(send.getData())
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;
     }

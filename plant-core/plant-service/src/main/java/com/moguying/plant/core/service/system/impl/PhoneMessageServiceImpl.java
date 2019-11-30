@@ -12,14 +12,10 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
 import com.moguying.plant.core.entity.system.PhoneMessage;
 import com.moguying.plant.core.entity.system.PhoneMessageTpl;
-import com.moguying.plant.core.entity.system.vo.InnerMessage;
-import com.moguying.plant.core.service.common.message.MessageSendService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.mq.sender.PhoneMessageSender;
 import com.moguying.plant.utils.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,18 +29,6 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
 
     @Value("${message.time}")
     private String time;
-
-    @Value("${message.send.url}")
-    private String sendUrl;
-
-    @Value("${message.account}")
-    private String account;
-
-    @Value("${message.sale.account}")
-    private String saleAccount;
-
-    @Value("${message.password}")
-    private String password;
 
 
     @Autowired
@@ -74,14 +58,18 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
             messageEnum.setMessage(messageEnum.getMessage().replace("time",String.valueOf(inTime)));
             return resultData.setMessageEnum(messageEnum);
         }
-        if(send(sendMessage.getPhone(),codeContent.getContent(),code,code))
+        ResultData<Boolean> sendResult = send(sendMessage.getPhone(), codeContent.getContent(), code, code, String.valueOf(inTime));
+        if(sendResult.getMessageEnum().equals(MessageEnum.SUCCESS))
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
         return resultData;
     }
 
 
     @Override
-    public boolean send(String phone, String template, String code,String... params) {
+    public ResultData<Boolean> send(String phone, String template, String code,String... params) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        if(!CommonUtil.INSTANCE.isPhone(phone))
+            return resultData.setMessageEnum(MessageEnum.PHONE_ERROR);
         for(int i = 1; i <= params.length ; i++) {
             template = template.replace("{param" + i + "}", params[i - 1]);
         }
@@ -92,9 +80,9 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
         add.setAddTime(new Date());
         if(phoneMessageDAO.insert(add) > 0) {
             amqpTemplate.convertAndSend(RabbitConfig.PHONE_MESSAGE, JSON.toJSONString(new PhoneMessageSender(phone, template)));
-            return true;
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
         }
-        return false;
+        return resultData;
     }
 
     @Override

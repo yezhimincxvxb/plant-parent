@@ -68,8 +68,6 @@ public class CallBackController {
     @ApiOperation("支付异步处理")
     public CallBackResponseToPayment payCallback(HttpServletRequest request, PaymentResponse paymentResponse) {
         CallBackResponseToPayment responseToPayment = new CallBackResponseToPayment("000000", "success");
-        //TODO 验签
-
         if (TYPE_IN_ACCOUNT.equals(paymentResponse.getResponseType()) &&
 
                 PaymentStateEnum.RESPONSE_COMMON_SUCCESS.getStateInfo().equals(paymentResponse.getCode())) {

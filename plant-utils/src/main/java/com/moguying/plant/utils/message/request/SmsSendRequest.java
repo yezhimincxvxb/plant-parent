@@ -1,9 +1,12 @@
-package com.moguying.plant.core.service.common.message.request;
+package com.moguying.plant.utils.message.request;
+
+import lombok.Data;
 
 /**
  * @author tianyh
  * @Description:普通短信发送实体类
  */
+@Data
 public class SmsSendRequest {
     /**
      * 创蓝API账号，必填
@@ -79,70 +82,6 @@ public class SmsSendRequest {
         this.phone = phone;
         this.sendtime = sendtime;
         this.report = report;
-        this.uid = uid;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getSendtime() {
-        return sendtime;
-    }
-
-    public void setSendtime(String sendtime) {
-        this.sendtime = sendtime;
-    }
-
-    public String getReport() {
-        return report;
-    }
-
-    public void setReport(String report) {
-        this.report = report;
-    }
-
-    public String getExtend() {
-        return extend;
-    }
-
-    public void setExtend(String extend) {
-        this.extend = extend;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
         this.uid = uid;
     }
 

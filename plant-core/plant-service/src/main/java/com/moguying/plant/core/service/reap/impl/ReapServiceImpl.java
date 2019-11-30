@@ -12,6 +12,7 @@ import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapWeighDAO;
 import com.moguying.plant.core.dao.seed.SeedTypeDAO;
+import com.moguying.plant.core.dao.system.PhoneMessageTplDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.account.UserMoney;
@@ -23,6 +24,7 @@ import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.seed.SeedType;
+import com.moguying.plant.core.entity.system.PhoneMessageTpl;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
@@ -88,6 +90,9 @@ public class ReapServiceImpl<T> implements ReapService {
     @Autowired
     private ReapWeighDAO reapWeighDAO;
 
+    @Autowired
+    private PhoneMessageTplDAO phoneMessageTplDAO;
+
     @Override
     @DS("read")
     public PageResult<Reap> reapList(Integer page, Integer size, Reap where) {
@@ -115,7 +120,9 @@ public class ReapServiceImpl<T> implements ReapService {
 
             List<InnerMessage> messages = reapDAO.selectPhoneByRange(idList);
             for (InnerMessage message : messages) {
-                phoneMessageService.sendOtherMessage(message, SystemEnum.PHONE_MESSAGE_SEED_REAP_TYPE.getState());
+                phoneMessageService.send(message.getPhone(),
+                        phoneMessageTplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"reap")).getContent(),
+                        null,message.getPhone(),message.getCount());
             }
             return 1;
         }
