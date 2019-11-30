@@ -304,7 +304,7 @@ public class TasteServiceImpl implements TasteService {
                     .is(true).and("endTime").gt(new Date()).and("tasteCount").gt(0)), Taste.class);
         }
         //没有进行中免费申请活动
-        if (Objects.isNull(taste.getId()))
+        if (Objects.isNull(taste) || Objects.isNull(taste.getId()))
             return resultData;
 
         TasteApply apply = new TasteApply(userId, taste.getId(), ApiEnum.TASTE_APPLY.getType());
