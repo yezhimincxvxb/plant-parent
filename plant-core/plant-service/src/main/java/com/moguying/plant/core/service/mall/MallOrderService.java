@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.mall;
 
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.mall.MallOrder;
@@ -12,6 +13,7 @@ import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
 import com.moguying.plant.core.entity.user.vo.UserMallOrder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface MallOrderService {
@@ -60,4 +62,7 @@ public interface MallOrderService {
     Boolean orderSuccess(MallOrder order, UserSaleCoin userSaleCoin);
 
     Integer getMallOrderNum();
+
+    PageResult<MallOrder> mallOrderListExcel(Integer page, Integer size, MallOrderSearch where);
+
 }

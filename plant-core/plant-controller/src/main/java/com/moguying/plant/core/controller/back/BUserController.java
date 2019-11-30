@@ -8,12 +8,15 @@ import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.entity.user.UserBank;
+import com.moguying.plant.core.entity.user.dto.UserPlantMoneyDto;
+import com.moguying.plant.core.entity.user.vo.UserPlantMoneyVo;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.CommonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +30,9 @@ public class BUserController {
 
     @Autowired
     UserService userService;
+
+    @Value("${excel.download.dir}")
+    private String downloadDir;
 
     /**
      * 用户列表
@@ -54,9 +60,13 @@ public class BUserController {
     public ResponseData<Integer> excelList(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                            @RequestBody PageSearch<User> search, HttpServletRequest request) {
         if (Objects.isNull(search.getWhere())) search.setWhere(new User());
-        userService.downloadExcel(user.getId(), search, request);
+        DownloadInfo downloadInfo = new DownloadInfo("用户列表", request.getServletContext(), user.getId(), downloadDir);
+        PageResult<User> pageResult = userService.userList(search.getPage(), search.getSize(), search.getWhere());
+        new Thread(new DownloadService<>(pageResult.getData(), User.class, downloadInfo)).start();
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
+
+
 
 
     /**
@@ -145,6 +155,15 @@ public class BUserController {
     @ApiOperation("用户银行卡列表")
     public ResponseData<List<UserBank>> userBankList(@PathVariable Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), userService.bankCardList(userId));
+    }
+
+    /**
+     * 种植金额列表
+     */
+    @PostMapping("/plant/money/list")
+    @ApiOperation("种植金额列表")
+    public PageResult<UserPlantMoneyVo> userPlantMoneyList(@RequestBody PageSearch<UserPlantMoneyDto> search) {
+        return userService.userPlantMoneyList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 

@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.mall.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.mall.MallProductTypeDAO;
@@ -21,7 +22,6 @@ public class MallProductTypeServiceImpl implements MallProductTypeService {
 
     @Autowired
     private MallProductDAO mallProductDAO;
-
 
     @Override
     @DS("read")
@@ -45,6 +45,7 @@ public class MallProductTypeServiceImpl implements MallProductTypeService {
     }
 
     @Override
+    @DS("write")
     public ResultData<Integer> deleteType(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         MallProduct where = new MallProduct();

@@ -1,5 +1,7 @@
 package com.moguying.plant.core.entity.bargain.vo;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelCollection;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.constant.MallEnum;
 import com.moguying.plant.utils.BigDecimalSerialize;
@@ -20,24 +22,28 @@ public class BackBargainDetailVo {
     /**
      * 订单详情id
      */
+    @Excel(name = "订单详情id")
     @JSONField(ordinal = 1)
     private Integer orderId;
 
     /**
      * 手机号
      */
+    @Excel(name = "手机号")
     @JSONField(ordinal = 2)
     private String phone;
 
     /**
      * 商品名称
      */
+    @Excel(name = "商品名称")
     @JSONField(ordinal = 3)
     private String productName;
 
     /**
      * 商品价格
      */
+    @Excel(name = "商品价格")
     @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     private BigDecimal productPrice;
 
@@ -50,36 +56,42 @@ public class BackBargainDetailVo {
     /**
      * 已砍进度
      */
+    @Excel(name = "已砍进度")
     @JSONField(ordinal = 6)
     private String bargainProgress;
 
     /**
      * 砍成人数
      */
+    @Excel(name = "砍成人数")
     @JSONField(ordinal = 7)
     private Integer bargainCount;
 
     /**
      * 参与人数
      */
+    @Excel(name = "参与人数")
     @JSONField(ordinal = 8)
     private Integer bargainNumber;
 
     /**
      * 剩余时间
      */
+    @Excel(name = "剩余时间")
     @JSONField(ordinal = 9)
     private String leftTime;
 
     /**
-     * 添加时间
+     * 开始砍价时间
      */
+    @Excel(name = "开始砍价时间", format = "yyyy-MM-dd HH:mm:ss")
     @JSONField(ordinal = 10, format = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
 
     /**
      * 砍成时间
      */
+    @Excel(name = "砍成时间", format = "yyyy-MM-dd HH:mm:ss")
     @JSONField(ordinal = 11, format = "yyyy-MM-dd HH:mm:ss")
     private Date bargainTime;
 
@@ -92,6 +104,7 @@ public class BackBargainDetailVo {
     /**
      * 收货地址
      */
+    @Excel(name = "收货地址")
     @JSONField(ordinal = 13)
     private String address;
 
@@ -104,19 +117,29 @@ public class BackBargainDetailVo {
     /**
      * 订单状态
      */
+    @Excel(name = "订单状态")
     @JSONField(ordinal = 15)
     private String orderState;
 
     /**
      * 发货状态
      */
+    @Excel(name = "发货状态")
     @JSONField(ordinal = 16)
     private String sendState;
 
     /**
+     * 商品添加时间
+     */
+    @Excel(name = "商品添加时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 17, format = "yyyy-MM-dd HH:mm:ss")
+    private Date productTime;
+
+    /**
      * 帮砍用户
      */
-    @JSONField(ordinal = 17)
+    @ExcelCollection(name = "帮砍用户", type = BargainVo.class)
+    @JSONField(ordinal = 18)
     private List<BargainVo> users;
 
     public String getBargainProgress() {

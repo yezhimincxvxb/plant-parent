@@ -15,6 +15,7 @@ import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExcReap;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
+import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.PayOrderResponse;
 import com.moguying.plant.core.entity.payment.request.PaymentRequest;
@@ -40,6 +41,7 @@ import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.reap.SaleCoinService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import com.moguying.plant.core.service.seed.SeedTypeService;
+import com.moguying.plant.core.service.user.UserFertilizerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/seed")
@@ -100,6 +103,9 @@ public class ASeedController {
 
     @Autowired
     private ReapExcLogService reapExcLogService;
+
+    @Autowired
+    private UserFertilizerService userFertilizerService;
 
     /**
      * 提交菌包订单
@@ -254,6 +260,33 @@ public class ASeedController {
             return responseData.setData(resultData.getData().getData());
         }
         return responseData;
+    }
+
+    /**
+     * 种植返现红包金额
+     */
+    @GetMapping("/return/money/{reapId}")
+    @ApiOperation("种植返现")
+    public ResponseData<BigDecimal> returnMoney(@LoginUserId Integer userId, @PathVariable("reapId") Integer reapId) {
+
+        ResponseData<BigDecimal> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+
+        Reap reap = reapService.reapInfoByIdAndUserId(reapId, userId);
+        if (Objects.isNull(reap))
+            return responseData
+                    .setMessage(MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getMessage())
+                    .setState(MessageEnum.SEED_ORDER_DETAIL_NOT_EXISTS.getState());
+
+        UserFertilizer userFertilizer = userFertilizerService.userFertilizer(userId, reap.getOrderNumber());
+        if (Objects.isNull(userFertilizer))
+            return responseData
+                    .setMessage(MessageEnum.FERTILIZER_NOT_FOUND.getMessage())
+                    .setState(MessageEnum.FERTILIZER_NOT_FOUND.getState());
+
+        return responseData
+                .setMessage(MessageEnum.SUCCESS.getMessage())
+                .setState(MessageEnum.SUCCESS.getState())
+                .setData(userFertilizer.getFertilizerAmount());
     }
 
 

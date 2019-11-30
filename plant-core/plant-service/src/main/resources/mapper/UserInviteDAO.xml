@@ -1,56 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.user.UserInviteDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserInvite">
-        <id column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="phone" jdbcType="VARCHAR" property="phone"/>
-        <result column="plant_amount" jdbcType="DECIMAL" property="plantAmount"/>
-        <result column="invite_award" jdbcType="DECIMAL" property="inviteAward"/>
-        <result column="invite_user_id" jdbcType="INTEGER" property="inviteUserId"/>
-        <result column="reg_time" jdbcType="TIMESTAMP" property="regTime"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.user.UserInvite">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="plant_amount" jdbcType="DECIMAL" property="plantAmount" />
+    <result column="invite_award" jdbcType="DECIMAL" property="inviteAward" />
+    <result column="invite_user_id" jdbcType="INTEGER" property="inviteUserId" />
+    <result column="reg_time" jdbcType="TIMESTAMP" property="regTime"/>
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        user_id, phone, plant_amount, invite_award, invite_user_id
-    </sql>
+  <sql id="Base_Column_List">
+    user_id, phone, plant_amount, invite_award, invite_user_id
+  </sql>
 
-    <update id="incUserInviteInfo" parameterType="com.moguying.plant.core.entity.user.UserInvite">
-        update plant_user_invite
-        <set>
-            <if test="plantAmount != null">
-                plant_amount = plant_amount + #{plantAmount},
-            </if>
-            <if test="inviteAward != null">
-                invite_award = invite_award + #{inviteAward},
-            </if>
-        </set>
-        where user_id = #{userId}
-    </update>
+  <update id="incUserInviteInfo" parameterType="com.moguying.plant.core.entity.user.UserInvite">
+    update plant_user_invite
+    <set>
+      <if test="plantAmount != null">
+        plant_amount = plant_amount + #{plantAmount},
+      </if>
+      <if test="inviteAward != null">
+        invite_award = invite_award + #{inviteAward},
+      </if>
+    </set>
+    where  user_id = #{userId}
+  </update>
 
 
-    <select id="sumInviteAmount" resultType="java.math.BigDecimal">
-        select COALESCE(sum(${field}),0) from plant_user_invite
-        <where>
-            <if test="inviteUserId != null">
-                invite_user_id = #{inviteUserId}
-            </if>
-        </where>
-    </select>
+  <select id="sumInviteAmount" resultType="java.math.BigDecimal">
+    select COALESCE(sum(${field}),0) from plant_user_invite
+    <where>
+      <if test="inviteUserId != null">
+        invite_user_id = #{inviteUserId}
+      </if>
+    </where>
+  </select>
 
-    <select id="countInvite" resultType="java.lang.Integer">
-        select count(*) from plant_user_invite
-        <where>
-            <if test="inviteUserId != null">
-                invite_user_id = #{inviteUserId}
-            </if>
-        </where>
-    </select>
-
-    <select id="inviteList" resultMap="BaseResultMap">
-        select t1.user_id,t1.phone,t1.plant_amount,t1.invite_award,t2.reg_time from plant_user_invite t1
-        left join plant_user t2 on t1.user_id = t2.id
-        where invite_user_id = #{inviteUserId}
-    </select>
+  <select id="countInvite" resultType="java.lang.Integer">
+    select count(*) from plant_user_invite
+    <where>
+      <if test="inviteUserId != null">
+        invite_user_id = #{inviteUserId}
+      </if>
+    </where>
+  </select>
+  
+  <select id="inviteList" resultMap="BaseResultMap">
+    select t1.user_id,t1.phone,t1.plant_amount,t1.invite_award,t2.reg_time from plant_user_invite t1
+    left join plant_user t2 on t1.user_id = t2.id
+    where invite_user_id = #{inviteUserId}
+    order by t2.reg_time desc
+  </select>
 
 
 </mapper>

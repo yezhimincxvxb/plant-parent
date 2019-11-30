@@ -194,7 +194,7 @@ public class ReapServiceImpl<T> implements ReapService {
         message.setUserId(userId);
         message.setPhone(userInfo.getPhone());
 
-        //更新成品状态
+        // 更新成品状态
         Reap updateReap = new Reap();
         updateReap.setId(reap.getId());
         updateReap.setRecAmount(reap.getPreAmount());
@@ -205,7 +205,8 @@ public class ReapServiceImpl<T> implements ReapService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return resultData.setMessageEnum(MessageEnum.SEED_REAP_SALE_ERROR);
         }
-        //更新用户本金
+
+        // 更新用户本金
         UserMoneyOperator capitalOperator = new UserMoneyOperator();
         capitalOperator.setOpType(MoneyOpEnum.SALE_REAP_SEED);
         capitalOperator.setOperationId(reap.getOrderNumber());
@@ -216,7 +217,7 @@ public class ReapServiceImpl<T> implements ReapService {
         if (moneyService.updateAccount(capitalOperator) == null)
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
-        //更新用户收益
+        // 更新用户收益
         UserMoney profit = new UserMoney(userId);
         UserMoneyOperator profitOperator = new UserMoneyOperator();
         profitOperator.setOperationId(reap.getOrderNumber());
@@ -228,7 +229,8 @@ public class ReapServiceImpl<T> implements ReapService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
         totalAmount = totalAmount.add(reap.getPreAmount()).add(reap.getPreProfit());
-        //更新已领取收益
+
+        // 更新已领取收益
         reapWeighDAO.incField(new ReapWeigh(userId).setHasProfit(totalAmount));
         reapWeighDAO.decField(new ReapWeigh(userId).setAvailableProfit(totalAmount));
         SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());

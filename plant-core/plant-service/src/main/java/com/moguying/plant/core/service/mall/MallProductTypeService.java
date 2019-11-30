@@ -9,7 +9,6 @@ public interface MallProductTypeService {
 
     List<MallProductType> typeList(MallProductType where);
 
-
     ResultData<Integer> saveType(MallProductType type);
 
     ResultData<Integer> deleteType(Integer id);

@@ -2,15 +2,14 @@ package com.moguying.plant.core.scheduled;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.mall.MallOrder;
-import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
+import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.scheduled.task.CloseMallPayOrder;
 import com.moguying.plant.core.scheduled.task.CloseOrderItem;
 import com.moguying.plant.core.scheduled.task.CloseSeedPayOrder;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,9 +19,8 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Component
+@Slf4j
 public class CloseOrderScheduled {
-
-    private Logger log = LoggerFactory.getLogger(CloseOrderScheduled.class);
 
     private static final List<Set<CloseOrderItem>> CLOSE_LOOP = Collections.synchronizedList(new ArrayList<>(60));
 

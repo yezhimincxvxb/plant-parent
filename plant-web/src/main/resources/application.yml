@@ -11,16 +11,16 @@ spring:
     pathmatch:
       use-suffix-pattern: true
   http:
-      encoding:
-        charset: UTF-8
-        force: true
+    encoding:
+      charset: UTF-8
+      force: true
   thymeleaf:
-      encoding: UTF-8
-      prefix: classpath:/views/
-      mode: HTML
-      servlet:
-        content-type: text/html
-      cache: false
+    encoding: UTF-8
+    prefix: classpath:/views/
+    mode: HTML
+    servlet:
+      content-type: text/html
+    cache: false
   servlet:
     multipart:
       enabled: true
@@ -152,20 +152,20 @@ spring:
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+          url: jdbc:mysql://192.168.1.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
         read:
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+          url: jdbc:mysql://192.168.1.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
       hikari:
         max-pool-size: 100
         min-idle: 20
         idle-timeout: 1000
   redis:
-    host: 192.168.5.220
-    port: 6869
-    password: AEnz2DF\Od,GWD#C*+
+    host: 127.0.0.1
+    port: 6379
+    password:
     database: 0
     timeout: 4000
     lettuce:
@@ -176,7 +176,7 @@ spring:
   data:
     mongodb:
       database: activity
-      host: 192.168.5.220
+      host: 192.168.1.220
       port: 27017
       username: activityAdmin
       password: Is&1+KVb[0
@@ -184,8 +184,8 @@ spring:
 upload:
   save-path: /pages/upload
   editor:
-    host: 192.168.5.220
-  host: 192.168.5.220
+    host: http://192.168.1.220
+  host: http://192.168.1.220
 
 recharge:
   review:
@@ -202,21 +202,21 @@ spring:
       primary: write
       datasource:
         write:
-          username: write
+          username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+          url: jdbc:mysql://192.168.1.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
         read:
-          username: write
+          username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://192.168.5.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
+          url: jdbc:mysql://192.168.1.220:3306/moguying?characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&tinyInt1isBit=false
       hikari:
         max-pool-size: 100
         min-idle: 20
         idle-timeout: 1000
   redis:
-    host: 192.168.5.220
+    host: 192.168.1.220
     port: 6869
     password: AEnz2DF\Od,GWD#C*+
     database: 0
@@ -229,7 +229,7 @@ spring:
   data:
     mongodb:
       database: activity
-      host: 192.168.5.220
+      host: 192.168.1.220
       port: 27017
       username: activityAdmin
       password: Is&1+KVb[0
@@ -237,8 +237,8 @@ spring:
 upload:
   save-path: /pages/upload
   editor:
-    host: http://192.168.5.220
-  host: http://192.168.5.220
+    host: http://192.168.1.220
+  host: http://192.168.1.220
 
 swagger:
   enabled: true

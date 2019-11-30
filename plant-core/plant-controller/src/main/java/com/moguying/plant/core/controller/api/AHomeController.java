@@ -8,7 +8,10 @@ import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.block.vo.BlockDetail;
-import com.moguying.plant.core.entity.common.vo.*;
+import com.moguying.plant.core.entity.common.vo.Calculation;
+import com.moguying.plant.core.entity.common.vo.HomeProduct;
+import com.moguying.plant.core.entity.common.vo.HomeProductDetail;
+import com.moguying.plant.core.entity.common.vo.HomeSeed;
 import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.entity.content.Article;
 import com.moguying.plant.core.entity.content.Banner;
@@ -25,7 +28,6 @@ import com.moguying.plant.core.service.content.BannerService;
 import com.moguying.plant.core.service.device.DeviceService;
 import com.moguying.plant.core.service.mall.MallProductService;
 import com.moguying.plant.core.service.mall.MallProductTypeService;
-import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.seed.SeedService;
 import com.moguying.plant.core.service.system.ApkService;
 import com.moguying.plant.utils.InterestUtil;
@@ -37,7 +39,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -72,7 +76,7 @@ public class AHomeController {
 
     @Autowired
     private MallProductTypeService mallProductTypeService;
-    
+
 
     /**
      * 首页banner列表
@@ -168,14 +172,14 @@ public class AHomeController {
     @PostMapping(value = "/block/list")
     public PageResult<Block> blockList(@RequestBody PageSearch<Block> search) {
         //必须是上架的大棚
-        if(null == search.getWhere()) {
+        if (null == search.getWhere()) {
             Block where = new Block();
             where.setIsShow(true);
             search.setWhere(where);
         } else {
             search.getWhere().setIsShow(true);
         }
-         return blockService.blockList(search.getPage(), search.getSize(), search.getWhere());
+        return blockService.blockList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
@@ -211,6 +215,17 @@ public class AHomeController {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), blockDetail);
     }
 
+    /**
+     * 获取棚区id
+     */
+    @ApiOperation("获取棚区id")
+    @GetMapping("/get/blockId")
+    public ResponseData<Integer> getBlockId() {
+        Block block = blockService.getOne();
+        if (Objects.isNull(block))
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), block.getId());
+    }
 
     /**
      * 菌包市场
@@ -220,8 +235,8 @@ public class AHomeController {
     @ApiOperation("菌包市场")
     @PostMapping(value = "/index/seed")
     public PageResult<HomeSeed> seedList(@RequestBody PageSearch<HomeSeed> search) {
-        if(null == search.getWhere())  search.setWhere(new HomeSeed());
-        PageResult<HomeSeed> pageResult = seedService.seedListForHome(search.getPage(), search.getSize(),search.getWhere());
+        if (null == search.getWhere()) search.setWhere(new HomeSeed());
+        PageResult<HomeSeed> pageResult = seedService.seedListForHome(search.getPage(), search.getSize(), search.getWhere());
         List<HomeSeed> homeSeeds = pageResult.getData();
         //如果都已售罄，先一个售罄的显示
         if (search.getPage() == 1 && homeSeeds.size() == 0) {
@@ -264,14 +279,16 @@ public class AHomeController {
 
     /**
      * 商品类型列表
+     *
      * @return
      */
     @ApiOperation("商品类型列表")
     @GetMapping("/index/mall/types")
-    public ResponseData<List<MallProductType>> productTypeList(){
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),mallProductTypeService.typeList(null));
+    public ResponseData<List<MallProductType>> productTypeList() {
+        List<MallProductType> mallProductTypes = mallProductTypeService.typeList(new MallProductType());
+        mallProductTypes.sort(Comparator.comparing(MallProductType::getTypeSort));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), mallProductTypes);
     }
-
 
 
     /**
@@ -354,36 +371,37 @@ public class AHomeController {
 
     /**
      * 设备列表
+     *
      * @param pageSearch
      * @return
      */
     @ApiOperation("设备列表")
     @PostMapping("/device/gateway")
-    public PageResult<DeviceGateway> gatewayList(@RequestBody PageSearch<DeviceGateway> pageSearch){
-        return deviceService.deviceGatewayList(pageSearch.getPage(),pageSearch.getSize(),pageSearch.getWhere());
+    public PageResult<DeviceGateway> gatewayList(@RequestBody PageSearch<DeviceGateway> pageSearch) {
+        return deviceService.deviceGatewayList(pageSearch.getPage(), pageSearch.getSize(), pageSearch.getWhere());
     }
 
 
     /**
      * 指定设备信息
+     *
      * @param where
      * @return
      */
     @ApiOperation("指定设备信息")
     @PostMapping("/device/data")
-    public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where){
+    public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where) {
         ResultData<List<DeviceGatewayData>> resultData = deviceService.gatewayData(where.getGatewayLogo());
 
         ResponseData<List<DeviceGatewayData>> responseData = new ResponseData<>();
         responseData.setMessage(resultData.getMessageEnum().getMessage()).setState(resultData.getMessageEnum().getState());
-        if(resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             //只取一组数据
             return responseData.setData(resultData.getData().stream().filter((x) -> x.getSensorName().equals("3")
                     || x.getSensorName().equals("6")).collect(Collectors.toList()));
         }
         return responseData;
     }
-
 
 
 }

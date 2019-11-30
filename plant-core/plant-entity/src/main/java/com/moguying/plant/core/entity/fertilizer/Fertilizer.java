@@ -1,5 +1,6 @@
 package com.moguying.plant.core.entity.fertilizer;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -130,7 +131,7 @@ public class Fertilizer implements Serializable {
     @TableField
     private Integer useInSeedType;
 
-
+    @Excel(name = "券名称")
     @JSONField(ordinal = 20)
     @TableField(exist = false)
     private String typeName;

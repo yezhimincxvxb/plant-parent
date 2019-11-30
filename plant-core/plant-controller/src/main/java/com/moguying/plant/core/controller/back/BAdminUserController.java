@@ -60,6 +60,7 @@ public class BAdminUserController {
         else
             where = search.getWhere();
         where.setUserId(user.getId());
+
         adminUserService.readMessage(user.getId());
         return adminUserService.adminMessageList(search.getPage(), search.getSize(), where);
     }

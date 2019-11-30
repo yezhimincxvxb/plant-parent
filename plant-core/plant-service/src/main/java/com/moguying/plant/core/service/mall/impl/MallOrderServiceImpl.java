@@ -15,7 +15,9 @@ import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
+import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.coin.SaleCoin;
@@ -33,6 +35,7 @@ import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.user.vo.UserMallOrder;
 import com.moguying.plant.core.service.account.UserMoneyService;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.payment.PaymentApiService;
 import com.moguying.plant.core.service.payment.PaymentService;
@@ -49,12 +52,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MallOrderServiceImpl implements MallOrderService {
@@ -366,4 +367,19 @@ public class MallOrderServiceImpl implements MallOrderService {
     public Integer getMallOrderNum() {
         return mallOrderDAO.getMallOrderNum();
     }
+
+    @Override
+    @DS("read")
+    public PageResult<MallOrder> mallOrderListExcel(Integer page, Integer size, MallOrderSearch where) {
+        IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(page, size), where);
+        if (!Objects.isNull(pageResult.getRecords()) && pageResult.getRecords().size() > 0) {
+            for (MallOrder mallOrder : pageResult.getRecords()
+            ) {
+                mallOrder.setStateStr(stateMap.get(mallOrder.getState()));
+            }
+        }
+        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
+    }
+
+
 }

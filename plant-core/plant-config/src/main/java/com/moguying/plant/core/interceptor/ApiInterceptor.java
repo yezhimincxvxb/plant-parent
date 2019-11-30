@@ -73,7 +73,6 @@ public class ApiInterceptor implements HandlerInterceptor {
             setErrorResponse(response, jsonStr, HttpStatus.OK);
             return false;
         }
-
     }
 
 

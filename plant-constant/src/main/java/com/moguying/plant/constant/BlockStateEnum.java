@@ -2,7 +2,11 @@ package com.moguying.plant.constant;
 
 public enum BlockStateEnum {
     NO_OPEN("未开放", 0),
-    OPEN("已开放", 1);
+    OPEN("已开放", 1),
+
+    GROW_DAYS_30("30天生长周期", 30),
+    GROW_DAYS_45("30天生长周期", 45),
+    GROW_DAYS_60("30天生长周期", 60);
 
     private String name;
     private Integer state;

@@ -184,9 +184,17 @@ public class User implements Serializable {
     /**
      * 是否为渠道商
      */
-    @JSONField(ordinal = 20)
+    @JSONField(ordinal = 21)
     @TableField
     private Boolean isChannel;
+
+    /**
+     * 邀请人手机号
+     */
+    @Excel(name = "邀请人手机号")
+    @JSONField(ordinal = 15)
+    @TableField(exist = false)
+    private String invitePhone;
 
 
     /**

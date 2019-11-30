@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/mall/type")
 @Api(tags = "商城商品分类管理")
-public class MallProductTypeController {
+public class BMallProductTypeController {
 
     @Autowired
     private MallProductTypeService typeService;

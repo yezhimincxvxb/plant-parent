@@ -27,30 +27,56 @@ public class MoneyWithdraw implements Serializable {
     private Integer id;
 
     /**
-     * 提现流水号
-     */
-    @Excel(name = "流水号")
-    @JSONField(ordinal = 2)
-    @TableField
-    private String orderNumber;
-
-    /**
      * 用户id
      */
-    @JSONField(ordinal = 3)
+    @JSONField(ordinal = 2)
     @TableField
     private Integer userId;
 
+    /**
+     * 用户姓名
+     */
+    @Excel(name = "真实姓名")
+    @JSONField(ordinal = 3)
+    @TableField(exist = false)
+    private String realName;
+
+    /**
+     * 手机号
+     */
     @Excel(name = "预留手机")
     @JSONField(ordinal = 4)
     @TableField
     private String bankPhone;
 
     /**
+     * 到账银行卡号
+     */
+    @Excel(name = "到账银行卡号")
+    @JSONField(ordinal = 5, serializeUsing = BankCarSerialize.class)
+    @TableField
+    private String bankNumber;
+
+    /**
+     * 提现流水号
+     */
+    @Excel(name = "流水号")
+    @JSONField(ordinal = 6)
+    @TableField
+    private String orderNumber;
+
+    /**
+     * 提现短信流水号
+     */
+    @JSONField(ordinal = 7)
+    @TableField
+    private String seqNo;
+
+    /**
      * 提现金额
      */
     @Excel(name = "提现金额")
-    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 5)
+    @JSONField(ordinal = 8, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal withdrawMoney;
 
@@ -58,7 +84,7 @@ public class MoneyWithdraw implements Serializable {
      * 手续费
      */
     @Excel(name = "手续费")
-    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 6)
+    @JSONField(ordinal = 9, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal fee;
 
@@ -66,7 +92,7 @@ public class MoneyWithdraw implements Serializable {
      * 到账金额
      */
     @Excel(name = "到账金额")
-    @JSONField(serializeUsing = BigDecimalSerialize.class, ordinal = 8)
+    @JSONField(ordinal = 10, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal toAccountMoney;
 
@@ -74,39 +100,23 @@ public class MoneyWithdraw implements Serializable {
      * 提现时间
      */
     @Excel(name = "提现时间", format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss", ordinal = 9)
+    @JSONField(ordinal = 11, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date withdrawTime;
 
     /**
-     * 审核时间
-     */
-    @Excel(name = "审核时间", format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss", ordinal = 10)
-    @TableField
-    private Date verifyTime;
-
-    /**
      * 审核用户
      */
-    @JSONField(ordinal = 11)
+    @JSONField(ordinal = 12)
     @TableField
     private Integer verifyUser;
 
     /**
      * 审核备注
      */
-    @JSONField(ordinal = 12)
+    @JSONField(ordinal = 13)
     @TableField
     private String verifyMark;
-
-    /**
-     * 到账银行卡号
-     */
-    @Excel(name = "到账银行卡号")
-    @JSONField(ordinal = 13, serializeUsing = BankCarSerialize.class)
-    @TableField
-    private String bankNumber;
 
     /**
      * [0未审核，1审核通过，2审核未通，3已到账，4到账中]
@@ -120,21 +130,26 @@ public class MoneyWithdraw implements Serializable {
     private transient List<Integer> inState;
 
     /**
-     * 提现短信流水号
+     * 审核时间
      */
-    @JSONField(ordinal = 15)
+    @Excel(name = "审核时间", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 15, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
-    private String seqNo;
+    private Date verifyTime;
 
+    /**
+     * 到账时间
+     */
     @Excel(name = "到账时间", format = "yyyy-MM-dd HH:mm:ss")
     @JSONField(ordinal = 16, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date successTime;
 
-    @Excel(name = "真实姓名")
-    @JSONField(ordinal = 17)
+
+    @Excel(name = "注册手机号")
+    @JSONField(ordinal = 18)
     @TableField(exist = false)
-    private String realName;
+    private String phone;
 
     /**
      * 查询辅助

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -165,5 +166,24 @@ public class BlockServiceImpl extends ServiceImpl<BlockDAO, Block> implements Bl
                 where = block;
         }
         return where;
+    }
+
+    @Override
+    @DS("read")
+    public Block getOne() {
+        List<Integer> days = Arrays.asList(
+                BlockStateEnum.GROW_DAYS_30.getState(),
+                BlockStateEnum.GROW_DAYS_45.getState(),
+                BlockStateEnum.GROW_DAYS_60.getState());
+        QueryWrapper<Block> queryWrapper = new QueryWrapper<Block>()
+                .eq("is_show", true)
+                .eq("state", true)
+                .eq("is_delete", false)
+                .gt("left_count", 0)
+                .in("grow_days", days)
+                .orderByAsc("grow_days")
+                .orderByAsc("left_count")
+                .last("limit 1");
+        return blockDAO.selectOne(queryWrapper);
     }
 }

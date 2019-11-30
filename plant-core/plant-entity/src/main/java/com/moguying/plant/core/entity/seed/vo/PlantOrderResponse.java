@@ -71,5 +71,11 @@ public class PlantOrderResponse {
     @JSONField
     private Integer reapId;
 
+    /**
+     * 订单流水号
+     */
+    @JSONField
+    private String orderNumber;
+
 
 }

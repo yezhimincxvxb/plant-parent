@@ -25,4 +25,6 @@ public interface BlockService extends IService<Block> {
     List<BlockDetail> blockRecommend();
 
     Block findBlockBySeedType(Integer seedTypeId);
+
+    Block getOne();
 }

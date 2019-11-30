@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 @Slf4j
@@ -33,6 +34,8 @@ public class DownloadService<T extends BaseDAO, K> implements Runnable {
 
     private DownloadInfo downloadInfo;
 
+    private List<K> data;
+
     public DownloadService(T dao, PageSearch<K> search, Class<?> classes, DownloadInfo downloadInfo) {
         this.dao = dao;
         this.search = search;
@@ -40,10 +43,18 @@ public class DownloadService<T extends BaseDAO, K> implements Runnable {
         this.downloadInfo = downloadInfo;
     }
 
+    public DownloadService(List<K> data, Class<?> classes, DownloadInfo downloadInfo) {
+        this.data = data;
+        this.classes = classes;
+        this.downloadInfo = downloadInfo;
+    }
+
     @Override
     public void run() {
         try {
-            List<K> data = dao.selectSelective(search.getWhere());
+            if (Objects.isNull(data)) {
+                data = dao.selectSelective(search.getWhere());
+            }
             if (data.size() <= 0) return;
             String fileName = downloadInfo.getFileName();
             ServletContext servletContext = downloadInfo.getContext();

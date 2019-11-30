@@ -160,7 +160,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @Override
     @DS("write")
     public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId) {
-        return plantOrder(order, userId, false);
+        return plantOrder(order,userId,false);
     }
 
     /**
@@ -172,7 +172,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @Override
     @DS("write")
     @Transactional
-    public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId, boolean isTaste) {
+    public ResultData<BuyOrderResponse> plantOrder(BuyOrder order, Integer userId,boolean isTaste) {
         ResultData<BuyOrderResponse> result = new ResultData<>(MessageEnum.ERROR, null);
 
         // 用户不存在
@@ -185,7 +185,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         if (null == seed || !seed.getState().equals(SeedEnum.REVIEWED.getState()) || !seed.getIsShow())
             return result.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
 
-        if (!isTaste && seed.getTypeInfo().getIsForNew())
+        if(!isTaste && seed.getTypeInfo().getIsForNew())
             return result.setMessageEnum(MessageEnum.SEED_ONLY_FOR_NEWER);
 
 
@@ -202,7 +202,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
         // 购买总价
         BigDecimal buyAmount = BigDecimal.ZERO;
-        if (!isTaste)
+        if(!isTaste)
             buyAmount = InterestUtil.INSTANCE.calAmount(order.getCount(), seed.getPerPrice());
 
         // 减少库存
@@ -234,7 +234,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
             orderResponse.setOrderNumber(seedOrderDetail.getOrderNumber());
             orderResponse.setPerWeigh(seed.getTypeInfo().getPerWeigh());
             // 非体验需加入关单队列
-            if (!isTaste) {
+            if(!isTaste) {
                 UserMoney userMoney = moneyDAO.selectById(userId);
                 orderResponse.setAvailableMoney(userMoney.getAvailableMoney());
                 // 默认订单180秒关单
@@ -306,7 +306,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @TriggerEvent(action = "plant")
     @DS("write")
     public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder) {
-        return plantSeed(userId, plantOrder, false);
+        return plantSeed(userId,plantOrder,false);
     }
 
     /**
@@ -319,13 +319,13 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @TriggerEvent(action = "plant")
     @Override
     @DS("write")
-    public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder, boolean isTaste) {
+    public ResultData<TriggerEventResult<PlantOrderResponse>> plantSeed(Integer userId, PlantOrder plantOrder,boolean isTaste) {
         ResultData<TriggerEventResult<PlantOrderResponse>> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
         // 是否设置了支付密码
         User user = userDAO.userInfoById(userId);
         // 非体验时校验
-        if (!isTaste) {
+        if(!isTaste) {
             if (null == user || StringUtils.isEmpty(user.getPayPassword()))
                 return resultData.setMessageEnum(MessageEnum.NEED_PAY_PASSWORD);
 
@@ -398,7 +398,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         reap.setUserId(userId);
         reap.setBlockId(plantOrder.getBlockId());
         reap.setPlantCount(plantOrder.getPlantCount());
-        if (!isTaste) {
+        if(!isTaste) {
             reap.setPreAmount(InterestUtil.INSTANCE.calAmount(plantOrder.getPlantCount(), seedType.getPerPrice()));
             reap.setPreProfit(InterestUtil.INSTANCE.calInterest(reap.getPreAmount(), seedType.getInterestRates(), seedType.getGrowDays()));
         }
@@ -413,7 +413,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
 
         //非体验时使用
-        if (!isTaste) {
+        if(!isTaste) {
             //更新产量
             reapWeighDAO.incField(new ReapWeigh(userId).setTotalWeigh(plantWeigh));
             // 更新预期本金
@@ -489,6 +489,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         response.setGrowDays(seedType.getGrowDays());
         response.setPerWeigh(seedType.getPerWeigh());
         response.setReapId(reap.getId());
+        response.setOrderNumber(reap.getOrderNumber());
 
         // 发送站内信
         InnerMessage message = new InnerMessage();
@@ -510,53 +511,53 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     @Override
     @DS("write")
     @Transactional
-    public ResultData<Integer> plantReapExchange(Integer userId, ExcReap excReap) {
+    public ResultData<Integer> plantReapExchange(Integer userId,ExcReap excReap) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         //兑换单个采摘或兑换剩余产量，但不能同时
-        if (null != excReap.getReapId() && null != excReap.getExcWeigh())
+        if(null != excReap.getReapId() && null != excReap.getExcWeigh())
             return resultData.setMessageEnum(MessageEnum.PARAMETER_ERROR);
 
         UserAddress userAddress = userAddressDAO.selectById(excReap.getAddressId());
         Optional<UserAddress> addressOptional = Optional.ofNullable(userAddress);
-        if (!addressOptional.isPresent())
+        if(!addressOptional.isPresent())
             return resultData.setMessageEnum(MessageEnum.USER_ADDRESS_NO_EXISTS);
         SeedType seedType = null;
         BigDecimal excWeigh = BigDecimal.ZERO;
         BigDecimal excProfit = BigDecimal.ZERO;
-        if (null != excReap.getReapId()) {
+        if(null != excReap.getReapId()) {
             Reap reap = reapDAO.selectById(excReap.getReapId());
             Optional<Reap> reapOptional = Optional.ofNullable(reap);
-            if (!reapOptional.isPresent())
+            if(!reapOptional.isPresent())
                 return resultData.setMessageEnum(MessageEnum.SEED_REAP_NOT_EXISTS);
-            if (reap.getPlantWeigh().compareTo(exWeigh) < 0)
+            if(reap.getPlantWeigh().compareTo(exWeigh) < 0)
                 return resultData.setMessageEnum(MessageEnum.REAP_EXCHANGE_WEIGH_ERROR);
             ResultData<Integer> excReapItem = excReapItem(reap);
-            if (!excReapItem.getMessageEnum().equals(MessageEnum.SUCCESS))
+            if(!excReapItem.getMessageEnum().equals(MessageEnum.SUCCESS))
                 return resultData;
             //添加商城订单
             seedType = seedTypeDAO.selectById(reap.getSeedType());
             excWeigh = reap.getPlantWeigh();
             excProfit = reap.getPreAmount().add(reap.getPreProfit());
-        } else if (null != excReap.getExcWeigh()) {
-            seedType = seedTypeDAO.selectOne(new QueryWrapper<SeedType>().lambda().eq(SeedType::getExMallDefault, true));
+        } else if( null != excReap.getExcWeigh()){
+            seedType = seedTypeDAO.selectOne(new QueryWrapper<SeedType>().lambda().eq(SeedType::getExMallDefault,true));
             ReapWeigh reapWeigh = reapWeighDAO.selectOne(new QueryWrapper<ReapWeigh>().lambda().eq(ReapWeigh::getUserId, userId));
-            if (reapWeigh.getAvailableWeigh().compareTo(exWeigh) < 0)
+            if(reapWeigh.getAvailableWeigh().compareTo(exWeigh) < 0)
                 return resultData.setMessageEnum(MessageEnum.REAP_EXCHANGE_WEIGH_ERROR);
             excWeigh = reapWeigh.getAvailableWeigh();
-            if (excWeigh.compareTo(excReap.getExcWeigh()) != 0)
+            if(excWeigh.compareTo(excReap.getExcWeigh()) != 0)
                 return resultData;
         }
 
         Optional<SeedType> seedTypeOptional = Optional.ofNullable(seedType);
-        if (!seedTypeOptional.isPresent())
+        if(!seedTypeOptional.isPresent())
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
         Optional<Integer> integer = seedTypeOptional.map(SeedType::getExMallProduct);
         MallProduct mallProduct = mallProductDAO.selectById(integer.orElse(0));
-        if (null == mallProduct)
+        if(null == mallProduct)
             return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
 
         BigDecimal[] bigDecimals = excWeigh.divideAndRemainder(seedType.getExMallWeigh());
-        if (bigDecimals[0].intValue() <= 0)
+        if(bigDecimals[0].intValue() <= 0)
             return resultData.setMessageEnum(MessageEnum.REAP_WEIGH_NOT_ENOUGH);
 
         BuyProduct buyProduct = new BuyProduct();
@@ -565,16 +566,16 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         SubmitOrder submitOrder = new SubmitOrder().setAddressId(excReap.getAddressId()).setMark("成品兑换实物")
                 .setProducts(Collections.singletonList(buyProduct));
         ResultData<BuyResponse> buyResponseResultData = mallProductService.submitOrder(submitOrder, userId);
-        if (buyResponseResultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+        if(buyResponseResultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             MallOrder mallOrder = new MallOrder();
             mallOrder.setId(buyResponseResultData.getData().getOrderId());
             mallOrder.setPayTime(new Date());
             mallOrder.setState(MallEnum.ORDER_HAS_PAY.getState());
             mallOrder.setAccountPayAmount(BigDecimal.ZERO);
             mallOrder.setCarPayAmount(BigDecimal.ZERO);
-            if (mallOrderDAO.updateById(mallOrder) <= 0) return resultData;
+            if(mallOrderDAO.updateById(mallOrder) <= 0) return resultData;
             ReapExcLog log = new ReapExcLog();
-            if (null != excReap.getReapId()) {
+            if(null != excReap.getReapId()) {
                 log.setReapId(excReap.getReapId());
                 reapWeighDAO.incField(new ReapWeigh(userId).setAvailableWeigh(bigDecimals[1]));
                 reapWeighDAO.decField(new ReapWeigh(userId).setAvailableProfit(excProfit));
@@ -596,13 +597,13 @@ public class PlantOrderServiceImpl implements PlantOrderService {
     }
 
 
-    private ResultData<Integer> excReapItem(Reap reap) {
+    private ResultData<Integer> excReapItem(Reap reap){
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         //置reap状态
         Reap update = new Reap();
         update.setId(reap.getId());
-        update.setState(ReapEnum.EXCHANGE_DONE.getState());
-        if (reapDAO.updateById(update) > 0) {
+        update.setState(ReapEnum.EXCHANGE_THING.getState());
+        if(reapDAO.updateById(update) > 0){
             //更新用户本金
             UserMoneyOperator collectCapitalOperator = new UserMoneyOperator();
             collectCapitalOperator.setOpType(MoneyOpEnum.EXCHANGE_REAP);

@@ -1,12 +1,12 @@
 package com.moguying.plant.core.entity.fertilizer;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
@@ -42,6 +42,7 @@ public class UserFertilizer implements Serializable {
     /**
      * 券id
      */
+    @Excel(name = "券id")
     @JSONField(ordinal = 3)
     @TableField
     private Integer fertilizerId;
@@ -96,7 +97,7 @@ public class UserFertilizer implements Serializable {
     /**
      * 券
      */
-    @Excel(name = "券", orderNum = "6")
+    @ExcelEntity
     @JSONField(ordinal = 10)
     @TableField(exist = false)
     private Fertilizer fertilizer;
@@ -117,5 +118,13 @@ public class UserFertilizer implements Serializable {
     @JSONField(ordinal = 12)
     @TableField(exist = false)
     private String realName;
+
+    /**
+     * 券使用时间
+     */
+    @Excel(name = "券使用时间", orderNum = "9", format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss", ordinal = 13)
+    @TableField
+    private Date useTime;
 
 }

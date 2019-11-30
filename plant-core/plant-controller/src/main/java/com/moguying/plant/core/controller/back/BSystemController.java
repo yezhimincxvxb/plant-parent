@@ -4,14 +4,13 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.system.Apk;
 import com.moguying.plant.core.entity.fertilizer.TriggerEvent;
+import com.moguying.plant.core.entity.system.Apk;
 import com.moguying.plant.core.service.system.ApkService;
 import com.moguying.plant.core.service.system.TriggerEventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

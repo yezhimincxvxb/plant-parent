@@ -489,4 +489,10 @@ ADD COLUMN `city` varchar(255) DEFAULT NULL COMMENT '体验店城市' AFTER `add
 
 
 ALTER TABLE `moguying`.`plant_money_recharge`
-ADD COLUMN `review_uid` int(0) NOT NULL COMMENT '审核人id' AFTER `source`;
+ADD COLUMN `review_uid` int(11) NOT NULL DEFAULT '0' COMMENT '审核人id' AFTER `source`;
+
+ALTER TABLE `moguying`.`plant_mall_product_type`
+ADD COLUMN `type_sort` bigint(11) DEFAULT '0' COMMENT '排序' AFTER `type_name`;
+
+ALTER TABLE `moguying`.`plant_user_fertilizer`
+ADD COLUMN `use_time` datetime DEFAULT NULL COMMENT '券使用时间';

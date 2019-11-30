@@ -4,7 +4,6 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.account.UserMoneyDAO;
@@ -20,8 +19,10 @@ import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.*;
+import com.moguying.plant.core.entity.user.dto.UserPlantMoneyDto;
 import com.moguying.plant.core.entity.user.vo.LoginResponse;
 import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
+import com.moguying.plant.core.entity.user.vo.UserPlantMoneyVo;
 import com.moguying.plant.core.entity.user.vo.UserSummaryInfo;
 import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
@@ -404,7 +405,8 @@ public class UserServiceImpl implements UserService {
         // 删除地址
         if (addressDAO.deleteById(address.getId()) > 0) {
             // 删除后没有默认地址，则将最近新增的地址设置为默认地址
-            if (addressDAO.getDefaultNum(address.getUserId()) == 0) {
+
+            if (addressDAO.selectCount(new QueryWrapper<UserAddress>().lambda().eq(UserAddress::getUserId,address.getUserId()).eq(UserAddress::getIsDefault,true).eq(UserAddress::getIsDelete,false).ne(UserAddress::getId,address.getId())) == 0) {
                 addressDAO.setDefaultByTime(address.getUserId());
             }
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
@@ -639,25 +641,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @DS("read")
     public Integer regUserTotal() {
-        return userDAO.selectCount(new QueryWrapper<User>().lambda().eq(User::getUserState,UserEnum.BANK_IN_USED));
+        return userDAO.selectCount(new QueryWrapper<User>().lambda().eq(User::getUserState, UserEnum.BANK_IN_USED));
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Override
+    @DS("read")
+    public PageResult<UserPlantMoneyVo> userPlantMoneyList(Integer page, Integer size, UserPlantMoneyDto userPlantMoneyDto) {
+        IPage<UserPlantMoneyVo> iPage = userDAO.userPlantMoneyList(new Page<>(page, size), userPlantMoneyDto);
+        return new PageResult<>(iPage.getTotal(), iPage.getRecords());
+    }
 }
 

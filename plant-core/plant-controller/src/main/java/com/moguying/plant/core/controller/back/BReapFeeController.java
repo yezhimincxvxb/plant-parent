@@ -130,6 +130,18 @@ public class BReapFeeController {
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
+    /**
+     * 修改审核状态
+     * @param id
+     * @return
+     */
+    @PostMapping("/update/{id}")
+    @ApiOperation("修改审核状态")
+    public ResponseData<Integer> updateState(@PathVariable Integer id, @RequestParam("state") Boolean isPass){
+        ResultData<Boolean> resultData = reapFeeService.updateState(id,isPass);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    }
+
 
     /**
      * 删除参数

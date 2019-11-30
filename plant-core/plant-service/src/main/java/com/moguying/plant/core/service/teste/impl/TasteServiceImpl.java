@@ -38,7 +38,6 @@ import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.teste.TasteService;
 import com.moguying.plant.utils.CommonUtil;
 import com.moguying.plant.utils.DateUtil;
-import com.moguying.plant.utils.IdCardSerialize;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
@@ -116,10 +115,10 @@ public class TasteServiceImpl implements TasteService {
     @DS("write")
     @Override
     @Transactional
-    public ResultData<BuyOrderResponse> buy(BuyOrder buyOrder,Integer userId) {
-        ResultData<BuyOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR,null);
+    public ResultData<BuyOrderResponse> buy(BuyOrder buyOrder, Integer userId) {
+        ResultData<BuyOrderResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
-        if(!isNew(userId))
+        if (!isNew(userId))
             return resultData.setMessageEnum(MessageEnum.SEED_ONLY_FOR_NEWER);
 
         // 体验购买只有一次机会
@@ -131,29 +130,29 @@ public class TasteServiceImpl implements TasteService {
 
         // 菌包不存在
         Seed seed = seedDAO.seedInfoWithTypeById(buyOrder.getSeedId());
-        if(null == seed)
+        if (null == seed)
             return resultData.setMessageEnum(MessageEnum.SEED_NOT_EXISTS);
 
         // 菌包类型
-        if(null == seed.getTypeInfo())
+        if (null == seed.getTypeInfo())
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_EXIST);
 
         // 非新手类型
-        if(!seed.getTypeInfo().getIsForNew())
+        if (!seed.getTypeInfo().getIsForNew())
             return resultData.setMessageEnum(MessageEnum.SEED_TYPE_NOT_FOR_TASTE);
 
         // 固定一份
-        if(1 != buyOrder.getCount())
+        if (1 != buyOrder.getCount())
             return resultData.setMessageEnum(MessageEnum.TASTE_BUY_SEED_COUNT_ERROR);
 
         ResultData<BuyOrderResponse> buyResult = plantOrderService.plantOrder(buyOrder, userId, true);
-        if(!buyResult.getMessageEnum().equals(MessageEnum.SUCCESS))
+        if (!buyResult.getMessageEnum().equals(MessageEnum.SUCCESS))
             return resultData.setMessageEnum(buyResult.getMessageEnum());
 
         ResultData<Integer> payResult =
                 plantOrderService.payOrderSuccess(seedOrderDetailDAO.selectById(buyResult.getData().getOrderId()),
                         userDAO.selectById(userId));
-        if(payResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
+        if (payResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             // 返回订单id，而不是订单详情id
             buyResult.getData().setOrderId(payResult.getData());
             buyResult.getData().setSeedTypeId(seed.getSeedType());
@@ -179,7 +178,7 @@ public class TasteServiceImpl implements TasteService {
 
         Block block = blockDAO.selectById(reap.getBlockId());
         if (Objects.isNull(block))
-            return  resultData.setMessageEnum(MessageEnum.BLOCK_NOT_EXISTS);
+            return resultData.setMessageEnum(MessageEnum.BLOCK_NOT_EXISTS);
 
         SeedType seedType = seedTypeDAO.selectById(reap.getSeedType());
         if (Objects.isNull(seedType))
@@ -188,7 +187,7 @@ public class TasteServiceImpl implements TasteService {
         Reap update = new Reap();
         update.setId(reap.getId());
         update.setState(ReapEnum.SALE_DONE.getState());
-        if(reapDAO.updateById(update) > 0) {
+        if (reapDAO.updateById(update) > 0) {
             TasteReap tasteReap = new TasteReap();
             tasteReap.setSeedTypeName(seedType.getClassName());
             tasteReap.setBlockNumber(block.getNumber());
@@ -203,12 +202,12 @@ public class TasteServiceImpl implements TasteService {
 
     @Override
     public ResultData<Boolean> saveTaste(Taste taste) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
         Optional<Taste> optional = Optional.ofNullable(taste);
-        if(!optional.isPresent())
+        if (!optional.isPresent())
             return resultData;
         MallProduct product = mallProductDAO.selectById(taste.getProductId());
-        if(null == product)
+        if (null == product)
             return resultData.setMessageEnum(MessageEnum.MALL_PRODUCT_NOT_EXISTS);
         taste.setThumbPic(product.getThumbPicUrl());
         taste.setPic(product.getPicUrl());
@@ -222,12 +221,12 @@ public class TasteServiceImpl implements TasteService {
     }
 
     @Override
-    public PageResult<Taste> tastePageResult(Integer page, Integer size,Taste where,Integer userId) {
+    public PageResult<Taste> tastePageResult(Integer page, Integer size, Taste where, Integer userId) {
         Optional<Taste> optional = Optional.ofNullable(where);
-        Query query = new Query().with(PageRequest.of(page-1,size, Sort.Direction.DESC,"tasteCount"));
-        if(optional.map(Taste::getState).isPresent())
+        Query query = new Query().with(PageRequest.of(page - 1, size, Sort.Direction.DESC, "tasteCount"));
+        if (optional.map(Taste::getState).isPresent())
             query.addCriteria(Criteria.where("state").is(where.getState()));
-        if(optional.map(Taste::getIsShow).isPresent())
+        if (optional.map(Taste::getIsShow).isPresent())
             query.addCriteria(Criteria.where("isShow").is(where.getIsShow()));
         List<Taste> items = mongoTemplate.find(query, Taste.class);
 
@@ -242,28 +241,28 @@ public class TasteServiceImpl implements TasteService {
             taste.setApplySuccessCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId()).and("state").is(ApiEnum.TASTE_APPLY_SUCCESS.getType())), TasteApply.class));
             taste.setApplyCount(mongoTemplate.count(new Query(Criteria.where("tasteId").is(taste.getId())), TasteApply.class));
         });
-        long count = mongoTemplate.count(query,Taste.class);
-        return new PageResult<>(count,items);
+        long count = mongoTemplate.count(query, Taste.class);
+        return new PageResult<>(count, items);
     }
 
     @Override
     public PageResult<Taste> tastePageResult(Integer page, Integer size, Taste where) {
-        return tastePageResult(page,size,where,null);
+        return tastePageResult(page, size, where, null);
     }
 
     @Override
     public ResultData<Boolean> deleteTaste(String id) {
         DeleteResult result = mongoTemplate.remove(new Query(Criteria.where("id").is(id)), Taste.class);
-        if(result.getDeletedCount() > 0)
-            return new ResultData<>(MessageEnum.SUCCESS,true);
-        return new ResultData<>(MessageEnum.ERROR,false);
+        if (result.getDeletedCount() > 0)
+            return new ResultData<>(MessageEnum.SUCCESS, true);
+        return new ResultData<>(MessageEnum.ERROR, false);
     }
 
     @Override
     public Boolean setShowState(String id) {
         Query query = new Query(Criteria.where("id").is(id));
-        Taste taste = mongoTemplate.findOne(query,Taste.class);
-        if(null != taste) {
+        Taste taste = mongoTemplate.findOne(query, Taste.class);
+        if (null != taste) {
             UpdateResult updateResult = mongoTemplate.updateFirst(query, Update.update("isShow", !taste.getIsShow()), Taste.class);
             return updateResult.getModifiedCount() > 0;
         }
@@ -273,17 +272,17 @@ public class TasteServiceImpl implements TasteService {
     @Override
     public Boolean setState(TasteApply where) {
         Query query = new Query(Criteria.where("id").is(where.getId()));
-        TasteApply apply = mongoTemplate.findOne(query,TasteApply.class);
-        if(null != apply) {
+        TasteApply apply = mongoTemplate.findOne(query, TasteApply.class);
+        if (null != apply) {
             Update update = new Update();
-            update.set("state",where.getState());
-            update.set("applyReviewTime",new Date());
+            update.set("state", where.getState());
+            update.set("applyReviewTime", new Date());
             UpdateResult updateResult = mongoTemplate.updateFirst(query, update, TasteApply.class);
-            if(ApiEnum.TASTE_APPLY_SUCCESS.getType().equals(where.getState())) {
-                Taste taste = mongoTemplate.findOne(new Query(Criteria.where("id").is(apply.getTasteId())),Taste.class);
+            if (ApiEnum.TASTE_APPLY_SUCCESS.getType().equals(where.getState())) {
+                Taste taste = mongoTemplate.findOne(new Query(Criteria.where("id").is(apply.getTasteId())), Taste.class);
                 Long count = Optional.ofNullable(taste).map(Taste::getTasteCount).orElse(0L);
                 AtomicLong atomicLong = new AtomicLong(count);
-                if(count <= 0) return false;
+                if (count <= 0) return false;
                 mongoTemplate.updateFirst(new Query(Criteria.where("id").is(taste.getId())), Update.update("tasteCount", atomicLong.decrementAndGet()), Taste.class);
             }
             return updateResult.getModifiedCount() > 0;
@@ -292,26 +291,30 @@ public class TasteServiceImpl implements TasteService {
     }
 
     @Override
-    public ResultData<Boolean> addTasteApply(Integer userId,Taste taste) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+    public ResultData<Boolean> addTasteApply(Integer userId, Taste taste) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
+
         User user = userDAO.selectById(userId);
         Optional<User> userOptional = Optional.ofNullable(user);
-        if(!userOptional.isPresent())
+        if (!userOptional.isPresent())
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
-        taste =  Optional.ofNullable(taste).orElseGet(() -> mongoTemplate.findOne(new Query(Criteria.where("isShow")
-                .is(true).and("endTime").gt(new Date()).and("tasteCount").gt(0)),Taste.class));
+
+        if (Objects.isNull(taste) || Objects.isNull(taste.getId())) {
+            taste = mongoTemplate.findOne(new Query(Criteria.where("isShow")
+                    .is(true).and("endTime").gt(new Date()).and("tasteCount").gt(0)), Taste.class);
+        }
         //没有进行中免费申请活动
-        if(null == taste)
+        if (Objects.isNull(taste) || Objects.isNull(taste.getId()))
             return resultData;
 
-        TasteApply apply = new TasteApply(userId,taste.getId(), ApiEnum.TASTE_APPLY.getType());
+        TasteApply apply = new TasteApply(userId, taste.getId(), ApiEnum.TASTE_APPLY.getType());
         Taste tasteInfo = mongoTemplate.findOne(new Query(Criteria.where("id").is(taste.getId())), Taste.class);
         Long count = Optional.ofNullable(tasteInfo).map(Taste::getTasteCount).orElse(0L);
-        if(count <= 0)
+        if (count <= 0)
             return resultData.setMessageEnum(MessageEnum.TASTE_COUNT_NOT_ENOUGH);
 
-        boolean exist = mongoTemplate.exists(new Query(Criteria.where("userId").is(userId).and("tasteId").is(taste.getId())),TasteApply.class);
-        if(exist)
+        boolean exist = mongoTemplate.exists(new Query(Criteria.where("userId").is(userId).and("tasteId").is(taste.getId())), TasteApply.class);
+        if (exist)
             return resultData.setMessageEnum(MessageEnum.TASTE_HAS_APPLY);
 
         MallProduct product = mallProductDAO.selectById(tasteInfo.getProductId());
@@ -328,11 +331,11 @@ public class TasteServiceImpl implements TasteService {
 
     @Override
     public ResultData<TasteApply> checkApply(Integer userId, Taste taste) {
-        ResultData<TasteApply> resultData = new ResultData<>(MessageEnum.ERROR,null);
+        ResultData<TasteApply> resultData = new ResultData<>(MessageEnum.ERROR, null);
         TasteApply tasteApply = mongoTemplate.findOne(new Query(Criteria.where("userId").is(userId).and("tasteId").is(taste.getId())), TasteApply.class);
         Optional<TasteApply> optionalTasteApply = Optional.ofNullable(tasteApply);
-        if(optionalTasteApply.isPresent()) {
-            if(tasteApply.getState().equals(ApiEnum.TASTE_APPLY_SUCCESS.getType())){
+        if (optionalTasteApply.isPresent()) {
+            if (tasteApply.getState().equals(ApiEnum.TASTE_APPLY_SUCCESS.getType())) {
                 tasteApply.setUserAddress(userAddressDAO.userDefaultAddress(userId));
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(tasteApply);
             }
@@ -343,36 +346,36 @@ public class TasteServiceImpl implements TasteService {
 
     @Override
     public PageResult<TasteApply> tasteApplyPageResult(Integer page, Integer size, TasteApply where) {
-        Query query = new Query().with(PageRequest.of(page-1,size, Sort.Direction.DESC,"applyTime"));
+        Query query = new Query().with(PageRequest.of(page - 1, size, Sort.Direction.DESC, "applyTime"));
         Optional<TasteApply> optional = Optional.ofNullable(where);
-        if(optional.map(TasteApply::getTasteId).isPresent())
+        if (optional.map(TasteApply::getTasteId).isPresent())
             query.addCriteria(Criteria.where("tasteId").is(where.getTasteId()));
-        if(optional.map(TasteApply::getState).isPresent())
+        if (optional.map(TasteApply::getState).isPresent())
             query.addCriteria(Criteria.where("state").is(where.getState()));
         List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
         tasteApplies.forEach(x -> x.setPhone(CommonUtil.INSTANCE.idOrPhoneMask(x.getPhone())));
         long count = mongoTemplate.count(query, TasteApply.class);
-        return new PageResult<>(count,tasteApplies);
+        return new PageResult<>(count, tasteApplies);
     }
 
 
     @Override
     public PageResult<TasteApply> bTasteApplyPageResult(Integer page, Integer size, TasteApply where) {
-        Query query = new Query().with(PageRequest.of(page-1,size, Sort.Direction.DESC,"applyTime"));
+        Query query = new Query().with(PageRequest.of(page - 1, size, Sort.Direction.DESC, "applyTime"));
         Optional<TasteApply> optional = Optional.ofNullable(where);
-        if(optional.map(TasteApply::getState).isPresent())
+        if (optional.map(TasteApply::getState).isPresent())
             query.addCriteria(Criteria.where("state").is(where.getState()));
-        if(optional.map(TasteApply::getPhone).isPresent())
+        if (optional.map(TasteApply::getPhone).isPresent())
             query.addCriteria(Criteria.where("phone").is(where.getPhone()));
-        if(optional.map(TasteApply::getProductName).isPresent())
+        if (optional.map(TasteApply::getProductName).isPresent())
             query.addCriteria(Criteria.where("productName").is(where.getProductName()));
-        if(optional.map(TasteApply::getStartTime).isPresent() && optional.map(TasteApply::getEndTime).isPresent())
+        if (optional.map(TasteApply::getStartTime).isPresent() && optional.map(TasteApply::getEndTime).isPresent())
             query.addCriteria(Criteria.where("applyReviewTime").gte(where.getStartTime()).lte(where.getEndTime()));
-        if(optional.map(TasteApply::getTasteStartTime).isPresent() && optional.map(TasteApply::getTasteEndTime).isPresent())
+        if (optional.map(TasteApply::getTasteStartTime).isPresent() && optional.map(TasteApply::getTasteEndTime).isPresent())
             query.addCriteria(Criteria.where("tasteTime").gte(where.getTasteStartTime()).lte(where.getTasteEndTime()));
         List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
         long count = mongoTemplate.count(query, TasteApply.class);
-        return new PageResult<>(count,tasteApplies);
+        return new PageResult<>(count, tasteApplies);
     }
 
     @Override
@@ -389,6 +392,6 @@ public class TasteServiceImpl implements TasteService {
         if (count > 0)
             return new ResultData<>(MessageEnum.ERROR, 1);
 
-        return  fertilizerService.distributeFertilizer("taste",userId);
+        return fertilizerService.distributeFertilizer("taste", userId);
     }
 }

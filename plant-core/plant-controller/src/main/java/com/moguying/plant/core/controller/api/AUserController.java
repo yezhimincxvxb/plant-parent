@@ -17,6 +17,7 @@ import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.vo.BlockDetail;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerDot;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerSearch;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.payment.request.*;
@@ -429,12 +430,12 @@ public class AUserController {
         User user = userService.userInfoById(userId);
         if (user == null)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
-
-        if (null == bindCard.getBankNumber() || null == bindCard.getMsgCode() || null == bindCard.getSeqNo() || null == bindCard.getPhone()
-                || StringUtils.isEmpty(bindCard.getMsgCode()) || StringUtils.isEmpty(bindCard.getBankNumber())
-                || StringUtils.isEmpty(bindCard.getSeqNo()) || StringUtils.isEmpty(bindCard.getPhone())
-        )
-            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+        if (null ==bindCard.getBankNumber() || StringUtils.isEmpty(bindCard.getBankNumber()))
+            return new ResponseData<>(MessageEnum.BANK_NUMBER_IS_EMPTY.getMessage(), MessageEnum.BANK_NUMBER_IS_EMPTY.getState());
+        if (null==bindCard.getMsgCode() || StringUtils.isEmpty(bindCard.getMsgCode()))
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_IS_EMPTY.getMessage(), MessageEnum.MESSAGE_CODE_IS_EMPTY.getState());
+        if (null== bindCard.getPhone() ||StringUtils.isEmpty(bindCard.getPhone()))
+            return new ResponseData<>(MessageEnum.PHONE_IS_EMPTY.getMessage(), MessageEnum.PHONE_IS_EMPTY.getState());
 
         if (!CommonUtil.INSTANCE.isPhone(bindCard.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
@@ -682,7 +683,7 @@ public class AUserController {
     public PageResult<Reap> productList(@LoginUserId Integer userId, @RequestBody PageSearch<Reap> search) {
         Reap where = new Reap();
         where.setUserId(userId);
-        where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(), ReapEnum.SALE_DONE.getState(), ReapEnum.EXCHANGE_DONE.getState()));
+        where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(), ReapEnum.SALE_DONE.getState(), ReapEnum.EXCHANGE_THING.getState()));
         if (search.getWhere() != null && null != search.getWhere().getGroupId())
             where.setGroupId(search.getWhere().getGroupId());
 
@@ -895,17 +896,11 @@ public class AUserController {
 
     /**
      * 被邀请人列表
-     *
-     * @param page
-     * @param size
-     * @return
      */
-    @GetMapping("/invite/list")
+    @PostMapping("/invite/list")
     @ApiOperation("被邀请人列表")
-    public PageResult<UserInvite> inviteList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                             @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                             @LoginUserId Integer userId) {
-        return userInviteService.inviteList(page, size, userId);
+    public PageResult<UserInvite> inviteList(@LoginUserId Integer userId, @RequestBody PageSearch search) {
+        return userInviteService.inviteList(search.getPage(), search.getSize(), userId);
     }
 
 
@@ -1179,6 +1174,21 @@ public class AUserController {
 
         ResultData<Integer> resultData = farmerService.friendHelpSuccess(userId, symbol);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
+    }
+
+
+    @GetMapping("/fertilizer/dot")
+    @ApiOperation("用户券红点")
+    public ResponseData<FertilizerDot> fertilizerDot(@LoginUserId Integer userId){
+        FertilizerDot fertilizerDot = userFertilizerService.fertilizerDot(userId);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),fertilizerDot);
+    }
+
+    @PostMapping("/fertilizer/dot")
+    @ApiOperation("取消用户券红点")
+    public ResponseData<Boolean> cancelFertilizerDot(@LoginUserId Integer userId){
+        Boolean aBoolean = userFertilizerService.cancelFertilizerDot(userId);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),aBoolean);
     }
 
 }

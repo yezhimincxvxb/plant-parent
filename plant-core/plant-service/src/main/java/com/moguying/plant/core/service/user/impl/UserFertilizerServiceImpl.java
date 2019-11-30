@@ -1,5 +1,6 @@
 package com.moguying.plant.core.service.user.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -17,6 +18,7 @@ import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.FertilizerType;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerDot;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerSearch;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.mall.MallOrderDetail;
@@ -30,6 +32,7 @@ import com.moguying.plant.core.service.user.UserFertilizerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +65,10 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
 
     @Autowired
     private MallOrderDetailDAO mallOrderDetailDAO;
+
+
+    @Autowired
+    private StringRedisTemplate dotRedisTemplate;
 
     @Value("${excel.download.dir}")
     private String downloadDir;
@@ -155,7 +162,7 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
         if (type == null)
             return userFertilizerDAO.findByIdAndUserId(userId, id);
 
-        if (type == 4)
+        if (FertilizerEnum.MONEY_FERTILIZER.getState().equals(type))
             return userFertilizerDAO.getUserFertilizer(userId, id, type);
 
         return null;
@@ -174,7 +181,28 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
 
         // 更新券状态
         userFertilizer.setState(1);
+        userFertilizer.setUseTime(new Date());
         return userFertilizerDAO.updateById(userFertilizer) > 0;
+    }
+
+    @Override
+    @DS("read")
+    public UserFertilizer userFertilizer(Integer userId, String orderNumber) {
+        return userFertilizerDAO.getUserAndNumber(userId, orderNumber, FertilizerEnum.MONEY_FERTILIZER.getState());
+    }
+
+
+    @Override
+    @DS("read")
+    public FertilizerDot fertilizerDot(Integer userId) {
+        String dotJsonString = dotRedisTemplate.opsForValue().get("fertilizer:dot:" + userId);
+        return JSON.parseObject(dotJsonString, FertilizerDot.class);
+    }
+
+    @Override
+    @DS("read")
+    public Boolean cancelFertilizerDot(Integer userId) {
+        return dotRedisTemplate.opsForValue().setIfPresent("fertilizer:dot:" + userId,JSON.toJSONString(new FertilizerDot(false,0)));
     }
 }
 
