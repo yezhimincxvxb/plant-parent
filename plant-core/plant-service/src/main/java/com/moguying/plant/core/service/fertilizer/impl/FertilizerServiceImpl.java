@@ -1,5 +1,6 @@
 package com.moguying.plant.core.service.fertilizer.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,6 +21,7 @@ import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.FertilizerType;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerDot;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
@@ -30,6 +32,8 @@ import com.moguying.plant.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +63,10 @@ public class FertilizerServiceImpl implements FertilizerService {
 
     @Autowired
     private SaleCoinLogDao saleCoinLogDao;
+
+
+    @Autowired
+    private StringRedisTemplate dotRedisTemplate;
 
     @Override
     @DS("write")
@@ -228,7 +236,7 @@ public class FertilizerServiceImpl implements FertilizerService {
                         // 红包金额为种植金额 * 红包比率
                         BigDecimal amount = plantOrderResponse.getPlantAmount()
                                 .multiply(fertilizer.getFertilizerAmount())
-                                .divide(new BigDecimal("100.0"), BigDecimal.ROUND_DOWN);
+                                .divide(new BigDecimal("100.0"), 2,BigDecimal.ROUND_DOWN);
                         userFertilizer.setFertilizerAmount(amount);
                     } else {
                         // 固定金额
@@ -251,6 +259,7 @@ public class FertilizerServiceImpl implements FertilizerService {
                 // 新增券
                 if (userFertilizer.getFertilizerAmount().compareTo(BigDecimal.ZERO) > 0 && userFertilizerDAO.insert(userFertilizer) > 0) {
                     resultData.setMessageEnum(MessageEnum.SUCCESS);
+                    dotRedisTemplate.opsForValue().setIfAbsent("fertilizer:dot:"+userFertilizer.getUserId(), JSON.toJSONString(new FertilizerDot(true,fertilizer.getTypeId())));
                 } else {
                     return resultData.setMessageEnum(MessageEnum.ERROR);
                 }

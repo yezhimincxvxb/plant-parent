@@ -4,6 +4,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerDot;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerSearch;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.user.vo.UserFertilizerInfo;
@@ -40,5 +41,9 @@ public interface UserFertilizerService {
     Boolean redPackageSuccess(UserFertilizer userFertilizer);
 
     UserFertilizer userFertilizer(Integer userId, String orderNumber);
+
+    FertilizerDot fertilizerDot(Integer userId);
+
+    Boolean cancelFertilizerDot(Integer userId);
 
 }

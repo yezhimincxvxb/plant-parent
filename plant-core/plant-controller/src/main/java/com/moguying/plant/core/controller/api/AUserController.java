@@ -17,6 +17,7 @@ import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.vo.BlockDetail;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.fertilizer.vo.FertilizerDot;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerSearch;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
 import com.moguying.plant.core.entity.payment.request.*;
@@ -682,7 +683,7 @@ public class AUserController {
     public PageResult<Reap> productList(@LoginUserId Integer userId, @RequestBody PageSearch<Reap> search) {
         Reap where = new Reap();
         where.setUserId(userId);
-        where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(), ReapEnum.SALE_DONE.getState(), ReapEnum.EXCHANGE_DONE.getState()));
+        where.setStates(Arrays.asList(ReapEnum.REAP_DONE.getState(), ReapEnum.SALE_DONE.getState(), ReapEnum.EXCHANGE_THING.getState()));
         if (search.getWhere() != null && null != search.getWhere().getGroupId())
             where.setGroupId(search.getWhere().getGroupId());
 
@@ -1173,6 +1174,21 @@ public class AUserController {
 
         ResultData<Integer> resultData = farmerService.friendHelpSuccess(userId, symbol);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
+    }
+
+
+    @GetMapping("/fertilizer/dot")
+    @ApiOperation("用户券红点")
+    public ResponseData<FertilizerDot> fertilizerDot(@LoginUserId Integer userId){
+        FertilizerDot fertilizerDot = userFertilizerService.fertilizerDot(userId);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),fertilizerDot);
+    }
+
+    @PostMapping("/fertilizer/dot")
+    @ApiOperation("取消用户券红点")
+    public ResponseData<Boolean> cancelFertilizerDot(@LoginUserId Integer userId){
+        Boolean aBoolean = userFertilizerService.cancelFertilizerDot(userId);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),aBoolean);
     }
 
 }

@@ -602,7 +602,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
         //置reap状态
         Reap update = new Reap();
         update.setId(reap.getId());
-        update.setState(ReapEnum.EXCHANGE_DONE.getState());
+        update.setState(ReapEnum.EXCHANGE_THING.getState());
         if(reapDAO.updateById(update) > 0){
             //更新用户本金
             UserMoneyOperator collectCapitalOperator = new UserMoneyOperator();
