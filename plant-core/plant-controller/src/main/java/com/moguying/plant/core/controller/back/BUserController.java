@@ -60,9 +60,7 @@ public class BUserController {
     public ResponseData<Integer> excelList(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                            @RequestBody PageSearch<User> search, HttpServletRequest request) {
         if (Objects.isNull(search.getWhere())) search.setWhere(new User());
-        DownloadInfo downloadInfo = new DownloadInfo("用户列表", request.getServletContext(), user.getId(), downloadDir);
-        PageResult<User> pageResult = userService.userList(search.getPage(), search.getSize(), search.getWhere());
-        new Thread(new DownloadService<>(pageResult.getData(), User.class, downloadInfo)).start();
+        userService.downloadExcel(user.getId(), search, request);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
