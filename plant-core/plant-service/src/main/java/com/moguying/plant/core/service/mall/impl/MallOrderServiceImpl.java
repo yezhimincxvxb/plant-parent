@@ -76,6 +76,8 @@ public class MallOrderServiceImpl implements MallOrderService {
      */
     @Value("${express.query.url}")
     private String expressQueryUrl;
+    @Value("${excel.download.dir}")
+    private String downloadDir;
 
     @Autowired
     private MallOrderDAO mallOrderDAO;
@@ -370,15 +372,16 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Override
     @DS("read")
-    public PageResult<MallOrder> mallOrderListExcel(Integer page, Integer size, MallOrderSearch where) {
-        IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(page, size), where);
+    public void downloadExcel(Integer userId, MallOrderSearch search, HttpServletRequest request) {
+        IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(search.getPage(), search.getSize()), search);
         if (!Objects.isNull(pageResult.getRecords()) && pageResult.getRecords().size() > 0) {
             for (MallOrder mallOrder : pageResult.getRecords()
             ) {
                 mallOrder.setStateStr(stateMap.get(mallOrder.getState()));
             }
         }
-        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
+        DownloadInfo downloadInfo = new DownloadInfo("商城订单", request.getServletContext(), userId, downloadDir);
+        new Thread(new DownloadService<>(pageResult.getRecords(), MallOrder.class, downloadInfo)).start();
     }
 
 
