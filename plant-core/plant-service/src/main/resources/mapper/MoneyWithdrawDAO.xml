@@ -52,8 +52,8 @@
       </if>
 
       <if test="wq.bankPhone != null and wq.bankPhone != ''">
-        <bind name="phoneLike" value="'%'+ bankPhone +'%'"/>
-        AND t1.bank_phone like #{phoneLike}
+        <bind name="bankLike" value="'%'+ bankPhone +'%'"/>
+        AND t1.bank_phone like #{bankLike}
       </if>
       <if test="wq.orderNumber != null and wq.orderNumber != ''">
         AND t1.order_number = #{orderNumber}
