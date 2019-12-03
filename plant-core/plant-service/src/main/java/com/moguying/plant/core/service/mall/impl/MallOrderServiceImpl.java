@@ -373,15 +373,15 @@ public class MallOrderServiceImpl implements MallOrderService {
     @Override
     @DS("read")
     public void downloadExcel(Integer userId, MallOrderSearch search, HttpServletRequest request) {
-        IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(search.getPage(), search.getSize()), search);
-        if (!Objects.isNull(pageResult.getRecords()) && pageResult.getRecords().size() > 0) {
-            for (MallOrder mallOrder : pageResult.getRecords()
+        List<MallOrder> orderList = mallOrderDAO.selectSelective(search);
+        if (!Objects.isNull(orderList) && orderList.size() > 0) {
+            for (MallOrder mallOrder : orderList
             ) {
                 mallOrder.setStateStr(stateMap.get(mallOrder.getState()));
             }
         }
         DownloadInfo downloadInfo = new DownloadInfo("商城订单", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadService<>(pageResult.getRecords(), MallOrder.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(orderList, MallOrder.class, downloadInfo)).start();
     }
 
 
