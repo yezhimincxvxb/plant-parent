@@ -15,6 +15,7 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapFee;
 import com.moguying.plant.core.entity.reap.ReapFeeParam;
+import com.moguying.plant.core.entity.reap.vo.FeeUpdateStateRequest;
 import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.reap.ReapFeeService;
 import com.moguying.plant.utils.InterestUtil;
@@ -72,11 +73,11 @@ public class ReapFeeServiceImpl implements ReapFeeService {
 
     @Override
     @DS("write")
-    public ResultData<Boolean> updateState(Integer feeId,Boolean isPass) {
+    public ResultData<Boolean> updateState(FeeUpdateStateRequest stateRequest) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
         ReapFee fee = new ReapFee();
-        fee.setId(feeId);
-        fee.setState(isPass);
+        fee.setId(stateRequest.getId());
+        fee.setState(stateRequest.getState());
         if (reapFeeDAO.updateById(fee)>0)
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         return resultData;

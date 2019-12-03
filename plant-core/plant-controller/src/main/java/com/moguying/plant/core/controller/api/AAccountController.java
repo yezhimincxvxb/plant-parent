@@ -8,28 +8,25 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
-import com.moguying.plant.core.entity.account.MoneyRecharge;
 import com.moguying.plant.core.entity.account.MoneyWithdraw;
 import com.moguying.plant.core.entity.account.UserMoney;
-import com.moguying.plant.core.entity.account.vo.*;
+import com.moguying.plant.core.entity.account.vo.AccountInfo;
+import com.moguying.plant.core.entity.account.vo.DetailInfo;
+import com.moguying.plant.core.entity.account.vo.InAndOutMoney;
+import com.moguying.plant.core.entity.account.vo.WithdrawRequest;
 import com.moguying.plant.core.entity.common.vo.Profit;
 import com.moguying.plant.core.entity.mall.vo.ProductInfo;
-import com.moguying.plant.core.entity.payment.PayRequestInfo;
-import com.moguying.plant.core.entity.payment.PayWithCode;
 import com.moguying.plant.core.entity.payment.request.PaymentRequest;
 import com.moguying.plant.core.entity.payment.request.PaymentRequestForHtml;
 import com.moguying.plant.core.entity.payment.request.WithdrawMoneyPageRequest;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
-import com.moguying.plant.core.entity.payment.response.SendPaySmsCodeResponse;
 import com.moguying.plant.core.entity.payment.response.SendWithdrawSmsCodeResponse;
 import com.moguying.plant.core.entity.payment.response.WithdrawMoneyResponse;
 import com.moguying.plant.core.entity.user.User;
-import com.moguying.plant.core.entity.user.UserMoneyOperator;
 import com.moguying.plant.core.entity.user.vo.MonthProfit;
 import com.moguying.plant.core.entity.user.vo.TotalProfit;
 import com.moguying.plant.core.entity.user.vo.UserMoneyDate;
 import com.moguying.plant.core.entity.user.vo.UserMoneyDetail;
-import com.moguying.plant.core.service.account.MoneyRechargeService;
 import com.moguying.plant.core.service.account.MoneyWithdrawService;
 import com.moguying.plant.core.service.account.UserMoneyLogService;
 import com.moguying.plant.core.service.account.UserMoneyService;
@@ -60,9 +57,6 @@ public class AAccountController {
 
     @Autowired
     private UserMoneyLogService moneyLogService;
-
-    @Autowired
-    private MoneyRechargeService moneyRechargeService;
 
     @Autowired
     private MoneyWithdrawService moneyWithdrawService;
@@ -277,9 +271,6 @@ public class AAccountController {
     }
 
 
-
-
-
     /**
      * 利润统计
      *
@@ -447,7 +438,8 @@ public class AAccountController {
                 MoneyOpEnum.INVITE_AWARD.getType(),
                 MoneyOpEnum.SALE_REAP_SEED.getType(),
                 MoneyOpEnum.PANT_SEED_FERTILIZER.getType(),
-                MoneyOpEnum.SALE_REAP_SEED_PROFIT.getType());
+                MoneyOpEnum.SALE_REAP_SEED_PROFIT.getType(),
+                MoneyOpEnum.RED_PACKAGE.getType());
         BigDecimal in = userMoneyService.getTotal(userId, dateTime, inList);
         String inCome = decimalFormat.format(in);
 

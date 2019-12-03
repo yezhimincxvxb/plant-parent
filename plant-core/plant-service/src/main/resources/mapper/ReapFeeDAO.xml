@@ -8,6 +8,7 @@
     <result column="reap_id" jdbcType="INTEGER" property="reapId" />
     <result column="fee_amount" jdbcType="DECIMAL" property="feeAmount" />
     <result column="is_first" jdbcType="BIT" property="isFirst" />
+    <result column="state" jdbcType="BIT" property="state" />
   </resultMap>
 
   <resultMap id="BaseResultInfo" type="com.moguying.plant.core.entity.reap.ReapFee" extends="BaseResultMap">

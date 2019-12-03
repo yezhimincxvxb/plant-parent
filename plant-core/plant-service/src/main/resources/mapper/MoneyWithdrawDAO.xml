@@ -45,15 +45,9 @@
         <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
             AND t2.real_name like #{realNameLike}
       </if>
-
-      <if test="wq.phone != null and wq.phone != ''">
-        <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
-        AND t2.phone like #{phoneLike}
-      </if>
-
       <if test="wq.bankPhone != null and wq.bankPhone != ''">
-        <bind name="phoneLike" value="'%'+ bankPhone +'%'"/>
-        AND t1.bank_phone like #{phoneLike}
+        <bind name="bankPhoneLike" value="'%'+ wq.bankPhone +'%'"/>
+        AND t1.bank_phone like #{bankPhoneLike}
       </if>
       <if test="wq.orderNumber != null and wq.orderNumber != ''">
         AND t1.order_number = #{orderNumber}
@@ -73,6 +67,10 @@
       <if test="wq.userId != null">
         AND t1.user_id = #{wq.userId}
       </if>
+      <if test="wq.phone != null and wq.phone != ''">
+        <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
+        AND t2.phone like #{phoneLike}
+      </if>
       <if test="wq.startTime != null">
         <![CDATA[
             AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{wq.startTime})
@@ -87,48 +85,6 @@
     </where>
     order by t1.withdraw_time desc
   </select>
-    <select id="selectSelective" resultMap="BaseInfoMap">
-        select t1.id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time, t1.seq_no,
-        verify_time, verify_user, verify_mark, bank_number, bank_phone, t1.`state`, t1.success_time, t2.real_name
-        from plant_money_withdraw t1
-        left join plant_user t2 on t1.user_id = t2.id
-        <where>
-            <if test="wq.id != null ">
-                t1.id = #{wq.id}
-            </if>
-            <if test="wq.userId != null">
-                and t1.user_id = #{wq.userId}
-            </if>
-            <if test="wq.realName != null and wq.realName != ''">
-                and instr(t2.real_name, #{wq.realName})
-            </if>
-            <if test="wq.bankPhone != null and wq.bankPhone != ''">
-                and instr(t1.bank_phone, #{wq.bankPhone})
-            </if>
-            <if test="wq.orderNumber != null and wq.orderNumber != ''">
-                and instr(t1.order_number, #{wq.orderNumber})
-            </if>
-            <if test="wq.bankNumber != null and wq.bankNumber != ''">
-                and instr(t1.bank_number, #{wq.bankNumber})
-            </if>
-            <if test="wq.state != null">
-                and t1.state = #{wq.state}
-            </if>
-            <if test="wq.inState != null">
-                and t1.state in
-                <foreach collection="wq.inState" open="(" close=")" separator="," item="item">
-                    #{item}
-                </foreach>
-            </if>
-            <if test="wq.startTime != null">
-                and unix_timestamp(t1.withdraw_time) &gt;= unix_timestamp(#{wq.startTime})
-            </if>
-            <if test="wq.endTime != null">
-                and unix_timestamp(t1.withdraw_time) &lt;= unix_timestamp(#{wq.endTime})
-            </if>
-        </where>
-        order by t1.withdraw_time desc
-    </select>
 
     <select id="selectByOrderNumber" resultMap="BaseResultMap">
         select
