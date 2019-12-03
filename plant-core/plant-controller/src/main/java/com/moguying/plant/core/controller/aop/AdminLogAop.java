@@ -51,7 +51,8 @@ public class AdminLogAop {
         adminLog.setActionParam(JSONObject.toJSONString(request.getParameterMap()));
         adminLog.setAddTime(new Date());
         adminLog.setUserId(adminUser.getId());
-        adminLogService.save(adminLog);
+        if (null!=adminLog.getUserId())
+            adminLogService.save(adminLog);
     }
 
 }
