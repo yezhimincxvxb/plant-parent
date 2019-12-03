@@ -4,6 +4,8 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
+import com.moguying.plant.core.entity.activity.LotteryLog;
+import com.moguying.plant.core.entity.activity.LotteryRule;
 import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
 import com.moguying.plant.core.service.content.ActivityService;
@@ -99,4 +101,24 @@ public class BActivityController {
         return activityService.activityLog(search.getPage(), search.getSize(), search.getWhere());
     }
 
+
+    @GetMapping("/lottery/rule/list")
+    @ApiOperation("抽奖规则")
+    public PageResult<LotteryRule> lotteryRulePageResult() {
+        return null;
+    }
+
+
+    @PostMapping("/lottery/rule")
+    @ApiOperation("添加抽奖规则")
+    public ResponseData<Boolean> addLotteryRule(@RequestBody LotteryRule rule) {
+        return null;
+    }
+
+
+    @PostMapping("/lottery/log")
+    @ApiOperation("抽奖记录")
+    public PageResult<LotteryLog> lotteryLogPageResult(@RequestBody PageSearch<LotteryLog> search){
+        return null;
+    }
 }
