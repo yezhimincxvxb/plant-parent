@@ -1,41 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.mall.MallOrderDetailDAO">
-    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.MallOrderDetail">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="order_id" jdbcType="INTEGER" property="orderId"/>
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="product_id" jdbcType="INTEGER" property="productId"/>
-        <result column="buy_count" jdbcType="INTEGER" property="buyCount"/>
-        <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount"/>
-        <result column="buy_coins" jdbcType="INTEGER" property="buyCoins"/>
-    </resultMap>
+  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.mall.MallOrderDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
+    <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount" />
+    <result column="buy_coins" jdbcType="INTEGER" property="buyCoins" />
+  </resultMap>
 
-    <resultMap id="OrderItemMap" type="com.moguying.plant.core.entity.mall.vo.OrderItem">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="product_id" jdbcType="INTEGER" property="productId"/>
-        <result column="name" jdbcType="VARCHAR" property="productName"/>
-        <result column="summary_desc" jdbcType="VARCHAR" property="productSummary"/>
-        <result column="price" jdbcType="DECIMAL" property="productPrice"/>
-        <result column="buy_count" jdbcType="INTEGER" property="buyCount"/>
-        <result column="fee_amount" jdbcType="DECIMAL" property="expressFee"/>
-        <result column="thumb_pic_url" jdbcType="DECIMAL" property="thumbPicUrl"/>
-        <result column="consume_coins" jdbcType="INTEGER" property="coin"/>
-    </resultMap>
+  <resultMap id="OrderItemMap" type="com.moguying.plant.core.entity.mall.vo.OrderItem">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="name" jdbcType="VARCHAR" property="productName" />
+    <result column="summary_desc" jdbcType="VARCHAR" property="productSummary" />
+    <result column="price" jdbcType="DECIMAL" property="productPrice" />
+    <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
+    <result column="fee_amount" jdbcType="DECIMAL" property="expressFee" />
+    <result column="thumb_pic_url" jdbcType="DECIMAL" property="thumbPicUrl" />
+    <result column="consume_coins" jdbcType="INTEGER" property="coin" />
+  </resultMap>
 
-    <sql id="Base_Column_List">
-        id, order_id, user_id, product_id, buy_count, buy_amount, buy_coins
-    </sql>
+  <resultMap id="OrderItemList" type="com.moguying.plant.core.entity.mall.vo.MallOrderDetailVo">
+    <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
+    <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, order_id, user_id, product_id, buy_count, buy_amount, buy_coins
+  </sql>
 
 
-    <select id="selectDetailListByOrderId" resultMap="OrderItemMap">
-        select t1.product_id ,t2.name,t2.summary_desc,t2.price,t1.buy_count,t2.thumb_pic_url,t2.consume_coins
-        from plant_mall_order_detail t1
-        left join plant_mall_product t2 on t1.product_id = t2.id
-        where order_id = #{orderId}
-        <if test="userId != null">
-            AND t1.user_id = #{userId}
-        </if>
-    </select>
+  <select id="selectDetailListByOrderId" resultMap="OrderItemMap">
+    select t1.product_id ,t2.name,t2.summary_desc,t2.price,t1.buy_count,t2.thumb_pic_url,t2.consume_coins
+    from plant_mall_order_detail t1
+    left join plant_mall_product t2 on t1.product_id = t2.id
+    where order_id = #{orderId}
+    <if test="userId != null">
+      AND t1.user_id = #{userId}
+    </if>
+  </select>
+
+
+  <select id="selectSelective" resultMap="OrderItemList">
+    select t1.buy_count,t1.buy_amount,t2.order_number,t3.real_name,t3.phone,t4.name as product_name
+    from plant_mall_order_detail t1 LEFT JOIN plant_mall_order t2 on t1.order_id = t2.id
+    LEFT JOIN plant_user t3 on t1.user_id = t3.id
+    LEFT JOIN plant_mall_product t4 on t1.product_id = t4.id
+    where t2.state in (2,3,4)
+    <if test="wq.orderNumber != null and wq.orderNumber != ''">
+      <bind name="orderNumberLike" value="'%'+ wq.orderNumber +'%'"/>
+      AND t2.order_number like #{orderNumberLike}
+    </if>
+    <if test="wq.realName != null and wq.realName != ''">
+      <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
+      AND t3.real_name like #{realNameLike}
+    </if>
+    <if test="wq.phone != null and wq.phone != ''">
+      <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
+      AND t3.phone like #{phoneLike}
+    </if>
+    <if test="wq.productName != null and wq.productName != ''">
+      <bind name="productNameLike" value="'%'+ wq.productName +'%'"/>
+      AND t4.name like #{productNameLike}
+    </if>
+  </select>
 
 </mapper>

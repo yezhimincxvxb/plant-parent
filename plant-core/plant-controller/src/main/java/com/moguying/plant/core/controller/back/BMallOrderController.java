@@ -2,22 +2,20 @@ package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MallEnum;
 import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.mall.MallCompany;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
-import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.mall.MallCompanyService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,8 +45,10 @@ public class BMallOrderController {
      */
     @PostMapping
     @ApiOperation("商城订单列表")
-    public PageResult<MallOrder> mallOrderList(@RequestBody MallOrderSearch search) {
-        return mallOrderService.mallOrderList(search.getPage(), search.getSize(), search);
+    public PageResult<MallOrder> mallOrderList(@RequestBody PageSearch<MallOrder> search) {
+        if(null == search.getWhere())
+            search.setWhere(new MallOrder());
+        return mallOrderService.mallOrderList(search.getPage(), search.getSize(),search.getWhere());
     }
 
 
@@ -115,10 +115,8 @@ public class BMallOrderController {
     @PostMapping(value = "/excel")
     @ApiOperation("商城订单导出表")
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                               @RequestBody MallOrderSearch search, HttpServletRequest request) {
-        DownloadInfo downloadInfo = new DownloadInfo("商城订单", request.getServletContext(), user.getId(), downloadDir);
-        PageResult<MallOrder> pageResult = mallOrderService.mallOrderListExcel(search.getPage(), search.getSize(), search);
-        new Thread(new DownloadService<>(pageResult.getData(), MallOrder.class, downloadInfo)).start();
+                                               @RequestBody PageSearch<MallOrder> search, HttpServletRequest request) {
+        mallOrderService.downloadExcel(user.getId(), search, request);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 

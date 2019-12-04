@@ -55,7 +55,10 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MallOrderServiceImpl implements MallOrderService {
@@ -76,6 +79,9 @@ public class MallOrderServiceImpl implements MallOrderService {
      */
     @Value("${express.query.url}")
     private String expressQueryUrl;
+
+    @Value("${excel.download.dir}")
+    private String downloadDir;
 
     @Autowired
     private MallOrderDAO mallOrderDAO;
@@ -112,7 +118,7 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Override
     @DS("read")
-    public PageResult<MallOrder> mallOrderList(Integer page, Integer size, MallOrderSearch where) {
+    public PageResult<MallOrder> mallOrderList(Integer page, Integer size, MallOrder where) {
         IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(page, size), where);
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
@@ -370,15 +376,9 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Override
     @DS("read")
-    public PageResult<MallOrder> mallOrderListExcel(Integer page, Integer size, MallOrderSearch where) {
-        IPage<MallOrder> pageResult = mallOrderDAO.selectSelective(new Page<>(page, size), where);
-        if (!Objects.isNull(pageResult.getRecords()) && pageResult.getRecords().size() > 0) {
-            for (MallOrder mallOrder : pageResult.getRecords()
-            ) {
-                mallOrder.setStateStr(stateMap.get(mallOrder.getState()));
-            }
-        }
-        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
+    public void downloadExcel(Integer userId, PageSearch<MallOrder> search, HttpServletRequest request) {
+        DownloadInfo downloadInfo = new DownloadInfo("商城订单", request.getServletContext(), userId, downloadDir);
+        new Thread(new DownloadService<>(mallOrderDAO,search, MallOrder.class, downloadInfo)).start();
     }
 
 

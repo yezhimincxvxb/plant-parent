@@ -16,9 +16,9 @@ import java.util.List;
  */
 @Repository
 public interface MallOrderDAO extends BaseDAO<MallOrder> {
-    IPage<MallOrder> selectSelective(Page<MallOrder> page, @Param("wq") MallOrderSearch where);
+    IPage<MallOrder> selectSelective(Page<MallOrder> page, @Param("wq") MallOrder where);
 
-    List<MallOrder> selectSelective(@Param("wq") MallOrderSearch where);
+    List<MallOrder> selectSelective(@Param("wq") MallOrder where);
 
     IPage<UserMallOrder> userOrderListByState(Page<MallOrder> page, @Param("userId") Integer userId, @Param("state") Integer state);
 

@@ -18,13 +18,18 @@
         <result column="reg_source" jdbcType="VARCHAR" property="regSource"/>
         <result column="invite_code" jdbcType="VARCHAR" property="inviteCode"/>
         <result column="invite_uid" jdbcType="INTEGER" property="inviteUid"/>
-        <result column="invite_name" jdbcType="VARCHAR" property="inviteName"/>
         <result column="user_state" jdbcType="BIT" property="userState"/>
         <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
         <result column="payment_account" jdbcType="VARCHAR" property="paymentAccount"/>
         <result column="payment_state" jdbcType="INTEGER" property="paymentState"/>
         <result column="is_channel" jdbcType="INTEGER" property="isChannel"/>
     </resultMap>
+
+    <resultMap id="BaseInfoMap" type="com.moguying.plant.core.entity.user.User" extends="BaseResultMap">
+        <result column="invite_name" jdbcType="VARCHAR" property="inviteName"/>
+        <result column="invite_phone" jdbcType="VARCHAR" property="invitePhone"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         id, phone, real_name, is_real_name, is_bind_card, `password`, pay_password, avatars_id,
         id_card, reg_time, reg_ip, reg_source, invite_code, invite_uid, user_state,
@@ -39,10 +44,10 @@
     </sql>
 
 
-    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.user.User" resultMap="BaseResultMap">
+    <select id="selectSelective" parameterType="com.moguying.plant.core.entity.user.User" resultMap="BaseInfoMap">
         select t1.id, t1.phone, t1.real_name, t1.is_real_name, t1.is_bind_card, t1.`password`, t1.pay_password,
         t1.id_card, t1.reg_time, t1.reg_ip, t1.reg_source, t1.invite_code, t1.invite_uid, t1.user_state,t1.is_channel,
-        t1.payment_account,t1.payment_state,t2.is_real_name as invite_name,t2.phone as invite_phone from plant_user t1
+        t1.payment_account,t1.payment_state,t2.real_name as invite_name,t2.phone as invite_phone from plant_user t1
         left join plant_user t2 on t1.invite_uid = t2.id
         <where>
             <if test="wq.id != null">
@@ -130,7 +135,8 @@
 
     <select id="userPlantMoneyList" resultType="com.moguying.plant.core.entity.user.vo.UserPlantMoneyVo">
         select t1.id `userId`, t1.real_name `userName`, t1.phone, t1.reg_time,
-        IFNULL(sum(t2.buy_count), 0) `buyCount`, IFNULL(sum(t2.plant_count), 0) `plantCount`, IFNULL(sum(t2.buy_amount), 0) `buyMoney`,
+        IFNULL(sum(t2.buy_count), 0) `buyCount`, IFNULL(sum(t2.plant_count), 0) `plantCount`, IFNULL(sum(t2.buy_amount),
+        0) `buyMoney`,
         t3.collect_money
         from plant_user t1
         left join plant_seed_order t2 on t1.id = t2.user_id
@@ -138,13 +144,13 @@
         <where>
             <if test="upm != null">
                 <if test="upm.phone != null">
-                   and t1.phone = #{upm.phone}
+                    and t1.phone = #{upm.phone}
                 </if>
                 <if test="upm.startTime != null">
-                   and unix_timestamp(t1.reg_time) &gt;= unix_timestamp(#{upm.startTime})
+                    and unix_timestamp(t1.reg_time) &gt;= unix_timestamp(#{upm.startTime})
                 </if>
                 <if test="upm.endTime != null">
-                   and unix_timestamp(t1.reg_time) &lt;= unix_timestamp(#{upm.endTime})
+                    and unix_timestamp(t1.reg_time) &lt;= unix_timestamp(#{upm.endTime})
                 </if>
             </if>
         </where>

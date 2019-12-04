@@ -8,12 +8,14 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.reap.ReapFee;
 import com.moguying.plant.core.entity.reap.ReapFeeParam;
+import com.moguying.plant.core.entity.reap.vo.FeeUpdateStateRequest;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.reap.ReapFeeParamService;
 import com.moguying.plant.core.service.reap.ReapFeeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,14 +134,16 @@ public class BReapFeeController {
 
     /**
      * 修改审核状态
-     * @param id
+     *
      * @return
      */
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     @ApiOperation("修改审核状态")
-    public ResponseData<Integer> updateState(@PathVariable Integer id, @RequestParam("state") Boolean isPass){
-        ResultData<Boolean> resultData = reapFeeService.updateState(id,isPass);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
+    public ResponseData<Integer> updateState(@RequestBody FeeUpdateStateRequest stateRequest) {
+        if (null == stateRequest.getId() || null == stateRequest.getState())
+            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+        ResultData<Boolean> resultData = reapFeeService.updateState(stateRequest);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 

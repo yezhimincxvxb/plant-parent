@@ -68,7 +68,7 @@ public class MallOrder implements Serializable, PayOrder {
      * 订单快递费
      */
     @Excel(name = "运费")
-    @JSONField(ordinal = 6,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 6, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal feeAmount;
 
@@ -76,6 +76,7 @@ public class MallOrder implements Serializable, PayOrder {
      * 订单状态[0未支付，1已支付（待发货），2已发货（待收货），3已完成，4已关单,5已取消]
      */
     @JSONField(ordinal = 7)
+    @Excel(name = "状态",replace = {"未支付_0","1_已支付","2_已发贷","3_已完成","4_已关单","5_已取消"})
     @TableField
     private Integer state;
 
@@ -90,28 +91,28 @@ public class MallOrder implements Serializable, PayOrder {
      * 下单时间
      */
     @Excel(name = "创建时间")
-    @JSONField(ordinal = 9,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 
     /**
      * 支付时间
      */
-    @JSONField(ordinal = 10,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 10, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date payTime;
 
     /**
      * 关单时间
      */
-    @JSONField(ordinal = 11,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 11, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date closeTime;
 
     /**
      * 发货时间
      */
-    @JSONField(ordinal = 12,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 12, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date sendTime;
 
@@ -125,7 +126,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 确认收货时间
      */
-    @JSONField(ordinal = 14,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 14, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date confirmTime;
 
@@ -160,14 +161,14 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 卡支付金额
      */
-    @JSONField(ordinal = 18,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 18, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal carPayAmount;
 
     /**
      * 余额支付金额
      */
-    @JSONField(ordinal = 19,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 19, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal accountPayAmount;
 
@@ -175,7 +176,7 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 优惠金额
      */
-    @JSONField(ordinal = 25,serializeUsing = BigDecimalSerialize.class)
+    @JSONField(ordinal = 25, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal reducePayAmount;
 
@@ -188,7 +189,7 @@ public class MallOrder implements Serializable, PayOrder {
     @TableField(exist = false)
     private String phone;
 
-    @JSONField(ordinal = 21,format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(ordinal = 21, format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date noticeTime;
 
@@ -221,12 +222,10 @@ public class MallOrder implements Serializable, PayOrder {
      * 后台导出辅助字段
      * 订单状态
      */
-    @Excel(name = "订单状态")
     @JSONField(ordinal = 25)
+    @Excel(name = "订单状态")
     @TableField(exist = false)
     private String stateStr;
-
-
 
     @Override
     public MoneyOpEnum getOpType() {

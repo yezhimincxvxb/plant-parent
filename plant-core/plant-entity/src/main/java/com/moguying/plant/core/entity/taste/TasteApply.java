@@ -1,5 +1,6 @@
 package com.moguying.plant.core.entity.taste;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.utils.BigDecimalSerialize;
@@ -17,15 +18,18 @@ import java.util.Date;
 @NoArgsConstructor
 public class TasteApply {
 
+    @Excel(name = "id",orderNum = "1")
     protected String id;
 
     /**
      * 申请资格的用户id
      */
     @NonNull
+    @Excel(name = "用户id",orderNum = "2")
     protected Integer userId;
 
 
+    @Excel(name = "手机号",orderNum = "3")
     private String phone;
 
     /**
@@ -38,6 +42,7 @@ public class TasteApply {
      * 申请的状态
      */
     @NonNull
+    @Excel(name = "状态",orderNum = "4",replace = {"未审核_0","已通过_1","未通过_2"})
     protected Integer state;
 
     /**
@@ -50,11 +55,13 @@ public class TasteApply {
      * 申请时间
      */
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "申请时间",orderNum = "5",format = "yyyy-MM-dd HH:mm:ss")
     protected Date applyTime;
 
     /**
      * 试吃商品名
      */
+    @Excel(name = "商品名",orderNum = "6")
     protected String productName;
 
 
@@ -63,9 +70,11 @@ public class TasteApply {
 
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "审核时间",orderNum = "7",format = "yyyy-MM-dd HH:mm:ss")
     private Date applyReviewTime;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "发布时间",orderNum = "8",format = "yyyy-MM-dd HH:mm:ss")
     private Date tasteTime;
 
     @JSONField(serialize = false)

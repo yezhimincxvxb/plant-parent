@@ -5,6 +5,9 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.admin.AdminUser;
+import com.moguying.plant.core.entity.mall.MallOrder;
+import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.entity.taste.PopMessage;
 import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
@@ -15,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @RestController
@@ -161,5 +165,16 @@ public class BTasteController {
         }
         return tasteService.bTasteApplyPageResult(search.getPage(),search.getSize(),search.getWhere());
     }
+
+
+    @PostMapping("/apply/excel")
+    @ApiOperation("下载试吃申请记录")
+    public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
+                                               @RequestBody PageSearch<TasteApply> search, HttpServletRequest request){
+        tasteService.downloadExcel(user.getId(), search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+    }
+
+
 
 }

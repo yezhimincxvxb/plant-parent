@@ -10,13 +10,11 @@ import com.moguying.plant.core.entity.user.UserAddress;
 import com.moguying.plant.core.entity.user.UserBank;
 import com.moguying.plant.core.entity.user.dto.UserPlantMoneyDto;
 import com.moguying.plant.core.entity.user.vo.UserPlantMoneyVo;
-import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.CommonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +28,6 @@ public class BUserController {
 
     @Autowired
     UserService userService;
-
-    @Value("${excel.download.dir}")
-    private String downloadDir;
 
     /**
      * 用户列表
@@ -59,14 +54,10 @@ public class BUserController {
     @ApiOperation("用户列表下载")
     public ResponseData<Integer> excelList(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                            @RequestBody PageSearch<User> search, HttpServletRequest request) {
-        if (Objects.isNull(search.getWhere())) search.setWhere(new User());
-        DownloadInfo downloadInfo = new DownloadInfo("用户列表", request.getServletContext(), user.getId(), downloadDir);
-        PageResult<User> pageResult = userService.userList(search.getPage(), search.getSize(), search.getWhere());
-        new Thread(new DownloadService<>(pageResult.getData(), User.class, downloadInfo)).start();
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        if(Objects.isNull(search.getWhere())) search.setWhere(new User());
+        userService.downloadExcel(user.getId(),search,request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
     }
-
-
 
 
     /**

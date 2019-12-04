@@ -1,6 +1,7 @@
 package com.moguying.plant.core.service.teste;
 
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.seed.vo.BuyOrder;
@@ -9,6 +10,7 @@ import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.entity.taste.vo.TasteReap;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface TasteService {
@@ -108,6 +110,10 @@ public interface TasteService {
      * @return
      */
     PageResult<TasteApply> bTasteApplyPageResult(Integer page, Integer size, TasteApply where);
+
+
+    void downloadExcel(Integer userId, PageSearch<TasteApply> search, HttpServletRequest request);
+
 
     /**
      * 新手体验礼包券

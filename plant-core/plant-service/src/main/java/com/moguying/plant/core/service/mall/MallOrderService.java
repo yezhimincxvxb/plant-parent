@@ -19,7 +19,7 @@ import java.util.List;
 public interface MallOrderService {
 
 
-    PageResult<MallOrder> mallOrderList(Integer page, Integer size, MallOrderSearch where);
+    PageResult<MallOrder> mallOrderList(Integer page, Integer size, MallOrder where);
 
 
     PageResult<UserMallOrder> userMallOrderListByState(Integer page, Integer size, Integer userId, Integer state);
@@ -63,6 +63,6 @@ public interface MallOrderService {
 
     Integer getMallOrderNum();
 
-    PageResult<MallOrder> mallOrderListExcel(Integer page, Integer size, MallOrderSearch where);
+    void downloadExcel(Integer userId, PageSearch<MallOrder> search, HttpServletRequest request);
 
 }

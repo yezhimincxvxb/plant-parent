@@ -79,8 +79,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     @DS("read")
     public PageResult<AdminMessage> adminMessageList(Integer page, Integer size, AdminMessage where) {
-        IPage<AdminMessage> pageResult = adminMessageDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(where));
-        pageResult.getRecords().sort(Comparator.comparing(AdminMessage::getAddTime));
+        IPage<AdminMessage> pageResult = adminMessageDAO.selectPage(new Page<>(page, size),
+                new QueryWrapper<>(where).lambda().orderByDesc(AdminMessage::getAddTime));
         return new PageResult<>(pageResult.getTotal(),pageResult.getRecords());
     }
 
