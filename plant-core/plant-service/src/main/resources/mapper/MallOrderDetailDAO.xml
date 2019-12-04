@@ -23,7 +23,7 @@
     <result column="consume_coins" jdbcType="INTEGER" property="coin" />
   </resultMap>
 
-  <resultMap id="OrderItemList" type="com.moguying.plant.core.entity.mall.vo.MallOrderDetailVo">
+  <resultMap id="OrderItemList" type="com.moguying.plant.core.entity.mall.MallOrderDetail" extends="BaseResultMap">
     <result column="buy_count" jdbcType="INTEGER" property="buyCount" />
     <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
