@@ -39,19 +39,21 @@ public class AdminLogAop {
     @After(value = "addAdminLog()")
     public void doBefore(JoinPoint joinPoint) {
         //过滤NoLogin操作
-        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         NoLogin annotations = methodSignature.getMethod().getAnnotation(NoLogin.class);
-        if(null != annotations) return;
+        if (null != annotations) return;
         Optional<ServletRequestAttributes> attributes = Optional.ofNullable((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
-        if(!attributes.isPresent()) return;
+        if (!attributes.isPresent()) return;
         HttpServletRequest request = attributes.get().getRequest();
         AdminUser adminUser = (AdminUser) request.getSession().getAttribute(SessionAdminUser.sessionKey);
         AdminLog adminLog = new AdminLog();
         adminLog.setActionCode(request.getRequestURL().toString());
         adminLog.setActionParam(JSONObject.toJSONString(request.getParameterMap()));
         adminLog.setAddTime(new Date());
-        adminLog.setUserId(adminUser.getId());
-        adminLogService.save(adminLog);
+        if (null != adminLog.getUserId()) {
+            adminLog.setUserId(adminUser.getId());
+            adminLogService.save(adminLog);
+        }
     }
 
 }
