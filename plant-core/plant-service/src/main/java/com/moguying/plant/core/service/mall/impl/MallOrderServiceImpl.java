@@ -375,8 +375,7 @@ public class MallOrderServiceImpl implements MallOrderService {
     public void downloadExcel(Integer userId, MallOrderSearch search, HttpServletRequest request) {
         List<MallOrder> orderList = mallOrderDAO.selectSelective(search);
         if (!Objects.isNull(orderList) && orderList.size() > 0) {
-            for (MallOrder mallOrder : orderList
-            ) {
+            for (MallOrder mallOrder : orderList) {
                 mallOrder.setStateStr(stateMap.get(mallOrder.getState()));
             }
         }
