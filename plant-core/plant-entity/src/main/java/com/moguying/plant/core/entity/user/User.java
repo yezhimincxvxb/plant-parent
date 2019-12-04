@@ -49,7 +49,7 @@ public class User implements Serializable {
     /**
      * 是否实名
      */
-    @Excel(name = "是否实名",replace = {"是_1","否_2"})
+    @Excel(name = "是否实名",replace = {"是_1","否_2","---_null"})
     @JSONField(ordinal = 4)
     @TableField
     private Integer isRealName;
@@ -74,7 +74,7 @@ public class User implements Serializable {
     /**
      * 是否绑卡
      */
-    @Excel(name = "是否绑卡",replace = {"是_true","否_false"})
+    @Excel(name = "是否绑卡",replace = {"是_true","否_false","---_null"})
     @JSONField(ordinal = 7)
     @TableField
     private Boolean isBindCard;
