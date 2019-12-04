@@ -33,7 +33,6 @@ public class BMallOrderDetailController {
      */
     @PostMapping
     @ApiOperation("商城订单详情列表")
-    @NoLogin
     public PageResult<MallOrderDetailVo> mallOrderList(@RequestBody PageSearch<OrderDetailSearch> search) {
         return orderDetailService.mallOrderDetailList(search.getPage(), search.getSize(), search.getWhere());
     }
