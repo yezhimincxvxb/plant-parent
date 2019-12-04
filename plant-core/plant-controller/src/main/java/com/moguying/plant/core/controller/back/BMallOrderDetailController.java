@@ -6,7 +6,8 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminUser;
-import com.moguying.plant.core.entity.mall.MallOrderDetail;
+import com.moguying.plant.core.entity.mall.vo.MallOrderDetailVo;
+import com.moguying.plant.core.entity.mall.vo.OrderDetailSearch;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.mall.MallOrderDetailService;
 import io.swagger.annotations.Api;
@@ -32,7 +33,7 @@ public class BMallOrderDetailController {
      */
     @PostMapping
     @ApiOperation("商城订单详情列表")
-    public PageResult<MallOrderDetail> mallOrderList(@RequestBody PageSearch<MallOrderDetail> search) {
+    public PageResult<MallOrderDetailVo> mallOrderList(@RequestBody PageSearch<OrderDetailSearch> search) {
         return orderDetailService.mallOrderDetailList(search.getPage(), search.getSize(), search.getWhere());
     }
 
@@ -46,9 +47,8 @@ public class BMallOrderDetailController {
      */
     @PostMapping(value = "/excel")
     @ApiOperation("商城订单详情导出表")
-    @NoLogin
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                               PageSearch<MallOrderDetail> search, HttpServletRequest request) {
+                                               PageSearch<OrderDetailSearch> search, HttpServletRequest request) {
         orderDetailService.downloadExcel(user.getId(), search, request);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
