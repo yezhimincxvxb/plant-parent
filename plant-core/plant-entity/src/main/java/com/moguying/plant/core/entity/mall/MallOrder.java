@@ -76,6 +76,7 @@ public class MallOrder implements Serializable, PayOrder {
      * 订单状态[0未支付，1已支付（待发货），2已发货（待收货），3已完成，4已关单,5已取消]
      */
     @JSONField(ordinal = 7)
+    @Excel(name = "状态",replace = {"未支付_0","1_已支付","2_已发贷","3_已完成","4_已关单","5_已取消"})
     @TableField
     private Integer state;
 

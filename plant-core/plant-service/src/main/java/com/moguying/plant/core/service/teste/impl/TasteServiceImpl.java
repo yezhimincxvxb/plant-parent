@@ -17,10 +17,13 @@ import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
 import com.moguying.plant.core.dao.seed.SeedTypeDAO;
 import com.moguying.plant.core.dao.user.UserAddressDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
+import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.block.Block;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
+import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.seed.Seed;
@@ -33,6 +36,7 @@ import com.moguying.plant.core.entity.taste.Taste;
 import com.moguying.plant.core.entity.taste.TasteApply;
 import com.moguying.plant.core.entity.taste.vo.TasteReap;
 import com.moguying.plant.core.entity.user.User;
+import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.teste.TasteService;
@@ -42,6 +46,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -51,6 +56,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -104,6 +110,9 @@ public class TasteServiceImpl implements TasteService {
     @Autowired
     private UserFertilizerDAO userFertilizerDAO;
 
+
+    @Value("${excel.download.dir}")
+    private String downloadDir;
 
     @Override
     @DS("read")
@@ -361,7 +370,12 @@ public class TasteServiceImpl implements TasteService {
 
     @Override
     public PageResult<TasteApply> bTasteApplyPageResult(Integer page, Integer size, TasteApply where) {
-        Query query = new Query().with(PageRequest.of(page - 1, size, Sort.Direction.DESC, "applyTime"));
+        Query query;
+        if(page > 0 && size > 0)
+            query = new Query().with(PageRequest.of(page - 1, size, Sort.Direction.DESC, "applyTime"));
+        else
+            query = new Query().with(Sort.by(Sort.Direction.DESC,"applyTime") );
+
         Optional<TasteApply> optional = Optional.ofNullable(where);
         if (optional.map(TasteApply::getState).isPresent())
             query.addCriteria(Criteria.where("state").is(where.getState()));
@@ -376,6 +390,14 @@ public class TasteServiceImpl implements TasteService {
         List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
         long count = mongoTemplate.count(query, TasteApply.class);
         return new PageResult<>(count, tasteApplies);
+    }
+
+
+    @Override
+    public void downloadExcel(Integer userId, PageSearch<TasteApply> search, HttpServletRequest request) {
+        PageResult<TasteApply> tasteApplyPageResult = bTasteApplyPageResult(0, 0, search.getWhere());
+        DownloadInfo downloadInfo = new DownloadInfo("试吃申请", request.getServletContext(), userId, downloadDir);
+        new Thread(new DownloadService<>(tasteApplyPageResult.getData(),TasteApply.class,downloadInfo)).start();
     }
 
     @Override
