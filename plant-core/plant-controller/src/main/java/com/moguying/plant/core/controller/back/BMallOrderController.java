@@ -45,8 +45,10 @@ public class BMallOrderController {
      */
     @PostMapping
     @ApiOperation("商城订单列表")
-    public PageResult<MallOrder> mallOrderList(@RequestBody MallOrderSearch search) {
-        return mallOrderService.mallOrderList(search.getPage(), search.getSize(), search);
+    public PageResult<MallOrder> mallOrderList(@RequestBody PageSearch<MallOrder> search) {
+        if(null == search.getWhere())
+            search.setWhere(new MallOrder());
+        return mallOrderService.mallOrderList(search.getPage(), search.getSize(),search.getWhere());
     }
 
 
@@ -113,8 +115,7 @@ public class BMallOrderController {
     @PostMapping(value = "/excel")
     @ApiOperation("商城订单导出表")
     public ResponseData<Integer> downloadExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
-                                               @RequestBody MallOrderSearch search, HttpServletRequest request) {
-        if (Objects.isNull(search)) new MallOrderSearch();
+                                               @RequestBody PageSearch<MallOrder> search, HttpServletRequest request) {
         mallOrderService.downloadExcel(user.getId(), search, request);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
