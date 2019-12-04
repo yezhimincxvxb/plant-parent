@@ -76,7 +76,7 @@ public class MallOrder implements Serializable, PayOrder {
      * 订单状态[0未支付，1已支付（待发货），2已发货（待收货），3已完成，4已关单,5已取消]
      */
     @JSONField(ordinal = 7)
-    @Excel(name = "状态",replace = {"未支付_0","1_已支付","2_已发贷","3_已完成","4_已关单","5_已取消"})
+    @Excel(name = "状态",replace = {"未支付_0","已支付_1","已发贷_2","已完成_3","已关单_4","已取消_5"})
     @TableField
     private Integer state;
 
@@ -90,8 +90,8 @@ public class MallOrder implements Serializable, PayOrder {
     /**
      * 下单时间
      */
-    @Excel(name = "创建时间")
     @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "创建时间",format = "yyyy-MM-dd HH:mm:ss")
     @TableField
     private Date addTime;
 
@@ -218,14 +218,6 @@ public class MallOrder implements Serializable, PayOrder {
     @TableField(exist = false)
     private List<OrderItem> details;
 
-    /**
-     * 后台导出辅助字段
-     * 订单状态
-     */
-    @JSONField(ordinal = 25)
-    @Excel(name = "订单状态")
-    @TableField(exist = false)
-    private String stateStr;
 
     @Override
     public MoneyOpEnum getOpType() {
