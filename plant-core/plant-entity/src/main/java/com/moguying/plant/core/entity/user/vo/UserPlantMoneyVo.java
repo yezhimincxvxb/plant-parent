@@ -2,7 +2,6 @@ package com.moguying.plant.core.entity.user.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.utils.BigDecimalSerialize;
-import com.moguying.plant.utils.IdCardSerialize;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -21,7 +20,7 @@ public class UserPlantMoneyVo implements Serializable {
     @JSONField(ordinal = 2)
     private String userName;
 
-    @JSONField(ordinal = 3, serializeUsing = IdCardSerialize.class)
+    @JSONField(ordinal = 3)
     private String phone;
 
     /**
