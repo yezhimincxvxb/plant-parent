@@ -140,8 +140,9 @@
         left join plant_user_money t3 on t1.id = t3.user_id
         <where>
             <if test="upm != null">
-                <if test="upm.phone != null">
-                    and t1.phone = #{upm.phone}
+                <if test="upm.phone != null and upm.phone != ''">
+                    <bind name="phoneLike" value="'%' + upm.phone + '%'"/>
+                    AND t1.phone like #{phoneLike}
                 </if>
                 <if test="upm.startTime != null">
                     and unix_timestamp(t1.reg_time) &gt;= unix_timestamp(#{upm.startTime})
