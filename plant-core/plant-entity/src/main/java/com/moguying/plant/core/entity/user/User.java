@@ -16,8 +16,7 @@ import java.util.Date;
 
 /**
  * plant_user
- *
- * @author
+ * @author 
  */
 @TableName("plant_user")
 @Data
@@ -50,7 +49,7 @@ public class User implements Serializable {
     /**
      * 是否实名
      */
-    @Excel(name = "是否实名", replace = {"是_1", "否_2"})
+    @Excel(name = "是否实名",replace = {"是_1","否_2","---_null"})
     @JSONField(ordinal = 4)
     @TableField
     private Integer isRealName;
@@ -67,7 +66,7 @@ public class User implements Serializable {
     /**
      * 身份证有效期
      */
-    @JSONField(serialize = false, ordinal = 6)
+    @JSONField(serialize = false,ordinal = 6)
     @TableField
     private Date idExpireTime;
 
@@ -75,7 +74,7 @@ public class User implements Serializable {
     /**
      * 是否绑卡
      */
-    @Excel(name = "是否绑卡", replace = {"是_true", "否_false"})
+    @Excel(name = "是否绑卡",replace = {"是_true","否_false","---_null"})
     @JSONField(ordinal = 7)
     @TableField
     private Boolean isBindCard;
@@ -104,29 +103,29 @@ public class User implements Serializable {
     /**
      * 身份证号码
      */
-    @JSONField(serializeUsing = IdCardSerialize.class, ordinal = 9)
+    @JSONField(serializeUsing = IdCardSerialize.class,ordinal = 9)
     @TableField
     private String idCard;
 
     /**
      * 注册时间
      */
-    @Excel(name = "注册时间", format = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(deserialize = false, format = "yyyy-MM-dd HH:mm", ordinal = 10)
+    @Excel(name = "注册时间",format = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(deserialize =  false,format = "yyyy-MM-dd HH:mm",ordinal = 10)
     @TableField
     private Date regTime;
 
     /**
      * 注册ip
      */
-    @JSONField(deserialize = false, serialize = false, ordinal = 11)
+    @JSONField(deserialize = false,serialize =  false,ordinal = 11)
     @TableField
     private String regIp;
 
     /**
      * 注册来源
      */
-    @JSONField(deserialize = false, ordinal = 12)
+    @JSONField(deserialize =  false,ordinal = 12)
     @TableField
     private String regSource;
 
@@ -140,7 +139,7 @@ public class User implements Serializable {
     /**
      * 邀请人用户id
      */
-    @JSONField(serialize = false, deserialize = false, ordinal = 14)
+    @JSONField(serialize =  false,deserialize =  false,ordinal = 14)
     @TableField
     private Integer inviteUid;
 
@@ -162,7 +161,7 @@ public class User implements Serializable {
     /**
      * 最后登录时间
      */
-    @JSONField(serialize = false, deserialize = false, ordinal = 17)
+    @JSONField(serialize =  false,deserialize = false,ordinal = 17)
     @TableField
     private Date lastLoginTime;
 
@@ -218,7 +217,7 @@ public class User implements Serializable {
         this.realName = realName;
     }
 
-    public User(String phone) {
-        this(phone, null);
+    public User(String phone){
+        this(phone,null);
     }
 }

@@ -186,7 +186,7 @@ public class Reap implements Serializable {
     /**
      * 状态：[0待采摘，1已采摘，2售卖中，3已售卖，4已兑换]
      */
-    @Excel(name = "状态", replace = {"待采摘_0", "已采摘_1", "售卖中_2", "已售卖_3", "已兑换_4"})
+    @Excel(name = "状态", replace = {"---_null","待采摘_0", "已采摘_1", "售卖中_2", "已售卖_3", "已兑换_4"})
     @JSONField(ordinal = 23)
     @TableField
     private Integer state;

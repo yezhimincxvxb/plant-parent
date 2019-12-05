@@ -429,7 +429,7 @@
     </select>
 
     <select id="getPlantLines" resultType="java.math.BigDecimal">
-        select sum(preAmount) from plant_reap where user_id in (select id from  plant_user)
+        select sum(pre_amount) from plant_reap where user_id in (select id from  plant_user)
     </select>
 
 </mapper>
