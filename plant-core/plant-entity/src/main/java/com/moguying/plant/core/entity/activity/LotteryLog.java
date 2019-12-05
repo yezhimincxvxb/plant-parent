@@ -9,9 +9,10 @@ import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
-@TableName("plant_lottery_log")
+@TableName("plant_activity_lottery_log")
 public class LotteryLog {
 
     @TableId(type =  IdType.AUTO)
@@ -27,7 +28,7 @@ public class LotteryLog {
     //抽奖时间
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @TableField
-    private Integer addTime;
+    private Date addTime;
 
     //抽到类型
     @TableField

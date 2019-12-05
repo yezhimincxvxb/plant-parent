@@ -4,6 +4,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.activity.LotteryLog;
 import com.moguying.plant.core.entity.activity.LotteryRule;
 import com.moguying.plant.core.entity.content.Activity;
@@ -14,6 +15,11 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * @author Qinhir
+ */
 @RestController
 @RequestMapping("/activity")
 @Api(tags = "活动管理")
@@ -104,21 +110,31 @@ public class BActivityController {
 
     @GetMapping("/lottery/rule/list")
     @ApiOperation("抽奖规则")
-    public PageResult<LotteryRule> lotteryRulePageResult() {
-        return null;
+    public ResponseData<List<LotteryRule>> lotteryRuleList() {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),activityService.lotteryRuleList());
     }
 
 
     @PostMapping("/lottery/rule")
     @ApiOperation("添加抽奖规则")
     public ResponseData<Boolean> addLotteryRule(@RequestBody LotteryRule rule) {
-        return null;
+        ResultData<Boolean> aBoolean = activityService.addLotteryRule(rule);
+        return new ResponseData<>(aBoolean.getMessageEnum().getMessage(),aBoolean.getMessageEnum().getState());
+    }
+
+    @DeleteMapping("/lottery/rule/{id}")
+    @ApiOperation("删除抽奖规则")
+    public ResponseData<Boolean> deleteLotteryRule(@PathVariable String id){
+        Boolean aBoolean = activityService.deleteLotteryRule(id);
+        if(aBoolean)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
     }
 
 
     @PostMapping("/lottery/log")
     @ApiOperation("抽奖记录")
     public PageResult<LotteryLog> lotteryLogPageResult(@RequestBody PageSearch<LotteryLog> search){
-        return null;
+        return activityService.lotteryLog(search.getPage(),search.getSize(),search.getWhere());
     }
 }

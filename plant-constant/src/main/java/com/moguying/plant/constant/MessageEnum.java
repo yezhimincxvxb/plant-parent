@@ -182,7 +182,10 @@ public enum  MessageEnum {
     ONT_INVITE_LOG("目前还没有邀请记录，快邀请好友拿大奖",10177),
     REAP_WEIGH_NOT_ENOUGH("成品产量不足于兑换商品",10179),
     BANK_NUMBER_IS_EMPTY("银行卡号不能为空",10180),
-    PHONE_IS_EMPTY("手机号不能为空",10180);
+    PHONE_IS_EMPTY("手机号不能为空",10181),
+    LOTTERY_INFO_EMPTY("种植信息不存在，请种植后进行抽奖",10182),
+    LOTTERY_RULE_ERROR("抽奖规则格式错误",10183),
+    LOTTERY_RULE_OUT_OF_RANGE("您的抽奖条件已经超出我们的预期了！",10184);
 
 
     private String message;

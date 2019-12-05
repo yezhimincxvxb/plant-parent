@@ -10,8 +10,4 @@ public class LotteryQua {
 
     //抽奖次数
     private Long lotteryCount;
-
-    //抽奖类型
-    private Integer lotteryType;
-
 }

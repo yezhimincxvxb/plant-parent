@@ -2,6 +2,11 @@ package com.moguying.plant.core.service.content;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.activity.LotteryLog;
+import com.moguying.plant.core.entity.activity.LotteryRule;
+import com.moguying.plant.core.entity.activity.vo.LotteryQua;
+import com.moguying.plant.core.entity.activity.vo.LotteryResult;
 import com.moguying.plant.core.entity.content.Activity;
 import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
 
@@ -31,5 +36,15 @@ public interface ActivityService extends IService<Activity> {
 
     PageResult<UserActivityLogVo> activityLog(Integer page, Integer size, UserActivityLogVo userActivityLogVo);
 
+    LotteryQua lotteryQua(Integer userId);
 
+    ResultData<LotteryResult> lotteryDo(Integer userId);
+
+    ResultData<Boolean> addLotteryRule(LotteryRule rule);
+
+    List<LotteryRule> lotteryRuleList();
+
+    Boolean deleteLotteryRule(String id);
+
+    PageResult<LotteryLog> lotteryLog(Integer page,Integer size,LotteryLog search);
 }

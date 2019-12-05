@@ -12,4 +12,6 @@ public class LotteryRule {
 
     private String rule;
 
+    private Integer type;
+
 }

@@ -131,7 +131,7 @@ public class BUserAccountController {
 
 
     @PostMapping("/recharge/review/code")
-    @ApiOperation("充值审核验证")
+    @ApiOperation("发送充值审核验证码")
     public ResponseData<Integer> rechargeCode(@RequestBody RechargeReview review) {
         ResultData<Integer> reviewCode = moneyRechargeService.reviewCode(review);
         return new ResponseData<>(reviewCode.getMessageEnum().getMessage(),reviewCode.getMessageEnum().getState());

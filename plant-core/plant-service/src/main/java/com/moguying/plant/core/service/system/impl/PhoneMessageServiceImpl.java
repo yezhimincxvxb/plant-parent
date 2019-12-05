@@ -75,12 +75,14 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
         }
         PhoneMessage add = new PhoneMessage();
         if (null != code) add.setCode(code);
+        else
+            add.setState(SystemEnum.PHONE_MESSAGE_VALIDATE.getState());
         add.setMessage(template);
         add.setPhone(phone);
         add.setAddTime(new Date());
         if(phoneMessageDAO.insert(add) > 0) {
-            amqpTemplate.convertAndSend(RabbitConfig.PHONE_MESSAGE, JSON.toJSONString(new PhoneMessageSender(phone, template)));
-            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+            amqpTemplate.convertAndSend(RabbitConfig.PHONE_MESSAGE, new PhoneMessageSender(phone, template));
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
         }
         return resultData;
     }

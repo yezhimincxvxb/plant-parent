@@ -5,24 +5,44 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moguying.plant.constant.ActivityEnum;
+import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.dao.activity.LotteryLogDAO;
 import com.moguying.plant.core.dao.content.ActivityDAO;
+import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.activity.LotteryLog;
+import com.moguying.plant.core.entity.activity.LotteryRule;
+import com.moguying.plant.core.entity.activity.vo.LotteryQua;
+import com.moguying.plant.core.entity.activity.vo.LotteryResult;
 import com.moguying.plant.core.entity.content.Activity;
+import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.user.vo.UserActivityLogVo;
 import com.moguying.plant.core.service.content.ActivityService;
+import com.mongodb.client.result.DeleteResult;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Stream;
 
 
 @Service
 public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> implements ActivityService {
+
+    /**
+     * 概率项填充列表
+     */
+    private final List<String> probabilityList = Collections.synchronizedList(new LinkedList<>());
 
     @Autowired
     private ActivityDAO activityDAO;
@@ -30,8 +50,21 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
     @Autowired
     private UserActivityLogDAO userActivityLogDAO;
 
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ReapDAO reapDAO;
+
     @Value("${meta.content.img}")
     private String appendStr;
+
+    @Autowired
+    private LotteryLogDAO lotteryLogDAO;
 
     @Override
     @DS("read")
@@ -106,5 +139,115 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
     public PageResult<UserActivityLogVo> activityLog(Integer page, Integer size, UserActivityLogVo userActivityLogVo) {
         IPage<UserActivityLogVo> iPage = userActivityLogDAO.activityLog(new Page<>(page, size), userActivityLogVo);
         return new PageResult<>(iPage.getTotal(), iPage.getRecords());
+    }
+
+    @Override
+    @DS("read")
+    public LotteryQua lotteryQua(Integer userId) {
+        Long size = redisTemplate.opsForList().size(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()));
+        LotteryQua lotteryQua = new LotteryQua();
+        lotteryQua.setUserId(userId);
+        lotteryQua.setLotteryCount(size);
+        return lotteryQua;
+    }
+
+    @Override
+    @DS("read")
+    public ResultData<LotteryResult> lotteryDo(Integer userId) {
+        ResultData<LotteryResult> resultResultData = new ResultData<>(MessageEnum.ERROR,new LotteryResult());
+        String reapId = redisTemplate.opsForList().rightPop(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()));
+        Optional<String> optional = Optional.ofNullable(reapId);
+
+        if (!optional.isPresent()) return resultResultData.setMessageEnum(MessageEnum.LOTTERY_INFO_EMPTY);
+        Reap reap = reapDAO.selectById(Integer.parseInt(reapId));
+        if (null == reap)
+            return resultResultData.setMessageEnum(MessageEnum.LOTTERY_INFO_EMPTY);
+
+        //获取抽奖规则
+        List<LotteryRule> all = mongoTemplate.findAll(LotteryRule.class);
+        Stream<LotteryRule> lotteryRuleStream = all.stream().filter(x ->
+                x.getMinPlantCount().compareTo(reap.getPlantCount()) <= 0 && x.getMaxPlantCount().compareTo(reap.getPlantCount()) >= 0);
+        Optional<LotteryRule> firstRule = lotteryRuleStream.findFirst();
+        if(!firstRule.isPresent()) {
+            //因抽奖条件不符合的不应取消他的抽奖资格
+            redisTemplate.opsForList().rightPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()),reapId);
+            return resultResultData.setMessageEnum(MessageEnum.LOTTERY_RULE_OUT_OF_RANGE);
+        }
+
+        //保存抽奖信息
+        LotteryResult lotteryResult = fillList(firstRule.get().getRule());
+        lotteryResult.setType(firstRule.get().getType());
+        LotteryLog log = new LotteryLog();
+        log.setLotteryAmount(new BigDecimal(lotteryResult.getAmount()));
+        log.setReapId(Integer.parseInt(reapId));
+        log.setLotteryType(firstRule.get().getType());
+        log.setUserId(userId);
+        log.setAddTime(new Date());
+        if(lotteryLogDAO.insert(log) > 0)
+            return resultResultData.setMessageEnum(MessageEnum.SUCCESS).setData(lotteryResult);
+        return resultResultData;
+    }
+
+
+
+    /**
+     * 填充概率
+     *
+     * @param probability 概率规则
+     * @return
+     */
+    private LotteryResult fillList(String probability) {
+        probabilityList.clear();
+        Set<String> result = new HashSet<>();
+        Set<String> totalSet = new HashSet<>();
+        String[] split = probability.split("\\|");
+        for (String rate : split) {
+            if(rate.isEmpty()) continue;
+            String[] rateDes = rate.split("-");
+            for (int i = 0; i < Integer.parseInt(rateDes[1]); i++) {
+                probabilityList.add(rateDes[0]);
+                totalSet.add(rateDes[0]);
+            }
+        }
+        Collections.shuffle(probabilityList);
+        long l = System.currentTimeMillis() % probabilityList.size();
+        String s = probabilityList.get((int) l);
+        result.add(s);
+        totalSet.removeAll(result);
+        LotteryResult lotteryResult = new LotteryResult();
+        lotteryResult.setAmount(s);
+        lotteryResult.setLeftAmount(totalSet.toArray());
+        return lotteryResult;
+    }
+
+
+    @Override
+    @DS("read")
+    public ResultData<Boolean> addLotteryRule(LotteryRule rule) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
+        boolean matches = rule.getRule().matches("(\\d{1,4}-\\d{1,4}\\|?){3}");
+        if (!matches) return resultData.setMessageEnum(MessageEnum.LOTTERY_RULE_ERROR);
+        mongoTemplate.save(rule);
+        return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
+    }
+
+    @Override
+    @DS("read")
+    public List<LotteryRule> lotteryRuleList() {
+        return mongoTemplate.findAll(LotteryRule.class);
+    }
+
+    @Override
+    @DS("read")
+    public Boolean deleteLotteryRule(String id) {
+        DeleteResult deleteResult = mongoTemplate.remove(new Query().addCriteria(Criteria.where("id").is(id)), LotteryRule.class);
+        return deleteResult.getDeletedCount() > 0L;
+    }
+
+    @Override
+    @DS("read")
+    public PageResult<LotteryLog> lotteryLog(Integer page, Integer size, LotteryLog search) {
+        IPage<LotteryLog> lotteryLogIPage = lotteryLogDAO.selectPage(new Page<>(page, size), new QueryWrapper<>(search));
+        return new PageResult<>(lotteryLogIPage.getTotal(),lotteryLogIPage.getRecords());
     }
 }

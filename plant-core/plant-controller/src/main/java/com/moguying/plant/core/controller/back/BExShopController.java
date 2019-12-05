@@ -7,6 +7,7 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.exshop.ExShop;
 import com.moguying.plant.core.entity.exshop.vo.ExShopVo;
 import com.moguying.plant.core.service.exshop.ExShopService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/exshop")
+@Api(tags = "线下体验店管理")
 public class BExShopController {
 
     @Autowired

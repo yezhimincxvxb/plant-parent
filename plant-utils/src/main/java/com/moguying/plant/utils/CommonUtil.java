@@ -3,11 +3,18 @@ package com.moguying.plant.utils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public enum  CommonUtil {
     INSTANCE;
+
+
+
 
     private final String[] seedStr = {"0","Q","9","M","1","U","6","3","B","N","4","D","5","W","C","7","R","F","8","A","E","G","P",
             "Y","J","K","H","L","S","T","V","2","X","Z"};

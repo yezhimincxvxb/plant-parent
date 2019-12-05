@@ -1,28 +1,40 @@
 package com.moguying.plant.core.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import com.alibaba.fastjson.support.spring.messaging.MappingFastJsonMessageConverter;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
+import org.springframework.messaging.handler.annotation.support.MessageHandlerMethodFactory;
 
 
 @Configuration
-public class RabbitConfig {
+public class RabbitConfig implements RabbitListenerConfigurer {
 
-    public final static String PHONE_MESSAGE = "moguying.phone.message";
+    public final static String PHONE_MESSAGE = "phone.message";
+
+    public final static String PLANT_ACTION = "plant.#";
+
+    public final static String FERTILIZER_ACTION = "#.fertilizer";
+
+
+
 
     @Bean
     public Queue phoneMessageQueue() {
-        return new Queue(RabbitConfig.PHONE_MESSAGE);
+        return new Queue("phone.message");
     }
 
     @Bean
     public DirectExchange directExchange(){
-        return new DirectExchange("phoneMessageExchange");
+        return new DirectExchange("phone.message.direct");
     }
 
     @Bean
@@ -30,6 +42,47 @@ public class RabbitConfig {
         return BindingBuilder.bind(phoneMessageQueue).to(directExchange).with(RabbitConfig.PHONE_MESSAGE);
     }
 
+    @Bean
+    public Queue plantLotteryQueue(){
+        return new Queue("plant.lottery");
+    }
 
 
+    @Bean
+    public TopicExchange afterPlantExchange() {
+        return new TopicExchange("plant.topic");
+    }
+
+
+    @Bean
+    public Binding bindingTopicExchangeMessageB(Queue plantLotteryQueue,TopicExchange afterPlantExchange) {
+        return BindingBuilder.bind(plantLotteryQueue).to(afterPlantExchange).with(RabbitConfig.PLANT_ACTION);
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(new Jackson2JsonMessageConverter());
+        return template;
+    }
+
+
+    @Bean
+    public MessageHandlerMethodFactory defaultMessageHandlerMethodFactory() {
+        DefaultMessageHandlerMethodFactory defaultMessageHandlerMethodFactory = new DefaultMessageHandlerMethodFactory();
+        defaultMessageHandlerMethodFactory.setMessageConverter(mappingFastJsonMessageConverter());
+        return defaultMessageHandlerMethodFactory;
+    }
+
+    @Bean
+    public MappingFastJsonMessageConverter mappingFastJsonMessageConverter(){
+        return new MappingFastJsonMessageConverter();
+    }
+
+
+
+    @Override
+    public void configureRabbitListeners(RabbitListenerEndpointRegistrar rabbitListenerEndpointRegistrar) {
+        rabbitListenerEndpointRegistrar.setMessageHandlerMethodFactory(defaultMessageHandlerMethodFactory());
+    }
 }

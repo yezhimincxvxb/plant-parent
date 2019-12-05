@@ -8,7 +8,9 @@ public enum ActivityEnum {
 
     START_ACTIVITY(1,"2019-11-18 00:00:00"),
     MONEY_5RMB(1,"5元现金红包券"),
-    PLANT_FERTILIZER_95RMB(1,"95元种植券");
+    PLANT_FERTILIZER_95RMB(1,"95元种植券"),
+
+    LOTTERY_KEY_PRE(1,"plant:lottery:");
 
     private Integer state;
     private String message;

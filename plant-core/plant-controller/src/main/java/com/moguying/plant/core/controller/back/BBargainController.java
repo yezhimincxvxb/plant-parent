@@ -11,6 +11,8 @@ import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.core.service.common.DownloadService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/bargain")
 @Slf4j
+@Api(tags = "砍价管理")
 public class BBargainController {
 
     @Autowired
@@ -29,18 +32,16 @@ public class BBargainController {
     @Value("${excel.download.dir}")
     private String downloadDir;
 
-    /**
-     * 后台砍价详情列表
-     */
+
     @PostMapping("/list")
+    @ApiOperation("砍价详情列表")
     public PageResult<BackBargainDetailVo> bargainList(@RequestBody PageSearch<BargainVo> search) {
         return bargainDetailService.bargainList(search.getPage(), search.getSize(), search.getWhere());
     }
 
-    /**
-     * 后台砍价详情列表下载
-     */
+
     @PostMapping("/excel")
+    @ApiOperation("砍价详情列表下载")
     public ResponseData<Integer> bargainListExcel(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                                   @RequestBody PageSearch<BargainVo> search,
                                                   HttpServletRequest request) {
