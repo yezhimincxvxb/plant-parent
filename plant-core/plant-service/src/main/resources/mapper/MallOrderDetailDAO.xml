@@ -28,6 +28,8 @@
         <result column="buy_amount" jdbcType="DECIMAL" property="buyAmount"/>
         <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
         <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
         <result column="product_name" jdbcType="VARCHAR" property="productName"/>
     </resultMap>
@@ -49,11 +51,11 @@
 
 
     <select id="selectSelective" resultMap="OrderItemList">
-        select t1.buy_count,t1.buy_amount,t2.order_number,t3.real_name,t3.phone,t4.name as product_name
+        select t1.buy_count,t1.buy_amount,t2.order_number,t2.add_time,t2.state,t3.real_name,t3.phone,t4.name as product_name
         from plant_mall_order_detail t1 LEFT JOIN plant_mall_order t2 on t1.order_id = t2.id
         LEFT JOIN plant_user t3 on t1.user_id = t3.id
         LEFT JOIN plant_mall_product t4 on t1.product_id = t4.id
-        where t2.state in (2,3,4)
+        where 1=1 and t2.state in (2,3,4)
         <if test="wq!= null">
             <if test="wq.orderNumber != null and wq.orderNumber != ''">
                 <bind name="orderNumberLike" value="'%'+ wq.orderNumber +'%'"/>

@@ -26,28 +26,28 @@ public class MallOrderDetail implements Serializable {
     /**
      * 订单流水号
      */
-    @JSONField(ordinal = 2)
+    @JSONField(ordinal = 13)
     @TableField
     private Integer orderId;
 
     /**
      * 用户id
      */
-    @JSONField(ordinal = 3)
+    @JSONField(ordinal = 12)
     @TableField
     private Integer userId;
 
     /**
      * 产品id
      */
-    @JSONField(ordinal = 4)
+    @JSONField(ordinal = 11)
     @TableField
     private Integer productId;
 
     /**
      * 购买数量
      */
-    @JSONField(ordinal = 5)
+    @JSONField(ordinal = 6)
     @Excel(name = "购买数量")
     @TableField
     private Integer buyCount;
@@ -55,7 +55,7 @@ public class MallOrderDetail implements Serializable {
     /**
      * 购买总价
      */
-    @JSONField(ordinal = 6)
+    @JSONField(ordinal = 7,serializeUsing = BigDecimalSerialize.class)
     @Excel(name = "购买总价")
     @TableField
     private BigDecimal buyAmount;
@@ -63,27 +63,37 @@ public class MallOrderDetail implements Serializable {
     /**
      * 订单蘑菇币
      */
-    @JSONField(ordinal = 7)
+    @JSONField(ordinal = 10)
     @TableField
     private Integer buyCoins;
 
 
-    @JSONField(ordinal = 8)
+    @JSONField(ordinal = 2)
     @Excel(name = "订单流水号")
     @TableField(exist = false)
     private String orderNumber;
 
-    @JSONField(ordinal = 9)
+    @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "创建时间",format = "yyyy-MM-dd HH:mm:ss")
+    @TableField(exist = false)
+    private String addTime;
+
+    @JSONField(ordinal = 8)
+    @Excel(name = "状态", replace = {"未支付_0", "已支付_1", "已发贷_2", "已完成_3", "已关单_4", "已取消_5"})
+    @TableField(exist = false)
+    private String state;
+
+    @JSONField(ordinal = 4)
     @Excel(name = "用户姓名")
     @TableField(exist = false)
     private String realName;
 
-    @JSONField(ordinal = 10)
+    @JSONField(ordinal = 5)
     @Excel(name = "用户手机号")
     @TableField(exist = false)
     private String phone;
 
-    @JSONField(ordinal = 11)
+    @JSONField(ordinal = 3)
     @Excel(name = "产品名称")
     @TableField(exist = false)
     private String productName;

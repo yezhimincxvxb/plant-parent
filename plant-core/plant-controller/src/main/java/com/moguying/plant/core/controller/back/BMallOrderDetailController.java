@@ -6,7 +6,6 @@ import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.mall.MallOrderDetail;
-import com.moguying.plant.core.entity.mall.vo.OrderDetailSearch;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.mall.MallOrderDetailService;
 import io.swagger.annotations.Api;
