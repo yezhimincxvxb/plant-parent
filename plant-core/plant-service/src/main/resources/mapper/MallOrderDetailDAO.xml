@@ -55,7 +55,7 @@
         from plant_mall_order_detail t1 LEFT JOIN plant_mall_order t2 on t1.order_id = t2.id
         LEFT JOIN plant_user t3 on t1.user_id = t3.id
         LEFT JOIN plant_mall_product t4 on t1.product_id = t4.id
-        where 1=1 and t2.state in (2,3,4)
+        where 1=1 and t2.state in (1,2,3)
         <if test="wq!= null">
             <if test="wq.orderNumber != null and wq.orderNumber != ''">
                 <bind name="orderNumberLike" value="'%'+ wq.orderNumber +'%'"/>

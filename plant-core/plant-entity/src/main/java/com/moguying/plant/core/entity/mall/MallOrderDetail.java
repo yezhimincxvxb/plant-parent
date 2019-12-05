@@ -48,7 +48,7 @@ public class MallOrderDetail implements Serializable {
      * 购买数量
      */
     @JSONField(ordinal = 6)
-    @Excel(name = "购买数量")
+    @Excel(name = "购买数量",orderNum = "5")
     @TableField
     private Integer buyCount;
 
@@ -56,7 +56,7 @@ public class MallOrderDetail implements Serializable {
      * 购买总价
      */
     @JSONField(ordinal = 7,serializeUsing = BigDecimalSerialize.class)
-    @Excel(name = "购买总价")
+    @Excel(name = "购买总价",orderNum = "6")
     @TableField
     private BigDecimal buyAmount;
 
@@ -69,32 +69,32 @@ public class MallOrderDetail implements Serializable {
 
 
     @JSONField(ordinal = 2)
-    @Excel(name = "订单流水号")
+    @Excel(name = "订单流水号",orderNum = "1")
     @TableField(exist = false)
     private String orderNumber;
 
     @JSONField(ordinal = 9, format = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "创建时间",format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "创建时间",format = "yyyy-MM-dd HH:mm:ss",orderNum = "8")
     @TableField(exist = false)
     private String addTime;
 
     @JSONField(ordinal = 8)
-    @Excel(name = "状态", replace = {"未支付_0", "已支付_1", "已发贷_2", "已完成_3", "已关单_4", "已取消_5"})
+    @Excel(name = "状态", replace = {"未支付_0", "已支付_1", "已发贷_2", "已完成_3", "已关单_4", "已取消_5"},orderNum = "7")
     @TableField(exist = false)
     private String state;
 
     @JSONField(ordinal = 4)
-    @Excel(name = "用户姓名")
+    @Excel(name = "用户姓名",orderNum = "3")
     @TableField(exist = false)
     private String realName;
 
     @JSONField(ordinal = 5)
-    @Excel(name = "用户手机号")
+    @Excel(name = "用户手机号",orderNum = "4")
     @TableField(exist = false)
     private String phone;
 
     @JSONField(ordinal = 3)
-    @Excel(name = "产品名称")
+    @Excel(name = "产品名称",orderNum = "2")
     @TableField(exist = false)
     private String productName;
 
