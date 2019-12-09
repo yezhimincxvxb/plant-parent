@@ -485,9 +485,6 @@ ALTER TABLE `moguying`.`plant_ex_shop`
 ADD COLUMN `city` varchar(255) DEFAULT NULL COMMENT '体验店城市' AFTER `address`;
 
 
-
-
-
 ALTER TABLE `moguying`.`plant_money_recharge`
 ADD COLUMN `review_uid` int(11) NOT NULL DEFAULT '0' COMMENT '审核人id' AFTER `source`;
 
@@ -496,3 +493,14 @@ ADD COLUMN `type_sort` bigint(11) DEFAULT '0' COMMENT '排序' AFTER `type_name`
 
 ALTER TABLE `moguying`.`plant_user_fertilizer`
 ADD COLUMN `use_time` datetime DEFAULT NULL COMMENT '券使用时间';
+
+CREATE TABLE `plant_seed_feedback_material` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `material_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '文件名',
+  `material_path` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '访问地址',
+  `material_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '文件类型（1视频，2图片）',
+  `material_suffix` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '文件后缀名',
+  `upload_time` datetime NOT NULL COMMENT '上传时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未删除,1已删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='溯源资源列表（图片/视频）';
