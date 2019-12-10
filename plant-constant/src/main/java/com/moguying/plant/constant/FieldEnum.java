@@ -10,7 +10,8 @@ public enum FieldEnum {
     SHARE("share"),
     FRIEND_HELP("friendHelp"),
     HELP_FRIEND("helpFriend"),
-    PLANT_AMOUNT("plant_amount");
+    PLANT_AMOUNT("plant_amount"),
+    PLANT_LOTTERY("lottery");
     private String field;
 
     FieldEnum(String field) {

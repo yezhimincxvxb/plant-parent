@@ -1,4 +1,4 @@
-package com.moguying.plant.mq.sender;
+package com.moguying.plant.core.entity.mq;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

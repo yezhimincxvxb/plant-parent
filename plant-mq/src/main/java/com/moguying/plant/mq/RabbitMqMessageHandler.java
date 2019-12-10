@@ -1,9 +1,10 @@
 package com.moguying.plant.mq;
 
-import com.moguying.plant.constant.MessageEnum;
-import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.constant.ActivityEnum;
+import com.moguying.plant.core.entity.mq.FertilizerSender;
+import com.moguying.plant.core.entity.mq.PhoneMessageSender;
 import com.moguying.plant.core.entity.seed.vo.PlantOrderResponse;
-import com.moguying.plant.mq.sender.PhoneMessageSender;
+import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.utils.message.MessageSendUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -18,11 +19,16 @@ import java.util.Optional;
 @Slf4j
 public class RabbitMqMessageHandler {
 
+
+
     @Autowired
     private MessageSendUtil sendUtil;
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private FertilizerService fertilizerService;
 
     /**
      * 发送短信
@@ -37,18 +43,33 @@ public class RabbitMqMessageHandler {
     }
 
 
+    /**
+     * 抽奖发券
+     * @param fertilizerSender
+     */
+    @RabbitListener(queues = "lottery.fertilizer")
+    @RabbitHandler
+    public void addFertilizer(FertilizerSender fertilizerSender) {
+        fertilizerService.distributeFertilizer(fertilizerSender.getEvent(),fertilizerSender.getUserId());
+        log.debug("=====================已发券=============={}",fertilizerSender);
+    }
+
+
+
+
 
     /**
      * 添加抽奖信息
      */
     @RabbitListener(queues = "plant.lottery")
     @RabbitHandler
-    public void addLottery(PlantOrderResponse resultData){
+    public void addLottery(PlantOrderResponse resultData) {
 
         Optional<PlantOrderResponse> optional = Optional.ofNullable(resultData);
         if(optional.isPresent()) {
-            redisTemplate.opsForList().leftPush("plant:lottery:".concat(resultData.getUserId().toString()),
+            redisTemplate.opsForList().leftPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(resultData.getUserId().toString()),
                     resultData.getReapId().toString());
+
         }
     }
 

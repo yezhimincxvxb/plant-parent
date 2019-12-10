@@ -485,9 +485,6 @@ ALTER TABLE `moguying`.`plant_ex_shop`
 ADD COLUMN `city` varchar(255) DEFAULT NULL COMMENT '体验店城市' AFTER `address`;
 
 
-
-
-
 ALTER TABLE `moguying`.`plant_money_recharge`
 ADD COLUMN `review_uid` int(11) NOT NULL DEFAULT '0' COMMENT '审核人id' AFTER `source`;
 
@@ -496,3 +493,13 @@ ADD COLUMN `type_sort` bigint(11) DEFAULT '0' COMMENT '排序' AFTER `type_name`
 
 ALTER TABLE `moguying`.`plant_user_fertilizer`
 ADD COLUMN `use_time` datetime DEFAULT NULL COMMENT '券使用时间';
+
+CREATE TABLE `plant_activity_lottery_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
+  `reap_id` int(11) NOT NULL DEFAULT '0' COMMENT '种植id',
+  `lottery_type` tinyint(255) NOT NULL DEFAULT '0' COMMENT '抽奖类型',
+  `lottery_amount` decimal(15,2) NOT NULL DEFAULT '0.00' COMMENT '抽奖金额',
+  `add_time` datetime NOT NULL COMMENT '抽奖时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

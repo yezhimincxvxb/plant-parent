@@ -10,4 +10,7 @@ public class LotteryQua {
 
     //抽奖次数
     private Long lotteryCount;
+
+    //今日抽奖次数
+    private Long dailyLotteryCount;
 }

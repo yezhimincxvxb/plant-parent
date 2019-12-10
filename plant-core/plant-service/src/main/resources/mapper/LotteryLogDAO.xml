@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.activity.LotteryLogDAO">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.activity.LotteryLog">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="reap_id" jdbcType="VARCHAR" property="reapId"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="lottery_type" jdbcType="TIMESTAMP" property="lotteryType"/>
+        <result column="lottery_amount" jdbcType="VARCHAR" property="lotteryAmount"/>
+    </resultMap>
+
+</mapper>

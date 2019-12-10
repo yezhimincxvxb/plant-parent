@@ -185,7 +185,8 @@ public enum  MessageEnum {
     PHONE_IS_EMPTY("手机号不能为空",10181),
     LOTTERY_INFO_EMPTY("种植信息不存在，请种植后进行抽奖",10182),
     LOTTERY_RULE_ERROR("抽奖规则格式错误",10183),
-    LOTTERY_RULE_OUT_OF_RANGE("您的抽奖条件已经超出我们的预期了！",10184);
+    LOTTERY_RULE_OUT_OF_RANGE("您的抽奖条件已经超出我们的预期了！",10184),
+    LOTTERY_DAILY_COUNT_USED("今日抽奖次数已用完，请明日种植再来抽奖！",10185);
 
 
     private String message;

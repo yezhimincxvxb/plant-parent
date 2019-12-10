@@ -1,6 +1,5 @@
 package com.moguying.plant.core.service.system.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.MessageEnum;
@@ -13,7 +12,7 @@ import com.moguying.plant.core.entity.SendMessage;
 import com.moguying.plant.core.entity.system.PhoneMessage;
 import com.moguying.plant.core.entity.system.PhoneMessageTpl;
 import com.moguying.plant.core.service.system.PhoneMessageService;
-import com.moguying.plant.mq.sender.PhoneMessageSender;
+import com.moguying.plant.core.entity.mq.PhoneMessageSender;
 import com.moguying.plant.utils.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;

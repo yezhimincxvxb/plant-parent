@@ -10,7 +10,8 @@ public enum ActivityEnum {
     MONEY_5RMB(1,"5元现金红包券"),
     PLANT_FERTILIZER_95RMB(1,"95元种植券"),
 
-    LOTTERY_KEY_PRE(1,"plant:lottery:");
+    LOTTERY_KEY_PRE(1,"plant:lottery:"),
+    LOTTERY_COUNT_KEY_PRE(1,"plant:lottery:count:");
 
     private Integer state;
     private String message;
