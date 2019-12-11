@@ -55,13 +55,13 @@ public class UserFertilizerInfo {
     /**
      * 券开始使用时间
      */
-    @JSONField(ordinal = 8,format = "yyyy.MM.dd HH:mm:ss")
+    @JSONField(ordinal = 8,format = "yyyy.MM.dd")
     private Date startTime;
 
     /**
      * 券结束使用时间
      */
-    @JSONField(ordinal = 9 ,format = "yyyy.MM.dd HH:mm:ss")
+    @JSONField(ordinal = 9 ,format = "yyyy.MM.dd")
     private Date expireTime;
 
     /**
