@@ -39,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -194,7 +195,7 @@ public class MallProductServiceImpl implements MallProductService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.NESTED)
     @DS("write")
     public ResultData<BuyResponse> submitOrder(SubmitOrder submitOrder, Integer userId) {
         ResultData<BuyResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
