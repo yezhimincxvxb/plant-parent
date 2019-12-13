@@ -29,6 +29,7 @@ public class QiniuManager {
     private String fileDomain;
 
     private Auth auth;
+
     private UploadManager uploadManager;
 
     private BucketManager bucket;

@@ -5,21 +5,25 @@ import com.moguying.plant.core.entity.mq.FertilizerSender;
 import com.moguying.plant.core.entity.mq.PhoneMessageSender;
 import com.moguying.plant.core.entity.seed.vo.PlantOrderResponse;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
+import com.moguying.plant.utils.ApplicationContextUtil;
 import com.moguying.plant.utils.message.MessageSendUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Component
 @Slf4j
-public class RabbitMqMessageHandler {
+public class RabbitMqMessageHandler implements EnvironmentAware {
 
-
+    private Environment environment;
 
     @Autowired
     private MessageSendUtil sendUtil;
@@ -38,7 +42,9 @@ public class RabbitMqMessageHandler {
     @RabbitHandler
     public void  process(PhoneMessageSender sender){
         Optional<PhoneMessageSender> senderOptional = Optional.ofNullable(sender);
-        if(senderOptional.isPresent())
+        String[] activeProfiles = environment.getActiveProfiles();
+        boolean allMatch = Arrays.stream(activeProfiles).allMatch((x) -> x.matches("pro-\\w*"));
+        if( allMatch && senderOptional.isPresent())
             sendUtil.sendNormal(sender.getPhone(),sender.getContent());
     }
 
@@ -74,4 +80,8 @@ public class RabbitMqMessageHandler {
         }
     }
 
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 }

@@ -138,10 +138,10 @@ lbs:
   map:
     key:
 qiniu:
-  access-key:
-  secret-key:
-  bucket-name:
-  file-domain:
+  access-key: pkz7y-4fPbiG6zH1EXLUZ_pdiU1sGM6djOTIvZoX
+  secret-key: 1Kw0dr3fsjXbAvUhxugd_NtZnUrzfOhtxxODGtpz
+  bucket-name: moguying-oss
+  file-domain: http://q2fiuk3xy.bkt.clouddn.com
   upload-domain: https://upload-z2.qiniup.com
   tem-path: E:\Img
   thread-num: 4
