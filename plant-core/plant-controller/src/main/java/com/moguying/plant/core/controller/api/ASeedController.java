@@ -20,6 +20,7 @@ import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.PayOrderResponse;
 import com.moguying.plant.core.entity.payment.request.PaymentRequest;
 import com.moguying.plant.core.entity.payment.request.WebHtmlPayRequest;
+import com.moguying.plant.core.entity.payment.response.PayResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapExcLog;
@@ -172,7 +173,7 @@ public class ASeedController {
         if (null != payOrder.getPayMsgCode() && null == payOrder.getSeqNo())
             return new ResponseData<>(MessageEnum.MESSAGE_SERIAL_NO_EMPTY.getMessage(), MessageEnum.MESSAGE_SERIAL_NO_EMPTY.getState());
 
-        ResultData<PaymentResponse> resultData = plantOrderService.payOrder(payOrder, userId);
+        ResultData<PaymentResponse<PayResponse>> resultData = plantOrderService.payOrder(payOrder, userId);
         if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             SeedOrderDetail seedOrderDetail = seedOrderDetailService.orderDetailByIdAndUserId(payOrder.getOrderId(), userId);
             Block block = blockService.findBlockBySeedType(seedOrderDetail.getSeedTypeId());

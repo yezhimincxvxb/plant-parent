@@ -1,16 +1,13 @@
 package com.moguying.plant.core.entity.feedback;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@TableName("plant_seed_feedback_material")
+@TableName("plant_feedback_material")
 @Data
 public class FeedbackMaterial implements Serializable {
     private static final long serialVersionUID = 5724805967700643470L;
@@ -53,6 +50,7 @@ public class FeedbackMaterial implements Serializable {
      */
     @JSONField(ordinal = 7)
     @TableField
+    @TableLogic
     private Boolean isDelete;
 
 }

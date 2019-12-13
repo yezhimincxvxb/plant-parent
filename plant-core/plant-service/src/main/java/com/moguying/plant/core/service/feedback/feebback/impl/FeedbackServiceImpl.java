@@ -48,6 +48,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public ResultData<Boolean> saveFeedbackItem(FeedbackItem feedbackItem) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
+        if(feedbackItem.getBanners().isEmpty() || feedbackItem.getFeedbackTypes().isEmpty())
+            return resultData.setMessageEnum(MessageEnum.PARAMETER_ERROR);
         mongoTemplate.save(feedbackItem);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }
