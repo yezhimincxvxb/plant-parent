@@ -5,6 +5,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.payment.PayRequestInfo;
+import com.moguying.plant.core.entity.payment.response.PayResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
 import com.moguying.plant.core.entity.system.PayOrder;
@@ -34,8 +35,8 @@ public class PaymentApiServiceImpl implements PaymentApiService {
     @Transactional
     @Override
     @DS("write")
-    public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, PayOrder orderDetail, User userInfo) {
-        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
+    public ResultData<PaymentResponse<PayResponse>> payOrder(SendPayOrder payOrder, PayOrder orderDetail, User userInfo) {
+        ResultData<PaymentResponse<PayResponse>> resultData = new ResultData<>(MessageEnum.ERROR,null);
         // 仅全额由余额支付时校验支付密码
         if (orderDetail.getAccountPayAmount().add(orderDetail.getReducePayAmount())
                 .compareTo(orderDetail.getBuyAmount().add(orderDetail.getFeeAmount())) == 0) {
@@ -70,7 +71,7 @@ public class PaymentApiServiceImpl implements PaymentApiService {
             payRequestInfo.setSmsCode(payOrder.getPayMsgCode());
             payRequestInfo.setSeqNo(payOrder.getSeqNo());
             payRequestInfo.setBankId(payOrder.getBankId());
-            ResultData<PaymentResponse> payResult = paymentService.pay(payRequestInfo);
+            ResultData<PaymentResponse<PayResponse>> payResult = paymentService.pay(payRequestInfo);
             if (null != payResult && payResult.getMessageEnum().equals(MessageEnum.SUCCESS)) {
                 resultData.setMessageEnum(MessageEnum.SUCCESS);
             } else if (null != payResult) {

@@ -144,8 +144,6 @@ qiniu:
   file-domain: http://q2fiuk3xy.bkt.clouddn.com
   upload-domain: https://upload-z2.qiniup.com
   tem-path: E:\Img
-  thread-num: 4
-  reput-time: 300000
 
 ---
 debug: false

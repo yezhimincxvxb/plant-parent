@@ -30,6 +30,7 @@ import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.mall.vo.BuyProduct;
 import com.moguying.plant.core.entity.payment.request.PaymentRequest;
 import com.moguying.plant.core.entity.payment.request.WebHtmlPayRequest;
+import com.moguying.plant.core.entity.payment.response.PayResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapExcLog;
@@ -274,9 +275,9 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      */
     @Override
     @DS("write")
-    public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, Integer userId) {
+    public ResultData<PaymentResponse<PayResponse>> payOrder(SendPayOrder payOrder, Integer userId) {
         SeedOrderDetail orderDetail = seedOrderDetailDAO.selectById(payOrder.getOrderId());
-        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
+        ResultData<PaymentResponse<PayResponse>> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (null == orderDetail || null != orderDetail.getPayTime())
             return resultData.setMessageEnum(MessageEnum.SEED_ORDER_DETAIL_HAS_PAY);
 

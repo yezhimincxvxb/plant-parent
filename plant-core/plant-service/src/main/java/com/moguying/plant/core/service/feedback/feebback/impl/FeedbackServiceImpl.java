@@ -40,7 +40,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedbackItem getFeedback(FeedbackItem where) {
         Query query = new Query(Criteria.where("_id").is(where.get_id()));
         FeedbackItem feedbackItem = mongoTemplate.findOne(query, FeedbackItem.class);
-        if (null!=feedbackItem)
+        if (null != feedbackItem)
             return feedbackItem;
         return new FeedbackItem();
     }
@@ -48,6 +48,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public ResultData<Boolean> saveFeedbackItem(FeedbackItem feedbackItem) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
+        if(feedbackItem.getBanners().isEmpty() || feedbackItem.getFeedbackTypes().isEmpty())
+            return resultData.setMessageEnum(MessageEnum.PARAMETER_ERROR);
         mongoTemplate.save(feedbackItem);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
     }

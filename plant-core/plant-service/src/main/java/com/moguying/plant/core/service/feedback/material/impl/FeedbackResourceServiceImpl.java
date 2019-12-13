@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FeedbackResourceServiceImpl implements FeedbackMaterialService {
+
+
     @Autowired
     private FeedbackMaterialDAO materialDAO;
 
@@ -38,9 +40,10 @@ public class FeedbackResourceServiceImpl implements FeedbackMaterialService {
 
 
     @Override
+    @DS("write")
     public ResultData<Boolean> deleteMaterial(FeedbackMaterial material) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
-        if (materialDAO.updateById(material) > 0){
+        if (materialDAO.updateById(material) > 0) {
             new Thread(new DeleteMaterialService(material.getId())).start();
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         }
@@ -48,8 +51,11 @@ public class FeedbackResourceServiceImpl implements FeedbackMaterialService {
     }
 
     @Override
+    @DS("read")
     public ResultData<Boolean> checkMaterial(String fileName) {
-        if (materialDAO.selectCount(new QueryWrapper<FeedbackMaterial>().lambda().eq(FeedbackMaterial::getMaterialName, fileName).ne(FeedbackMaterial::getIsDelete, true)) > 0)
+        if (materialDAO.selectCount(new QueryWrapper<FeedbackMaterial>().lambda()
+                .eq(FeedbackMaterial::getMaterialName, fileName)
+                .ne(FeedbackMaterial::getIsDelete, true)) > 0)
             return new ResultData<>(MessageEnum.FILE_EXISTS, false);
         return new ResultData<>(MessageEnum.SUCCESS, true);
     }

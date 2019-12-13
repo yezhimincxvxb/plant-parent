@@ -8,7 +8,7 @@ import java.util.List;
 public class FeedbackType {
 
     /**
-     * 溯源类型 seedPlant/checkInto/ofdcInfo
+     * 溯源类型
      */
     private String type;
     /**

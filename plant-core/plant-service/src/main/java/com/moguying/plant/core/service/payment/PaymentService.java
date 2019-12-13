@@ -108,8 +108,8 @@ public interface PaymentService {
      * @param payRequestInfo
      * @return
      */
-
-    ResultData<PaymentResponse> pay(PayRequestInfo payRequestInfo);
+    
+    ResultData<PaymentResponse<PayResponse>> pay(PayRequestInfo payRequestInfo);
 
 
     /**

@@ -12,6 +12,7 @@ import com.moguying.plant.core.entity.common.vo.BuyResponse;
 import com.moguying.plant.core.entity.mall.MallCompany;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.*;
+import com.moguying.plant.core.entity.payment.response.PayResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
@@ -200,7 +201,7 @@ public class AMallController {
             return new ResponseData<>(MessageEnum.MALL_ORDER_PAY_TYPE_ERROR.getMessage(), MessageEnum.MALL_ORDER_PAY_TYPE_ERROR.getState());
         if (null != payOrder.getPayMsgCode() && null == payOrder.getSeqNo())
             return new ResponseData<>(MessageEnum.MESSAGE_SERIAL_NO_EMPTY.getMessage(), MessageEnum.MESSAGE_SERIAL_NO_EMPTY.getState());
-        ResultData<PaymentResponse> resultData = mallOrderService.payOrder(payOrder, userId);
+        ResultData<PaymentResponse<PayResponse>> resultData = mallOrderService.payOrder(payOrder, userId);
         if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), payOrder.getOrderId());
         } else if (null != resultData.getData()) {

@@ -33,11 +33,6 @@ public class UploadServiceImpl implements UploadService {
     private String uploadDomain;
     @Value("${qiniu.tem-path}")
     private String temPath;
-    @Value("${qiniu.thread-num}")
-    private int threadNum;
-    @Value("${qiniu.reput-time}")
-    private long reputTime;
-
 
     @Override
     public UploadVo upload(HttpServletRequest request) {

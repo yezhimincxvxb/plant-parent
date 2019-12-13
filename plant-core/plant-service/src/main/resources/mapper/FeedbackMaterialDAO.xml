@@ -18,7 +18,7 @@
     <select id="selectSelective" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from plant_seed_feedback_material
+        from plant_feedback_material
         <where>
             is_delete !=1
             <if test="wq.materialName != null and wq.materialName != ''">
