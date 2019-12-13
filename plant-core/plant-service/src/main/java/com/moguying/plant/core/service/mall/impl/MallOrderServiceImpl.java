@@ -26,6 +26,7 @@ import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import com.moguying.plant.core.entity.mall.vo.TraceInfoParam;
+import com.moguying.plant.core.entity.payment.response.PayResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
@@ -168,8 +169,8 @@ public class MallOrderServiceImpl implements MallOrderService {
     @Transactional
     @Override
     @DS("write")
-    public ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, Integer userId) {
-        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
+    public ResultData<PaymentResponse<PayResponse>> payOrder(SendPayOrder payOrder, Integer userId) {
+        ResultData<PaymentResponse<PayResponse>> resultData = new ResultData<>(MessageEnum.ERROR, null);
 
         MallOrder mallOrder = mallOrderDAO.selectById(payOrder.getOrderId());
         if (null == mallOrder || null != mallOrder.getPayTime())

@@ -8,6 +8,7 @@ import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.mall.vo.TraceInfoParam;
+import com.moguying.plant.core.entity.payment.response.PayResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrder;
 import com.moguying.plant.core.entity.seed.vo.SendPayOrderResponse;
@@ -34,7 +35,7 @@ public interface MallOrderService {
     MallOrder selectOrderById(Integer id);
 
 
-    ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, Integer userId);
+    ResultData<PaymentResponse<PayResponse>> payOrder(SendPayOrder payOrder, Integer userId);
 
 
     ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId);

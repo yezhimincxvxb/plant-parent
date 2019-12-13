@@ -5,6 +5,7 @@ import com.moguying.plant.core.entity.TriggerEventResult;
 import com.moguying.plant.core.entity.coin.vo.ExcReap;
 import com.moguying.plant.core.entity.payment.request.PaymentRequest;
 import com.moguying.plant.core.entity.payment.request.WebHtmlPayRequest;
+import com.moguying.plant.core.entity.payment.response.PayResponse;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.entity.seed.vo.*;
@@ -18,7 +19,7 @@ public interface PlantOrderService {
 
     ResultData<SendPayOrderResponse> checkPayOrder(SendPayOrder payOrder, Integer userId);
 
-    ResultData<PaymentResponse> payOrder(SendPayOrder payOrder, Integer userId);
+    ResultData<PaymentResponse<PayResponse>> payOrder(SendPayOrder payOrder, Integer userId);
 
     ResultData<Integer> payOrderSuccess(SeedOrderDetail orderDetail, User userInfo);
 

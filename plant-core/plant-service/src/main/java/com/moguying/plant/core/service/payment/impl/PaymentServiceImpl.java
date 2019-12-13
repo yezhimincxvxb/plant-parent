@@ -558,13 +558,13 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     @DS("write")
-    public ResultData<PaymentResponse> pay(PayRequestInfo payRequestInfo) {
+    public ResultData<PaymentResponse<PayResponse>> pay(PayRequestInfo payRequestInfo) {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
         UserBank bank = userService.bankCard(payRequestInfo.getUserId(), payRequestInfo.getBankId());
         ResultData resultData = new ResultData(MessageEnum.ERROR, null);
-        ResultData<PaymentResponse> validateResult = payBeforeValidate(userInfo, bank);
+        ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
         if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
-            return validateResult;
+            return new ResultData<>(validateResult.getMessageEnum(),null);
 
         if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
@@ -908,9 +908,9 @@ public class PaymentServiceImpl implements PaymentService {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
         UserBank bank = userService.bankCard(payRequestInfo.getUserId(), payRequestInfo.getBankId());
         ResultData resultData = new ResultData(MessageEnum.ERROR, 0);
-        ResultData<PaymentResponse> validateResult = payBeforeValidate(userInfo, bank);
+        ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
         if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
-            return validateResult;
+            return new ResultData<>(validateResult.getMessageEnum(),null);
 
         if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
@@ -962,8 +962,8 @@ public class PaymentServiceImpl implements PaymentService {
      * @param bank
      * @return
      */
-    private ResultData<PaymentResponse> payBeforeValidate(User userInfo, UserBank bank) {
-        ResultData<PaymentResponse> resultData = new ResultData<>(MessageEnum.ERROR, null);
+    private ResultData<Boolean> payBeforeValidate(User userInfo, UserBank bank) {
+        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (null == userInfo)
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
 

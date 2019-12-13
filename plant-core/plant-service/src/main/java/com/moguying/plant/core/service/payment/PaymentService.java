@@ -100,7 +100,7 @@ public interface PaymentService {
      * @return
      */
     
-    ResultData<PaymentResponse> pay(PayRequestInfo payRequestInfo);
+    ResultData<PaymentResponse<PayResponse>> pay(PayRequestInfo payRequestInfo);
 
 
     /**
