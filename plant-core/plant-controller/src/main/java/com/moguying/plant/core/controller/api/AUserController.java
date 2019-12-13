@@ -10,6 +10,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.moguying.plant.constant.*;
 import com.moguying.plant.core.annotation.LoginUserId;
+import com.moguying.plant.core.annotation.ValidateUser;
 import com.moguying.plant.core.dao.user.UserActivityLogDAO;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
@@ -406,6 +407,7 @@ public class AUserController {
      * @param userId
      * @return
      */
+    @ValidateUser
     @GetMapping("/card")
     @ApiOperation("银行卡信息")
     public ResponseData<List<UserBank>> cardInfo(@LoginUserId Integer userId) {

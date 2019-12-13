@@ -196,6 +196,8 @@ public class UserFertilizerServiceImpl implements UserFertilizerService {
     @DS("read")
     public FertilizerDot fertilizerDot(Integer userId) {
         String dotJsonString = dotRedisTemplate.opsForValue().get("fertilizer:dot:" + userId);
+        if(null == dotJsonString)
+            return new FertilizerDot();
         return JSON.parseObject(dotJsonString, FertilizerDot.class);
     }
 

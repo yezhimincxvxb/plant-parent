@@ -259,7 +259,7 @@ public class FertilizerServiceImpl implements FertilizerService {
                 // 新增券
                 if (userFertilizer.getFertilizerAmount().compareTo(BigDecimal.ZERO) > 0 && userFertilizerDAO.insert(userFertilizer) > 0) {
                     resultData.setMessageEnum(MessageEnum.SUCCESS);
-                    dotRedisTemplate.opsForValue().setIfAbsent("fertilizer:dot:"+userFertilizer.getUserId(), JSON.toJSONString(new FertilizerDot(true,fertilizer.getTypeId())));
+                    dotRedisTemplate.opsForValue().set("fertilizer:dot:"+userFertilizer.getUserId(), JSON.toJSONString(new FertilizerDot(true,fertilizer.getTypeId())));
                 } else {
                     return resultData.setMessageEnum(MessageEnum.ERROR);
                 }

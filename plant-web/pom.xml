@@ -21,6 +21,12 @@
             <version>${moguying.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.moguying</groupId>
+            <artifactId>plant-mq</artifactId>
+            <version>${moguying.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

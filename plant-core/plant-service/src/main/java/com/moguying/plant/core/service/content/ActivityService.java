@@ -38,7 +38,7 @@ public interface ActivityService extends IService<Activity> {
 
     LotteryQua lotteryQua(Integer userId);
 
-    ResultData<LotteryResult> lotteryDo(Integer userId);
+    ResultData<LotteryResult> lotteryDo(Integer userId,boolean isCheck);
 
     ResultData<Boolean> addLotteryRule(LotteryRule rule);
 
@@ -47,4 +47,6 @@ public interface ActivityService extends IService<Activity> {
     Boolean deleteLotteryRule(String id);
 
     PageResult<LotteryLog> lotteryLog(Integer page,Integer size,LotteryLog search);
+
+
 }

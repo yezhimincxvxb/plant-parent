@@ -5,7 +5,7 @@
 
     <artifactId>plant-utils</artifactId>
     <name>plant-utils</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Common tools for project</description>
     <dependencies>
 
         <dependency>
@@ -42,6 +42,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>palnt-utils</finalName>
+        <finalName>plant-utils</finalName>
     </build>
 </project>

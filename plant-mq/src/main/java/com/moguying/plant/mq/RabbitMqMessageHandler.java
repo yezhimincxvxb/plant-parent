@@ -51,9 +51,7 @@ public class RabbitMqMessageHandler {
     @RabbitHandler
     public void addFertilizer(FertilizerSender fertilizerSender) {
         fertilizerService.distributeFertilizer(fertilizerSender.getEvent(),fertilizerSender.getUserId());
-        log.debug("=====================已发券=============={}",fertilizerSender);
     }
-
 
 
 
@@ -67,9 +65,12 @@ public class RabbitMqMessageHandler {
 
         Optional<PlantOrderResponse> optional = Optional.ofNullable(resultData);
         if(optional.isPresent()) {
+            String countKey = ActivityEnum.LOTTERY_COUNT_KEY_PRE.getMessage().concat(resultData.getUserId().toString());
+            String count = Optional.ofNullable(redisTemplate.opsForValue().get(countKey)).orElse("0");
+            if(Integer.parseInt(count) <= 0) return;
+            redisTemplate.opsForValue().decrement(countKey);
             redisTemplate.opsForList().leftPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(resultData.getUserId().toString()),
                     resultData.getReapId().toString());
-
         }
     }
 

@@ -120,10 +120,11 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
     public ResultData<Integer> addMoneyWithdraw(MoneyWithdraw moneyWithdraw, Integer bankId) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
 
-        if (moneyWithdraw.getWithdrawMoney().compareTo(new BigDecimal(withdrawMin)) < 0
-                || moneyWithdraw.getWithdrawMoney().compareTo(new BigDecimal(withdrawMax)) > 0) {
-            return resultData.setMessageEnum(MessageEnum.WITHDRAW_MONEY_ERROR);
-        }
+        if (moneyWithdraw.getWithdrawMoney().compareTo(new BigDecimal(withdrawMin)) < 0)
+            return resultData.setMessageEnum(MessageEnum.WITHDRAW_MONEY_LIMIT_MIN);
+
+        if(moneyWithdraw.getWithdrawMoney().compareTo(new BigDecimal(withdrawMax)) > 0)
+            return resultData.setMessageEnum(MessageEnum.WITHDRAW_MONEY_LIMIT_MAX);
 
         BigDecimal totalWithdraw = moneyWithdrawDAO.withdrawDailyCountByUserId(moneyWithdraw.getUserId(),
                 DateUtil.INSTANCE.todayBegin(), DateUtil.INSTANCE.todayEnd());

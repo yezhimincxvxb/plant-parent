@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moguying.plant.utils.BigDecimalSerialize;
+import com.moguying.plant.utils.IdCardSerialize;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -36,7 +37,15 @@ public class LotteryLog {
 
     //抽到金额
     @JSONField(serializeUsing = BigDecimalSerialize.class)
-    @TableField()
+    @TableField
     private BigDecimal lotteryAmount;
+
+    //种植份数
+    @TableField(exist = false)
+    private Integer plantCount;
+
+    //手机号
+    @TableField(exist = false)
+    private String phone;
 
 }

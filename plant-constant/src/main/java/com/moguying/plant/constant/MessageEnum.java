@@ -186,7 +186,9 @@ public enum  MessageEnum {
     LOTTERY_INFO_EMPTY("种植信息不存在，请种植后进行抽奖",10182),
     LOTTERY_RULE_ERROR("抽奖规则格式错误",10183),
     LOTTERY_RULE_OUT_OF_RANGE("您的抽奖条件已经超出我们的预期了！",10184),
-    LOTTERY_DAILY_COUNT_USED("今日抽奖次数已用完，请明日种植再来抽奖！",10185);
+    LOTTERY_DAILY_COUNT_USED("抽奖次数已用完，种植再来抽奖！",10185),
+    WITHDRAW_MONEY_LIMIT_MIN("单笔提现最小100.00元起提",10186),
+    WITHDRAW_MONEY_LIMIT_MAX("单笔提现最大200000.00元",10187);
 
 
     private String message;

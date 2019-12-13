@@ -1089,10 +1089,15 @@ public class PaymentServiceImpl implements PaymentService {
                 UserMoney userMoney = moneyDAO.selectById(userId);
                 // 余额充足
                 if (userMoney.getAvailableMoney().compareTo(payAmount) >= 0) {
+                    User userInfo = userDao.selectById(userId);
+                    //如果支付密码未设置则提示设置支付密码
+                    if(StringUtils.isEmpty(userInfo.getPayPassword()))
+                        return resultData.setMessageEnum(MessageEnum.NEED_PAY_PASSWORD);
                     payOrderResponse.setNeedPassword(true);
                     updateDetail.setCarPayAmount(BigDecimal.ZERO);
                     updateDetail.setAccountPayAmount(payAmount);
                     dao.updateById(updateDetail);
+
                     return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(payOrderResponse);
                 } else {
                     // 卡支付的部分

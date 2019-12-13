@@ -45,6 +45,11 @@ public class RabbitConfig implements RabbitListenerConfigurer {
         return new Queue("plant.lottery");
     }
 
+    @Bean
+    public Queue lotteryFertilizerQueue(){
+        return new Queue("lottery.fertilizer");
+    }
+
 
     @Bean
     public TopicExchange afterPlantExchange() {
@@ -55,6 +60,11 @@ public class RabbitConfig implements RabbitListenerConfigurer {
     @Bean
     public Binding bindingTopicExchangeMessageB(Queue plantLotteryQueue,TopicExchange afterPlantExchange) {
         return BindingBuilder.bind(plantLotteryQueue).to(afterPlantExchange).with(RabbitConfig.PLANT_ACTION);
+    }
+
+    @Bean
+    public Binding bindingTopicExchangeMessageA(Queue lotteryFertilizerQueue,TopicExchange afterPlantExchange) {
+        return BindingBuilder.bind(lotteryFertilizerQueue).to(afterPlantExchange).with(RabbitConfig.FERTILIZER_ACTION);
     }
 
     @Bean

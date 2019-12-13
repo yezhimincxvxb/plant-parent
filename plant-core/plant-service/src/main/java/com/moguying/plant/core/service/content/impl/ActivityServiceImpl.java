@@ -154,10 +154,11 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
     @DS("read")
     public LotteryQua lotteryQua(Integer userId) {
         Long size = redisTemplate.opsForList().size(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()));
-        String dailyCount = redisTemplate.opsForValue().get(ActivityEnum.LOTTERY_COUNT_KEY_PRE.getMessage().concat(userId.toString()));
+        String countKey = ActivityEnum.LOTTERY_COUNT_KEY_PRE.getMessage().concat(userId.toString());
+        String dailyCount = redisTemplate.opsForValue().get(countKey);
         Optional<String> optional = Optional.ofNullable(dailyCount);
         if(!optional.isPresent()) {
-            redisTemplate.opsForValue().setIfAbsent(ActivityEnum.LOTTERY_COUNT_KEY_PRE.getMessage().concat(userId.toString()),
+            redisTemplate.opsForValue().setIfAbsent(countKey,
                     dailyLotteryCount, Duration.between(Instant.now(), DateUtil.INSTANCE.todayEnd().toInstant()));
             dailyCount = dailyLotteryCount;
         }
@@ -171,16 +172,13 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
 
     @Override
     @DS("read")
-    public ResultData<LotteryResult> lotteryDo(Integer userId) {
+    public ResultData<LotteryResult> lotteryDo(Integer userId,boolean isCheck) {
         ResultData<LotteryResult> resultResultData = new ResultData<>(MessageEnum.ERROR,new LotteryResult());
         String key = ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString());
-        String countKey = ActivityEnum.LOTTERY_COUNT_KEY_PRE.getMessage().concat(userId.toString());
 
-        //每日三次抽奖
-        String dayLotteryCount = redisTemplate.opsForValue().get(countKey);
-        if(null == dayLotteryCount || Integer.parseInt(dayLotteryCount) <= 0)
+        Long dayLotteryCount = redisTemplate.opsForList().size(key);
+        if(null == dayLotteryCount || dayLotteryCount <= 0)
             return resultResultData.setMessageEnum(MessageEnum.LOTTERY_DAILY_COUNT_USED);
-
 
         String reapId = redisTemplate.opsForList().rightPop(key);
         Optional<String> optional = Optional.ofNullable(reapId);
@@ -201,6 +199,14 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
             return resultResultData.setMessageEnum(MessageEnum.LOTTERY_RULE_OUT_OF_RANGE);
         }
 
+        if(isCheck) {
+            LotteryResult lotteryResult = new LotteryResult();
+            lotteryResult.setType(firstRule.get().getType());
+            //仅是检查不取消资格
+            redisTemplate.opsForList().rightPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()),reapId);
+            return resultResultData.setMessageEnum(MessageEnum.SUCCESS).setData(lotteryResult);
+        }
+
         //保存抽奖信息
         LotteryResult lotteryResult = fillList(firstRule.get().getRule());
         lotteryResult.setType(firstRule.get().getType());
@@ -211,7 +217,6 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
         log.setUserId(userId);
         log.setAddTime(new Date());
         if(lotteryLogDAO.insert(log) > 0) {
-            redisTemplate.opsForValue().decrement(countKey);
             rabbitTemplate.convertAndSend("plant.topic","lottery.fertilizer",new FertilizerSender(userId,"lottery:".concat(lotteryResult.getAmount())));
             return resultResultData.setMessageEnum(MessageEnum.SUCCESS).setData(lotteryResult);
         }
@@ -277,9 +282,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
     @Override
     @DS("read")
     public PageResult<LotteryLog> lotteryLog(Integer page, Integer size, LotteryLog search) {
-        IPage<LotteryLog> lotteryLogIPage = lotteryLogDAO.selectPage(new Page<>(page, size),
-                new QueryWrapper<LotteryLog>()
-                .lambda().eq(LotteryLog::getUserId,search.getUserId()));
+        IPage<LotteryLog> lotteryLogIPage = lotteryLogDAO.selectSelective(new Page<>(page, size), search);
         return new PageResult<>(lotteryLogIPage.getTotal(),lotteryLogIPage.getRecords());
     }
 }

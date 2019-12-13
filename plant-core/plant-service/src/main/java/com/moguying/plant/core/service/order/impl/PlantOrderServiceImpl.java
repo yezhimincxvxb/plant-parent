@@ -593,7 +593,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
 
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(bigDecimals[0].intValue());
         }
-        return resultData;
+        return resultData.setMessageEnum(buyResponseResultData.getMessageEnum());
     }
 
 
