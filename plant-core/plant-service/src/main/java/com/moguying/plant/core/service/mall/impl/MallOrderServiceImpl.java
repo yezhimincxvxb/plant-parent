@@ -54,10 +54,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MallOrderServiceImpl implements MallOrderService {
@@ -144,7 +141,11 @@ public class MallOrderServiceImpl implements MallOrderService {
     @DS("read")
     public PageResult<UserMallOrder> userMallOrderListByState(Integer page, Integer size, Integer userId, Integer state) {
         IPage<UserMallOrder> pageResult = mallOrderDAO.userOrderListByState(new Page<>(page, size), userId, state);
-        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
+        List<UserMallOrder> records = pageResult.getRecords();
+        if (!records.isEmpty()) {
+            records.removeIf(mallOrder -> mallOrder.getState().equals(0) && mallOrder.getOrderNumber().startsWith("KJ"));
+        }
+        return new PageResult<>(pageResult.getTotal(), records);
     }
 
     @Override
