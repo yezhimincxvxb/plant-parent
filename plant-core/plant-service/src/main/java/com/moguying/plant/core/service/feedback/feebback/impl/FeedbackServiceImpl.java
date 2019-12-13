@@ -40,7 +40,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedbackItem getFeedback(FeedbackItem where) {
         Query query = new Query(Criteria.where("_id").is(where.get_id()));
         FeedbackItem feedbackItem = mongoTemplate.findOne(query, FeedbackItem.class);
-        if (null!=feedbackItem)
+        if (null != feedbackItem)
             return feedbackItem;
         return new FeedbackItem();
     }

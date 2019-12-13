@@ -148,14 +148,12 @@ lbs:
   map:
     key:
 qiniu:
-  access-key: 1
-  secret-key: 1
-  bucket-name:
-  file-domain:
+  access-key: 0nbhqscOSlQEJ7D0e7OOx0OeMtk17CmBuifuwwgk
+  secret-key: qmocfGJzMYJqsXDfOFo40PhH-OGIaYcH3Ic_tpbe
+  bucket-name: springvideo
+  file-domain: video.youniyo.com
   upload-domain: https://upload-z2.qiniup.com
   tem-path: E:\Img
-  thread-num: 4
-  reput-time: 300000
 
 ---
 debug: false

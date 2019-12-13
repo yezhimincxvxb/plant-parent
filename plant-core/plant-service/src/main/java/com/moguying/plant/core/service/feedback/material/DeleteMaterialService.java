@@ -24,29 +24,28 @@ public class DeleteMaterialService implements Runnable {
     private FeedbackMaterialDAO dao = ApplicationContextUtil.getBean(FeedbackMaterialDAO.class);
 
     public DeleteMaterialService(Integer id) {
-        this.id =id;
+        this.id = id;
     }
 
     @Override
     public void run() {
         FeedbackMaterial feedbackMaterial = dao.selectById(id);
-        if(null != feedbackMaterial){
-            /** 根据KEY删除七牛云指定空间的文件 */
+        if (null != feedbackMaterial) {
+            //根据KEY删除七牛云指定空间的文件
             qiniuManager.delete(feedbackMaterial.getMaterialName());
-            /**替换溯源列表的素材URl*/
-            Query reqQuery = new Query();
-            List<FeedbackItem> items = mongoTemplate.find(reqQuery, FeedbackItem.class);
-            String itemStr = JSON.toJSONString(items).replace(feedbackMaterial.getMaterialPath(),"");
-            List<FeedbackItem> items2  = JSON.parseArray(itemStr,FeedbackItem.class);
-            for (FeedbackItem feedbackItem: items2) {
+            //替换溯源列表的素材URl
+            List<FeedbackItem> items = mongoTemplate.find(new Query(), FeedbackItem.class);
+            String itemStr = JSON.toJSONString(items).replace(feedbackMaterial.getMaterialPath(), "");
+            List<FeedbackItem> items2 = JSON.parseArray(itemStr, FeedbackItem.class);
+            for (FeedbackItem feedbackItem : items2) {
                 Query updateQuery = new Query();
                 updateQuery.addCriteria(Criteria.where("_id").is(feedbackItem.get_id()));
-                Update update2 = new Update();
-                update2.set("feedbackType", feedbackItem.getFeedbackType());
-                update2.set("banners", feedbackItem.getBanners());
-                update2.set("describeInfo", feedbackItem.getDescribeInfo());
-                update2.set("feedbackTypes", feedbackItem.getFeedbackTypes());
-                mongoTemplate.updateFirst(updateQuery, update2, FeedbackItem.class);
+                Update update = new Update();
+                update.set("feedbackType", feedbackItem.getFeedbackType());
+                update.set("banners", feedbackItem.getBanners());
+                update.set("describeInfo", feedbackItem.getDescribeInfo());
+                update.set("feedbackTypes", feedbackItem.getFeedbackTypes());
+                mongoTemplate.updateFirst(updateQuery, update, FeedbackItem.class);
             }
         }
     }
