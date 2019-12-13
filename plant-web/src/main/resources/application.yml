@@ -148,8 +148,8 @@ lbs:
   map:
     key:
 qiniu:
-  access-key:
-  secret-key:
+  access-key: 1
+  secret-key: 1
   bucket-name:
   file-domain:
   upload-domain: https://upload-z2.qiniup.com

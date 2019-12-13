@@ -43,7 +43,7 @@
         <result column="fee_amount" jdbcType="DECIMAL" property="feeAmount"/>
         <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
         <result column="is_notice" jdbcType="BIT" property="isNotice"/>
-
+        <result column="order_number" property="orderNumber"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -55,7 +55,7 @@
 
     <select id="userOrderListByState" resultMap="OrderListMap">
         select id,add_time,fee_amount,buy_amount,state,sum(buy_amount + fee_amount) as total_amount,is_notice,
-        total_coins
+        total_coins, order_number
         from plant_mall_order
         where user_id = #{userId}
         <choose>
