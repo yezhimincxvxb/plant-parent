@@ -45,6 +45,9 @@ public class UserMallOrder {
     @JSONField(ordinal = 10, name = "isNotice")
     private Boolean isNotice;
 
+    @JSONField(ordinal = 11, serialize = false)
+    private String orderNumber;
+
     public Integer getId() {
         return id;
     }
