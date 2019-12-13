@@ -24,7 +24,6 @@ import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
-import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import com.moguying.plant.core.entity.mall.vo.TraceInfoParam;
 import com.moguying.plant.core.entity.payment.response.PaymentResponse;
@@ -378,7 +377,7 @@ public class MallOrderServiceImpl implements MallOrderService {
     @DS("read")
     public void downloadExcel(Integer userId, PageSearch<MallOrder> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("商城订单", request.getServletContext(), userId, downloadDir);
-        new Thread(new DownloadService<>(mallOrderDAO,search, MallOrder.class, downloadInfo)).start();
+        new Thread(new DownloadService<>(mallOrderDAO, search, MallOrder.class, downloadInfo)).start();
     }
 
 

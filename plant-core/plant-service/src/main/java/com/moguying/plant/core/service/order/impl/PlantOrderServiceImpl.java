@@ -63,6 +63,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
@@ -510,7 +511,7 @@ public class PlantOrderServiceImpl implements PlantOrderService {
      */
     @Override
     @DS("write")
-    @Transactional
+    @Transactional(propagation = Propagation.NESTED)
     public ResultData<Integer> plantReapExchange(Integer userId,ExcReap excReap) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, 0);
         //兑换单个采摘或兑换剩余产量，但不能同时

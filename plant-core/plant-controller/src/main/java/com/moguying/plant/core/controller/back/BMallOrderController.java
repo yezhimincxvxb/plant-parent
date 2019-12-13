@@ -8,7 +8,6 @@ import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.mall.MallCompany;
 import com.moguying.plant.core.entity.mall.MallOrder;
-import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.mall.MallCompanyService;
 import com.moguying.plant.core.service.mall.MallOrderService;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/mall/order")

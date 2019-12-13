@@ -137,6 +137,15 @@ reap:
 lbs:
   map:
     key:
+qiniu:
+  access-key:
+  secret-key:
+  bucket-name:
+  file-domain:
+  upload-domain: https://upload-z2.qiniup.com
+  tem-path: E:\Img
+  thread-num: 4
+  reput-time: 300000
 
 ---
 debug: false

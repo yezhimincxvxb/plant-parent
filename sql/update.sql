@@ -503,3 +503,14 @@ CREATE TABLE `plant_activity_lottery_log` (
   `add_time` datetime NOT NULL COMMENT '抽奖时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `plant_seed_feedback_material` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `material_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '文件名',
+  `material_path` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '访问地址',
+  `material_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '文件类型（1视频，2图片）',
+  `material_suffix` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '文件后缀名',
+  `upload_time` datetime NOT NULL COMMENT '上传时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未删除,1已删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='溯源资源列表（图片/视频）';
