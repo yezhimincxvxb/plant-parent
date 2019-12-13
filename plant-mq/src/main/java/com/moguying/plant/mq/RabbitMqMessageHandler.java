@@ -5,13 +5,11 @@ import com.moguying.plant.core.entity.mq.FertilizerSender;
 import com.moguying.plant.core.entity.mq.PhoneMessageSender;
 import com.moguying.plant.core.entity.seed.vo.PlantOrderResponse;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
-import com.moguying.plant.utils.ApplicationContextUtil;
 import com.moguying.plant.utils.message.MessageSendUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -21,8 +19,9 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class RabbitMqMessageHandler implements EnvironmentAware {
+public class RabbitMqMessageHandler {
 
+    @Autowired
     private Environment environment;
 
     @Autowired
@@ -36,7 +35,7 @@ public class RabbitMqMessageHandler implements EnvironmentAware {
 
     /**
      * 发送短信
-     * @param sender
+     * @param sender 发送者
      */
     @RabbitListener(queues = "phone.message")
     @RabbitHandler
@@ -51,7 +50,7 @@ public class RabbitMqMessageHandler implements EnvironmentAware {
 
     /**
      * 抽奖发券
-     * @param fertilizerSender
+     * @param fertilizerSender 发送者
      */
     @RabbitListener(queues = "lottery.fertilizer")
     @RabbitHandler
@@ -78,10 +77,5 @@ public class RabbitMqMessageHandler implements EnvironmentAware {
             redisTemplate.opsForList().leftPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(resultData.getUserId().toString()),
                     resultData.getReapId().toString());
         }
-    }
-
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
     }
 }
