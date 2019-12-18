@@ -4,6 +4,8 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.feedback.FeedbackItem;
+import com.moguying.plant.core.entity.feedback.FeedbackType;
+import com.moguying.plant.core.entity.feedback.ItemContent;
 import com.moguying.plant.core.service.feedback.feebback.FeedbackService;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -39,22 +41,32 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public FeedbackItem getFeedback(FeedbackItem where) {
         Query query = new Query();
-        if(null != where.getId())
+        if (null != where.getId())
             query.addCriteria(Criteria.where("_id").is(where.getId()));
-        if(null != where.getFeedbackType())
+        if (null != where.getFeedbackType())
             query.addCriteria(Criteria.where("feedbackType").is(where.getFeedbackType()));
-        if(null != where.getFeedbackTypeId())
+        if (null != where.getFeedbackTypeId())
             query.addCriteria(Criteria.where("feedbackTypeId").is(where.getFeedbackTypeId()));
         FeedbackItem feedbackItem = mongoTemplate.findOne(query, FeedbackItem.class);
-        if (null != feedbackItem)
+        if (null != feedbackItem) {
+            List<FeedbackType> feedbackTypes = feedbackItem.getFeedbackTypes();
+            if (feedbackTypes != null && !feedbackTypes.isEmpty()) {
+                feedbackTypes.forEach(feedbackType -> {
+                    List<ItemContent> itemContents = feedbackType.getItemContents();
+                    if (itemContents != null && !itemContents.isEmpty()) {
+                        itemContents.sort((o1, o2) -> o2.getPlantTime().compareTo(o1.getPlantTime()));
+                    }
+                });
+            }
             return feedbackItem;
+        }
         return new FeedbackItem();
     }
 
     @Override
     public ResultData<Boolean> saveFeedbackItem(FeedbackItem feedbackItem) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
-        if(feedbackItem.getBanners().isEmpty() || feedbackItem.getFeedbackTypes().isEmpty())
+        if (feedbackItem.getBanners().isEmpty() || feedbackItem.getFeedbackTypes().isEmpty())
             return resultData.setMessageEnum(MessageEnum.PARAMETER_ERROR);
         mongoTemplate.save(feedbackItem);
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
@@ -63,7 +75,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public ResultData<Boolean> updateFeedbackItem(FeedbackItem feedbackItem) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
-        Query  query = new Query(Criteria.where("id").is(feedbackItem.getId()));
+        Query query = new Query(Criteria.where("id").is(feedbackItem.getId()));
         Update update = new Update();
         update.set("feedbackType", feedbackItem.getFeedbackType());
         update.set("banners", feedbackItem.getBanners());
