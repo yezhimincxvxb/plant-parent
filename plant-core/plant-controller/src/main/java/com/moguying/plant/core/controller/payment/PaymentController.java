@@ -8,6 +8,7 @@ import com.moguying.plant.core.entity.payment.response.PaymentResponse;
 import com.moguying.plant.core.service.payment.PaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,9 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/payment")
 @Api(tags = "支付相关")
+@Slf4j
 public class PaymentController {
 
-    private Logger log = LoggerFactory.getLogger(PaymentController.class);
 
     @Autowired
     PaymentService paymentService;

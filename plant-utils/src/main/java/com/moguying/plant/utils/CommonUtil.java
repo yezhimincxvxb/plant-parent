@@ -3,11 +3,7 @@ package com.moguying.plant.utils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public enum  CommonUtil {

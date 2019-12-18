@@ -2,6 +2,7 @@ package com.moguying.plant.core.controller.api;
 
 
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.dao.bargain.BargainDetailDao;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
@@ -42,6 +43,7 @@ public class ABargainController {
      * 砍价成功记录(所有用户)
      */
     @PostMapping("/success/logs")
+    @NoLogin
     @ApiOperation("砍价成功记录(所有用户)")
     public PageResult<BargainVo> successLogs(@RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.successLogs(pageSearch.getPage(), pageSearch.getSize());
@@ -51,6 +53,7 @@ public class ABargainController {
      * 砍价产品列表
      */
     @PostMapping("/product/list")
+    @NoLogin
     @ApiOperation("砍价产品列表")
     public PageResult<BargainVo> productList(@RequestBody PageSearch<?> pageSearch) {
 
@@ -98,6 +101,7 @@ public class ABargainController {
      * 砍价产品详情
      */
     @GetMapping("/product/info/{productId}")
+    @NoLogin
     @ApiOperation("砍价产品详情")
     public ResponseData<BargainVo> productInfo(@PathVariable("productId") Integer productId) {
 
@@ -120,6 +124,7 @@ public class ABargainController {
      * 砍价中的产品详情
      */
     @PostMapping("/product/one")
+    @NoLogin
     @ApiOperation("砍价中的产品详情")
     public ResponseData<BargainVo> productInfoByOrderId(@RequestBody BargainVo bargainVo) {
         ResponseData<BargainVo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);
@@ -143,6 +148,7 @@ public class ABargainController {
      * 超时关单
      */
     @GetMapping("/time/out/{orderId}")
+    @NoLogin
     @ApiOperation("超时关单")
     public ResponseData<String> closeByTimeOut(@PathVariable("orderId") Integer orderId) {
         ResponseData<String> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), null);

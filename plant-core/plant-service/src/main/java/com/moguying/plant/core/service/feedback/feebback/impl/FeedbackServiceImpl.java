@@ -38,7 +38,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public FeedbackItem getFeedback(FeedbackItem where) {
-        Query query = new Query(Criteria.where("_id").is(where.get_id()));
+        Query query = new Query();
+        if(null != where.getId())
+            query.addCriteria(Criteria.where("_id").is(where.getId()));
+        if(null != where.getFeedbackType())
+            query.addCriteria(Criteria.where("feedbackType").is(where.getFeedbackType()));
+        if(null != where.getFeedbackTypeId())
+            query.addCriteria(Criteria.where("feedbackTypeId").is(where.getFeedbackTypeId()));
         FeedbackItem feedbackItem = mongoTemplate.findOne(query, FeedbackItem.class);
         if (null != feedbackItem)
             return feedbackItem;
@@ -57,8 +63,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public ResultData<Boolean> updateFeedbackItem(FeedbackItem feedbackItem) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
-        Query query = new Query();
-        query.addCriteria(Criteria.where("_id").is(feedbackItem.get_id()));
+        Query  query = new Query(Criteria.where("id").is(feedbackItem.getId()));
         Update update = new Update();
         update.set("feedbackType", feedbackItem.getFeedbackType());
         update.set("banners", feedbackItem.getBanners());
@@ -72,7 +77,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public ResultData<Boolean> removeFeedbackItem(FeedbackItem feedbackItem) {
-        DeleteResult result = mongoTemplate.remove(new Query(Criteria.where("_id").is(feedbackItem.get_id())), FeedbackItem.class);
+        DeleteResult result = mongoTemplate.remove(new Query(Criteria.where("_id").is(feedbackItem.getId())), FeedbackItem.class);
         if (result.getDeletedCount() > 0)
             return new ResultData<>(MessageEnum.SUCCESS, true);
         return new ResultData<>(MessageEnum.ERROR, false);

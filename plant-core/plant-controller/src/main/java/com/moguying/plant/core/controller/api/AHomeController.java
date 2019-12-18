@@ -2,6 +2,7 @@ package com.moguying.plant.core.controller.api;
 
 import com.moguying.plant.constant.BannerEnum;
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -84,6 +85,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("首页banner列表")
+    @NoLogin
     @GetMapping(value = "/banner")
     public ResponseData<List<Banner>> bannerList() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -97,6 +99,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("由参数获取不同Banner")
+    @NoLogin
     @GetMapping("/banner/{typeName}")
     public ResponseData<List<Banner>> mallBannerList(@PathVariable String typeName) {
 
@@ -112,10 +115,10 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("活动页列表")
-    @GetMapping("/activity")
-    public PageResult<Activity> activityList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                             @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return activityService.activityListForHome(page, size, null, null);
+    @NoLogin
+    @PostMapping("/activity")
+    public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search) {
+        return activityService.activityListForHome(search.getPage(), search.getSize(), null, null);
 
     }
 
@@ -127,6 +130,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("活动详情")
+    @NoLogin
     @GetMapping("/activity/{id}")
     public ResponseData<Activity> activityDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.activityDetail(id));
@@ -134,6 +138,7 @@ public class AHomeController {
 
 
     @ApiOperation("最新活动")
+    @NoLogin
     @GetMapping("/newest/activity")
     public ResponseData<List<Activity>> newestActivity() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.newestActivity());
@@ -146,6 +151,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("公告列表")
+    @NoLogin
     @GetMapping(value = "/annotation")
     public ResponseData<List<Article>> annotationList() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -159,6 +165,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("推荐棚区列表")
+    @NoLogin
     @GetMapping(value = "/block")
     public ResponseData<List<BlockDetail>> recommendBlock() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -169,6 +176,7 @@ public class AHomeController {
      * 所有棚区
      */
     @ApiOperation("所有棚区")
+    @NoLogin
     @PostMapping(value = "/block/list")
     public PageResult<Block> blockList(@RequestBody PageSearch<Block> search) {
         //必须是上架的大棚
@@ -190,6 +198,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("棚区详情")
+    @NoLogin
     @GetMapping("/block/{id}")
     public ResponseData<BlockDetail> blockDetail(@PathVariable Integer id) {
         ResultData<Block> resultData = blockService.blockInfo(id);
@@ -219,6 +228,7 @@ public class AHomeController {
      * 获取棚区id
      */
     @ApiOperation("获取棚区id")
+    @NoLogin
     @GetMapping("/get/blockId")
     public ResponseData<Integer> getBlockId() {
         Block block = blockService.getOne();
@@ -233,6 +243,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("菌包市场")
+    @NoLogin
     @PostMapping(value = "/index/seed")
     public PageResult<HomeSeed> seedList(@RequestBody PageSearch<HomeSeed> search) {
         if (null == search.getWhere()) search.setWhere(new HomeSeed());
@@ -258,6 +269,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("菌包详情")
+    @NoLogin
     @GetMapping("/index/seed/{id}")
     public ResponseData<SeedDetail> seedDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), seedService.seedDetail(id));
@@ -271,6 +283,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("商城商品列表")
+    @NoLogin
     @PostMapping("/index/mall")
     public PageResult<HomeProduct> productList(@RequestBody HomeProduct search) {
         return mallProductService.productListForHome(search.getPage(), search.getSize(), search);
@@ -283,6 +296,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("商品类型列表")
+    @NoLogin
     @GetMapping("/index/mall/types")
     public ResponseData<List<MallProductType>> productTypeList() {
         List<MallProductType> mallProductTypes = mallProductTypeService.typeList(new MallProductType());
@@ -298,6 +312,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("商城商品详情")
+    @NoLogin
     @GetMapping("/product/{id}")
     public ResponseData<HomeProductDetail> productDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -310,6 +325,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("apk最新版本信息")
+    @NoLogin
     @GetMapping("/apk/info")
     public ResponseData<Apk> newestApkInfo() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
@@ -324,6 +340,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("查询菌包种类可种大棚")
+    @NoLogin
     @PostMapping("/plant/block")
     public ResponseData<Block> findSeedTypeInBlock(@RequestBody SeedTypeInBlock seedTypeInBlock) {
         Block block = blockService.findBlockBySeedType(seedTypeInBlock.getSeedTypeId());
@@ -337,6 +354,7 @@ public class AHomeController {
      * 获取推荐菌包
      */
     @ApiOperation("获取推荐菌包")
+    @NoLogin
     @GetMapping("/recommend/seed")
     public ResponseData<List<HomeSeed>> recommendSeed() {
         List<HomeSeed> recommendSeed = seedService.recommendSeed();
@@ -355,6 +373,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("计算金额")
+    @NoLogin
     @PostMapping("/calculation")
     public ResponseData<Calculation> calculation(@RequestBody Calculation calculation) {
         if (null != calculation.getCount() && null != calculation.getPrice()) {
@@ -376,6 +395,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("设备列表")
+    @NoLogin
     @PostMapping("/device/gateway")
     public PageResult<DeviceGateway> gatewayList(@RequestBody PageSearch<DeviceGateway> pageSearch) {
         return deviceService.deviceGatewayList(pageSearch.getPage(), pageSearch.getSize(), pageSearch.getWhere());
@@ -389,6 +409,7 @@ public class AHomeController {
      * @return
      */
     @ApiOperation("指定设备信息")
+    @NoLogin
     @PostMapping("/device/data")
     public ResponseData<List<DeviceGatewayData>> deviceData(@RequestBody DeviceGatewayData where) {
         ResultData<List<DeviceGatewayData>> resultData = deviceService.gatewayData(where.getGatewayLogo());

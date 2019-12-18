@@ -39,7 +39,7 @@ public class DeleteMaterialService implements Runnable {
             List<FeedbackItem> items2 = JSON.parseArray(itemStr, FeedbackItem.class);
             for (FeedbackItem feedbackItem : items2) {
                 Query updateQuery = new Query();
-                updateQuery.addCriteria(Criteria.where("_id").is(feedbackItem.get_id()));
+                updateQuery.addCriteria(Criteria.where("_id").is(feedbackItem.getId()));
                 Update update = new Update();
                 update.set("feedbackType", feedbackItem.getFeedbackType());
                 update.set("banners", feedbackItem.getBanners());

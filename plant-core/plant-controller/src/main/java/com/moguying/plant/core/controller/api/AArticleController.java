@@ -1,6 +1,7 @@
 package com.moguying.plant.core.controller.api;
 
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -28,6 +29,7 @@ public class AArticleController {
     private ArticleService articleService;
 
     @GetMapping("/types")
+    @NoLogin
     @ApiOperation("文章分类")
     public ResponseData<List<ArticleType>> articleTypes() {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleTypeService.articleTypeList());
@@ -35,6 +37,7 @@ public class AArticleController {
 
 
     @PostMapping("/{urlName}")
+    @NoLogin
     @ApiOperation("对应分类文章列表")
     public PageResult<Article> articleList(@RequestBody PageSearch<Article> search, @PathVariable String urlName) {
         PageResult<Article> list = new PageResult<>();
@@ -51,6 +54,7 @@ public class AArticleController {
 
 
     @GetMapping("/{urlName}/{id}")
+    @NoLogin
     @ApiOperation("文章详情")
     public ResponseData<Article> articleDetail(@PathVariable String urlName, @PathVariable Integer id) {
         ResponseData<Article> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());

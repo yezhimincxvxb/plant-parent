@@ -3,6 +3,7 @@ package com.moguying.plant.core.controller.api;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.constant.UserEnum;
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.TriggerEventResult;
@@ -55,6 +56,7 @@ public class ARegisterController {
      */
     @PostMapping(value = "/register")
     @ResponseBody
+    @NoLogin
     @ApiOperation("注册")
     public ResponseData<LoginResponse> register(@RequestBody Register register){
         // 校验手机号格式
@@ -118,6 +120,7 @@ public class ARegisterController {
      */
     @PostMapping(value = "/login")
     @ResponseBody
+    @NoLogin
     @ApiOperation("登录")
     public ResponseData<LoginResponse> login(@RequestBody Login login, HttpServletRequest request){
         if(null != request.getSession().getAttribute("user"))
@@ -162,6 +165,7 @@ public class ARegisterController {
      */
     @PutMapping(value = "/forget")
     @ResponseBody
+    @NoLogin
     @ApiOperation("忘记密码")
     public ResponseData<Integer> forgetPassword(@RequestBody ForgetPassword forgetPassword){
         if(!CommonUtil.INSTANCE.isPhone(forgetPassword.getPhone()))
@@ -184,6 +188,7 @@ public class ARegisterController {
      * @throws IOException
      */
     @GetMapping(value = "/image/captcha")
+    @NoLogin
     @ApiOperation("图形验证码")
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
         try {

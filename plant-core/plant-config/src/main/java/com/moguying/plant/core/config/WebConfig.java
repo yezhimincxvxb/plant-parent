@@ -73,8 +73,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(apiInterceptor).addPathPatterns("/api/account/**", "/api/user/**", "/api/seed/**", "/api/mall/**", "/api/farmer/**",
-                "/api/login/bargain/**", "/api/taste/**","/api/activity/**");
+        registry.addInterceptor(apiInterceptor).addPathPatterns("/api/**");
         registry.addInterceptor(backInterceptor).addPathPatterns("/backEnd/**");
         registry.addInterceptor(callBackInterceptor).addPathPatterns("/payment/notify/**");
         super.addInterceptors(registry);

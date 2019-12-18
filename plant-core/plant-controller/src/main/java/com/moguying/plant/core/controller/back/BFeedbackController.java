@@ -52,12 +52,12 @@ public class BFeedbackController {
 
 
     /**
-     * 更新溯源
+     * 添加溯源
      *
      * @return
      */
     @PostMapping("/add")
-    @ApiOperation("更新溯源")
+    @ApiOperation("添加溯源")
     @NoLogin
     public ResponseData<Boolean> saveFeedbackItem(@RequestBody FeedbackItem feedbackItem) {
         ResultData<Boolean> resultData = feedbackService.saveFeedbackItem(feedbackItem);

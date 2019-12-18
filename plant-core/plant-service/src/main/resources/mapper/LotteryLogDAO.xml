@@ -18,6 +18,19 @@
             <if test="wq.userId != null">
                 t1.user_id = #{wq.userId}
             </if>
+            <if test="wq.phone != null">
+                <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
+                AND t3.phone like #{phoneLike}
+            </if>
+            <if test="wq.lotteryType != null">
+                AND t1.lottery_type = #{wq.lotteryType}
+            </if>
+            <if test="wq.startTime != null and wq.endTime != null">
+            <![CDATA[
+                AND UNIX_TIMESTAMP(t1.add_time) >= UNIX_TIMESTAMP(#{wq.startTime})
+                AND UNIX_TIMESTAMP(t1.add_time) <= UNIX_TIMESTAMP(#{wq.endTime})
+            ]]>
+            </if>
         </where>
         order by t1.add_time desc
     </select>

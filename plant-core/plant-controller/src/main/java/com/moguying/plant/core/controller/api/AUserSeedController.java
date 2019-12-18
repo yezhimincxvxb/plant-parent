@@ -1,5 +1,6 @@
 package com.moguying.plant.core.controller.api;
 
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
@@ -28,6 +29,7 @@ public class AUserSeedController {
      * 兑换列表 (不需要用户登录)
      */
     @PostMapping("/exchangeList")
+    @NoLogin
     @ApiOperation("兑换列表")
     public PageResult<ExchangeInfo> exchangeList(@RequestBody PageSearch<Integer> pageSearch) {
         Integer page = pageSearch.getPage();

@@ -1,6 +1,7 @@
 package com.moguying.plant.core.controller.api;
 
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
@@ -25,6 +26,7 @@ public class AExShopController {
      * 体验店列表
      */
     @PostMapping("/list")
+    @NoLogin
     @ApiOperation("体验店列表")
     public PageResult<ExShopVo> exShopPageResult(@RequestBody PageSearch<ExShop> search) {
         return exShopService.exShopPageResult(search.getPage(), search.getSize(), search.getWhere(), true);
@@ -34,6 +36,7 @@ public class AExShopController {
      * 体验店详情
      */
     @GetMapping("/{shopId}")
+    @NoLogin
     @ApiOperation("体验店详情")
     public ResponseData<ExShopVo> exShopPageResult(@PathVariable("shopId") Integer shopId) {
         ResponseData<ExShopVo> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
@@ -44,6 +47,7 @@ public class AExShopController {
      * 查询对应体验店的轮播图
      */
     @PostMapping("/banner")
+    @NoLogin
     @ApiOperation("体验店轮播图")
     public ResponseData<List<ExShopPic>> findShopPic(@RequestBody ExShopPic shopPic) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), exShopService.showPicList(shopPic));

@@ -176,8 +176,8 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
         ResultData<LotteryResult> resultResultData = new ResultData<>(MessageEnum.ERROR,new LotteryResult());
         String key = ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString());
 
-        Long dayLotteryCount = redisTemplate.opsForList().size(key);
-        if(null == dayLotteryCount || dayLotteryCount <= 0)
+        Long lotteryCount = redisTemplate.opsForList().size(key);
+        if(null == lotteryCount || lotteryCount <= 0)
             return resultResultData.setMessageEnum(MessageEnum.LOTTERY_DAILY_COUNT_USED);
 
         String reapId = redisTemplate.opsForList().rightPop(key);

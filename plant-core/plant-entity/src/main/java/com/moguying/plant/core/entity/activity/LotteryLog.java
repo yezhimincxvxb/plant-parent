@@ -48,4 +48,12 @@ public class LotteryLog {
     @TableField(exist = false)
     private String phone;
 
+    //查询抽奖开始时间
+    @TableField(exist = false)
+    private Date startTime;
+
+    //查询抽奖结束时间
+    @TableField(exist = false)
+    private Date endTime;
+
 }

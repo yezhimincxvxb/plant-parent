@@ -14,7 +14,6 @@ import com.moguying.plant.core.entity.activity.vo.LotteryQuaQuery;
 import com.moguying.plant.core.entity.activity.vo.LotteryResult;
 import com.moguying.plant.core.service.content.ActivityService;
 import com.moguying.plant.utils.CommonUtil;
-import com.moguying.plant.utils.IdCardSerialize;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

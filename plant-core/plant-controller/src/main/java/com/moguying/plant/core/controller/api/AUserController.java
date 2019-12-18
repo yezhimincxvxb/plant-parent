@@ -901,7 +901,7 @@ public class AUserController {
      */
     @PostMapping("/invite/list")
     @ApiOperation("被邀请人列表")
-    public PageResult<UserInvite> inviteList(@LoginUserId Integer userId, @RequestBody PageSearch search) {
+    public PageResult<UserInvite> inviteList(@LoginUserId Integer userId, @RequestBody PageSearch<UserInvite> search) {
         return userInviteService.inviteList(search.getPage(), search.getSize(), userId);
     }
 
@@ -1190,7 +1190,9 @@ public class AUserController {
     @ApiOperation("取消用户券红点")
     public ResponseData<Boolean> cancelFertilizerDot(@LoginUserId Integer userId){
         Boolean aBoolean = userFertilizerService.cancelFertilizerDot(userId);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),aBoolean);
+        if(aBoolean)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
     }
 
 }
