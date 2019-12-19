@@ -86,4 +86,7 @@ public class ReapFee implements Serializable {
 
     @TableField(exist = false)
     private Date endTime;
+
+    @TableField(exist = false)
+    private Integer channelId;
 }

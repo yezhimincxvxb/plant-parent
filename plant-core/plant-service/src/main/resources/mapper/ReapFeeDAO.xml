@@ -1,82 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.reap.ReapFeeDAO">
-  <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.reap.ReapFee">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="invite_uid" jdbcType="INTEGER" property="inviteUid" />
-    <result column="reap_id" jdbcType="INTEGER" property="reapId" />
-    <result column="fee_amount" jdbcType="DECIMAL" property="feeAmount" />
-    <result column="is_first" jdbcType="BIT" property="isFirst" />
-    <result column="state" jdbcType="BIT" property="state" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.reap.ReapFee">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="invite_uid" jdbcType="INTEGER" property="inviteUid"/>
+        <result column="reap_id" jdbcType="INTEGER" property="reapId"/>
+        <result column="fee_amount" jdbcType="DECIMAL" property="feeAmount"/>
+        <result column="is_first" jdbcType="BIT" property="isFirst"/>
+        <result column="state" jdbcType="BIT" property="state"/>
+    </resultMap>
 
-  <resultMap id="BaseResultInfo" type="com.moguying.plant.core.entity.reap.ReapFee" extends="BaseResultMap">
-    <collection property="user" ofType="com.moguying.plant.core.entity.user.User">
-      <result column="phone" property="phone"/>
-      <result column="real_name" property="realName"/>
-      <result column="reg_time" property="regTime"/>
-    </collection>
-    <collection property="inviteUser" ofType="com.moguying.plant.core.entity.user.User">
-      <result column="invite_phone" property="phone"/>
-      <result column="invite_real_name" property="realName"/>
-    </collection>
-    <collection property="reap" ofType="com.moguying.plant.core.entity.reap.Reap">
-      <result column="seed_grow_days" property="seedGrowDays"/>
-      <result column="add_time" property="addTime"/>
-      <result column="plant_count" property="plantCount"/>
-      <result column="plant_amount" property="preAmount"/>
-    </collection>
-  </resultMap>
+    <resultMap id="BaseResultInfo" type="com.moguying.plant.core.entity.reap.ReapFee" extends="BaseResultMap">
+        <collection property="user" ofType="com.moguying.plant.core.entity.user.User">
+            <result column="phone" property="phone"/>
+            <result column="real_name" property="realName"/>
+            <result column="reg_time" property="regTime"/>
+        </collection>
+        <collection property="inviteUser" ofType="com.moguying.plant.core.entity.user.User">
+            <result column="invite_phone" property="phone"/>
+            <result column="invite_real_name" property="realName"/>
+        </collection>
+        <collection property="reap" ofType="com.moguying.plant.core.entity.reap.Reap">
+            <result column="seed_grow_days" property="seedGrowDays"/>
+            <result column="add_time" property="addTime"/>
+            <result column="plant_count" property="plantCount"/>
+            <result column="plant_amount" property="preAmount"/>
+        </collection>
+    </resultMap>
 
 
-
-  <sql id="Base_Column_List">
+    <sql id="Base_Column_List">
     id, user_id, invite_uid, reap_id, fee_amount, is_first
   </sql>
 
 
-  <select id="selectSelective" resultMap="BaseResultInfo">
-    select t1.*,t2.add_time,t2.plant_count,t2.pre_amount as plant_amount,
-    t3.phone,t3.real_name,t3.reg_time,t4.phone as invite_phone,t4.real_name as invite_real_name,
-    t5.grow_days as seed_grow_days
-    from plant_reap_fee t1
-    left join plant_reap t2 on t1.reap_id = t2.id
-    left join plant_user t3 on t1.user_id = t3.id
-    left join plant_user t4 on t1.invite_uid = t4.id
-    left join plant_seed_type t5 on t2.seed_type = t5.id
-    <where>
-      <if test="wq.userPhone != null and wq.userPhone != ''">
-        t3.phone = #{wq.userPhone}
-      </if>
-      <if test="wq.invitePhone != null and wq.invitePhone != ''">
-        AND t3.phone = #{wq.invitePhone}
-      </if>
-      <if test="wq.inviteUid != null">
-        AND t1.invite_uid = #{wq.inviteUid}
-      </if>
-      <if test="wq.isFirst != null">
-        AND t1.is_first = #{wq.isFirst}
-      </if>
-      <if test="wq.regStartTime != null and wq.regEndTime != null">
-        <![CDATA[
+    <select id="selectSelective" resultMap="BaseResultInfo">
+        select t1.*,t2.add_time,t2.plant_count,t2.pre_amount as plant_amount,
+        t3.phone,t3.real_name,t3.reg_time,t4.phone as invite_phone,t4.real_name as invite_real_name,
+        t5.grow_days as seed_grow_days
+        from plant_reap_fee t1
+        left join plant_reap t2 on t1.reap_id = t2.id
+        left join plant_user t3 on t1.user_id = t3.id
+        left join plant_user t4 on t1.invite_uid = t4.id
+        left join plant_seed_type t5 on t2.seed_type = t5.id
+        <where>
+            <if test="wq.userPhone != null and wq.userPhone != ''">
+                t3.phone = #{wq.userPhone}
+            </if>
+            <if test="wq.invitePhone != null and wq.invitePhone != ''">
+                AND t3.phone = #{wq.invitePhone}
+            </if>
+            <if test="wq.inviteUid != null">
+                AND t1.invite_uid = #{wq.inviteUid}
+            </if>
+            <if test="wq.isFirst != null">
+                AND t1.is_first = #{wq.isFirst}
+            </if>
+            <!-- 注册时间搜索 -->
+            <if test="wq.regStartTime != null and wq.regEndTime != null">
+                <![CDATA[
             AND UNIX_TIMESTAMP(t3.reg_time) >= UNIX_TIMESTAMP(#{wq.regStartTime})
             AND UNIX_TIMESTAMP(t3.reg_time) <= UNIX_TIMESTAMP(#{wq.regEndTime})
         ]]>
-      </if>
-      <if test="wq.startTime != null and wq.endTime != null">
-        <![CDATA[
+            </if>
+            <!-- 种植时间搜索 -->
+            <if test="wq.startTime != null and wq.endTime != null">
+                <![CDATA[
             AND UNIX_TIMESTAMP(t2.add_time) >= UNIX_TIMESTAMP(#{wq.startTime})
             AND UNIX_TIMESTAMP(t2.add_time) <= UNIX_TIMESTAMP(#{wq.endTime})
         ]]>
-      </if>
-      <if test="wq.userRealName != null and wq.userRealName != ''">
-        AND t3.real_name = #{wq.userRealName}
-      </if>
-    </where>
-    order by t1.id desc
-  </select>
-  
-  
-  
+            </if>
+            <if test="wq.userRealName != null and wq.userRealName != ''">
+                AND t3.real_name = #{wq.userRealName}
+            </if>
+            <if test="wq.channelId != null">
+                and t1.invite_uid = #{wq.channelId}
+            </if>
+        </where>
+        order by t1.id desc
+    </select>
+
+
 </mapper>

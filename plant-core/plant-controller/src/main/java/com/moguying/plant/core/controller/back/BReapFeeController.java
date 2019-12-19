@@ -10,12 +10,13 @@ import com.moguying.plant.core.entity.reap.ReapFee;
 import com.moguying.plant.core.entity.reap.ReapFeeParam;
 import com.moguying.plant.core.entity.reap.vo.FeeUpdateStateRequest;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
+import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.reap.ReapFeeParamService;
 import com.moguying.plant.core.service.reap.ReapFeeService;
+import com.moguying.plant.core.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,15 @@ public class BReapFeeController {
     @Autowired
     private ReapFeeParamService reapFeeParamService;
 
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/channel/list")
+    @ApiOperation("渠道商列表")
+    public PageResult<User> channelList(@RequestBody PageSearch search) {
+        return userService.userList(search.getPage(), search.getSize(), new User().setIsChannel(true));
+    }
+
 
     /**
      * 查询运营费用列表
@@ -43,8 +53,11 @@ public class BReapFeeController {
     @PostMapping
     @ApiOperation("查询运营费用列表")
     public PageResult<ReapFee> reapFeePageResult(@RequestBody PageSearch<ReapFee> search) {
-
-        return reapFeeService.reapFeeList(search.getPage(), search.getSize(), search.getWhere());
+        ReapFee where = search.getWhere();
+        if (where == null) {
+            where = new ReapFee();
+        }
+        return reapFeeService.reapFeeList(search.getPage(), search.getSize(), where);
     }
 
 
