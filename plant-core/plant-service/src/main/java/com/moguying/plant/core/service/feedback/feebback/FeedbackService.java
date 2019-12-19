@@ -10,6 +10,8 @@ public interface FeedbackService {
 
     FeedbackItem getFeedback(FeedbackItem feedbackItem);
 
+    Boolean existFeedback(FeedbackItem feedbackItem);
+
     ResultData<Boolean> saveFeedbackItem(FeedbackItem feedbackItem);
 
     ResultData<Boolean> updateFeedbackItem(FeedbackItem feedbackItem);

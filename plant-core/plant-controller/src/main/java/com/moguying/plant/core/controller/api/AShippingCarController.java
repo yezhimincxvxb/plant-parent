@@ -3,17 +3,23 @@ package com.moguying.plant.core.controller.api;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.LoginUserId;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.common.vo.ModifyItemResponse;
 import com.moguying.plant.core.entity.mall.MallCar;
-import com.moguying.plant.core.entity.mall.vo.*;
+import com.moguying.plant.core.entity.mall.vo.BuyProduct;
+import com.moguying.plant.core.entity.mall.vo.CarItemList;
+import com.moguying.plant.core.entity.mall.vo.CheckItems;
+import com.moguying.plant.core.entity.mall.vo.OrderItem;
 import com.moguying.plant.core.service.mall.MallCarService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -45,14 +51,11 @@ public class AShippingCarController {
     /**
      * 购物车列表
      */
-    @GetMapping
+    @PostMapping("/list")
     @ApiOperation("购物车列表")
-    public ResponseData<CarItemList> carItems(@LoginUserId Integer userId, @RequestParam(value = "page", defaultValue = "1") Integer page,
-                                              @RequestParam(value = "size", defaultValue = "10") Integer size
-    ) {
-
+    public ResponseData<CarItemList> carItems(@LoginUserId Integer userId, @RequestBody PageSearch search) {
         CarItemList carItemList = new CarItemList();
-        PageResult<OrderItem> pageResult = mallCarService.userCarItems(page, size, userId);
+        PageResult<OrderItem> pageResult = mallCarService.userCarItems(search.getPage(), search.getSize(), userId);
         carItemList.setCheckedAmount(mallCarService.getCheckedItemAmount(userId));
         carItemList.setItems(pageResult.getData());
         carItemList.setCount(pageResult.getCount());

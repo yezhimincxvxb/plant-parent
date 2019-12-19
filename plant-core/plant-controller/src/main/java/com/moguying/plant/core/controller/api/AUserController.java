@@ -432,13 +432,12 @@ public class AUserController {
         User user = userService.userInfoById(userId);
         if (user == null)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
-        if (null ==bindCard.getBankNumber() || StringUtils.isEmpty(bindCard.getBankNumber()))
+        if (null == bindCard.getBankNumber() || StringUtils.isEmpty(bindCard.getBankNumber()))
             return new ResponseData<>(MessageEnum.BANK_NUMBER_IS_EMPTY.getMessage(), MessageEnum.BANK_NUMBER_IS_EMPTY.getState());
-        if (null==bindCard.getMsgCode() || StringUtils.isEmpty(bindCard.getMsgCode()))
+        if (null == bindCard.getMsgCode() || StringUtils.isEmpty(bindCard.getMsgCode()))
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_IS_EMPTY.getMessage(), MessageEnum.MESSAGE_CODE_IS_EMPTY.getState());
-        if (null== bindCard.getPhone() ||StringUtils.isEmpty(bindCard.getPhone()))
+        if (null == bindCard.getPhone() || StringUtils.isEmpty(bindCard.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_IS_EMPTY.getMessage(), MessageEnum.PHONE_IS_EMPTY.getState());
-
         if (!CommonUtil.INSTANCE.isPhone(bindCard.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
         bindCard.setBankNumber(bindCard.getBankNumber().replaceAll("\\s", ""));
@@ -712,17 +711,11 @@ public class AUserController {
 
     /**
      * 菌包管理-已购买
-     *
-     * @param page
-     * @param size
-     * @return
      */
-    @GetMapping(value = "/order")
+    @PostMapping("/order")
     @ApiOperation("菌包管理-已购买")
-    public PageResult<SeedOrderDetail> seedOrderList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                     @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                                     @LoginUserId Integer userId) {
-        return seedOrderDetailService.userSeedOrderList(page, size, userId, SeedEnum.SEED_ORDER_DETAIL_HAS_PAY.getState());
+    public PageResult<SeedOrderDetail> seedOrderList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
+        return seedOrderDetailService.userSeedOrderList(search.getPage(), search.getSize(), userId, SeedEnum.SEED_ORDER_DETAIL_HAS_PAY.getState());
     }
 
 
@@ -800,18 +793,11 @@ public class AUserController {
 
     /**
      * 菌包订单
-     *
-     * @param page
-     * @param size
-     * @param userId
-     * @return
      */
-    @GetMapping(value = "/order/unpay")
+    @PostMapping(value = "/order/unpay")
     @ApiOperation("菌包订单")
-    public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                           @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                                           @LoginUserId Integer userId) {
-        return seedOrderDetailService.selectUserPayListByUserId(page, size, userId);
+    public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
+        return seedOrderDetailService.selectUserPayListByUserId(search.getPage(), search.getSize(), userId);
     }
 
 
@@ -835,17 +821,11 @@ public class AUserController {
 
     /**
      * 站内信息列表
-     *
-     * @param page
-     * @param size
-     * @return
      */
-    @GetMapping(value = "/message")
+    @PostMapping("/message")
     @ApiOperation("站内信息列表")
-    public PageResult<UserMessage> messageList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                               @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                               @LoginUserId Integer userId) {
-        return userService.userMessageList(page, size, userId);
+    public PageResult<UserMessage> messageList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
+        return userService.userMessageList(search.getPage(), search.getSize(), userId);
     }
 
 
@@ -1181,18 +1161,18 @@ public class AUserController {
 
     @GetMapping("/fertilizer/dot")
     @ApiOperation("用户券红点")
-    public ResponseData<FertilizerDot> fertilizerDot(@LoginUserId Integer userId){
+    public ResponseData<FertilizerDot> fertilizerDot(@LoginUserId Integer userId) {
         FertilizerDot fertilizerDot = userFertilizerService.fertilizerDot(userId);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),fertilizerDot);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), fertilizerDot);
     }
 
     @PostMapping("/fertilizer/dot")
     @ApiOperation("取消用户券红点")
-    public ResponseData<Boolean> cancelFertilizerDot(@LoginUserId Integer userId){
+    public ResponseData<Boolean> cancelFertilizerDot(@LoginUserId Integer userId) {
         Boolean aBoolean = userFertilizerService.cancelFertilizerDot(userId);
-        if(aBoolean)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        if (aBoolean)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
 }

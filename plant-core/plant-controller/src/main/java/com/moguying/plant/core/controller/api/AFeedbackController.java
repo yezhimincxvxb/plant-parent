@@ -25,7 +25,13 @@ public class AFeedbackController {
     @NoLogin
     public ResponseData<FeedbackItem> feedbackItem(@RequestBody FeedbackItem queryFeedback) {
         FeedbackItem feedback = feedbackService.getFeedback(queryFeedback);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState(),feedback);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), feedback);
+    }
+
+    @PostMapping("/exist")
+    @NoLogin
+    public ResponseData<Boolean> exist(@RequestBody FeedbackItem queryFeedback) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), feedbackService.existFeedback(queryFeedback));
     }
 
 

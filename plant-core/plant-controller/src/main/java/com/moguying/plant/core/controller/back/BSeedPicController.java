@@ -2,6 +2,7 @@ package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.seed.SeedPic;
 import com.moguying.plant.core.service.seed.SeedPicService;
@@ -11,10 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,12 +44,10 @@ public class BSeedPicController {
      *
      * @return
      */
-    @GetMapping(value = "/list")
+    @PostMapping("/list")
     @ApiOperation("菌包图片列表")
-    public PageResult<SeedPic> seedPicList(@RequestParam(value = "page", defaultValue = "1", required = false) Integer page,
-                                           @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
-
-        return seedPicService.seedPicList(page, size);
+    public PageResult<SeedPic> seedPicList(@RequestBody PageSearch search) {
+        return seedPicService.seedPicList(search.getPage(), search.getSize());
     }
 
     /**

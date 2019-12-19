@@ -203,7 +203,7 @@ public class BSeedController {
      * @deprecated
      */
 
-    @GetMapping(value = "/cancel/list")
+    @GetMapping("/cancel/list")
     @ApiOperation("菌包取消种植列表")
     public PageResult<Seed> seedCancelList(@RequestParam(value = "page", defaultValue = "1", required = false) Integer page,
                                            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {

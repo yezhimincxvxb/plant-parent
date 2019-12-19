@@ -104,37 +104,24 @@ public class AAccountController {
 
 
     /**
-     * 提现列表
-     *
-     * @param page
-     * @param size
-     * @return
+     * 提现记录列表
      */
-    @GetMapping("/withdraw")
+    @PostMapping("/withdraw/log")
     @ApiOperation("提现列表")
-    public PageResult<MoneyWithdraw> withdrawList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                  @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                                  @LoginUserId Integer userId) {
+    public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
         MoneyWithdraw where = new MoneyWithdraw();
         where.setUserId(userId);
         where.setState(MoneyStateEnum.WITHDRAW_IN_ACCOUNT.getState());
-        return moneyWithdrawService.apiMoneyWithdrawList(page, size, where);
+        return moneyWithdrawService.apiMoneyWithdrawList(search.getPage(), search.getSize(), where);
     }
 
 
     /**
      * 提现审核记录
-     *
-     * @param page
-     * @param size
-     * @param userId
-     * @return
      */
-    @GetMapping("/withdraw/review")
+    @PostMapping("/withdraw/review")
     @ApiOperation("提现审核记录")
-    public PageResult<MoneyWithdraw> withdrawReviewList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                                        @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                                        @LoginUserId Integer userId) {
+    public PageResult<MoneyWithdraw> withdrawReviewList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
         MoneyWithdraw where = new MoneyWithdraw();
         where.setUserId(userId);
         List<Integer> states = new ArrayList<>();
@@ -144,15 +131,12 @@ public class AAccountController {
         states.add(MoneyStateEnum.WITHDRAW_SUCCESS.getState());
         states.add(MoneyStateEnum.WITHDRAW_ACCOUNT_ING.getState());
         where.setInState(states);
-        return moneyWithdrawService.apiMoneyWithdrawList(page, size, where);
+        return moneyWithdrawService.apiMoneyWithdrawList(search.getPage(), search.getSize(), where);
     }
 
 
     /**
      * 提交提现
-     *
-     * @param userId
-     * @return
      */
     @ValidateUser
     @PostMapping("/withdraw")
@@ -160,15 +144,11 @@ public class AAccountController {
     public ResponseData<Integer> withdraw(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getBankId())
             return new ResponseData<>(MessageEnum.BANK_CARD_ID_EMPTY.getMessage(), MessageEnum.BANK_CARD_ID_EMPTY.getState());
-
         if (null == withdrawRequest.getCode())
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_IS_EMPTY.getMessage(), MessageEnum.MESSAGE_CODE_IS_EMPTY.getState());
-
         User userInfo = userService.userInfoById(userId);
-
         if (StringUtils.isEmpty(userInfo.getPayPassword()))
             return new ResponseData<>(MessageEnum.NEED_PAY_PASSWORD.getMessage(), MessageEnum.NEED_PAY_PASSWORD.getState());
-
         if (phoneMessageService.validateMessage(userInfo.getPhone(), withdrawRequest.getCode()) <= 0)
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
         MoneyWithdraw withdraw = new MoneyWithdraw();
@@ -180,11 +160,7 @@ public class AAccountController {
 
 
     /**
-     * 提现发送第三方提现短信
-     *
-     * @param userId
-     * @param withdrawRequest
-     * @return
+     * 发送提现短信验证码
      */
     @ValidateUser
     @PostMapping("/withdraw/sms")
@@ -192,13 +168,13 @@ public class AAccountController {
     public ResponseData<SendWithdrawSmsCodeResponse> sendWithdrawSms(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
         if (null == withdrawRequest.getWithdrawId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
-
         MoneyWithdraw moneyWithdraw = new MoneyWithdraw();
         moneyWithdraw.setId(withdrawRequest.getWithdrawId());
         moneyWithdraw.setUserId(userId);
         ResultData<PaymentResponse<SendWithdrawSmsCodeResponse>> resultData = moneyWithdrawService.sendWithdrawSms(moneyWithdraw);
         if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
-            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(),
+                    resultData.getMessageEnum().getState(),
                     resultData.getData().getData());
         } else if (null != resultData.getData()) {
             return new ResponseData<>(resultData.getData().getMsg(), MessageEnum.ERROR.getState());
@@ -209,8 +185,6 @@ public class AAccountController {
 
     /**
      * 提现到账-纯接口
-     *
-     * @return
      */
     @ValidateUser
     @PutMapping("/withdraw")
@@ -240,13 +214,11 @@ public class AAccountController {
     @ApiOperation("提现到账-页面")
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> toAccountPage(@LoginUserId Integer userId, @RequestBody WithdrawRequest withdrawRequest) {
-
         if (null == withdrawRequest.getWithdrawId())
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
         MoneyWithdraw withdraw = moneyWithdrawService.selectById(withdrawRequest.getWithdrawId());
         if (null == withdraw)
             return new ResponseData<>(MessageEnum.WITHDRAW_NOT_EXISTS.getMessage(), MessageEnum.WITHDRAW_NOT_EXISTS.getState());
-
         User userInfo = userService.userInfoById(userId);
         WithdrawMoneyPageRequest request = new WithdrawMoneyPageRequest();
         request.setWdMerNo(userInfo.getPaymentAccount());
@@ -273,8 +245,6 @@ public class AAccountController {
 
     /**
      * 利润统计
-     *
-     * @return
      */
     @ApiOperation("利润统计")
     @GetMapping(value = "/profit")

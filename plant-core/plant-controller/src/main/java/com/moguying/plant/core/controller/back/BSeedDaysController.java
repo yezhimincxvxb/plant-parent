@@ -2,6 +2,7 @@ package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.seed.SeedDays;
 import com.moguying.plant.core.service.seed.SeedDaysService;
@@ -10,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,16 +26,11 @@ public class BSeedDaysController {
 
     /**
      * 菌包周期列表
-     *
-     * @param page
-     * @param size
-     * @return
      */
-    @GetMapping(value = "/list")
+    @PostMapping("/list")
     @ApiOperation("菌包周期列表")
-    public PageResult<SeedDays> seedDaysList(@RequestParam(value = "page", defaultValue = "1", required = false) Integer page,
-                                             @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
-        return seedDaysService.seedDaysList(page, size);
+    public PageResult<SeedDays> seedDaysList(@RequestBody PageSearch search) {
+        return seedDaysService.seedDaysList(search.getPage(), search.getSize());
     }
 
 

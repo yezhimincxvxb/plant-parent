@@ -52,6 +52,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             List<FeedbackType> feedbackTypes = feedbackItem.getFeedbackTypes();
             if (feedbackTypes != null && !feedbackTypes.isEmpty()) {
                 feedbackTypes.forEach(feedbackType -> {
+                    if (!feedbackType.isFlow()) return;
                     List<ItemContent> itemContents = feedbackType.getItemContents();
                     if (itemContents != null && !itemContents.isEmpty()) {
                         itemContents.sort((o1, o2) -> o2.getPlantTime().compareTo(o1.getPlantTime()));
@@ -62,6 +63,18 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
         return new FeedbackItem();
     }
+
+    @Override
+    public Boolean existFeedback(FeedbackItem where) {
+        Query query = new Query();
+        if (null != where.getFeedbackType())
+            query.addCriteria(Criteria.where("feedbackType").is(where.getFeedbackType()));
+        if (null != where.getFeedbackTypeId())
+            query.addCriteria(Criteria.where("feedbackTypeId").is(where.getFeedbackTypeId()));
+        FeedbackItem feedbackItem = mongoTemplate.findOne(query, FeedbackItem.class);
+        return feedbackItem != null;
+    }
+
 
     @Override
     public ResultData<Boolean> saveFeedbackItem(FeedbackItem feedbackItem) {

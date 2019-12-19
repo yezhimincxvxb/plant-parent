@@ -2,6 +2,7 @@ package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.fertilizer.TriggerEvent;
@@ -35,16 +36,11 @@ public class BSystemController {
 
     /**
      * apk列表
-     *
-     * @param page
-     * @param size
-     * @return
      */
-    @GetMapping("/apk")
+    @PostMapping("/apk")
     @ApiOperation("apk列表")
-    public PageResult<Apk> apkList(@RequestParam(value = "page", defaultValue = "1") Integer page,
-                                   @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return apkService.apkList(page, size, null);
+    public PageResult<Apk> apkList(@RequestBody PageSearch search) {
+        return apkService.apkList(search.getPage(), search.getSize(), null);
     }
 
 
