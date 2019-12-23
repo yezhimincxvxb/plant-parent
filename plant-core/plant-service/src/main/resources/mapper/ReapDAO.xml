@@ -151,7 +151,7 @@
                 AND t3.group_id = #{wq.groupId}
             </if>
         </where>
-        order by t1.state
+        order by t1.state,t1.pre_reap_time desc
     </select>
 
 

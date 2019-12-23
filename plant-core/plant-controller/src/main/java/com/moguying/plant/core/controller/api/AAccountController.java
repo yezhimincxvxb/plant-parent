@@ -108,7 +108,7 @@ public class AAccountController {
      */
     @PostMapping("/withdraw/log")
     @ApiOperation("提现列表")
-    public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
+    public PageResult<MoneyWithdraw> withdrawList(@RequestBody PageSearch<MoneyWithdraw> search, @LoginUserId Integer userId) {
         MoneyWithdraw where = new MoneyWithdraw();
         where.setUserId(userId);
         where.setState(MoneyStateEnum.WITHDRAW_IN_ACCOUNT.getState());
@@ -121,15 +121,14 @@ public class AAccountController {
      */
     @PostMapping("/withdraw/review")
     @ApiOperation("提现审核记录")
-    public PageResult<MoneyWithdraw> withdrawReviewList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
+    public PageResult<MoneyWithdraw> withdrawReviewList(@RequestBody PageSearch<MoneyWithdraw> search, @LoginUserId Integer userId) {
         MoneyWithdraw where = new MoneyWithdraw();
         where.setUserId(userId);
-        List<Integer> states = new ArrayList<>();
-        states.add(MoneyStateEnum.WITHDRAWING.getState());
-        states.add(MoneyStateEnum.WITHDRAW_FAILED.getState());
-        states.add(MoneyStateEnum.WITHDRAW_SUCCESS.getState());
-        states.add(MoneyStateEnum.WITHDRAW_SUCCESS.getState());
-        states.add(MoneyStateEnum.WITHDRAW_ACCOUNT_ING.getState());
+
+        List<Integer> states = Arrays.asList(MoneyStateEnum.WITHDRAWING.getState(),
+                MoneyStateEnum.WITHDRAW_FAILED.getState(),
+                MoneyStateEnum.WITHDRAW_SUCCESS.getState(),
+                MoneyStateEnum.WITHDRAW_ACCOUNT_ING.getState());
         where.setInState(states);
         return moneyWithdrawService.apiMoneyWithdrawList(search.getPage(), search.getSize(), where);
     }
