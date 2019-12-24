@@ -153,7 +153,6 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @DS("write")
     @Transactional
     public BargainLog helpSuccess(Integer userId, BargainDetail detail) {
-
         BargainDetail update;
         // 关单
         if (!DateUtil.INSTANCE.betweenTime(detail.getAddTime(), detail.getCloseTime()) || detail.getTotalCount() <= detail.getBargainCount()) {
@@ -164,17 +163,34 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             bargainDetailDao.updateById(update);
             return null;
         }
-
         // 更新
         update = new BargainDetail();
-
         // 帮砍价格
-        BigDecimal helpAmount;
+        BigDecimal helpAmount = BigDecimal.ZERO;
+        if (detail.getBargainCount() + 1 < detail.getTotalCount()){
+            // 砍价系数
+            BargainRate bargainRate = bargainRateDao.selectById(detail.getProductId());
+            if (Objects.isNull(bargainRate)) return null;
+            // 注册时间
+            User user = userDAO.selectById(userId);
+            if (Objects.isNull(user)) return null;
+            //  注册时间在砍价详情生成之后，默认为新用户
+            if (user.getRegTime().after(detail.getAddTime())) {
+                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getNewRate()));
+            } else {
+                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getOwnRate()));
+            }
+        }
+
+        // 剩余价格等于帮砍价格或者零，提前生成订单
+        if (detail.getLeftAmount().compareTo(BigDecimal.ZERO) == 0 || detail.getLeftAmount().compareTo(helpAmount) == 0) {
+            detail.setBargainCount(detail.getTotalCount() - 1);
+        }
+
         // 最后一刀
         if (detail.getBargainCount() + 1 == detail.getTotalCount()) {
             // 订单流水号
             String orderNumber = OrderPrefixEnum.KAN_JIA.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate();
-
             // 生成订单
             MallOrder mallOrder = new MallOrder();
             mallOrder.setOrderNumber(orderNumber);
@@ -182,7 +198,6 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             mallOrder.setState(0);
             mallOrder.setAddTime(new Date());
             if (mallOrderDAO.insert(mallOrder) <= 0) return null;
-
             // 生成订单详情
             MallOrderDetail orderDetail = new MallOrderDetail();
             orderDetail.setOrderId(mallOrder.getId());
@@ -191,28 +206,11 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             orderDetail.setBuyCount(detail.getProductCount());
             orderDetail.setBuyAmount(detail.getTotalAmount());
             if (mallOrderDetailDAO.insert(orderDetail) <= 0) return null;
-
             // 关单
             update.setState(true);
             update.setOrderNumber(orderNumber);
-
             // 全部砍完
             helpAmount = detail.getLeftAmount();
-        } else {
-            // 砍价系数
-            BargainRate bargainRate = bargainRateDao.selectById(detail.getProductId());
-            if (Objects.isNull(bargainRate)) return null;
-
-            // 注册时间
-            User user = userDAO.selectById(userId);
-            if (Objects.isNull(user)) return null;
-
-            //  注册时间在砍价详情生成之后，默认为新用户
-            if (user.getRegTime().after(detail.getAddTime())) {
-                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getNewRate()));
-            } else {
-                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getOwnRate()));
-            }
         }
 
         update.setId(detail.getId());
