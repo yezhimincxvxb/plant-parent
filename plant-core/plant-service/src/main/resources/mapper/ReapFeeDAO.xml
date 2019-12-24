@@ -74,6 +74,7 @@
             <if test="wq.userRealName != null and wq.userRealName != ''">
                 AND t3.real_name = #{wq.userRealName}
             </if>
+            <!-- 渠道商搜索 -->
             <if test="wq.channelId != null">
                 and t1.invite_uid = #{wq.channelId}
             </if>

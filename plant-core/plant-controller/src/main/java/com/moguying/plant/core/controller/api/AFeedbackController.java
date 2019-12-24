@@ -5,6 +5,7 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.feedback.FeedbackItem;
+import com.moguying.plant.core.entity.feedback.Result;
 import com.moguying.plant.core.service.feedback.feebback.FeedbackService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,10 @@ public class AFeedbackController {
 
     @PostMapping("/exist")
     @NoLogin
-    public ResponseData<Boolean> exist(@RequestBody FeedbackItem queryFeedback) {
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), feedbackService.existFeedback(queryFeedback));
+    public ResponseData<Result> exist(@RequestBody FeedbackItem queryFeedback) {
+        Result result = new Result();
+        result.setIsExist(feedbackService.existFeedback(queryFeedback));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
     }
 
 

@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -198,18 +199,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public ResultData<User> saveUserInfo(Integer id, User user) {
         ResultData<User> resultData = new ResultData<>(MessageEnum.ERROR, null);
-
         if (userDAO.selectById(id) == null)
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
         user.setId(id);
-
-        if (user.getPassword() != null && !StringUtils.isEmpty(user.getPassword()))
+        if (StringUtils.isNotBlank(user.getPassword()))
             user.setPassword(PasswordUtil.INSTANCE.encode(user.getPassword().getBytes()));
-
-        if (user.getPayPassword() != null && !StringUtils.isEmpty(user.getPayPassword()))
+        if (StringUtils.isNotBlank(user.getPayPassword()))
             user.setPayPassword(PasswordUtil.INSTANCE.encode(user.getPayPassword().getBytes()));
-
-        if (user.getInviteName() != null && !StringUtils.isBlank(user.getInviteName())) {
+        if (StringUtils.isNotBlank(user.getInviteName())) {
             User invite = new User();
             invite.setPhone(user.getInviteName());
             User inviteUser = userDAO.selectOne(new QueryWrapper<>(invite));
@@ -218,19 +215,17 @@ public class UserServiceImpl implements UserService {
             else
                 return resultData.setMessageEnum(MessageEnum.INVITE_USER_NOT_EXISTS);
         }
-
         if (user.getIdCard() != null && idCardExists(user.getIdCard()))
             return resultData.setMessageEnum(MessageEnum.IDCARD_EXISTS);
-
         try {
             if (userDAO.updateById(user) > 0) {
                 User updatedUser = userDAO.selectById(id);
                 return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(updatedUser);
             }
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return resultData;
         }
-
         return resultData;
     }
 
@@ -426,45 +421,25 @@ public class UserServiceImpl implements UserService {
     @Override
     @DS("read")
     public UserSummaryInfo userSummaryInfo(User user) {
-
         UserSummaryInfo summaryInfo = new UserSummaryInfo();
         summaryInfo.setPhone(user.getPhone());
-        summaryInfo.setAvailableAmount(userMoneyDAO.selectById(user.getId()).getAvailableMoney());
-
+        // 用户可用金额
+        UserMoney userMoney = userMoneyDAO.selectById(user.getId());
+        if (userMoney == null) return null;
+        summaryInfo.setAvailableAmount(userMoney.getAvailableMoney());
         // 持有可种植的菌包份数
         Integer sumSeedCount = seedOrderDAO.sumSeedCountByUserId(user.getId());
-        if (null != sumSeedCount) {
-            summaryInfo.setSeedCount(sumSeedCount);
-        } else {
-            summaryInfo.setSeedCount(0);
-        }
-
+        summaryInfo.setSeedCount(sumSeedCount != null ? sumSeedCount : 0);
         // 用户有种植的大棚个数
         Integer blockCount = reapDAO.countBlockIdByUserId(user.getId());
-        if (null == blockCount) {
-            summaryInfo.setBlockCount(0);
-        } else {
-            summaryInfo.setBlockCount(blockCount);
-        }
-
+        summaryInfo.setBlockCount(blockCount != null ? blockCount : 0);
         // 是否有新消息
         Integer count = userMessageDAO.countMessageByUserId(user.getId());
-        if (count > 0) {
-            summaryInfo.setHasNewMessage(true);
-        } else {
-            summaryInfo.setHasNewMessage(false);
-        }
-
+        summaryInfo.setHasNewMessage(count != null && count > 0);
         // 是否设置了支付密码
-        if (null == user.getPayPassword() || StringUtils.isBlank(user.getPayPassword())) {
-            summaryInfo.setHasPayPassword(false);
-        } else {
-            summaryInfo.setHasPayPassword(true);
-        }
-
+        summaryInfo.setHasPayPassword(StringUtils.isNotBlank(user.getPayPassword()));
         return summaryInfo;
     }
-
 
     private boolean idCardExists(String idCard) {
         User where = new User();

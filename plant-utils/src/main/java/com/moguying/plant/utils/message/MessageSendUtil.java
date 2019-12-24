@@ -5,7 +5,6 @@ import com.moguying.plant.utils.CurlUtil;
 import com.moguying.plant.utils.message.request.SmsSendRequest;
 import com.moguying.plant.utils.message.response.SmsSendResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 
@@ -25,12 +24,12 @@ public class MessageSendUtil {
     private String password;
 
 
-    public boolean sendNormal(String phone,String content){
-        return send(sendUrl,account,password,phone,content);
+    public boolean sendNormal(String phone, String content) {
+        return send(sendUrl, account, password, phone, content);
     }
 
-    public boolean sendSale(String phone,String content){
-        return send(sendUrl,saleAccount,password,phone,content);
+    public boolean sendSale(String phone, String content) {
+        return send(sendUrl, saleAccount, password, phone, content);
     }
 
     private boolean send(String sendUrl, String account, String password, String phone, String msg) {
@@ -44,8 +43,5 @@ public class MessageSendUtil {
         }
         return true;
     }
-
-
-
 
 }

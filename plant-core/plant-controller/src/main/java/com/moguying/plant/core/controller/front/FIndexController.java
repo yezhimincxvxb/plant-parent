@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "公共接口")
 public class FIndexController {
 
-
     @Autowired
     private UserService userService;
 
@@ -39,15 +38,13 @@ public class FIndexController {
     @ResponseBody
     @ApiOperation("发送短信")
     public ResponseData<SendMessage> seedMessage(@RequestBody SendMessage sendMessage, HttpServletRequest request) {
-
         if (null == sendMessage.getPhone() || !CommonUtil.INSTANCE.isPhone(sendMessage.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
-
         User user = userService.userInfoByPhone(sendMessage.getPhone(), UserEnum.USER_ACTIVE);
         sendMessage.setIsReg(null == user);
         ResultData<Boolean> resultData = messageService.sendCodeMessage(sendMessage);
-
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(),
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),
+                resultData.getMessageEnum().getState(),
                 sendMessage);
     }
 

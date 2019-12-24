@@ -161,7 +161,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (null != orderNumber)
             paymentInfo.setOrderNumber(orderNumber);
         paymentInfo.setAddTime(new Date());
-        mongoTemplate.insert(paymentInfo);
+        mongoTemplate.save(paymentInfo);
         // paymentInfoDAO.insert(paymentInfo);
     }
 
@@ -771,10 +771,7 @@ public class PaymentServiceImpl implements PaymentService {
                     Feature.OrderedField), '&');
             String sign = CFCARAUtil.signMessageByP1(signData, pfxfile, password);
             paymentRequest.setSign(sign);
-
-
             return paymentRequest;
-
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.config.MybatisPlusConfig;
 import com.moguying.plant.core.entity.*;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
@@ -31,9 +32,6 @@ public class BUserController {
 
     /**
      * 用户列表
-     *
-     * @param search
-     * @return
      */
     @PostMapping("/list")
     @ApiOperation("用户列表")
