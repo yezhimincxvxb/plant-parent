@@ -142,84 +142,60 @@ public class AUserController {
     }
 
     /**
-     * 首页信息
+     * 用户中心首页信息
      */
     @GetMapping
-    @ApiOperation("首页信息")
+    @ApiOperation("用户中心首页信息")
     public ResponseData<UserSummaryInfo> index(@LoginUserId Integer userId) {
-
-        ResponseData<UserSummaryInfo> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-
-        // 用户不存在
-        User user = userService.userInfoById(userId);
-        if (null == user)
-            return responseData
-                    .setMessage(MessageEnum.USER_NOT_EXISTS.getMessage())
-                    .setState(MessageEnum.USER_NOT_EXISTS.getState());
-
-        // 首页显示信息
-        UserSummaryInfo summaryInfo = userService.userSummaryInfo(user);
-        if (summaryInfo != null)
-            return responseData
-                    .setMessage(MessageEnum.SUCCESS.getMessage())
-                    .setState(MessageEnum.SUCCESS.getState())
-                    .setData(summaryInfo);
-
-        return responseData;
-    }
-
-    /**
-     * PC端用户中心信息
-     */
-    @GetMapping("/info")
-    @ApiOperation("PC端用户中心信息")
-    public ResponseData<User> userInfo(@LoginUserId Integer userId) {
-
-        ResponseData<User> responseData = new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
-
-        // 用户不存在
         User user = userService.userInfoById(userId);
         if (null == user)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
+        // 用户首页摘要信息
+        UserSummaryInfo summaryInfo = userService.userSummaryInfo(user);
+        if (summaryInfo != null)
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), summaryInfo);
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+    }
 
+    /**
+     * PC端用户个人中心首页信息
+     */
+    @GetMapping("/info")
+    @ApiOperation("PC端用户个人中心首页信息")
+    public ResponseData<User> userInfo(@LoginUserId Integer userId) {
+        User user = userService.userInfoById(userId);
+        if (null == user)
+            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
         // 隐藏id
         user.setId(null);
         user.setPhone(user.getPhone().substring(0, 3).concat("***").concat(user.getPhone().substring(7, 11)));
-        return responseData.setData(user);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), user);
     }
 
 
     /**
-     * 修改支付密码
+     * 设置/修改支付密码
      */
     @PutMapping(value = "/pay/password")
-    @ApiOperation("修改支付密码")
+    @ApiOperation("设置/修改支付密码")
     public ResponseData<Integer> setPayPassword(@RequestBody PayPassword payPassword, @LoginUserId Integer userId) {
-        // 用户不存在
         User userInfo = userService.userInfoById(userId);
         if (null == userInfo)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
-
         // 首次设置密码
-        if (StringUtils.isEmpty(userInfo.getPayPassword()) && payPassword.getOldPayPassword() != null
-                && StringUtils.isNotEmpty(payPassword.getOldPayPassword())) {
+        if (StringUtils.isBlank(userInfo.getPayPassword()) && StringUtils.isNotBlank(payPassword.getOldPayPassword()))
             return new ResponseData<>(MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getMessage(), MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getState());
-        }
-
         // 旧密码错误
-        if (!StringUtils.isEmpty(userInfo.getPayPassword())) {
-            if (null == payPassword.getOldPayPassword())
+        if (StringUtils.isNotBlank(userInfo.getPayPassword())) {
+            if (StringUtils.isBlank(payPassword.getOldPayPassword()))
                 return new ResponseData<>(MessageEnum.PAY_PASSWORD_IS_EMPTY.getMessage(), MessageEnum.PAY_PASSWORD_IS_EMPTY.getState());
-
             String newPayPassword = PasswordUtil.INSTANCE.encode(payPassword.getOldPayPassword().getBytes());
             if (!newPayPassword.equals(userInfo.getPayPassword()))
                 return new ResponseData<>(MessageEnum.OLD_PAY_PASSWORD_ERROR.getMessage(), MessageEnum.OLD_PAY_PASSWORD_ERROR.getState());
         }
-
         // 短信验证
         if (messageService.validateMessage(userInfo.getPhone(), payPassword.getCode()) <= 0)
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
-
         User update = new User();
         update.setPayPassword(payPassword.getPayPassword());
         ResultData<User> resultData = userService.saveUserInfo(userId, update);
@@ -244,35 +220,26 @@ public class AUserController {
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
-
     /**
      * 设置/修改提现密码
      * 跳转第三方支付网页设置
-     *
-     * @param userId
-     * @return
      */
     @GetMapping("/withdraw/password")
     @ApiOperation("设置/修改提现密码")
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> setWithdrawPassword(@LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
-
-        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState())) {
+        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
             return new ResponseData<>(MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getMessage(),
                     MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getState());
-        }
-
         if (!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState())
                 || StringUtils.isEmpty(userInfo.getPaymentAccount())) {
             return new ResponseData<>(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT.getMessage(),
                     MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT.getState());
         }
-
         ModifyPayPasswordRequest modifyPayPasswordRequest = new ModifyPayPasswordRequest();
         modifyPayPasswordRequest.setMerchantNo(userInfo.getPaymentAccount());
         modifyPayPasswordRequest.setType("H5");
-
         PaymentRequest paymentRequest = paymentService.modifyPayPassword(modifyPayPasswordRequest);
         if (null != paymentRequest) {
             PaymentRequestForHtml paymentRequestForHtml = new PaymentRequestForHtml();

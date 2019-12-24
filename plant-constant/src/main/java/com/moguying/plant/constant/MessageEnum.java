@@ -10,7 +10,7 @@ public enum  MessageEnum {
     IDCARD_EXISTS("身份证号已存在",10005),
     SEED_CLASS_NAME_EMPTY("菌包分类名不能为空",10006),
     ID_ERROR("删除ID不正确",10007),
-    SEED_CLASS_PARENT_NAME_EXISTS("分类名称已存在",10008),
+    USER_IS_BAND("用户冻结",10008),
     SEED_CLASS_PARENT_NOT_EXISTS("上级分类不存在",10009),
     PARAMETER_ERROR("参数错误",10010),
     DAYS_EXISTS_ERROR("周期已存在",10011),

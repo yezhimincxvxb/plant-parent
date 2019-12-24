@@ -20,32 +20,22 @@ public enum PasswordUtil {
 
     public String encode(byte[] source, Integer length) {
         String s = null;
-        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             java.security.MessageDigest md = java.security.MessageDigest
                     .getInstance("MD5");
             md.update(source);
-            byte tmp[] = md.digest();
-
-            if (null == length)
-                length = tmp.length;
-
-            char str[] = new char[length * 2];
-
+            byte[] tmp = md.digest();
+            if (null == length) length = tmp.length;
+            char[] str = new char[length * 2];
             int k = 0;
-
-
             for (int i = 0; i < length; i++) {
-
                 byte byte0 = tmp[i];
                 str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-
                 str[k++] = hexDigits[byte0 & 0xf];
-
             }
             s = new String(str);
-
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

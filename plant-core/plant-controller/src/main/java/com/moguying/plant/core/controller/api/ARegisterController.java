@@ -51,40 +51,32 @@ public class ARegisterController {
 
     /**
      * 注册
-     * @param register
-     * @return
      */
     @PostMapping(value = "/register")
     @ResponseBody
     @NoLogin
     @ApiOperation("注册")
-    public ResponseData<LoginResponse> register(@RequestBody Register register){
+    public ResponseData<LoginResponse> register(@RequestBody Register register) {
         // 校验手机号格式
         if (!CommonUtil.INSTANCE.isPhone(register.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
-
         // 用户是否已存在
         User user = userService.userInfoByPhone(register.getPhone(), null);
         if (user != null)
             return new ResponseData<>(MessageEnum.PHONE_EXISTS.getMessage(), MessageEnum.PHONE_EXISTS.getState());
-
         // 校验短信验证码
         if (StringUtils.isEmpty(register.getMsgCode()))
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_IS_EMPTY.getMessage(), MessageEnum.MESSAGE_CODE_IS_EMPTY.getState());
-
         // 短信验证码是否失效(一分钟有效)
         PhoneMessage message = messageService.messageByPhone(register.getPhone());
         if (message == null || !message.getCode().equals(register.getMsgCode()))
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
-
         // 验证后更新状态
         messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
-
         // 创建用户，封装数据
         User addUser = new User();
         addUser.setPhone(register.getPhone());
         addUser.setRegSource(UserEnum.REG_SOURCE_MOBILE.getStateName());
-
         // 校验邀请人
         if (!StringUtils.isEmpty(register.getInviteCode())) {
             // 邀请人信息
@@ -93,10 +85,8 @@ public class ARegisterController {
                 return new ResponseData<>(MessageEnum.INVITE_USER_NOT_EXISTS.getMessage(), MessageEnum.INVITE_USER_NOT_EXISTS.getState());
             addUser.setInviteUid(inviteUser.getId());
         }
-
         // 添加用户
         ResultData<TriggerEventResult<InnerMessage>> resultData = userService.addUser(addUser);
-
         // 如果邀请人不为空
         if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS)) {
             if (addUser.getInviteUid() != null) {
@@ -115,74 +105,67 @@ public class ARegisterController {
 
     /**
      * 登录
-     * @param login
-     * @return
      */
     @PostMapping(value = "/login")
     @ResponseBody
     @NoLogin
     @ApiOperation("登录")
-    public ResponseData<LoginResponse> login(@RequestBody Login login, HttpServletRequest request){
-        if(null != request.getSession().getAttribute("user"))
-            return new ResponseData<>(MessageEnum.USER_HAS_LOGIN.getMessage(),MessageEnum.USER_HAS_LOGIN.getState());
-
+    public ResponseData<LoginResponse> login(@RequestBody Login login, HttpServletRequest request) {
+        if (null != request.getSession().getAttribute("user"))
+            return new ResponseData<>(MessageEnum.USER_HAS_LOGIN.getMessage(), MessageEnum.USER_HAS_LOGIN.getState());
         if (StringUtils.isEmpty(login.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
-
         User user;
-        // 验证码登录
+        // 验证码登录 & 密码登录
         if (!StringUtils.isEmpty(login.getCode()) && StringUtils.isEmpty(login.getPassword())) {
             PhoneMessage message = messageService.messageByPhone(login.getPhone());
-            if(message == null || !message.getCode().equals(login.getCode()))
-                return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(),MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
-            messageService.setMessageState(message.getId(),SystemEnum.PHONE_MESSAGE_VALIDATE);
-            user = userService.userInfoByPhone(login.getPhone(),UserEnum.USER_ACTIVE);
+            if (message == null || !message.getCode().equals(login.getCode()))
+                return new ResponseData<>(MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_LOGIN_ERROR.getState());
+            messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
+            user = userService.userInfoByPhone(login.getPhone(), UserEnum.USER_ACTIVE);
         } else if (!StringUtils.isEmpty(login.getPassword()) && StringUtils.isEmpty(login.getCode())) {
-            user = userService.loginByPhoneAndPassword(login.getPhone(),login.getPassword());
-            if(user == null)
-                return new ResponseData<>(MessageEnum.LOGIN_ERROR.getMessage(),MessageEnum.LOGIN_ERROR.getState());
+            user = userService.loginByPhoneAndPassword(login.getPhone(), login.getPassword());
+            if (user == null)
+                return new ResponseData<>(MessageEnum.LOGIN_ERROR.getMessage(), MessageEnum.LOGIN_ERROR.getState());
         } else {
-            return new ResponseData<>(MessageEnum.LOGIN_METHOD_ERROR.getMessage(),MessageEnum.LOGIN_METHOD_ERROR.getState());
+            return new ResponseData<>(MessageEnum.LOGIN_METHOD_ERROR.getMessage(), MessageEnum.LOGIN_METHOD_ERROR.getState());
         }
+        if (user == null || user.getUserState().equals(false))
+            return new ResponseData<>(MessageEnum.USER_IS_BAND.getMessage(), MessageEnum.USER_IS_BAND.getState());
         User update = new User();
         update.setLastLoginTime(new Date());
-        if(null != userService.saveUserInfo(user.getId(),update).getData()) {
+        if (null != userService.saveUserInfo(user.getId(), update).getData()) {
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
-                    userService.loginSuccess(user.getId(),user.getPhone()).getData().getData());
+                    userService.loginSuccess(user.getId(), user.getPhone()).getData().getData());
         }
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(),MessageEnum.ERROR.getState());
+        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
-
-
-
-
 
 
     /**
      * 忘记密码
-     * @param forgetPassword
-     * @return
      */
     @PutMapping(value = "/forget")
     @ResponseBody
     @NoLogin
     @ApiOperation("忘记密码")
-    public ResponseData<Integer> forgetPassword(@RequestBody ForgetPassword forgetPassword){
-        if(!CommonUtil.INSTANCE.isPhone(forgetPassword.getPhone()))
-            return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(),MessageEnum.PHONE_ERROR.getState());
-        User user = userService.userInfoByPhone(forgetPassword.getPhone(),UserEnum.USER_ACTIVE);
-        if(user == null)
-            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(),MessageEnum.USER_NOT_EXISTS.getState());
+    public ResponseData<Integer> forgetPassword(@RequestBody ForgetPassword forgetPassword) {
+        if (!CommonUtil.INSTANCE.isPhone(forgetPassword.getPhone()))
+            return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
+        User user = userService.userInfoByPhone(forgetPassword.getPhone(), UserEnum.USER_ACTIVE);
+        if (user == null)
+            return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
         User update = new User();
-        if(messageService.validateMessage(forgetPassword.getPhone(),forgetPassword.getCode()) <= 0 )
-            return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(),MessageEnum.MESSAGE_CODE_ERROR.getState());
+        if (messageService.validateMessage(forgetPassword.getPhone(), forgetPassword.getCode()) <= 0)
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
         update.setPassword(forgetPassword.getPassword());
-        ResultData<User> resultData = userService.saveUserInfo(user.getId(),update);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState(),resultData.getData().getId());
+        ResultData<User> resultData = userService.saveUserInfo(user.getId(), update);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
     }
 
     /**
      * 图形验证码
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -209,7 +192,7 @@ public class ARegisterController {
 
             // 输出图片流
             gifCaptcha.out(response.getOutputStream());
-        }  catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
