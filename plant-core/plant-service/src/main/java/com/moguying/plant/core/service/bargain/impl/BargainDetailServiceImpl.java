@@ -182,8 +182,8 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             }
         }
 
-        // 剩余价格等于帮砍价格或者零，提前生成订单
-        if (detail.getLeftAmount().compareTo(BigDecimal.ZERO) == 0 || detail.getLeftAmount().compareTo(helpAmount) == 0) {
+        // 剩余价格等于零或小于等于帮砍价格，提前生成订单
+        if (detail.getLeftAmount().compareTo(BigDecimal.ZERO) == 0 || detail.getLeftAmount().compareTo(helpAmount) <= 0) {
             detail.setBargainCount(detail.getTotalCount() - 1);
         }
 

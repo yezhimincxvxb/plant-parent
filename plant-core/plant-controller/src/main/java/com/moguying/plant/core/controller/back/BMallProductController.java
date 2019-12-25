@@ -96,19 +96,15 @@ public class BMallProductController {
     @PostMapping("/toBargain/list")
     @ApiOperation("商品推送到砍价列表")
     public ResponseData<Integer> productToBargain(@RequestBody MallProduct product) {
-
         ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-
         // 参数错误
         if (Objects.isNull(product) || Objects.isNull(product.getId()))
             return responseData;
-
         Integer result = productService.updateProductToBargain(product);
         if (result > 0)
             return responseData
                     .setMessage(MessageEnum.SUCCESS.getMessage())
                     .setState(MessageEnum.SUCCESS.getState());
-
         return responseData;
     }
 

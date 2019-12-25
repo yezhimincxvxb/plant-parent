@@ -395,17 +395,13 @@ public class MallProductServiceImpl implements MallProductService {
     @DS("write")
     @Transactional
     public Integer updateProductToBargain(MallProduct mallProduct) {
-
         if (Objects.isNull(mallProduct)) return 0;
-
         // 商品不存在
         if (Objects.isNull(mallProductDAO.selectById(mallProduct.getId()))) return 0;
-
         // 默认值
         Integer ownRate = Optional.ofNullable(mallProduct.getOwnRate()).orElse(50);
         Integer newRate = Optional.ofNullable(mallProduct.getNewRate()).orElse(20);
         Integer oldRate = Optional.ofNullable(mallProduct.getOldRate()).orElse(10);
-
         // 设置砍价系数
         BargainRate bargainRate = bargainRateDao.selectById(mallProduct.getId());
         if (Objects.isNull(bargainRate)) {
