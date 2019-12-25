@@ -171,7 +171,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
     }
 
     @Override
-    @DS("read")
+    @DS("write")
     public ResultData<LotteryResult> lotteryDo(Integer userId,boolean isCheck) {
         ResultData<LotteryResult> resultResultData = new ResultData<>(MessageEnum.ERROR,new LotteryResult());
         String key = ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString());

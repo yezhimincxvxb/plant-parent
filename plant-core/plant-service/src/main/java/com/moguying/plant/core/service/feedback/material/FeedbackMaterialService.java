@@ -11,7 +11,7 @@ public interface FeedbackMaterialService {
 
     ResultData<Integer> addMaterial(FeedbackMaterial feedbackMaterial);
 
-    ResultData<Boolean> deleteMaterial(FeedbackMaterial feedbackMaterial);
+    ResultData<Boolean> deleteMaterial(Integer id);
 
     ResultData<Boolean> checkMaterial(String fileName);
 

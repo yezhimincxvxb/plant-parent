@@ -39,7 +39,7 @@ public class BReapFeeController {
 
     @PostMapping("/channel/list")
     @ApiOperation("渠道商列表")
-    public PageResult<User> channelList(@RequestBody PageSearch search) {
+    public PageResult<User> channelList(@RequestBody PageSearch<User> search) {
         return userService.userList(search.getPage(), search.getSize(), new User().setIsChannel(true));
     }
 

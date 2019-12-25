@@ -59,10 +59,7 @@ public class BFeedbackMaterialController {
     public ResponseData<Integer> deleteMaterial(@PathVariable Integer id) {
         if (null == id)
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
-        FeedbackMaterial material = new FeedbackMaterial();
-        material.setId(id);
-        material.setIsDelete(true);
-        ResultData<Boolean> resultData = resourceService.deleteMaterial(material);
+        ResultData<Boolean> resultData = resourceService.deleteMaterial(id);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 

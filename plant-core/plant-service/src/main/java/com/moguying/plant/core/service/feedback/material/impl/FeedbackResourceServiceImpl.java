@@ -41,10 +41,10 @@ public class FeedbackResourceServiceImpl implements FeedbackMaterialService {
 
     @Override
     @DS("write")
-    public ResultData<Boolean> deleteMaterial(FeedbackMaterial material) {
+    public ResultData<Boolean> deleteMaterial(Integer id) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, false);
-        if (materialDAO.updateById(material) > 0) {
-            new Thread(new DeleteMaterialService(material.getId())).start();
+        if (materialDAO.deleteById(id) > 0) {
+            new Thread(new DeleteMaterialService(id)).start();
             return resultData.setMessageEnum(MessageEnum.SUCCESS);
         }
         return resultData;

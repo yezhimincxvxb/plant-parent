@@ -45,7 +45,7 @@
         <![CDATA[
             unix_timestamp(NOW()) >= unix_timestamp(open_time) AND unix_timestamp(NOW()) <= unix_timestamp(close_time)
           ]]>
-        order by open_time
+        order by open_time desc
     </select>
 
     <select id="selectSelective" parameterType="com.moguying.plant.core.entity.content.Activity"
