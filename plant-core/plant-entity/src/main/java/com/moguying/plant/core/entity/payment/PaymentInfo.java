@@ -1,5 +1,6 @@
 package com.moguying.plant.core.entity.payment;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -50,6 +51,13 @@ public class PaymentInfo implements Serializable {
     /**
      * 添加时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
+
+    // 辅助字段
+    private String userName;
+    private Date start;
+    private Date end;
+
 
 }

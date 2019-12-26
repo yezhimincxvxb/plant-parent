@@ -21,7 +21,4 @@ public interface PhoneMessageService {
 
     ResultData<Boolean> send(String phone,String template,String code,String... params);
 
-
-
-
 }
