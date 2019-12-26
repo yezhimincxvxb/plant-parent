@@ -19,12 +19,13 @@
         <result column="close_time" property="closeTime"/>
         <result column="symbol" property="symbol"/>
         <result column="order_number" property="orderNumber"/>
+        <result column="reserve_amount" property="reserveAmount"/>
     </resultMap>
 
     <!-- 基本查询字段 -->
     <sql id="BaseColumnList">
         id, user_id, product_id, product_count, total_amount, bargain_amount, left_amount,
-        total_count, bargain_count, state, add_time, bargain_time, close_time, symbol, order_number
+        total_count, bargain_count, state, add_time, bargain_time, close_time, symbol, order_number, reserve_amount
     </sql>
 
     <!-- 用户砍价详情 -->
@@ -99,7 +100,7 @@
     <select id="doingList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
         select t1.id `orderId`, t2.name `productName`, t1.bargain_amount `bargainAmount`, t1.left_amount `leftAmount`,
         t2.summary_desc `productInfo`, t2.pic_url `picUrl`, t1.add_time `beginTime`, t1.close_time `endTime`,
-        sum(t1.bargain_amount / t1.total_amount) `rate`, t2.id `productId`, t1.user_id `userId`,t1.symbol
+        t1.total_amount `totalAmount`, t2.id `productId`, t1.user_id `userId`,t1.symbol
         from plant_bargain_detail t1
         left join plant_mall_product t2 on t1.product_id = t2.id
         <where>
@@ -107,26 +108,6 @@
                 t1.user_id = #{userId}
             </if>
             and t1.state = 0
-            and unix_timestamp(t1.add_time) &lt; unix_timestamp()
-            and unix_timestamp(t1.close_time) &gt; unix_timestamp()
-        </where>
-        group by t1.id
-    </select>
-
-    <!-- 砍价进行中的成品列表 -->
-    <select id="successList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
-        select t1.id `orderId`, t2.name `productName`, t1.bargain_amount `bargainAmount`, t1.left_amount `leftAmount`,
-        t2.summary_desc `productInfo`, t2.pic_url `picUrl`, t1.add_time `beginTime`, t1.close_time `endTime`,
-        sum(t1.bargain_amount / t1.total_amount) `rate`, t2.id `productId`, t1.user_id `userId`
-        from plant_bargain_detail t1
-        left join plant_mall_product t2 on t1.product_id = t2.id
-        left join plant_mall_order t3 on t1.order_number = t3.order_number
-        <where>
-            <if test="userId != null">
-                t1.user_id = #{userId}
-            </if>
-            and t3.state = 0
-            and t1.state = 1
             and unix_timestamp(t1.add_time) &lt; unix_timestamp()
             and unix_timestamp(t1.close_time) &gt; unix_timestamp()
         </where>
@@ -201,6 +182,7 @@
         left join plant_user t4 on t1.user_id = t4.id
         left join plant_mall_product t5 on t1.product_id = t5.id
         left join plant_user_address t6 on t3.address_id = t6.id
+        left join plant_bargain_rate t7 on t1.product_id = t7.product_id
         <where>
             <if test="bargain != null">
                 <if test="bargain.phone != null">
@@ -210,7 +192,7 @@
                     and instr(t5.name, #{bargain.productName})
                 </if>
                 <if test="bargain.beginTime != null">
-                    and unix_timestamp(t5.add_time) &gt;= unix_timestamp(#{bargain.beginTime})
+                    and unix_timestamp(t7.add_time) &gt;= unix_timestamp(#{bargain.beginTime})
                 </if>
                 <if test="bargain.endTime != null">
                     and unix_timestamp(t1.bargain_time) &lt;= unix_timestamp(#{bargain.endTime})

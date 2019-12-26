@@ -1,9 +1,11 @@
 package com.moguying.plant.core.service.bargain.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.constant.MallEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.bargain.BargainDetailDao;
@@ -27,11 +29,14 @@ import com.moguying.plant.core.entity.mall.MallOrderDetail;
 import com.moguying.plant.core.entity.mall.MallProduct;
 import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.entity.user.UserAddress;
+import com.moguying.plant.core.scheduled.CloseOrderScheduled;
+import com.moguying.plant.core.scheduled.task.CloseBargainOrder;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -65,11 +70,17 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Autowired
     private BargainRateDao bargainRateDao;
 
+    @Autowired
+    private CloseOrderScheduled closeOrderScheduled;
+
+    @Value("${bargain.expire.time}")
+    private Long bargainTime;
+
     /**
      * 获取比率
      */
     private BigDecimal getRate(Integer val) {
-        return new BigDecimal(val + new Random().nextInt(11)).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_UP);
+        return new BigDecimal(val + new Random().nextInt(11)).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_DOWN);
     }
 
     @Override
@@ -87,12 +98,9 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @Override
     @DS("write")
     @Transactional
-    public ResultData<ShareVo> shareSuccess(Integer userId, MallProduct product) {
-
+    public ResultData<ShareVo> shareSuccess(Integer userId, MallProduct product, BargainRate bargainRate) {
         ResultData<ShareVo> resultData = new ResultData<>(MessageEnum.ERROR, null);
-
         if (Objects.isNull(product)) return resultData;
-
         // 重复分享
         List<BargainDetail> details = bargainDetailDao.getOneByOpen(userId, product.getId(), false);
         if (details != null && !details.isEmpty()) {
@@ -108,31 +116,26 @@ public class BargainDetailServiceImpl implements BargainDetailService {
                     .setOrderId(detail.getId());
             return resultData.setMessageEnum(MessageEnum.BARGAIN_AGAIN).setData(shareVo);
         }
-
-        // 未设置砍价系数
-        BargainRate bargainRate = bargainRateDao.selectById(product.getId());
-        if (Objects.isNull(bargainRate)) return resultData.setMessageEnum(MessageEnum.NOT_BARGAIN_RATE);
-
         // 总价、第一刀砍了多少
-        BigDecimal totalAmount = product.getPrice().multiply(new BigDecimal(product.getBargainNumber()));
-        BigDecimal bargainAmount = totalAmount.multiply(getRate(bargainRate.getOwnRate()));
-
+        BigDecimal totalAmount = product.getPrice().multiply(BigDecimal.valueOf(bargainRate.getBargainNumber()));
+        BigDecimal bargainAmount = totalAmount.multiply(getRate(bargainRate.getOwnRate())).setScale(2, BigDecimal.ROUND_DOWN);
         // 首次分享，生成砍价详情
-        BargainDetail add = new BargainDetail();
-        add.setUserId(userId);
-        add.setProductId(product.getId());
-        add.setProductCount(product.getBargainNumber());
-        add.setTotalAmount(totalAmount);
-        add.setBargainAmount(bargainAmount);
-        add.setLeftAmount(totalAmount.subtract(bargainAmount));
-        add.setTotalCount(product.getBargainCount());
-        add.setBargainCount(1);
-        add.setSymbol(RandomStringUtils.random(12, true, true));
-        add.setAddTime(new Date());
-        add.setBargainTime(new Date());
-        add.setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
-        if (bargainDetailDao.insert(add) <= 0) return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_ORDER_FAIL);
-
+        BargainDetail add = new BargainDetail()
+                .setUserId(userId)
+                .setProductId(product.getId())
+                .setProductCount(bargainRate.getBargainNumber())
+                .setReserveAmount(BigDecimal.valueOf(bargainRate.getBargainCount() - 1).multiply(BigDecimal.valueOf(0.01)))
+                .setTotalAmount(totalAmount)
+                .setBargainAmount(bargainAmount)
+                .setLeftAmount(totalAmount.subtract(bargainAmount))
+                .setTotalCount(bargainRate.getBargainCount())
+                .setBargainCount(1)
+                .setSymbol(RandomStringUtils.random(12, true, true))
+                .setAddTime(new Date())
+                .setBargainTime(new Date())
+                .setCloseTime(DateUtil.INSTANCE.nextDay(new Date()));
+        if (bargainDetailDao.insert(add) <= 0)
+            return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_ORDER_FAIL);
         // 日志
         BargainLog log = new BargainLog();
         log.setUserId(userId);
@@ -144,6 +147,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         if (bargainLogDao.insert(log) > 0) {
             ShareVo shareVo = new ShareVo()
                     .setOrderId(add.getId());
+            closeOrderScheduled.addCloseItem(new CloseBargainOrder(add.getId(), bargainTime));
             return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(shareVo);
         }
         return resultData.setMessageEnum(MessageEnum.ADD_BARGAIN_LOG_FAIL);
@@ -153,21 +157,14 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @DS("write")
     @Transactional
     public BargainLog helpSuccess(Integer userId, BargainDetail detail) {
-        BargainDetail update;
         // 关单
         if (!DateUtil.INSTANCE.betweenTime(detail.getAddTime(), detail.getCloseTime()) || detail.getTotalCount() <= detail.getBargainCount()) {
-            // 更新状态
-            update = new BargainDetail();
-            update.setId(detail.getId());
-            update.setState(true);
-            bargainDetailDao.updateById(update);
+            bargainOrderClose(detail.getId());
             return null;
         }
-        // 更新
-        update = new BargainDetail();
         // 帮砍价格
         BigDecimal helpAmount = BigDecimal.ZERO;
-        if (detail.getBargainCount() + 1 < detail.getTotalCount()){
+        if (detail.getBargainCount() + 1 < detail.getTotalCount()) {
             // 砍价系数
             BargainRate bargainRate = bargainRateDao.selectById(detail.getProductId());
             if (Objects.isNull(bargainRate)) return null;
@@ -176,9 +173,13 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             if (Objects.isNull(user)) return null;
             //  注册时间在砍价详情生成之后，默认为新用户
             if (user.getRegTime().after(detail.getAddTime())) {
-                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getNewRate()));
+                helpAmount = (detail.getLeftAmount().subtract(detail.getReserveAmount()))
+                        .multiply(getRate(bargainRate.getNewRate())).setScale(2, BigDecimal.ROUND_DOWN)
+                        .add(BigDecimal.valueOf(0.01));
             } else {
-                helpAmount = detail.getLeftAmount().multiply(getRate(bargainRate.getOwnRate()));
+                helpAmount = (detail.getLeftAmount().subtract(detail.getReserveAmount()))
+                        .multiply(getRate(bargainRate.getOwnRate())).setScale(2, BigDecimal.ROUND_DOWN)
+                        .add(BigDecimal.valueOf(0.01));
             }
         }
 
@@ -207,19 +208,19 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             orderDetail.setBuyAmount(detail.getTotalAmount());
             if (mallOrderDetailDAO.insert(orderDetail) <= 0) return null;
             // 关单
-            update.setState(true);
-            update.setOrderNumber(orderNumber);
+            bargainOrderClose(detail.getId());
             // 全部砍完
             helpAmount = detail.getLeftAmount();
         }
-
-        update.setId(detail.getId());
-        update.setBargainAmount(detail.getBargainAmount().add(helpAmount));
-        update.setLeftAmount(detail.getLeftAmount().subtract(helpAmount));
-        update.setBargainCount(detail.getBargainCount() + 1);
-        update.setBargainTime(new Date());
+        // 更新
+        BargainDetail update = new BargainDetail()
+                .setId(detail.getId())
+                .setReserveAmount(detail.getReserveAmount().subtract(BigDecimal.valueOf(0.01)))
+                .setBargainAmount(detail.getBargainAmount().add(helpAmount))
+                .setLeftAmount(detail.getLeftAmount().subtract(helpAmount))
+                .setBargainCount(detail.getBargainCount() + 1)
+                .setBargainTime(new Date());
         if (bargainDetailDao.updateById(update) <= 0) return null;
-
         // 日志
         BargainLog log = new BargainLog();
         log.setUserId(userId);
@@ -254,23 +255,13 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
     @Override
     @DS("read")
-    public PageResult<BargainVo> successList(Integer page, Integer size, Integer userId) {
-        IPage<BargainVo> pageResult = bargainDetailDao.successList(new Page<>(page, size), userId);
-        return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
-    }
-
-    @Override
-    @DS("read")
     public BargainVo productInfoByOrderId(BargainVo bargainVo) {
-
         BargainDetail detail = new BargainDetail();
-
         // 根据订单id
         if (Objects.nonNull(bargainVo.getOrderId())) {
             detail = bargainDetailDao.selectById(bargainVo.getOrderId());
             if (detail == null) return null;
         }
-
         // 根据口令
         if (Objects.nonNull(bargainVo.getSymbol())) {
             QueryWrapper<BargainDetail> queryWrapper = new QueryWrapper<BargainDetail>().eq("symbol", bargainVo.getSymbol());
@@ -278,10 +269,10 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             if (details == null || details.size() != 1) return null;
             detail = details.get(0);
         }
-
         MallProduct mallProduct = mallProductDAO.selectById(detail.getProductId());
         if (mallProduct == null) return null;
-
+        BargainRate bargainRate = bargainRateDao.selectById(mallProduct.getId());
+        if (bargainRate == null) return null;
         return new BargainVo()
                 .setOrderId(detail.getId())
                 .setProductName(mallProduct.getName())
@@ -291,9 +282,9 @@ public class BargainDetailServiceImpl implements BargainDetailService {
                 .setPicUrl(mallProduct.getPicUrl())
                 .setBeginTime(detail.getAddTime())
                 .setEndTime(detail.getCloseTime())
-                .setRate(detail.getBargainAmount().divide(detail.getTotalAmount(), 2))
+                .setRate(detail.getBargainAmount().divide(detail.getTotalAmount(), 2, BigDecimal.ROUND_DOWN))
                 .setProductId(mallProduct.getId())
-                .setProductPrice(mallProduct.getPrice().multiply(new BigDecimal(mallProduct.getBargainNumber())))
+                .setProductPrice(mallProduct.getPrice().multiply(new BigDecimal(bargainRate.getBargainNumber())))
                 .setUserId(detail.getUserId())
                 .setSymbol(detail.getSymbol());
     }
@@ -315,9 +306,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
     @DS("write")
     @Transactional
     public Boolean submitSuccess(Integer userId, MallProduct product, UserAddress address, BargainDetail detail, MallOrder mallOrder) {
-
         if (product == null || address == null || mallOrder == null) return false;
-
         // 超时关单
         if (!DateUtil.INSTANCE.betweenTime(detail.getAddTime(), detail.getCloseTime())) {
             // 更新状态
@@ -328,41 +317,38 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             mallOrderDAO.updateById(update);
             return false;
         }
-
+        BargainRate bargainRate = bargainRateDao.selectById(product.getId());
+        if (bargainRate == null) return false;
         // 库存不足
-        if (product.getLeftCount() < product.getBargainNumber()) return false;
-
+        if (product.getLeftCount() < bargainRate.getBargainNumber()) return false;
         // 更新库存
-        if (mallProductDAO.updateProductHasCountById(product.getBargainNumber(), product.getId()) <= 0) return false;
-
+        if (mallProductDAO.updateProductHasCountById(bargainRate.getBargainNumber(), product.getId()) <= 0)
+            return false;
         // 限量商品
-        if (product.getIsLimit()) {
+        if (bargainRate.getIsLimit()) {
             // 限量不足
-            if (product.getBargainLimit() < product.getBargainNumber()) {
+            if (bargainRate.getBargainLimit() < bargainRate.getBargainNumber()) {
                 // 批量关单
                 if (!closeOrders(product)) TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;
             } else {
                 // 减限量
-                MallProduct mallProduct = new MallProduct();
-                mallProduct.setId(product.getId());
-                mallProduct.setBargainLimit(product.getBargainLimit() - product.getBargainNumber());
-                if (mallProductDAO.updateById(mallProduct) <= 0) return false;
-
+                BargainRate update = new BargainRate()
+                        .setProductId(bargainRate.getProductId())
+                        .setBargainLimit(bargainRate.getBargainLimit() - bargainRate.getBargainNumber());
+                if (bargainRateDao.updateById(update) <= 0) return false;
                 // 更新订单为待发货
                 mallOrder.setAddressId(address.getId());
                 mallOrder.setState(1);
                 mallOrder.setPayTime(new Date());
                 if (mallOrderDAO.updateById(mallOrder) <= 0) return false;
-
                 // 发货后，剩余不够下次发货，提前关单
-                if (product.getBargainLimit() < 2 * product.getBargainNumber()) {
+                if (bargainRate.getBargainLimit() < 2 * bargainRate.getBargainNumber()) {
                     if (!closeOrders(product)) TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 }
                 return true;
             }
         }
-
         // 更新订单为待发货
         mallOrder.setAddressId(address.getId());
         mallOrder.setState(1);
@@ -380,7 +366,6 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         List<Integer> idList = bargainDetailDao.getAllId(product.getId());
         if (idList != null && idList.size() > 0)
             if (bargainDetailDao.setState(idList) <= 0) return false;
-
         // 砍价成功生成的订单进行关单
         List<Integer> orderIds = bargainDetailDao.getOrderIds(product.getId());
         if (orderIds != null && orderIds.size() > 0)
@@ -401,7 +386,6 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         // 订单详情
         IPage<BackBargainDetailVo> iPage = bargainDetailDao.bargainList(new Page<>(page, size), bargain);
         List<BackBargainDetailVo> records = iPage.getRecords();
-
         List<Integer> idList = records.stream().map(BackBargainDetailVo::getOrderId).collect(Collectors.toList());
         if (!idList.isEmpty()) {
             // 参与人详情
@@ -420,8 +404,44 @@ public class BargainDetailServiceImpl implements BargainDetailService {
                 record.setUsers(vos);
             });
         }
-
         return new PageResult<>(iPage.getTotal(), records);
     }
 
+    @Override
+    @DS("read")
+    public BargainRate getBargainRate(Integer productId) {
+        return bargainRateDao.selectById(productId);
+    }
+
+    @Override
+    @DS("write")
+    @Transactional
+    public Boolean bargainOrderClose(Integer id) {
+        BargainDetail update = new BargainDetail()
+                .setId(id)
+                .setState(true);
+        if (bargainDetailDao.updateById(update) < 0) {
+            return false;
+        }
+        // 如果已砍成但错过提交订单时间，则需关闭对应的商城订单
+        BargainDetail bargainDetail = bargainDetailDao.selectById(id);
+        if (bargainDetail.getOrderNumber() != null) {
+            LambdaQueryWrapper<MallOrder> queryWrapper = new QueryWrapper<MallOrder>()
+                    .lambda().eq(MallOrder::getOrderNumber, bargainDetail.getOrderNumber());
+            MallOrder mallOrder = mallOrderDAO.selectOne(queryWrapper);
+            if (mallOrder != null) {
+                mallOrder.setState(MallEnum.ORDER_HAS_CLOSE.getState());
+                return mallOrderDAO.updateById(mallOrder) > 0;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    @DS("read")
+    public List<BargainDetail> needCloseList() {
+        LambdaQueryWrapper<BargainDetail> queryWrapper = new QueryWrapper<BargainDetail>()
+                .lambda().eq(BargainDetail::getState, false);
+        return bargainDetailDao.selectList(queryWrapper);
+    }
 }

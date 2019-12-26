@@ -1,12 +1,15 @@
 package com.moguying.plant.core.scheduled;
 
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.core.entity.bargain.BargainDetail;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.vo.CancelOrder;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
+import com.moguying.plant.core.scheduled.task.CloseBargainOrder;
 import com.moguying.plant.core.scheduled.task.CloseMallPayOrder;
 import com.moguying.plant.core.scheduled.task.CloseOrderItem;
 import com.moguying.plant.core.scheduled.task.CloseSeedPayOrder;
+import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +36,9 @@ public class CloseOrderScheduled {
     @Value("${order.expire.time}")
     private int expireTime;
 
+    @Value("${bargain.expire.time}")
+    private Long bargainTime;
+
     private int currentIndex = 0;
 
     @Autowired
@@ -40,6 +46,9 @@ public class CloseOrderScheduled {
 
     @Autowired
     private MallOrderService mallOrderService;
+
+    @Autowired
+    private BargainDetailService detailService;
 
     /**
      * 启动时，加载数据库中记录
@@ -65,6 +74,16 @@ public class CloseOrderScheduled {
                 addCloseItem(new CloseMallPayOrder(mallOrder.getId(), (int) (left / 60)), (int) (left % 60));
             }
 
+        }
+        // 关闭砍价详情
+        List<BargainDetail> details = detailService.needCloseList();
+        for (BargainDetail detail : details) {
+            long left = bargainTime - ((System.currentTimeMillis() - detail.getAddTime().getTime()) / 1000);
+            if (left <= 0) {
+                detailService.bargainOrderClose(detail.getId());
+            } else {
+                addCloseItem(new CloseBargainOrder(detail.getId(), (int) (left / 60)), (int) (left % 60));
+            }
         }
     }
 
