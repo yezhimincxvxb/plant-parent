@@ -3,12 +3,9 @@ package com.moguying.plant.core.service.mall.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moguying.plant.constant.FertilizerEnum;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.OrderPrefixEnum;
 import com.moguying.plant.core.dao.bargain.BargainRateDao;
-import com.moguying.plant.core.dao.fertilizer.FertilizerDAO;
-import com.moguying.plant.core.dao.fertilizer.UserFertilizerDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDAO;
 import com.moguying.plant.core.dao.mall.MallOrderDetailDAO;
 import com.moguying.plant.core.dao.mall.MallProductDAO;
@@ -22,8 +19,6 @@ import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.common.vo.BuyResponse;
 import com.moguying.plant.core.entity.common.vo.HomeProduct;
 import com.moguying.plant.core.entity.common.vo.HomeProductDetail;
-import com.moguying.plant.core.entity.fertilizer.Fertilizer;
-import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
 import com.moguying.plant.core.entity.mall.MallOrder;
 import com.moguying.plant.core.entity.mall.MallOrderDetail;
 import com.moguying.plant.core.entity.mall.MallProduct;
@@ -71,12 +66,6 @@ public class MallProductServiceImpl implements MallProductService {
 
     @Autowired
     private BargainRateDao bargainRateDao;
-
-    @Autowired
-    private FertilizerDAO fertilizerDAO;
-
-    @Autowired
-    private UserFertilizerDAO userFertilizerDAO;
 
     @Value("${order.expire.time}")
     private Long expireTime;
@@ -386,37 +375,35 @@ public class MallProductServiceImpl implements MallProductService {
     }
 
     @Override
-    @DS("read")
-    public BargainVo productInfo(Integer productId) {
-        return mallProductDAO.productInfo(productId);
-    }
-
-    @Override
     @DS("write")
     @Transactional
-    public Integer updateProductToBargain(MallProduct mallProduct) {
-        if (Objects.isNull(mallProduct)) return 0;
+    public Integer updateProductToBargain(BargainRate bargain) {
+        if (Objects.isNull(bargain)) return 0;
         // 商品不存在
-        if (Objects.isNull(mallProductDAO.selectById(mallProduct.getId()))) return 0;
-        // 默认值
-        Integer ownRate = Optional.ofNullable(mallProduct.getOwnRate()).orElse(50);
-        Integer newRate = Optional.ofNullable(mallProduct.getNewRate()).orElse(20);
-        Integer oldRate = Optional.ofNullable(mallProduct.getOldRate()).orElse(10);
-        // 设置砍价系数
-        BargainRate bargainRate = bargainRateDao.selectById(mallProduct.getId());
+        if (Objects.isNull(mallProductDAO.selectById(bargain.getProductId()))) return 0;
+        // 设置砍价参数
+        BargainRate bargainRate = bargainRateDao.selectById(bargain.getProductId());
         if (Objects.isNull(bargainRate)) {
             bargainRate = new BargainRate();
-            bargainRate.setProductId(mallProduct.getId())
-                    .setOwnRate(ownRate)
-                    .setNewRate(newRate)
-                    .setOldRate(oldRate);
+            bargainRate.setBargainCount(bargain.getBargainCount())
+                    .setBargainNumber(bargain.getBargainNumber())
+                    .setIsLimit(bargain.getIsLimit())
+                    .setBargainLimit(bargain.getBargainLimit())
+                    .setOwnRate(bargain.getOwnRate())
+                    .setNewRate(bargain.getNewRate())
+                    .setOldRate(bargain.getOldRate())
+                    .setAddTime(new Date());
             if (bargainRateDao.insert(bargainRate) <= 0) return 0;
         } else {
-            bargainRate.setOwnRate(ownRate)
-                    .setNewRate(newRate)
-                    .setOldRate(oldRate);
+            bargainRate.setBargainCount(bargain.getBargainCount() != null ? bargain.getBargainCount() : bargainRate.getBargainCount())
+                    .setBargainNumber(bargain.getBargainNumber() != null ? bargain.getBargainNumber() : bargainRate.getBargainNumber())
+                    .setIsLimit(bargain.getIsLimit() != null ? bargain.getIsLimit() : bargainRate.getIsLimit())
+                    .setBargainLimit(bargain.getBargainLimit() != null ? bargain.getBargainLimit() : bargainRate.getBargainLimit())
+                    .setOwnRate(bargain.getOwnRate() != null ? bargain.getOwnRate() : bargainRate.getOwnRate())
+                    .setNewRate(bargain.getNewRate() != null ? bargain.getNewRate() : bargainRate.getNewRate())
+                    .setOldRate(bargain.getOldRate() != null ? bargain.getOldRate() : bargainRate.getOldRate());
             if (bargainRateDao.updateById(bargainRate) <= 0) return 0;
         }
-        return mallProductDAO.updateById(mallProduct) > 0 ? mallProduct.getId() : 0;
+        return bargainRate.getProductId();
     }
 }

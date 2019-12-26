@@ -32,5 +32,4 @@ public interface MallProductDAO extends BaseDAO<MallProduct> {
 
     IPage<BargainVo> productList(Page<BargainVo> page);
 
-    BargainVo productInfo(@Param("productId") Integer productId);
 }

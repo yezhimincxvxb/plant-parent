@@ -119,35 +119,6 @@ public class MallProduct implements Serializable {
     private Integer consumeCoins;
 
     /**
-     * 砍价份数
-     */
-    @JSONField(ordinal = 17)
-    @TableField
-    private Integer bargainNumber;
-
-    /**
-     * 需砍刀数
-     */
-    @JSONField(ordinal = 18)
-    @TableField
-    private Integer bargainCount;
-
-    /**
-     * 是否限量
-     */
-    @JSONField(ordinal = 19)
-    @TableField
-    private Boolean isLimit;
-
-    /**
-     * 限量数量
-     */
-    @JSONField(ordinal = 20)
-    @TableField
-    private Integer bargainLimit;
-
-
-    /**
      * 商品类型id
      */
     @JSONField(serialize = false)
@@ -163,23 +134,5 @@ public class MallProduct implements Serializable {
     @JSONField(ordinal = 18)
     @TableField
     private Boolean isHot;
-
-    /**
-     * 本人砍价系数
-     */
-    @TableField(exist = false)
-    private Integer ownRate;
-
-    /**
-     * 新用户砍价系数
-     */
-    @TableField(exist = false)
-    private Integer newRate;
-
-    /**
-     * 老用户砍价系数
-     */
-    @TableField(exist = false)
-    private Integer oldRate;
 
 }

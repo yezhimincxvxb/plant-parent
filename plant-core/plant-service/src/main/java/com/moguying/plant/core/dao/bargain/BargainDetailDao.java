@@ -26,8 +26,6 @@ public interface BargainDetailDao extends BaseDAO<BargainDetail> {
 
     IPage<BargainVo> doingList(Page<BargainVo> page, @Param("userId") Integer userId);
 
-    IPage<BargainVo> successList(Page<BargainVo> page, @Param("userId") Integer userId);
-
     IPage<BargainVo> ownLog(Page<BargainVo> page, @Param("userId") Integer userId);
 
     MallOrder submitOrder(@Param("userId") Integer userId, @Param("productId") Integer productId);

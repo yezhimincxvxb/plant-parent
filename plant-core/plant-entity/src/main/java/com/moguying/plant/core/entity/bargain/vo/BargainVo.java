@@ -88,7 +88,7 @@ public class BargainVo {
      * 是否限量
      */
     @JSONField(ordinal = 13)
-    private Integer isLimit;
+    private Boolean isLimit;
 
     /**
      * 剩余数量
@@ -150,15 +150,35 @@ public class BargainVo {
      */
     private Integer userId;
 
+    /**
+     * 砍价总价格
+     */
+    @JSONField(serialize = false)
+    private BigDecimal totalAmount;
+
     public Integer getLeftNumber() {
-        if (this.isLimit != null && this.isLimit == 0)
+        if (this.isLimit != null && !this.isLimit)
             this.leftNumber = null;
-        return leftNumber;
+        return this.leftNumber;
     }
 
     public Integer getTotalNumber() {
-        if (this.isLimit != null && this.isLimit == 0)
+        if (this.isLimit != null && !this.isLimit)
             this.totalNumber = null;
-        return totalNumber;
+        return this.totalNumber;
     }
+
+    public BigDecimal getProductPrice() {
+        if (this.productCount != null && this.productPrice != null) {
+            this.productPrice = this.productPrice.multiply(BigDecimal.valueOf(this.productCount));
+        }
+        return this.productPrice;
+    }
+
+    public BigDecimal getRate() {
+        if (this.bargainAmount != null && this.totalAmount != null)
+            this.rate = this.bargainAmount.divide(this.totalAmount, 2, BigDecimal.ROUND_DOWN);
+        return this.rate;
+    }
+
 }

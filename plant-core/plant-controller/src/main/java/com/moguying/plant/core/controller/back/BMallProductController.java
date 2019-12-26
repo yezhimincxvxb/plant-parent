@@ -12,8 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
-
 
 @RestController
 @RequestMapping("/mall")
@@ -22,7 +20,7 @@ public class BMallProductController {
 
 
     @Autowired
-    MallProductService productService;
+    private MallProductService productService;
 
 
     @GetMapping("/{id}")
@@ -90,23 +88,7 @@ public class BMallProductController {
         return productService.productList(search.getPage(), search.getSize(), search.getWhere());
     }
 
-    /**
-     * 商品推送到砍价列表
-     */
-    @PostMapping("/toBargain/list")
-    @ApiOperation("商品推送到砍价列表")
-    public ResponseData<Integer> productToBargain(@RequestBody MallProduct product) {
-        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-        // 参数错误
-        if (Objects.isNull(product) || Objects.isNull(product.getId()))
-            return responseData;
-        Integer result = productService.updateProductToBargain(product);
-        if (result > 0)
-            return responseData
-                    .setMessage(MessageEnum.SUCCESS.getMessage())
-                    .setState(MessageEnum.SUCCESS.getState());
-        return responseData;
-    }
+
 
 }
 
