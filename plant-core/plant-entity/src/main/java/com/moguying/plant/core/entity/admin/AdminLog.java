@@ -31,6 +31,21 @@ public class AdminLog implements Serializable {
      */
     @TableField
     private String actionParam;
+
+    /**
+     * 请求方法
+     */
+    @TableField
+    private String actionMethod;
+
+
+    /**
+     * 操作描述
+     */
+    @TableField
+    private String actionDesc;
+
+
     /**
      * 操作时间
      */

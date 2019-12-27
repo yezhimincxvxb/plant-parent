@@ -1,11 +1,12 @@
 package com.moguying.plant.core.controller.aop;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.moguying.plant.core.annotation.NoLogin;
 import com.moguying.plant.core.entity.admin.AdminLog;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.admin.AdminLogService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -47,8 +48,10 @@ public class AdminLogAop {
         HttpServletRequest request = attributes.get().getRequest();
         AdminUser adminUser = (AdminUser) request.getSession().getAttribute(SessionAdminUser.sessionKey);
         AdminLog adminLog = new AdminLog();
-        adminLog.setActionCode(request.getRequestURL().toString());
-        adminLog.setActionParam(JSONObject.toJSONString(request.getParameterMap()));
+        adminLog.setActionCode(methodSignature.getDeclaringType().getSimpleName()+"->"+methodSignature.getMethod().getName());
+        adminLog.setActionDesc(methodSignature.getMethod().getAnnotation(ApiOperation.class).value());
+        adminLog.setActionMethod(request.getMethod());
+        adminLog.setActionParam(JSON.toJSONString(joinPoint.getArgs()));
         adminLog.setAddTime(new Date());
         if (null != adminUser.getId()) {
             adminLog.setUserId(adminUser.getId());
