@@ -189,6 +189,7 @@ public class BargainDetailServiceImpl implements BargainDetailService {
         }
 
         // 最后一刀
+        BargainDetail update = new BargainDetail();
         if (detail.getBargainCount() + 1 == detail.getTotalCount()) {
             // 订单流水号
             String orderNumber = OrderPrefixEnum.KAN_JIA.getPreFix() + DateUtil.INSTANCE.orderNumberWithDate();
@@ -209,12 +210,12 @@ public class BargainDetailServiceImpl implements BargainDetailService {
             if (mallOrderDetailDAO.insert(orderDetail) <= 0) return null;
             // 关单
             bargainOrderClose(detail.getId());
+            update.setOrderNumber(orderNumber);
             // 全部砍完
             helpAmount = detail.getLeftAmount();
         }
         // 更新
-        BargainDetail update = new BargainDetail()
-                .setId(detail.getId())
+         update.setId(detail.getId())
                 .setReserveAmount(detail.getReserveAmount().subtract(BigDecimal.valueOf(0.01)))
                 .setBargainAmount(detail.getBargainAmount().add(helpAmount))
                 .setLeftAmount(detail.getLeftAmount().subtract(helpAmount))
