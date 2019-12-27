@@ -248,8 +248,8 @@ public class BargainDetailServiceImpl implements BargainDetailService {
 
     @Override
     @DS("read")
-    public PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId) {
-        IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(page, size), userId);
+    public PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId, Boolean isSuccess) {
+        IPage<BargainVo> pageResult = bargainDetailDao.doingList(new Page<>(page, size), userId, isSuccess);
         return new PageResult<>(pageResult.getTotal(), pageResult.getRecords());
     }
 

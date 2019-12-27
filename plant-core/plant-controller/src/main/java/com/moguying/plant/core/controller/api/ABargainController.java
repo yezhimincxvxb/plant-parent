@@ -156,7 +156,7 @@ public class ABargainController {
     @PostMapping("/doing/list")
     @ApiOperation("砍价中的产品列表")
     public PageResult<BargainVo> doingList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
-        return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId);
+        return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId, false);
     }
 
     /**
@@ -252,6 +252,15 @@ public class ABargainController {
     @ApiOperation("砍价成功记录(用户本人)")
     public PageResult<BargainVo> ownLog(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.ownLog(pageSearch.getPage(), pageSearch.getSize(), userId);
+    }
+
+    /**
+     * 已砍成功但未提交
+     */
+    @PostMapping("/success/list")
+    @ApiOperation("已砍成功但未提交")
+    public PageResult<BargainVo> successList(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
+        return bargainDetailService.doingList(pageSearch.getPage(), pageSearch.getSize(), userId, true);
     }
 
     /**

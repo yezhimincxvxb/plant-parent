@@ -21,7 +21,7 @@ public class CloseMallPayOrder extends CloseOrderItem {
 
     @Override
     public void run() {
-        log.debug("close mall pay order:{}", toString());
+        log.debug("close mall pay order:{}", super.toString());
         MallOrderService mallOrderService = ApplicationContextUtil.getBean(MallOrderService.class);
         mallOrderService.cancelOrder(new CancelOrder(id, MessageEnum.MALL_ORDER_TIMEOUT_CLOSED.getMessage()), null);
     }

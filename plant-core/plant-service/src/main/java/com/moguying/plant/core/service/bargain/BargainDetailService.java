@@ -30,7 +30,7 @@ public interface BargainDetailService {
 
     List<SendNumberVo> sendNumber();
 
-    PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId);
+    PageResult<BargainVo> doingList(Integer page, Integer size, Integer userId, Boolean isSuccess);
 
     BargainVo productInfoByOrderId(BargainVo bargainVo);
 
