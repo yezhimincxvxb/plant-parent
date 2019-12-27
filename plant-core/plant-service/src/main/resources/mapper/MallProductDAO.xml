@@ -19,10 +19,6 @@
         <result column="is_hot" jdbcType="BIT" property="isHot"/>
         <result column="delivery_info" jdbcType="VARCHAR" property="deliveryInfo"/>
         <result column="consume_coins" jdbcType="INTEGER" property="consumeCoins"/>
-        <result column="bargain_count" jdbcType="INTEGER" property="bargainCount"/>
-        <result column="bargain_number" jdbcType="INTEGER" property="bargainNumber"/>
-        <result column="bargain_limit" jdbcType="INTEGER" property="bargainLimit"/>
-        <result column="is_limit" property="isLimit"/>
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
         <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
     </resultMap>
@@ -52,7 +48,7 @@
     <sql id="Base_Column_List">
         id, type_id,pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
         summary_desc,
-        is_show,is_hot delivery_info, consume_coins, bargain_count, bargain_number, bargain_limit, is_limit, add_time
+        is_show,is_hot delivery_info, consume_coins, add_time
     </sql>
 
     <sql id="Blob_Column_List">
@@ -63,8 +59,7 @@
             resultMap="BaseResultMap">
         select
         t1.id, type_id,pic_url, thumb_pic_url, `name`, price, old_price, fee, total_count, left_count, has_count,
-        summary_desc, is_show, delivery_info, consume_coins,t2.type_name,is_hot,bargain_count, bargain_number,
-        bargain_limit, is_limit, add_time
+        summary_desc, is_show, delivery_info, consume_coins,t2.type_name,is_hot, add_time
         from plant_mall_product t1
         left join plant_mall_product_type t2 on t1.type_id = t2.id
         <where>
@@ -144,23 +139,15 @@
 
     <!-- 砍价商品列表 -->
     <select id="productList" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
-        select id `productId`, `name` `productName`, pic_url `picUrl`, summary_desc `productInfo`, is_limit `isLimit`,
-        bargain_limit `totalNumber`, bargain_number `productCount`, IFNULL(sum(price * bargain_number),0) `productPrice`
-        from plant_mall_product
-        where is_show = 1
-        and bargain_count &gt; 0
-        and bargain_number &gt; 0
-        and left_count &gt; 0
-        group by id
-    </select>
-
-    <!-- 砍价商品详情 -->
-    <select id="productInfo" resultType="com.moguying.plant.core.entity.bargain.vo.BargainVo">
-        select id `productId`, `name` `productName`, summary_desc `productInfo`, sum(price * bargain_number)
-        `productPrice`, pic_url `picUrl`
-        from plant_mall_product
-        where id = #{productId}
-        group by id
+        select t1.id `productId`, t1.`name` `productName`, t1.pic_url , t1.summary_desc `productInfo`, t2.is_limit ,
+        t2.bargain_limit `totalNumber`, t2.bargain_number `productCount`, t1.price `productPrice`
+        from plant_mall_product t1
+        left join plant_bargain_rate t2 on t1.id = t2.product_id
+        where t1.is_show = 1
+        and t2.bargain_count &gt; 0
+        and t2.bargain_number &gt; 0
+        and t1.left_count &gt; 0
+        group by t1.id
     </select>
 
 </mapper>

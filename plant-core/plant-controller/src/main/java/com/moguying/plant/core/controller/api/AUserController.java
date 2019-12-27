@@ -182,6 +182,11 @@ public class AUserController {
         User userInfo = userService.userInfoById(userId);
         if (null == userInfo)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
+        // 短信验证码是否失效(一分钟有效)
+        PhoneMessage message = messageService.messageByPhone(userInfo.getPhone());
+        if (message == null || !message.getCode().equals(payPassword.getCode()))
+            return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
+        messageService.setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
         // 首次设置密码
         if (StringUtils.isBlank(userInfo.getPayPassword()) && StringUtils.isNotBlank(payPassword.getOldPayPassword()))
             return new ResponseData<>(MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getMessage(), MessageEnum.NOT_NEED_OLD_PAY_PASSWORD.getState());
@@ -193,9 +198,6 @@ public class AUserController {
             if (!newPayPassword.equals(userInfo.getPayPassword()))
                 return new ResponseData<>(MessageEnum.OLD_PAY_PASSWORD_ERROR.getMessage(), MessageEnum.OLD_PAY_PASSWORD_ERROR.getState());
         }
-        // 短信验证
-        if (messageService.validateMessage(userInfo.getPhone(), payPassword.getCode()) <= 0)
-            return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
         User update = new User();
         update.setPayPassword(payPassword.getPayPassword());
         ResultData<User> resultData = userService.saveUserInfo(userId, update);
@@ -254,7 +256,6 @@ public class AUserController {
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(),
                     paymentRequestForHtml);
         }
-
         return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
 
     }
@@ -271,7 +272,6 @@ public class AUserController {
         User user = userService.userInfoById(userId);
         if (null == user)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
-
         User userInfo = userService.loginByPhoneAndPassword(user.getPhone(), loginPassword.getOldPassword());
         if (null == userInfo)
             return new ResponseData<>(MessageEnum.OLD_PASSWORD_ERROR.getMessage(), MessageEnum.OLD_PASSWORD_ERROR.getState());

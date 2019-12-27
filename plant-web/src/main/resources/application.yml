@@ -93,6 +93,11 @@ order:
   expire:
     time: 300
 
+#砍价订单有效时长（秒）
+bargain:
+  expire:
+    time: 86400
+
 #田园种植
 farmer:
   energy:

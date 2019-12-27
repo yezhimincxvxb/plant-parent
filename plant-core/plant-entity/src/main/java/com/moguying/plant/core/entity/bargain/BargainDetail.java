@@ -128,6 +128,12 @@ public class BargainDetail implements Serializable {
     @JSONField(ordinal = 15)
     private String orderNumber;
 
+    /**
+     * 预留金
+     */
+    @TableField
+    @JSONField(serialize = false)
+    private BigDecimal reserveAmount;
 
     /**
      * 辅助字段

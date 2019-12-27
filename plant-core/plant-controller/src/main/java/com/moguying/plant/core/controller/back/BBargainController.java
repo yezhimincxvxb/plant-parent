@@ -6,11 +6,13 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.admin.AdminUser;
+import com.moguying.plant.core.entity.bargain.BargainRate;
 import com.moguying.plant.core.entity.bargain.vo.BackBargainDetailVo;
 import com.moguying.plant.core.entity.bargain.vo.BargainVo;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
 import com.moguying.plant.core.service.bargain.BargainDetailService;
 import com.moguying.plant.core.service.common.DownloadService;
+import com.moguying.plant.core.service.mall.MallProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/bargain")
@@ -29,8 +32,28 @@ public class BBargainController {
     @Autowired
     private BargainDetailService bargainDetailService;
 
+    @Autowired
+    private MallProductService productService;
+
     @Value("${excel.download.dir}")
     private String downloadDir;
+
+    /**
+     * 商品推送到砍价列表
+     */
+    @PostMapping("/push")
+    @ApiOperation("商品推送到砍价列表")
+    public ResponseData<Integer> productToBargain(@RequestBody BargainRate bargain) {
+        ResponseData<Integer> responseData = new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        if (Objects.isNull(bargain) || Objects.isNull(bargain.getProductId()))
+            return responseData;
+        Integer result = productService.updateProductToBargain(bargain);
+        if (result > 0)
+            return responseData
+                    .setMessage(MessageEnum.SUCCESS.getMessage())
+                    .setState(MessageEnum.SUCCESS.getState());
+        return responseData;
+    }
 
 
     @PostMapping("/list")

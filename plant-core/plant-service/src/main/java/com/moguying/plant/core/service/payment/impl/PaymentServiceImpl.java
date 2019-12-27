@@ -12,6 +12,7 @@ import com.moguying.plant.core.dao.account.UserMoneyDAO;
 import com.moguying.plant.core.dao.payment.PaymentInfoDAO;
 import com.moguying.plant.core.dao.seed.SeedOrderDetailDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
+import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.fertilizer.vo.FertilizerUseCondition;
@@ -36,7 +37,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +52,8 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -564,7 +571,7 @@ public class PaymentServiceImpl implements PaymentService {
         ResultData resultData = new ResultData(MessageEnum.ERROR, null);
         ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
         if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
-            return new ResultData<>(validateResult.getMessageEnum(),null);
+            return new ResultData<>(validateResult.getMessageEnum(), null);
 
         if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
@@ -907,7 +914,7 @@ public class PaymentServiceImpl implements PaymentService {
         ResultData resultData = new ResultData(MessageEnum.ERROR, 0);
         ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
         if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
-            return new ResultData<>(validateResult.getMessageEnum(),null);
+            return new ResultData<>(validateResult.getMessageEnum(), null);
 
         if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
@@ -1088,7 +1095,7 @@ public class PaymentServiceImpl implements PaymentService {
                 if (userMoney.getAvailableMoney().compareTo(payAmount) >= 0) {
                     User userInfo = userDao.selectById(userId);
                     //如果支付密码未设置则提示设置支付密码
-                    if(StringUtils.isEmpty(userInfo.getPayPassword()))
+                    if (StringUtils.isEmpty(userInfo.getPayPassword()))
                         return resultData.setMessageEnum(MessageEnum.NEED_PAY_PASSWORD);
                     payOrderResponse.setNeedPassword(true);
                     updateDetail.setCarPayAmount(BigDecimal.ZERO);
@@ -1194,5 +1201,26 @@ public class PaymentServiceImpl implements PaymentService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public PageResult<PaymentInfo> paymentList(Integer page, Integer size, PaymentInfo paymentInfo) {
+        Optional<PaymentInfo> optional = Optional.ofNullable(paymentInfo);
+        Query query = new Query();
+        Sort sort = new Sort(Sort.Direction.DESC, "addTime");
+        query.with(PageRequest.of(page - 1, size, sort));
+        if (optional.map(PaymentInfo::getOrderNumber).isPresent())
+            query.addCriteria(Criteria.where("orderNumber").is(paymentInfo.getOrderNumber()));
+        if (optional.map(PaymentInfo::getRequestAction).isPresent())
+            query.addCriteria(Criteria.where("requestAction").is(paymentInfo.getRequestAction()));
+        if (optional.map(PaymentInfo::getUserName).isPresent()) {
+            String regex = "^.*" + paymentInfo.getUserName() + ".*$";
+            Pattern pattern = Pattern.compile(regex);
+            query.addCriteria(Criteria.where("paymentRequest").regex(pattern));
+        }
+        if (optional.map(PaymentInfo::getStart).isPresent() && optional.map(PaymentInfo::getEnd).isPresent())
+            query.addCriteria(Criteria.where("addTime").gte(paymentInfo.getStart()).lte(paymentInfo.getEnd()));
+        List<PaymentInfo> paymentInfos = mongoTemplate.find(query, PaymentInfo.class);
+        return new PageResult<>(paymentInfos.size(), paymentInfos);
     }
 }

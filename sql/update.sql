@@ -514,3 +514,29 @@ CREATE TABLE `plant_seed_feedback_material` (
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未删除,1已删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='溯源资源列表（图片/视频）';
+
+ALTER TABLE `moguying`.`plant_mall_product` DROP  COLUMN  `bargain_count`;
+
+ALTER TABLE `moguying`.`plant_mall_product` DROP  COLUMN  `bargain_number`;
+
+ALTER TABLE `moguying`.`plant_mall_product` DROP  COLUMN  `is_limit`;
+
+ALTER TABLE `moguying`.`plant_mall_product` DROP  COLUMN  `bargain_limit`;
+
+ALTER TABLE `moguying`.`plant_bargain_detail`
+ADD COLUMN  `reserve_amount` decimal(15,2) DEFAULT NULL COMMENT '预留金' AFTER `product_count`;
+
+ALTER TABLE `moguying`.`plant_bargain_rate`
+ADD COLUMN  `bargain_count` int(11) NOT NULL DEFAULT '0' COMMENT '砍成人数';
+
+ALTER TABLE `moguying`.`plant_bargain_rate`
+ADD COLUMN  `bargain_number` int(11) NOT NULL DEFAULT '0' COMMENT '砍成送出数量';
+
+ALTER TABLE `moguying`.`plant_bargain_rate`
+ADD COLUMN  `is_limit` int(1) NOT NULL DEFAULT '0' COMMENT '是否限量商品';
+
+ALTER TABLE `moguying`.`plant_bargain_rate`
+ADD COLUMN  `bargain_limit` int(11) NOT NULL DEFAULT '0' COMMENT '商品限制数量';
+
+ALTER TABLE `moguying`.`plant_bargain_rate`
+ADD COLUMN  `add_time` datetime DEFAULT NULL COMMENT '推送时间';

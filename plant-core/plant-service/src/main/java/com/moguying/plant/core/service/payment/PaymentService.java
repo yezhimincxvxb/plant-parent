@@ -1,8 +1,10 @@
 package com.moguying.plant.core.service.payment;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.payment.PayRequestInfo;
+import com.moguying.plant.core.entity.payment.PaymentInfo;
 import com.moguying.plant.core.entity.payment.request.*;
 import com.moguying.plant.core.entity.payment.response.*;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
@@ -108,7 +110,7 @@ public interface PaymentService {
      * @param payRequestInfo
      * @return
      */
-    
+
     ResultData<PaymentResponse<PayResponse>> pay(PayRequestInfo payRequestInfo);
 
 
@@ -200,5 +202,6 @@ public interface PaymentService {
 
     PaymentRequest<WebHtmlPayRequest> generateWebHtmlPayData(SeedOrderDetail payOrder);
 
+    PageResult<PaymentInfo> paymentList(Integer page, Integer size, PaymentInfo paymentInfo);
 
 }

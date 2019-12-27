@@ -24,9 +24,7 @@ public interface BargainDetailDao extends BaseDAO<BargainDetail> {
 
     List<SendNumberVo> sendNumber();
 
-    IPage<BargainVo> doingList(Page<BargainVo> page, @Param("userId") Integer userId);
-
-    IPage<BargainVo> successList(Page<BargainVo> page, @Param("userId") Integer userId);
+    IPage<BargainVo> doingList(Page<BargainVo> page, @Param("userId") Integer userId, @Param("isSuccess") Boolean isSuccess);
 
     IPage<BargainVo> ownLog(Page<BargainVo> page, @Param("userId") Integer userId);
 
