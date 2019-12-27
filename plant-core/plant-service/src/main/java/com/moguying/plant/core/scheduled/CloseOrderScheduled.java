@@ -67,6 +67,8 @@ public class CloseOrderScheduled {
 
         List<MallOrder> mallOrders = mallOrderService.needPayOrders();
         for (MallOrder mallOrder : mallOrders) {
+            // 砍价的订单不管
+            if (mallOrder.getOrderNumber().startsWith("KJ")) continue;
             long left = expireTime - ((new Date().getTime() - mallOrder.getAddTime().getTime()) / 1000);
             if (left <= 0) {
                 mallOrderService.cancelOrder(new CancelOrder(mallOrder.getId(), MessageEnum.MALL_ORDER_TIMEOUT_CLOSED.getMessage()), null);
