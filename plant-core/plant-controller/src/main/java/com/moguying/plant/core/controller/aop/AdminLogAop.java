@@ -19,7 +19,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Aspect
@@ -48,10 +51,17 @@ public class AdminLogAop {
         HttpServletRequest request = attributes.get().getRequest();
         AdminUser adminUser = (AdminUser) request.getSession().getAttribute(SessionAdminUser.sessionKey);
         AdminLog adminLog = new AdminLog();
-        adminLog.setActionCode(methodSignature.getDeclaringType().getSimpleName()+"->"+methodSignature.getMethod().getName());
+        adminLog.setActionCode(methodSignature.getDeclaringType().getSimpleName() + "->" + methodSignature.getMethod().getName());
         adminLog.setActionDesc(methodSignature.getMethod().getAnnotation(ApiOperation.class).value());
         adminLog.setActionMethod(request.getMethod());
-        adminLog.setActionParam(JSON.toJSONString(joinPoint.getArgs()));
+        Object[] args = joinPoint.getArgs();
+        List<Object> list = new ArrayList<>();
+        for (Object arg : args) {
+            // 如果参数类型是请求和响应的http，使用JSON.toJSONString()转换会抛异常
+            if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) continue;
+            list.add(arg);
+        }
+        adminLog.setActionParam(JSON.toJSONString(list));
         adminLog.setAddTime(new Date());
         if (null != adminUser.getId()) {
             adminLog.setUserId(adminUser.getId());

@@ -36,33 +36,25 @@ public class BUserController {
     @PostMapping("/list")
     @ApiOperation("用户列表")
     public PageResult<User> userList(@RequestBody PageSearch<User> search) {
-        return userService.userList(search.getPage(), search.getSize(), search.getWhere());
+        return userService.userList(search.getPage(), search.getSize(), search.getWhere() == null ? new User() : search.getWhere());
     }
 
 
     /**
      * 用户列表下载
-     *
-     * @param user
-     * @param search
-     * @param request
-     * @return
      */
     @PostMapping("/excel")
     @ApiOperation("用户列表下载")
     public ResponseData<Integer> excelList(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
                                            @RequestBody PageSearch<User> search, HttpServletRequest request) {
-        if(Objects.isNull(search.getWhere())) search.setWhere(new User());
-        userService.downloadExcel(user.getId(),search,request);
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(),MessageEnum.SUCCESS.getState());
+        if (Objects.isNull(search.getWhere())) search.setWhere(new User());
+        userService.downloadExcel(user.getId(), search, request);
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
     }
 
 
     /**
      * 添加用户
-     *
-     * @param addUser
-     * @return
      */
     @PostMapping(value = "/add")
     @ApiOperation("添加用户")
