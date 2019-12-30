@@ -28,7 +28,7 @@ import java.util.Objects;
 public class BUserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     /**
      * 用户列表
@@ -61,7 +61,6 @@ public class BUserController {
     public ResponseData<Integer> userAdd(@RequestBody User addUser) {
         if (addUser.getPhone() != null && !CommonUtil.INSTANCE.isPhone(addUser.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
-
         ResultData<TriggerEventResult<InnerMessage>> resultData = userService.addUser(addUser);
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }

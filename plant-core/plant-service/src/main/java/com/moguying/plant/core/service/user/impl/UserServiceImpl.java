@@ -100,8 +100,7 @@ public class UserServiceImpl implements UserService {
     @DS("write")
     @Transactional
     public ResultData<TriggerEventResult<InnerMessage>> addUser(User user) {
-        ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, null);
-
+        ResultData<TriggerEventResult<InnerMessage>> resultData = new ResultData<>(MessageEnum.ERROR, new TriggerEventResult<>());
         // 手机号是否已存在
         if (user.getPhone() != null) {
             User where = new User();
@@ -110,22 +109,17 @@ public class UserServiceImpl implements UserService {
                 return resultData.setMessageEnum(MessageEnum.PHONE_EXISTS);
             }
         }
-
         // 身份证是否存在
         if (user.getIdCard() != null && idCardExists(user.getIdCard()))
             return resultData.setMessageEnum(MessageEnum.IDCARD_EXISTS);
-
         // 密码
         if (user.getPassword() != null)
             user.setPassword(PasswordUtil.INSTANCE.encode(user.getPassword().getBytes()));
-
         // 支付密码
         if (user.getPayPassword() != null)
             user.setPayPassword(PasswordUtil.INSTANCE.encode(user.getPayPassword().getBytes()));
-
         user.setRegTime(new Date());
         user.setUserState(true);
-
         // 新增用户
         if (userDAO.insert(user) > 0) {
             // 更新邀请码
@@ -133,18 +127,13 @@ public class UserServiceImpl implements UserService {
             update.setId(user.getId());
             update.setInviteCode(CommonUtil.INSTANCE.createInviteCode(user.getId()));
             userDAO.updateById(update);
-
             // 初始化用户账户
             userMoneyDAO.insert(new UserMoney(user.getId()));
-
             // 初始化用户产量信息
             reapWeighDAO.insert(new ReapWeigh(user.getId()));
-
             InnerMessage message = new InnerMessage();
             message.setUserId(user.getId());
             message.setPhone(user.getPhone());
-
-
             return resultData.setMessageEnum(MessageEnum.SUCCESS).
                     setData(new TriggerEventResult<InnerMessage>().setData(message).setUserId(user.getId()));
         }

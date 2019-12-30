@@ -50,6 +50,7 @@ public class UserFertilizer implements Serializable {
     /**
      * 券金额
      */
+    @Excel(name = "券金额/比例")
     @JSONField(ordinal = 4, serializeUsing = BigDecimalSerialize.class)
     @TableField
     private BigDecimal fertilizerAmount;
