@@ -182,7 +182,7 @@ public class ABargainController {
      */
     @PostMapping("/is/help")
     @ApiOperation("是否帮过")
-    public ResponseData<Integer> isHelp(@LoginUserId Integer userId, @RequestBody BargainVo bargainVo) {
+    public ResponseData<ResponseData> isHelp(@LoginUserId Integer userId, @RequestBody BargainVo bargainVo) {
         if (Objects.isNull(bargainVo) || Objects.isNull(bargainVo.getSymbol()))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
         LambdaQueryWrapper<BargainDetail> queryWrapper = new QueryWrapper<BargainDetail>()
@@ -191,11 +191,11 @@ public class ABargainController {
         if (Objects.isNull(detail))
             return new ResponseData<>(MessageEnum.NOT_BARGAIN_DETAIL.getMessage(), MessageEnum.NOT_BARGAIN_DETAIL.getState());
         if (userId.equals(detail.getUserId()) || detail.getState())
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), 1);
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), new ResponseData().setState(0));
         Integer count = bargainLogService.getBargainCount(userId, detail.getId());
         if (count >= 1)
-            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), 1);
-        return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), new ResponseData().setState(0));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), new ResponseData().setState(1));
     }
 
     /**
