@@ -3,12 +3,15 @@ package com.moguying.plant.core.controller.back;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.common.vo.BHomeTopTotal;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
+import com.moguying.plant.core.entity.index.SeedDetailTable;
 import com.moguying.plant.core.entity.index.TotalTable;
 import com.moguying.plant.core.service.account.MoneyWithdrawService;
 import com.moguying.plant.core.service.account.UserMoneyLogService;
 import com.moguying.plant.core.service.mall.MallOrderService;
 import com.moguying.plant.core.service.reap.ReapService;
 import com.moguying.plant.core.service.seed.SeedOrderDetailService;
+import com.moguying.plant.core.service.seed.SeedService;
 import com.moguying.plant.core.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -38,6 +44,9 @@ public class BHomeController {
     private MoneyWithdrawService moneyWithdrawService;
     @Autowired
     private UserMoneyLogService userMoneyLogService;
+    @Autowired
+    private SeedService seedService;
+
 
     /**
      * 首页顶部统计
@@ -100,4 +109,41 @@ public class BHomeController {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), table);
     }
 
+    /**
+     * 菌包明细
+     */
+    @GetMapping("/seed/detail")
+    @ApiOperation("菌包明细")
+    public ResponseData<List<SeedDetailTable>> seedDetail(@RequestParam("state") Integer state) {
+        List<SeedDetailTable> tables = seedService.seedDetailList();
+        if (tables.isEmpty())
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), new ArrayList<>());
+        List<Integer> ids = tables.stream().map(SeedDetailTable::getId).collect(Collectors.toList());
+        List<SeedDetailInfo> buyCounts = seedOrderDetailService.getSeedDetailInfo(ids, state);
+        List<Integer> types = tables.stream().map(SeedDetailTable::getType).collect(Collectors.toList());
+        List<SeedDetailInfo> plants = reapService.getSeedDetailInfo(types, state, 0);
+        List<SeedDetailInfo> picks = reapService.getSeedDetailInfo(types, state, 1);
+        List<SeedDetailInfo> sells = reapService.getSeedDetailInfo(types, state, 3);
+        tables.forEach(table -> {
+            Integer buyCount = buyCounts.stream()
+                    .filter(buy -> table.getId().equals(buy.getId()))
+                    .map(SeedDetailInfo::getBuyCount).findFirst().orElse(0);
+            Integer plantCount = plants.stream()
+                    .filter(plant -> table.getType().equals(plant.getType()))
+                    .map(SeedDetailInfo::getPlantCount).findFirst().orElse(0);
+            Integer pickCount = picks.stream()
+                    .filter(plant -> table.getType().equals(plant.getType()))
+                    .map(SeedDetailInfo::getPlantCount).findFirst().orElse(0);
+            Integer sellCount = sells.stream()
+                    .filter(sell -> table.getType().equals(sell.getType()))
+                    .map(SeedDetailInfo::getPlantCount).findFirst().orElse(0);
+            SeedDetailInfo info = new SeedDetailInfo()
+                    .setBuyCount(buyCount)
+                    .setPlantCount(plantCount)
+                    .setPickCount(pickCount)
+                    .setSellCount(sellCount);
+            table.setInfo(info);
+        });
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), tables);
+    }
 }

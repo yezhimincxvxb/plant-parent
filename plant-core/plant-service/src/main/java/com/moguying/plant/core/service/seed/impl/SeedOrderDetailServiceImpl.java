@@ -14,6 +14,7 @@ import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.index.TotalTable;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
@@ -153,5 +154,11 @@ public class SeedOrderDetailServiceImpl implements SeedOrderDetailService {
     @DS("read")
     public TotalTable getBuyCountAndPrice(Integer state) {
         return seedOrderDetailDAO.getBuyCountAndPrice(state);
+    }
+
+    @Override
+    @DS("read")
+    public List<SeedDetailInfo> getSeedDetailInfo(List<Integer> ids, Integer state) {
+        return seedOrderDetailDAO.getSeedDetailInfo(ids, state);
     }
 }

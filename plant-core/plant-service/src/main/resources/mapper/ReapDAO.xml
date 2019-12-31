@@ -459,4 +459,37 @@
         ) t
     </select>
 
+    <select id="getSeedDetailInfo" resultType="com.moguying.plant.core.entity.index.SeedDetailInfo">
+        select seed_type `type`, IFNULL(sum(plant_count),0) `plantCount`
+        from plant_reap
+        <where>
+            <if test="i != null">
+                and state = #{i}
+            </if>
+            <if test="types != null and types.size > 0">
+                and seed_type in
+                <foreach collection="types" item="type" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(add_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(add_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(add_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(add_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        group by seed_type
+    </select>
+
 </mapper>

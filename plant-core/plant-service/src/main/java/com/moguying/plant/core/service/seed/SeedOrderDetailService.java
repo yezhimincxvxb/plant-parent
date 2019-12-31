@@ -3,11 +3,11 @@ package com.moguying.plant.core.service.seed;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.index.TotalTable;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface SeedOrderDetailService {
@@ -42,4 +42,6 @@ public interface SeedOrderDetailService {
     Integer getBuySeedNum(Integer state);
 
     TotalTable getBuyCountAndPrice(Integer state);
+
+    List<SeedDetailInfo> getSeedDetailInfo(List<Integer> ids, Integer state);
 }

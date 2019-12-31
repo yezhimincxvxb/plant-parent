@@ -200,4 +200,34 @@
         </where>
     </select>
 
+    <select id="getSeedDetailInfo" resultType="com.moguying.plant.core.entity.index.SeedDetailInfo">
+        select seed_id id , IFNULL(sum(buy_count),0) `buyCount`
+        from plant_seed_order_detail
+        <where>
+            <if test="ids != null and ids.size > 0">
+                seed_id in
+                <foreach collection="ids" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(add_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(add_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(add_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(add_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        group by seed_id
+    </select>
+
 </mapper>

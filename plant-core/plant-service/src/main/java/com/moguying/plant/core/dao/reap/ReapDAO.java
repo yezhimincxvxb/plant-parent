@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.ReapEnum;
 import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.vo.TotalMoney;
@@ -78,4 +79,6 @@ public interface ReapDAO extends BaseDAO<Reap> {
     BigDecimal getPlantLines();
 
     Integer getPlantNum(@Param("state") Integer state);
+
+    List<SeedDetailInfo> getSeedDetailInfo(@Param("types") List<Integer> types, @Param("state") Integer state, @Param("i") Integer i);
 }

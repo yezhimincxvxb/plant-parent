@@ -3,6 +3,7 @@ package com.moguying.plant.core.dao.seed;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.BaseDAO;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.index.TotalTable;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import org.apache.ibatis.annotations.Param;
@@ -34,4 +35,6 @@ public interface SeedOrderDetailDAO extends BaseDAO<SeedOrderDetail> {
     Integer getBuySeedNum(@Param("state") Integer state);
 
     TotalTable getBuyCountAndPrice(@Param("state") Integer state);
+
+    List<SeedDetailInfo> getSeedDetailInfo(@Param("ids") List<Integer> ids, @Param("state") Integer state);
 }

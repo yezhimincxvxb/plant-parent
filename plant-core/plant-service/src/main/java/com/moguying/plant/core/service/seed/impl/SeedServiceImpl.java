@@ -11,6 +11,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.common.vo.HomeSeed;
+import com.moguying.plant.core.entity.index.SeedDetailTable;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.vo.SeedDetail;
 import com.moguying.plant.core.entity.seed.vo.SeedReview;
@@ -221,6 +222,12 @@ public class SeedServiceImpl implements SeedService {
     public void downloadExcel(Integer userId, PageSearch<Seed> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包售罄列表", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(seedDAO, search, Seed.class, downloadInfo)).start();
+    }
+
+    @Override
+    @DS("read")
+    public List<SeedDetailTable> seedDetailList() {
+        return seedDAO.seedDetailList();
     }
 }
 
