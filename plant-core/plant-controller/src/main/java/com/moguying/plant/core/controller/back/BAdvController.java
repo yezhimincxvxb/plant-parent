@@ -12,10 +12,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -198,7 +196,7 @@ public class BAdvController {
 
 
     @PostMapping(value = "/upload/{savePath}")
-    @ApiOperation("上传")
+    @ApiOperation("上传文件")
     public ResponseData<Map> uploadAdvPic(@PathVariable String savePath, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         if (!pathMap.containsKey(savePath))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());

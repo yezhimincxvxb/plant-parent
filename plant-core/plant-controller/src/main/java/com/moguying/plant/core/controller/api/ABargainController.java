@@ -194,7 +194,7 @@ public class ABargainController {
             return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), new ResponseData().setState(0));
         Integer count = bargainLogService.getBargainCount(userId, detail.getId());
         if (count >= 1)
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), new ResponseData().setState(0));
+            return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), new ResponseData().setState(0));
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), new ResponseData().setState(1));
     }
 
@@ -249,7 +249,7 @@ public class ABargainController {
      * 砍价成功记录(用户本人)
      */
     @PostMapping("/own/log")
-    @ApiOperation("砍价成功记录(用户本人)")
+    @ApiOperation("砍价成功记录")
     public PageResult<BargainVo> ownLog(@LoginUserId Integer userId, @RequestBody PageSearch<?> pageSearch) {
         return bargainDetailService.ownLog(pageSearch.getPage(), pageSearch.getSize(), userId);
     }

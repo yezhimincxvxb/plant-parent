@@ -35,7 +35,7 @@ public class BActivityController {
      * @return
      */
     @PostMapping("/list")
-    @ApiOperation("活动列表")
+    @ApiOperation("查看活动列表")
     public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search) {
         return activityService.activityList(search.getPage(), search.getSize(), search.getWhere());
     }
@@ -48,7 +48,7 @@ public class BActivityController {
      * @return
      */
     @GetMapping("/{id}")
-    @ApiOperation("活动详情")
+    @ApiOperation("查看活动详情")
     public ResponseData<Activity> activityDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.activityDetail(id));
     }
@@ -102,7 +102,7 @@ public class BActivityController {
      * 品宣部：后台查看，登录送菌包
      */
     @PostMapping("/prize/log")
-    @ApiOperation("后台查看，登录送菌包")
+    @ApiOperation("查看活动奖励")
     public PageResult<UserActivityLogVo> sendSeed(@RequestBody PageSearch<UserActivityLogVo> search) {
         return activityService.activityLog(search.getPage(), search.getSize(), search.getWhere());
     }

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +59,7 @@ public class AdminLogAop {
         List<Object> list = new ArrayList<>();
         for (Object arg : args) {
             // 如果参数类型是请求和响应的http，使用JSON.toJSONString()转换会抛异常
-            if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) continue;
+            if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse || arg instanceof MultipartFile) continue;
             list.add(arg);
         }
         adminLog.setActionParam(JSON.toJSONString(list));

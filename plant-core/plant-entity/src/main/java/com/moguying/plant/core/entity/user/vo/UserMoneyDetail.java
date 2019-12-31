@@ -2,6 +2,7 @@ package com.moguying.plant.core.entity.user.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.moguying.plant.constant.MoneyOpEnum;
+import com.moguying.plant.utils.BigDecimalSerialize;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -29,7 +30,7 @@ public class UserMoneyDetail implements Serializable {
     /**
      * 影响金额
      */
-    @JSONField(ordinal = 3)
+    @JSONField(ordinal = 3,serializeUsing = BigDecimalSerialize.class)
     private BigDecimal affectMoney;
 
     /**
