@@ -87,5 +87,30 @@
         </where>
     </select>
 
+    <select id="getUserMoney" resultType="com.moguying.plant.core.entity.index.TotalTable">
+        select IFNULL(sum(available_money),0) `availableMoney`, IFNULL(sum(collect_interest),0) `interest`,
+        IFNULL(sum(collect_capital),0) `plantAmount`, IFNULL(sum(freeze_money),0) `freezeAmount`,
+        IFNULL(sum(affect_money),0) `flowAmount`
+        from plant_user_money_log
+        <where>
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(affect_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(affect_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(affect_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(affect_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month),
+                        '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
 
 </mapper>

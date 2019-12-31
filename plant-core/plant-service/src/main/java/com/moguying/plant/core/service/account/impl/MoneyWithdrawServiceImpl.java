@@ -351,4 +351,16 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
         DownloadInfo downloadInfo = new DownloadInfo("提现列表", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(moneyWithdrawDAO, search, MoneyWithdraw.class, downloadInfo)).start();
     }
+
+    @Override
+    @DS("read")
+    public BigDecimal getWithdrawalSuccess(Integer state) {
+        return moneyWithdrawDAO.getWithdrawalSuccess(state);
+    }
+
+    @Override
+    @DS("read")
+    public BigDecimal getWithdrawalWait(Integer state) {
+        return moneyWithdrawDAO.getWithdrawalWait(state);
+    }
 }

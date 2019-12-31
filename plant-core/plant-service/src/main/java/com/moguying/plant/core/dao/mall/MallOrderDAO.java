@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.mall.MallOrder;
-import com.moguying.plant.core.entity.mall.vo.MallOrderSearch;
 import com.moguying.plant.core.entity.user.vo.UserMallOrder;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -26,5 +26,9 @@ public interface MallOrderDAO extends BaseDAO<MallOrder> {
 
     Integer closeOrder(@Param("ids") List<Integer> ids);
 
-    Integer getMallOrderNum();
+    Integer getMallOrderNum(@Param("state") Integer state);
+
+    Integer getMallOrderUserNum(@Param("state") Integer state);
+
+    BigDecimal getMallOrderAmount(@Param("state") Integer state);
 }

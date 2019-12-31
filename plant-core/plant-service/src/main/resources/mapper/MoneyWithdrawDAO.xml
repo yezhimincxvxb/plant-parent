@@ -30,61 +30,60 @@
   </sql>
 
 
+    <select id="selectSelective" resultMap="BaseInfoMap">
+        select t1.id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time,t1.seq_no,
+        verify_time, verify_user, verify_mark, bank_number, bank_phone,t1.`state`,t1.success_time,t2.real_name,t2.phone
+        from plant_money_withdraw t1
+        left join plant_user t2 on t1.user_id = t2.id
+        <where>
+            <if test="wq.id != null ">
+                t1.id = #{id}
+            </if>
 
-  <select id="selectSelective" resultMap="BaseInfoMap">
-    select  t1.id, order_number, user_id, withdraw_money, fee, to_account_money, withdraw_time,t1.seq_no,
-    verify_time, verify_user, verify_mark, bank_number, bank_phone,t1.`state`,t1.success_time,t2.real_name,t2.phone
-     from plant_money_withdraw t1
-     left join plant_user t2 on t1.user_id = t2.id
-    <where>
-      <if test="wq.id != null ">
-        t1.id = #{id}
-      </if>
-
-      <if test="wq.realName != null and wq.realName != ''">
-        <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
-            AND t2.real_name like #{realNameLike}
-      </if>
-      <if test="wq.bankPhone != null and wq.bankPhone != ''">
-        <bind name="bankPhoneLike" value="'%'+ wq.bankPhone +'%'"/>
-        AND t1.bank_phone like #{bankPhoneLike}
-      </if>
-      <if test="wq.orderNumber != null and wq.orderNumber != ''">
-        AND t1.order_number = #{orderNumber}
-      </if>
-      <if test="wq.state != null">
-        AND t1.state = #{wq.state}
-      </if>
-      <if test="wq.inState != null">
-        AND t1.state in
-        <foreach collection="wq.inState" open="(" close=")" separator="," item="item">
-            #{item}
-        </foreach>
-      </if>
-      <if test="wq.bankNumber != null and wq.bankNumber != ''">
-        AND t1.bank_number = #{wq.bankNumber}
-      </if>
-      <if test="wq.userId != null">
-        AND t1.user_id = #{wq.userId}
-      </if>
-      <if test="wq.phone != null and wq.phone != ''">
-        <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
-        AND t2.phone like #{phoneLike}
-      </if>
-      <if test="wq.startTime != null">
-        <![CDATA[
+            <if test="wq.realName != null and wq.realName != ''">
+                <bind name="realNameLike" value="'%'+ wq.realName +'%'"/>
+                AND t2.real_name like #{realNameLike}
+            </if>
+            <if test="wq.bankPhone != null and wq.bankPhone != ''">
+                <bind name="bankPhoneLike" value="'%'+ wq.bankPhone +'%'"/>
+                AND t1.bank_phone like #{bankPhoneLike}
+            </if>
+            <if test="wq.orderNumber != null and wq.orderNumber != ''">
+                AND t1.order_number = #{orderNumber}
+            </if>
+            <if test="wq.state != null">
+                AND t1.state = #{wq.state}
+            </if>
+            <if test="wq.inState != null">
+                AND t1.state in
+                <foreach collection="wq.inState" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="wq.bankNumber != null and wq.bankNumber != ''">
+                AND t1.bank_number = #{wq.bankNumber}
+            </if>
+            <if test="wq.userId != null">
+                AND t1.user_id = #{wq.userId}
+            </if>
+            <if test="wq.phone != null and wq.phone != ''">
+                <bind name="phoneLike" value="'%'+ wq.phone +'%'"/>
+                AND t2.phone like #{phoneLike}
+            </if>
+            <if test="wq.startTime != null">
+                <![CDATA[
             AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{wq.startTime})
         ]]>
-      </if>
-      <if test="wq.endTime != null">
-        <![CDATA[
+            </if>
+            <if test="wq.endTime != null">
+                <![CDATA[
             AND UNIX_TIMESTAMP(withdraw_time) <= UNIX_TIMESTAMP(#{wq.endTime})
         ]]>
-      </if>
+            </if>
 
-    </where>
-    order by t1.withdraw_time desc
-  </select>
+        </where>
+        order by t1.withdraw_time desc
+    </select>
 
     <select id="selectByOrderNumber" resultMap="BaseResultMap">
         select
@@ -109,5 +108,55 @@
         </where>
         AND state != 2
 
+    </select>
+
+    <select id="getWithdrawalSuccess" resultType="java.math.BigDecimal">
+        select IFNULL(sum(withdraw_money),0)
+        from plant_money_withdraw
+        <where>
+            state = 1
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(withdraw_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(withdraw_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(withdraw_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(withdraw_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month),
+                        '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id="getWithdrawalWait" resultType="java.math.BigDecimal">
+        select IFNULL(sum(withdraw_money),0)
+        from plant_money_withdraw
+        <where>
+            state = 0
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(withdraw_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(withdraw_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(withdraw_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(withdraw_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month),
+                        '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
     </select>
 </mapper>

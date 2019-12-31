@@ -165,4 +165,50 @@
         order by t1.reg_time asc
     </select>
 
+    <select id="getRegisterNum" resultType="java.lang.Integer">
+        select count(1) from plant_user
+        <where>
+            user_state = 1
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(reg_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(reg_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(reg_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(reg_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id="getRealNameNum" resultType="java.lang.Integer">
+        select count(1) from plant_user
+        <where>
+            user_state = 1 and is_real_name = 1
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(reg_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(reg_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(reg_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(reg_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
 </mapper>

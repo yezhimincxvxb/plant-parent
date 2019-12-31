@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.ReapEnum;
-import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapWeighDAO;
@@ -397,14 +396,20 @@ public class ReapServiceImpl<T> implements ReapService {
 
 
     @Override
+    @DS("read")
     public BigDecimal getPlantProfits() {
         return reapDAO.getPlantProfits();
     }
 
     @Override
+    @DS("read")
     public BigDecimal getPlantLines() {
         return reapDAO.getPlantLines();
     }
 
-
+    @Override
+    @DS("read")
+    public Integer getPlantNum(Integer state) {
+        return reapDAO.getPlantNum(state);
+    }
 }

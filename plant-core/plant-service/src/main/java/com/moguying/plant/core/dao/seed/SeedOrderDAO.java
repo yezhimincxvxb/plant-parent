@@ -31,4 +31,5 @@ public interface SeedOrderDAO extends BaseDAO<SeedOrder> {
     List<UserSeedOrder> userSeedOrderStatistics(Integer userId);
 
     Integer sumSeedCountByUserId(Integer userId);
+
 }

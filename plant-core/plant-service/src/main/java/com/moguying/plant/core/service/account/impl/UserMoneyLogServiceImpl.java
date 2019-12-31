@@ -11,6 +11,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.account.UserMoneyLog;
 import com.moguying.plant.core.entity.account.vo.AccountMoneyLogInfo;
+import com.moguying.plant.core.entity.index.TotalTable;
 import com.moguying.plant.core.service.account.UserMoneyLogService;
 import com.moguying.plant.core.service.common.DownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +78,11 @@ public class UserMoneyLogServiceImpl implements UserMoneyLogService {
     public void downloadExcel(Integer userId, PageSearch<UserMoneyLog> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("资金日志", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(userMoneyLogDAO, search, UserMoneyLog.class, downloadInfo)).start();
+    }
+
+    @Override
+    @DS("read")
+    public TotalTable getUserMoney(Integer state) {
+        return userMoneyLogDAO.getUserMoney(state);
     }
 }

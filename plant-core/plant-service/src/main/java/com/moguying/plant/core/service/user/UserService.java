@@ -79,6 +79,10 @@ public interface UserService {
 
     Integer regUserTotal();
 
+    Integer getRegisterNum(Integer state);
+
+    Integer getRealNameNum(Integer state);
+
     PageResult<UserPlantMoneyVo> userPlantMoneyList(Integer page, Integer size, UserPlantMoneyDto userPlantMoneyDto);
 
 }

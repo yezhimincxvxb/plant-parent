@@ -77,5 +77,5 @@ public interface ReapDAO extends BaseDAO<Reap> {
 
     BigDecimal getPlantLines();
 
-
+    Integer getPlantNum(@Param("state") Integer state);
 }

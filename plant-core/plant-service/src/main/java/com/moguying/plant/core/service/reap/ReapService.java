@@ -91,5 +91,6 @@ public interface ReapService {
      */
     BigDecimal getPlantLines();
 
+    Integer getPlantNum(Integer state);
 
 }

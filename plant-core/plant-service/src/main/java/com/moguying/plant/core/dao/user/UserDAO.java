@@ -30,4 +30,8 @@ public interface UserDAO extends BaseDAO<User> {
     List<User> inviteUser(@Param("startTime") Date startTime, @Param("inviteId") Integer inviteId);
 
     IPage<UserPlantMoneyVo> userPlantMoneyList(Page<UserPlantMoneyVo> page, @Param("upm") UserPlantMoneyDto userPlantMoneyDto);
+
+    Integer getRegisterNum(@Param("state") Integer state);
+
+    Integer getRealNameNum(@Param("state") Integer state);
 }
