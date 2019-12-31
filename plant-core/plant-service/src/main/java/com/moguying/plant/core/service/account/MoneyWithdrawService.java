@@ -32,7 +32,5 @@ public interface MoneyWithdrawService {
 
     void downloadExcel(Integer userId, PageSearch<MoneyWithdraw> search, HttpServletRequest request);
 
-    BigDecimal getWithdrawalSuccess(Integer state);
-
-    BigDecimal getWithdrawalWait(Integer state);
+    BigDecimal getWithdrawal(Integer state, Integer i);
 }

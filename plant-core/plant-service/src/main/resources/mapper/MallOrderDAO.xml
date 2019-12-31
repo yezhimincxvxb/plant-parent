@@ -120,7 +120,8 @@
     </update>
 
     <select id="getMallOrderNum" resultType="Integer">
-        select count(1) from plant_mall_order t1 ,plant_user t2
+        select count(1)
+        from plant_mall_order t1 ,plant_user t2
         <where>
             t1.user_id = t2.id
             <if test="state != null">

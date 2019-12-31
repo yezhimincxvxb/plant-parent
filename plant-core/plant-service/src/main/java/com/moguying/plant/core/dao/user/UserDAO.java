@@ -31,7 +31,5 @@ public interface UserDAO extends BaseDAO<User> {
 
     IPage<UserPlantMoneyVo> userPlantMoneyList(Page<UserPlantMoneyVo> page, @Param("upm") UserPlantMoneyDto userPlantMoneyDto);
 
-    Integer getRegisterNum(@Param("state") Integer state);
-
-    Integer getRealNameNum(@Param("state") Integer state);
+    Integer getUserNum(@Param("state") Integer state, @Param("i") Integer i);
 }

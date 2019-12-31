@@ -34,7 +34,6 @@ import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.DateUtil;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -354,13 +353,8 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
 
     @Override
     @DS("read")
-    public BigDecimal getWithdrawalSuccess(Integer state) {
-        return moneyWithdrawDAO.getWithdrawalSuccess(state);
+    public BigDecimal getWithdrawal(Integer state, Integer i) {
+        return moneyWithdrawDAO.getWithdrawal(state, i);
     }
 
-    @Override
-    @DS("read")
-    public BigDecimal getWithdrawalWait(Integer state) {
-        return moneyWithdrawDAO.getWithdrawalWait(state);
-    }
 }

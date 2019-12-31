@@ -110,11 +110,13 @@
 
     </select>
 
-    <select id="getWithdrawalSuccess" resultType="java.math.BigDecimal">
+    <select id="getWithdrawal" resultType="java.math.BigDecimal">
         select IFNULL(sum(withdraw_money),0)
         from plant_money_withdraw
         <where>
-            state = 1
+            <if test="i != null">
+                state = #{i}
+            </if>
             <if test="state != null ">
                 <choose>
                     <when test="state == 1">
@@ -135,28 +137,4 @@
         </where>
     </select>
 
-    <select id="getWithdrawalWait" resultType="java.math.BigDecimal">
-        select IFNULL(sum(withdraw_money),0)
-        from plant_money_withdraw
-        <where>
-            state = 0
-            <if test="state != null ">
-                <choose>
-                    <when test="state == 1">
-                        and date(withdraw_time) = curdate()
-                    </when>
-                    <when test="state == 2">
-                        and date(withdraw_time) = date_sub(curdate(), interval 1 day)
-                    </when>
-                    <when test="state == 3">
-                        and date_format(withdraw_time, '%Y%m') = date_format(curdate(), '%Y%m')
-                    </when>
-                    <when test="state == 4">
-                        and date_format(withdraw_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month),
-                        '%Y%m')
-                    </when>
-                </choose>
-            </if>
-        </where>
-    </select>
 </mapper>

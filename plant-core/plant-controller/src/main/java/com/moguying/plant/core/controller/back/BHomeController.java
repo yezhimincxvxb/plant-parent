@@ -1,6 +1,9 @@
 package com.moguying.plant.core.controller.back;
 
 import com.moguying.plant.constant.MessageEnum;
+import com.moguying.plant.constant.MoneyStateEnum;
+import com.moguying.plant.constant.ReapEnum;
+import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.common.vo.BHomeTopTotal;
 import com.moguying.plant.core.entity.index.SeedDetailInfo;
@@ -68,14 +71,14 @@ public class BHomeController {
     @GetMapping("/total/table")
     @ApiOperation("后台总表")
     public ResponseData<TotalTable> totalTable(@RequestParam("state") Integer state) {
-        Integer registerNum = userService.getRegisterNum(state);
-        Integer realNameNum = userService.getRealNameNum(state);
+        Integer registerNum = userService.getUserNum(state, null);
+        Integer realNameNum = userService.getUserNum(state, UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState());
         Integer buySeedNum = seedOrderDetailService.getBuySeedNum(state);
         TotalTable countAndPrice = seedOrderDetailService.getBuyCountAndPrice(state);
         Integer plantNum = reapService.getPlantNum(state);
         TotalTable userMoney = userMoneyLogService.getUserMoney(state);
-        BigDecimal withdrawalSuccess = moneyWithdrawService.getWithdrawalSuccess(state);
-        BigDecimal withdrawalWait = moneyWithdrawService.getWithdrawalWait(state);
+        BigDecimal withdrawalSuccess = moneyWithdrawService.getWithdrawal(state, MoneyStateEnum.WITHDRAW_SUCCESS.getState());
+        BigDecimal withdrawalWait = moneyWithdrawService.getWithdrawal(state, MoneyStateEnum.WITHDRAWING.getState());
         Integer mallOrderNum = mallOrderService.getMallOrderNum(state);
         Integer mallOrderUserNum = mallOrderService.getMallOrderUserNum(state);
         BigDecimal mallOrderAmount = mallOrderService.getMallOrderAmount(state);
@@ -121,9 +124,9 @@ public class BHomeController {
         List<Integer> ids = tables.stream().map(SeedDetailTable::getId).collect(Collectors.toList());
         List<SeedDetailInfo> buyCounts = seedOrderDetailService.getSeedDetailInfo(ids, state);
         List<Integer> types = tables.stream().map(SeedDetailTable::getType).collect(Collectors.toList());
-        List<SeedDetailInfo> plants = reapService.getSeedDetailInfo(types, state, 0);
-        List<SeedDetailInfo> picks = reapService.getSeedDetailInfo(types, state, 1);
-        List<SeedDetailInfo> sells = reapService.getSeedDetailInfo(types, state, 3);
+        List<SeedDetailInfo> plants = reapService.getSeedDetailInfo(types, state, ReapEnum.WAITING_REAP.getState());
+        List<SeedDetailInfo> picks = reapService.getSeedDetailInfo(types, state, ReapEnum.REAP_DONE.getState());
+        List<SeedDetailInfo> sells = reapService.getSeedDetailInfo(types, state, ReapEnum.SALE_DONE.getState());
         tables.forEach(table -> {
             Integer buyCount = buyCounts.stream()
                     .filter(buy -> table.getId().equals(buy.getId()))

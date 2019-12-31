@@ -1,7 +1,6 @@
 package com.moguying.plant.core.service.user.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -613,14 +612,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @DS("read")
-    public Integer getRegisterNum(Integer state) {
-        return userDAO.getRegisterNum(state);
-    }
-
-    @Override
-    @DS("read")
-    public Integer getRealNameNum(Integer state) {
-        return userDAO.getRealNameNum(state);
+    public Integer getUserNum(Integer state, Integer i) {
+        return userDAO.getUserNum(state, i);
     }
 
     @Override
