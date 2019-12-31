@@ -492,4 +492,28 @@
         group by seed_type
     </select>
 
+    <select id="capitalChange" resultType="com.moguying.plant.core.entity.index.CapitalChange">
+        select IFNULL(sum(pre_profit),0) `preProfit`, IFNULL(sum(pre_amount),0) `preAmount`
+        from plant_reap
+        <where>
+            date(pre_reap_time) &gt;= curdate()
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 30 day)
+                    </when>
+                    <when test="state == 2">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 60 day)
+                    </when>
+                    <when test="state == 3">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 90 day)
+                    </when>
+                    <when test="state == 4">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 120 day)
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
 </mapper>

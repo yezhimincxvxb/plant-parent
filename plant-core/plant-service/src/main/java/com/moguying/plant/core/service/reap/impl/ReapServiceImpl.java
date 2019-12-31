@@ -20,6 +20,7 @@ import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.index.CapitalChange;
 import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
@@ -418,5 +419,11 @@ public class ReapServiceImpl<T> implements ReapService {
     @DS("read")
     public List<SeedDetailInfo> getSeedDetailInfo(List<Integer> types, Integer state, Integer i) {
         return reapDAO.getSeedDetailInfo(types, state, i);
+    }
+
+    @Override
+    @DS("read")
+    public CapitalChange capitalChange(Integer state) {
+        return reapDAO.capitalChange(state);
     }
 }

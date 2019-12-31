@@ -6,6 +6,7 @@ import com.moguying.plant.constant.ReapEnum;
 import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.common.vo.BHomeTopTotal;
+import com.moguying.plant.core.entity.index.CapitalChange;
 import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.index.SeedDetailTable;
 import com.moguying.plant.core.entity.index.TotalTable;
@@ -148,5 +149,14 @@ public class BHomeController {
             table.setInfo(info);
         });
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), tables);
+    }
+
+    /**
+     * 资金变化
+     */
+    @GetMapping("/capital/change")
+    @ApiOperation("资金变化")
+    public ResponseData<CapitalChange> capitalChange(@RequestParam("state") Integer state) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), reapService.capitalChange(state));
     }
 }
