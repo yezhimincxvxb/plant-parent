@@ -4,15 +4,16 @@ import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
+import com.moguying.plant.core.entity.admin.AdminLog;
 import com.moguying.plant.core.entity.admin.AdminMessage;
 import com.moguying.plant.core.entity.admin.AdminUser;
 import com.moguying.plant.core.entity.system.vo.SessionAdminUser;
+import com.moguying.plant.core.service.admin.AdminLogService;
 import com.moguying.plant.core.service.admin.AdminUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +25,8 @@ public class BAdminUserController {
 
     @Autowired
     private AdminUserService adminUserService;
-
+    @Autowired
+    private AdminLogService adminLogService;
 
     /**
      * 后台用户信息
@@ -35,7 +37,6 @@ public class BAdminUserController {
     @GetMapping("/info")
     @ApiOperation("后台用户信息")
     public ResponseData<AdminUser> userInfo(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser adminUser) {
-
         AdminUser user = adminUserService.userInfo(adminUser.getId());
         if (user != null)
             return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), user);
@@ -90,6 +91,16 @@ public class BAdminUserController {
     @ApiOperation("后台用户列表")
     public PageResult<AdminUser> adminUserList(@RequestBody PageSearch<AdminUser> search) {
         return adminUserService.adminUserList(search.getPage(), search.getSize(), search.getWhere());
+    }
+
+    /**
+     * 用户登录记录
+     */
+    @PostMapping("/logs")
+    @ApiOperation("用户登录记录")
+    public PageResult<AdminLog> adminLogs(@RequestBody PageSearch<AdminLog> search) {
+        if (search.getWhere() == null) search.setWhere(new AdminLog());
+        return adminLogService.adminLogs(search);
     }
 
 

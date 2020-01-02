@@ -13,8 +13,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +29,7 @@ public class BAdminLoginController {
 
 
     @Autowired
-    AdminUserService adminUserService;
+    private AdminUserService adminUserService;
 
     @GetMapping(value = "/image/captcha")
     @NoLogin
@@ -40,8 +42,6 @@ public class BAdminLoginController {
     @NoLogin
     @ApiOperation("登录")
     public ResponseData<String> login(@RequestBody AdminUser adminUser, HttpServletRequest request) {
-
-
         if (StringUtils.isEmpty(adminUser.getUserName()) || StringUtils.isEmpty(adminUser.getPassword())
                 || StringUtils.isEmpty(adminUser.getCode()))
             return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState(), "");
@@ -50,7 +50,6 @@ public class BAdminLoginController {
             CaptchaUtil.clear(request);
             return new ResponseData<>(MessageEnum.CODE_ERROR.getMessage(), MessageEnum.CODE_ERROR.getState(), "");
         }
-
         String password = PasswordUtil.INSTANCE.encode(adminUser.getPassword().getBytes());
         AdminUser user = adminUserService.login(adminUser.getUserName(), password);
         if (user != null) {
@@ -65,7 +64,6 @@ public class BAdminLoginController {
     @ApiOperation("退出")
     public ResponseData<String> logout(HttpServletRequest request) {
         request.setAttribute(SessionAdminUser.sessionKey, null);
-
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), "");
     }
 
