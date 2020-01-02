@@ -34,28 +34,6 @@ public enum CommonUtil {
         return Integer.toString((int) (((Math.random() * 9) + 1) * 100000));
     }
 
-
-    /**
-     * 对身份证或手机打码
-     *
-     * @param idOrPhone
-     * @return
-     */
-    public String idOrPhoneMask(String idOrPhone) {
-        StringBuilder sb = new StringBuilder();
-        int length = idOrPhone.length();
-        if (length >= 15) {
-            sb.append(idOrPhone, 0, 3)
-                    .append("***")
-                    .append(idOrPhone, length - 4, length);
-        } else if (length == 11) {
-            sb.append(idOrPhone, 0, 3)
-                    .append("****")
-                    .append(idOrPhone, length - 4, length);
-        }
-        return sb.toString();
-    }
-
     /**
      * 身份证号校验
      *

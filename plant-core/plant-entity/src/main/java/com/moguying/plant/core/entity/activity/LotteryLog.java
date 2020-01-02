@@ -45,6 +45,7 @@ public class LotteryLog {
     private Integer plantCount;
 
     //手机号
+    @JSONField(serializeUsing = IdCardSerialize.class)
     @TableField(exist = false)
     private String phone;
 
