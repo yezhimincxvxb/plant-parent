@@ -9,6 +9,8 @@ import com.moguying.plant.core.entity.account.UserMoney;
 import com.moguying.plant.core.entity.coin.SaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
+import com.moguying.plant.core.entity.index.CapitalChange;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.system.vo.InnerMessage;
 import com.moguying.plant.core.entity.user.vo.TotalMoney;
@@ -91,5 +93,9 @@ public interface ReapService {
      */
     BigDecimal getPlantLines();
 
+    Integer getPlantNum(Integer state);
 
+    List<SeedDetailInfo> getSeedDetailInfo(List<Integer> types, Integer state, Integer i);
+
+    CapitalChange capitalChange(Integer state);
 }

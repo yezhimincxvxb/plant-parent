@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.constant.ReapEnum;
-import com.moguying.plant.constant.SystemEnum;
 import com.moguying.plant.core.annotation.TriggerEvent;
 import com.moguying.plant.core.dao.reap.ReapDAO;
 import com.moguying.plant.core.dao.reap.ReapWeighDAO;
@@ -21,6 +20,8 @@ import com.moguying.plant.core.entity.coin.UserSaleCoin;
 import com.moguying.plant.core.entity.coin.vo.ExchangeInfo;
 import com.moguying.plant.core.entity.fertilizer.Fertilizer;
 import com.moguying.plant.core.entity.fertilizer.UserFertilizer;
+import com.moguying.plant.core.entity.index.CapitalChange;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
 import com.moguying.plant.core.entity.reap.Reap;
 import com.moguying.plant.core.entity.reap.ReapWeigh;
 import com.moguying.plant.core.entity.seed.SeedType;
@@ -121,8 +122,8 @@ public class ReapServiceImpl<T> implements ReapService {
             List<InnerMessage> messages = reapDAO.selectPhoneByRange(idList);
             for (InnerMessage message : messages) {
                 phoneMessageService.send(message.getPhone(),
-                        phoneMessageTplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"reap")).getContent(),
-                        null,message.getPhone(),message.getCount());
+                        phoneMessageTplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode, "reap")).getContent(),
+                        null, message.getPhone(), message.getCount());
             }
             return 1;
         }
@@ -251,7 +252,7 @@ public class ReapServiceImpl<T> implements ReapService {
     @Override
     @DS("read")
     public Reap reapInfoByIdAndUserId(Integer id, Integer userId) {
-        return reapDAO.selectByIdAndUserId(id,userId);
+        return reapDAO.selectByIdAndUserId(id, userId);
     }
 
     @Override
@@ -397,14 +398,32 @@ public class ReapServiceImpl<T> implements ReapService {
 
 
     @Override
+    @DS("read")
     public BigDecimal getPlantProfits() {
         return reapDAO.getPlantProfits();
     }
 
     @Override
+    @DS("read")
     public BigDecimal getPlantLines() {
         return reapDAO.getPlantLines();
     }
 
+    @Override
+    @DS("read")
+    public Integer getPlantNum(Integer state) {
+        return reapDAO.getPlantNum(state);
+    }
 
+    @Override
+    @DS("read")
+    public List<SeedDetailInfo> getSeedDetailInfo(List<Integer> types, Integer state, Integer i) {
+        return reapDAO.getSeedDetailInfo(types, state, i);
+    }
+
+    @Override
+    @DS("read")
+    public CapitalChange capitalChange(Integer state) {
+        return reapDAO.capitalChange(state);
+    }
 }

@@ -3,6 +3,8 @@ package com.moguying.plant.core.service.seed;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
+import com.moguying.plant.core.entity.index.TotalTable;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,4 +38,10 @@ public interface SeedOrderDetailService {
 
 
     void downloadExcel(Integer userId, PageSearch<SeedOrderDetail> search, HttpServletRequest request);
+
+    Integer getBuySeedNum(Integer state);
+
+    TotalTable getBuyCountAndPrice(Integer state);
+
+    List<SeedDetailInfo> getSeedDetailInfo(List<Integer> ids, Integer state);
 }

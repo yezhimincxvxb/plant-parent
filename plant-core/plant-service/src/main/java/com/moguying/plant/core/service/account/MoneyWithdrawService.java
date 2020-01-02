@@ -9,6 +9,7 @@ import com.moguying.plant.core.entity.payment.response.SendWithdrawSmsCodeRespon
 import com.moguying.plant.core.entity.payment.response.WithdrawMoneyResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 public interface MoneyWithdrawService {
     PageResult<MoneyWithdraw> moneyWithdrawList(Integer page, Integer size, MoneyWithdraw where);
@@ -30,4 +31,6 @@ public interface MoneyWithdrawService {
     PageResult<MoneyWithdraw> apiMoneyWithdrawList(Integer page, Integer size, MoneyWithdraw where);
 
     void downloadExcel(Integer userId, PageSearch<MoneyWithdraw> search, HttpServletRequest request);
+
+    BigDecimal getWithdrawal(Integer state, Integer i);
 }

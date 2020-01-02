@@ -34,7 +34,6 @@ import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.payment.PaymentService;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.utils.DateUtil;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -351,4 +350,11 @@ public class MoneyWithdrawServiceImpl implements MoneyWithdrawService {
         DownloadInfo downloadInfo = new DownloadInfo("提现列表", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(moneyWithdrawDAO, search, MoneyWithdraw.class, downloadInfo)).start();
     }
+
+    @Override
+    @DS("read")
+    public BigDecimal getWithdrawal(Integer state, Integer i) {
+        return moneyWithdrawDAO.getWithdrawal(state, i);
+    }
+
 }

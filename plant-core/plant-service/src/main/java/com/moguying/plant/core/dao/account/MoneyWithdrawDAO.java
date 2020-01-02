@@ -23,4 +23,6 @@ public interface MoneyWithdrawDAO extends BaseDAO<MoneyWithdraw> {
     MoneyWithdraw selectByOrderNumber(String orderNumber);
 
     BigDecimal withdrawDailyCountByUserId(@Param("userId") Integer userId, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    BigDecimal getWithdrawal(@Param("state") Integer state, @Param("i") Integer i);
 }

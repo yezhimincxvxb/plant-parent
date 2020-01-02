@@ -120,7 +120,77 @@
     </update>
 
     <select id="getMallOrderNum" resultType="Integer">
-        select count(1) from plant_mall_order t1 ,plant_user t2 where t1.user_id = t2.id
+        select count(1)
+        from plant_mall_order t1 ,plant_user t2
+        <where>
+            t1.user_id = t2.id
+            <if test="state != null">
+                <choose>
+                    <when test="state == 1">
+                        and date(add_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(add_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(add_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(add_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id="getMallOrderUserNum" resultType="Integer">
+        select count(1) from (
+        select t1.user_id
+        from plant_mall_order t1 ,plant_user t2
+        <where>
+            t1.user_id = t2.id
+            <if test="state != null">
+                <choose>
+                    <when test="state == 1">
+                        and date(add_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(add_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(add_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(add_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        group by t1.user_id
+        ) t
+    </select>
+
+    <select id="getMallOrderAmount" resultType="java.math.BigDecimal">
+        select IFNULL(sum(buy_amount),0) from plant_mall_order t1 ,plant_user t2
+        <where>
+            t1.user_id = t2.id
+            <if test="state != null">
+                <choose>
+                    <when test="state == 1">
+                        and date(add_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(add_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(add_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(add_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
     </select>
 
 </mapper>

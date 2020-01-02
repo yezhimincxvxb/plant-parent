@@ -371,8 +371,8 @@ public class MallOrderServiceImpl implements MallOrderService {
 
     @Override
     @DS("read")
-    public Integer getMallOrderNum() {
-        return mallOrderDAO.getMallOrderNum();
+    public Integer getMallOrderNum(Integer state) {
+        return mallOrderDAO.getMallOrderNum(state);
     }
 
     @Override
@@ -382,5 +382,15 @@ public class MallOrderServiceImpl implements MallOrderService {
         new Thread(new DownloadService<>(mallOrderDAO, search, MallOrder.class, downloadInfo)).start();
     }
 
+    @Override
+    @DS("read")
+    public Integer getMallOrderUserNum(Integer state) {
+        return mallOrderDAO.getMallOrderUserNum(state);
+    }
 
+    @Override
+    @DS("read")
+    public BigDecimal getMallOrderAmount(Integer state) {
+        return mallOrderDAO.getMallOrderAmount(state);
+    }
 }

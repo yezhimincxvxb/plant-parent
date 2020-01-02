@@ -610,6 +610,11 @@ public class UserServiceImpl implements UserService {
         return userDAO.selectCount(new QueryWrapper<User>().lambda().eq(User::getUserState, true));
     }
 
+    @Override
+    @DS("read")
+    public Integer getUserNum(Integer state, Integer i) {
+        return userDAO.getUserNum(state, i);
+    }
 
     @Override
     @DS("read")

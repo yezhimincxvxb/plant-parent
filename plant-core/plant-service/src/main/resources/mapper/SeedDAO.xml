@@ -218,5 +218,14 @@
         where t1.id = #{id}
     </select>
 
+    <select id="seedDetailList" resultType="com.moguying.plant.core.entity.index.SeedDetailTable">
+        select t1.id, t1.`name`, t1.seed_type `type`
+        from plant_seed t1, plant_seed_type t2
+        <where>
+            t1.seed_type = t2.id
+            and t1.is_show = 1
+        </where>
+        order by t1.id desc
+    </select>
 
 </mapper>

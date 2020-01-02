@@ -4,6 +4,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.common.vo.HomeSeed;
+import com.moguying.plant.core.entity.index.SeedDetailTable;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.vo.SeedDetail;
 import com.moguying.plant.core.entity.seed.vo.SeedReview;
@@ -51,5 +52,6 @@ public interface SeedService {
 
     void downloadExcel(Integer userId, PageSearch<Seed> search, HttpServletRequest request);
 
+    List<SeedDetailTable> seedDetailList();
 }
 

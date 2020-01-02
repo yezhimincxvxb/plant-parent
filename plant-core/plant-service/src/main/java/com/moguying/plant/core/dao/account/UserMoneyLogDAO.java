@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moguying.plant.constant.MoneyOpEnum;
 import com.moguying.plant.core.dao.BaseDAO;
 import com.moguying.plant.core.entity.account.UserMoneyLog;
+import com.moguying.plant.core.entity.index.TotalTable;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -25,4 +26,6 @@ public interface UserMoneyLogDAO extends BaseDAO<UserMoneyLog> {
                                     @Param("types") List<MoneyOpEnum> types,
                                     @Param("startTime") Date startTime,
                                     @Param("endTime") Date endTime);
+
+    TotalTable getUserMoney(@Param("state") Integer state);
 }

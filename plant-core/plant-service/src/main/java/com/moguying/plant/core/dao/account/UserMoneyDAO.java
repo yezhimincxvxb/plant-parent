@@ -19,8 +19,5 @@ public interface UserMoneyDAO extends BaseDAO<UserMoney> {
 
     List<UserMoney> selectSelective(@Param("wq") UserMoney money);
 
-    /**
-     * 更新资金
-     */
     Integer updateByPrimaryKeySelective(UserMoney userMoney);
 }

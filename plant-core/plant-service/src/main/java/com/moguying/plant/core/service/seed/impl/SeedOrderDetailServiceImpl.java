@@ -14,6 +14,8 @@ import com.moguying.plant.core.entity.DownloadInfo;
 import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResultData;
+import com.moguying.plant.core.entity.index.SeedDetailInfo;
+import com.moguying.plant.core.entity.index.TotalTable;
 import com.moguying.plant.core.entity.seed.Seed;
 import com.moguying.plant.core.entity.seed.SeedOrderDetail;
 import com.moguying.plant.core.service.common.DownloadService;
@@ -140,5 +142,23 @@ public class SeedOrderDetailServiceImpl implements SeedOrderDetailService {
     public void downloadExcel(Integer userId, PageSearch<SeedOrderDetail> search, HttpServletRequest request) {
         DownloadInfo downloadInfo = new DownloadInfo("菌包订单", request.getServletContext(), userId, downloadDir);
         new Thread(new DownloadService<>(seedOrderDetailDAO, search, search.getWhere().getClass(), downloadInfo)).start();
+    }
+
+    @Override
+    @DS("read")
+    public Integer getBuySeedNum(Integer state) {
+        return seedOrderDetailDAO.getBuySeedNum(state);
+    }
+
+    @Override
+    @DS("read")
+    public TotalTable getBuyCountAndPrice(Integer state) {
+        return seedOrderDetailDAO.getBuyCountAndPrice(state);
+    }
+
+    @Override
+    @DS("read")
+    public List<SeedDetailInfo> getSeedDetailInfo(List<Integer> ids, Integer state) {
+        return seedOrderDetailDAO.getSeedDetailInfo(ids, state);
     }
 }

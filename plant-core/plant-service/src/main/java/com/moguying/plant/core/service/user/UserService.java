@@ -79,6 +79,8 @@ public interface UserService {
 
     Integer regUserTotal();
 
+    Integer getUserNum(Integer state, Integer i);
+
     PageResult<UserPlantMoneyVo> userPlantMoneyList(Integer page, Integer size, UserPlantMoneyDto userPlantMoneyDto);
 
 }

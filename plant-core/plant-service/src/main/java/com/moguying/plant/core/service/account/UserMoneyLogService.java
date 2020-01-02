@@ -6,6 +6,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.account.UserMoneyLog;
 import com.moguying.plant.core.entity.account.vo.AccountMoneyLogInfo;
+import com.moguying.plant.core.entity.index.TotalTable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -24,4 +25,5 @@ public interface UserMoneyLogService {
 
     void downloadExcel(Integer userId, PageSearch<UserMoneyLog> search, HttpServletRequest request);
 
+    TotalTable getUserMoney(Integer state);
 }

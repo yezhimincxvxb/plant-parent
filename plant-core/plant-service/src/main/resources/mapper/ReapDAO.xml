@@ -432,4 +432,88 @@
         select sum(pre_amount) from plant_reap where user_id in (select id from  plant_user)
     </select>
 
+    <select id="getPlantNum" resultType="java.lang.Integer">
+        select count(0)
+        from (
+        select user_id from plant_reap
+        <where>
+            user_id in(select id from plant_user where is_real_name = 1 and user_state = 1)
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(add_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(add_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(add_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(add_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        group by user_id
+        ) t
+    </select>
+
+    <select id="getSeedDetailInfo" resultType="com.moguying.plant.core.entity.index.SeedDetailInfo">
+        select seed_type `type`, IFNULL(sum(plant_count),0) `plantCount`
+        from plant_reap
+        <where>
+            <if test="i != null">
+                and state = #{i}
+            </if>
+            <if test="types != null and types.size > 0">
+                and seed_type in
+                <foreach collection="types" item="type" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(add_time) = curdate()
+                    </when>
+                    <when test="state == 2">
+                        and date(add_time) = date_sub(curdate(), interval 1 day)
+                    </when>
+                    <when test="state == 3">
+                        and date_format(add_time, '%Y%m') = date_format(curdate(), '%Y%m')
+                    </when>
+                    <when test="state == 4">
+                        and date_format(add_time, '%Y%m') = date_format(date_sub(curdate(), interval 1 month), '%Y%m')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        group by seed_type
+    </select>
+
+    <select id="capitalChange" resultType="com.moguying.plant.core.entity.index.CapitalChange">
+        select IFNULL(sum(pre_profit),0) `preProfit`, IFNULL(sum(pre_amount),0) `preAmount`
+        from plant_reap
+        <where>
+            date(pre_reap_time) &gt;= curdate()
+            <if test="state != null ">
+                <choose>
+                    <when test="state == 1">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 30 day)
+                    </when>
+                    <when test="state == 2">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 60 day)
+                    </when>
+                    <when test="state == 3">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 90 day)
+                    </when>
+                    <when test="state == 4">
+                        and date(pre_reap_time) &lt;= date_add(curdate(), interval 120 day)
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
 </mapper>
