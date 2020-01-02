@@ -59,14 +59,15 @@ public class RedisConfig extends CachingConfigurerSupport {
     public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory);
         FastJsonRedisSerializer<Object> jsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
-        RedisSerializationContext.SerializationPair<Object> pair = RedisSerializationContext.SerializationPair.fromSerializer(jsonRedisSerializer);
-        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(pair);
-        cacheConfiguration = cacheConfiguration.entryTtl(Duration.ofSeconds(ttl));
+        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+        cacheConfiguration = cacheConfiguration.entryTtl(Duration.ofSeconds(ttl))
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonRedisSerializer))
+                .disableCachingNullValues();
         RedisCacheManager cacheManager = new RedisCacheManager(redisCacheWriter, cacheConfiguration);
-        ParserConfig.getGlobalInstance().addAccept("com.moguying.plant.entity.");
+        ParserConfig.getGlobalInstance().addAccept("com.moguying.plant.core.entity.");
         return cacheManager;
     }
-
 
 }
 

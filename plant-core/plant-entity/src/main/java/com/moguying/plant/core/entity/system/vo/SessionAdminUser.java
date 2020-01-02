@@ -16,7 +16,7 @@ public class SessionAdminUser {
     /**
      * 用户名
      */
-    private String name;
+    private String realName;
 
     /**
      * 是否锁定
@@ -28,10 +28,17 @@ public class SessionAdminUser {
      */
     private Integer roleId;
 
+
+    /**
+     * 部门id
+     */
+    private Integer deptId;
+
     public SessionAdminUser(AdminUser adminUser) {
         id = adminUser.getId();
-        name = adminUser.getUserName();
+        realName = adminUser.getRealName();
         isLocked = adminUser.getIsLocked();
         roleId = adminUser.getRoleId();
+        deptId = adminUser.getDeptId();
     }
 }

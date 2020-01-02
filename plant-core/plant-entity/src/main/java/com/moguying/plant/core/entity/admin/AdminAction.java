@@ -7,33 +7,24 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
-@TableName("plant_admin_role")
 @Data
-public class AdminRole implements Serializable {
+@TableName("plant_admin_action")
+public class AdminAction implements Serializable {
 
-    private static final long serialVersionUID = -2226566382113511485L;
+    private static final long serialVersionUID = 5239427220484279173L;
+
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     @TableField
-    private String roleName;
-
-    @TableField(exist = false)
-    private List<Integer> actionIds;
+    private String actionController;
 
     @TableField
-    private String actionCode;
-
+    private String actionMethod;
 
     @TableField
-    private String viewCode;
-
-
-    @TableField(exist = false)
-    private List<AdminMenu> tree;
-
+    private String actionDesc;
 
 }

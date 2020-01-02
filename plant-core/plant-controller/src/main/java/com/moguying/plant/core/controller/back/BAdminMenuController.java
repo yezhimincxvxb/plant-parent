@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -105,7 +106,7 @@ public class BAdminMenuController {
     @ApiOperation("路由表")
     public ResponseData<MenuTree> menuTree() {
         MenuTree tree = new MenuTree();
-        List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuService.menus(new AdminMenu()));
+        List<AdminMenu> menus = adminMenuService.generateMenuTree(new ArrayList<>());
         tree.setTree(menus);
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), tree);
     }

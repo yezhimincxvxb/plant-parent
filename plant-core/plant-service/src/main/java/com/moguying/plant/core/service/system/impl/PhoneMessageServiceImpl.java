@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.constant.SystemEnum;
+import com.moguying.plant.constant.UserEnum;
 import com.moguying.plant.core.config.RabbitConfig;
 import com.moguying.plant.core.dao.system.PhoneMessageDAO;
 import com.moguying.plant.core.dao.system.PhoneMessageTplDAO;
@@ -11,8 +12,10 @@ import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.SendMessage;
 import com.moguying.plant.core.entity.system.PhoneMessage;
 import com.moguying.plant.core.entity.system.PhoneMessageTpl;
+import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.system.PhoneMessageService;
 import com.moguying.plant.core.entity.mq.PhoneMessageSender;
+import com.moguying.plant.core.service.user.UserService;
 import com.moguying.plant.utils.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -39,6 +42,10 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     @Autowired
     private AmqpTemplate amqpTemplate;
 
+
+    @Autowired
+    private UserService userService;
+
     /**
      * 发送验证码短信
      * 在规定时间内不可重复发送
@@ -49,6 +56,13 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
     @DS("write")
     public ResultData<Boolean> sendCodeMessage(SendMessage sendMessage) {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
+        //非注册发送验证码
+        if(!sendMessage.getIsReg()) {
+            User user = userService.userInfoByPhone(sendMessage.getPhone(), UserEnum.USER_ACTIVE);
+            if(null == user)
+                return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
+        }
+
         String code = CommonUtil.INSTANCE.messageCode();
         long inTime = (Long.parseLong(time) / 1000) / 60;
         PhoneMessageTpl codeContent = tplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"code"));
@@ -105,11 +119,10 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
 
     @Override
     @DS("write")
-    public Integer validateMessage(String phone, String code) {
+    public boolean validateMessage(String phone, String code) {
         PhoneMessage message = messageByPhone(phone);
-        if(message == null)
-            return -1;
+        if(message == null) return false;
         setMessageState(message.getId(), SystemEnum.PHONE_MESSAGE_VALIDATE);
-        return message.getCode().equals(code) ? 1 : -1;
+        return message.getCode().equals(code);
     }
 }

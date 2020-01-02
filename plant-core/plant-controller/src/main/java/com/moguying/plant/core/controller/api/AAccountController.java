@@ -148,7 +148,7 @@ public class AAccountController {
         User userInfo = userService.userInfoById(userId);
         if (StringUtils.isEmpty(userInfo.getPayPassword()))
             return new ResponseData<>(MessageEnum.NEED_PAY_PASSWORD.getMessage(), MessageEnum.NEED_PAY_PASSWORD.getState());
-        if (phoneMessageService.validateMessage(userInfo.getPhone(), withdrawRequest.getCode()) <= 0)
+        if (!phoneMessageService.validateMessage(userInfo.getPhone(), withdrawRequest.getCode()))
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
         MoneyWithdraw withdraw = new MoneyWithdraw();
         withdraw.setUserId(userId);

@@ -17,7 +17,7 @@ public interface PhoneMessageService {
     Integer setMessageState(Integer id, SystemEnum state);
 
 
-    Integer validateMessage(String phone, String code);
+    boolean validateMessage(String phone, String code);
 
     ResultData<Boolean> send(String phone,String template,String code,String... params);
 

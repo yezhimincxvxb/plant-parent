@@ -6,7 +6,7 @@ import com.moguying.plant.core.entity.admin.AdminUser;
 
 public interface AdminUserService {
 
-    AdminUser login(String name, String password);
+    AdminUser login(String phone,String ip);
 
     AdminUser userInfo(Integer id);
 

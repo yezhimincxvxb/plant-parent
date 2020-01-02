@@ -12,10 +12,8 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.admin.AdminMenu;
 import com.moguying.plant.core.entity.admin.AdminMessage;
 import com.moguying.plant.core.entity.admin.AdminUser;
-import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.admin.AdminMenuService;
 import com.moguying.plant.core.service.admin.AdminUserService;
-import com.moguying.plant.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,13 +43,18 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     @DS("write")
-    public AdminUser login(String name, String password) {
-        AdminUser adminUser = adminUserDAO.selectByNameAndPassword(name,password);
+    public AdminUser login(String phone,String ip) {
+        AdminUser adminUser = adminUserDAO.selectOne(
+                new QueryWrapper<AdminUser>().lambda()
+                .eq(AdminUser::getPhone,phone)
+                .eq(AdminUser::getIsLocked,false)
+        );
         if(null == adminUser) return null;
         else {
             AdminUser update = new AdminUser();
             update.setId(adminUser.getId());
             update.setLastLoginTime(new Date());
+            update.setLastLoginIp(ip);
             adminUserDAO.updateById(update);
             return adminUser;
         }
@@ -62,8 +65,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     public AdminUser userInfo(Integer id) {
         AdminUser user = adminUserDAO.adminUserInfoById(id);
         user.setHasNewMessage(adminMessageDAO.hasNewMessage(id) > 0);
-        List<String> ids = Arrays.asList(user.getRole().getActionCode().split(","));
-        List<AdminMenu> menus = adminMenuService.generateMenuTree(adminMenuDAO.selectByMenuStringIds(ids));
+        List<AdminMenu> menus = adminMenuService.generateMenuTree(Arrays.asList(user.getRole().getViewCode().split(",")));
         user.setRouters(menus);
         return  user;
     }
@@ -86,19 +88,6 @@ public class AdminUserServiceImpl implements AdminUserService {
     @DS("write")
     @Override
     public Integer saveAdminUser(AdminUser adminUser) {
-        if(null != adminUser.getPhone()){
-            User where = new User();
-            where.setPhone(adminUser.getPhone());
-            User user = userDAO.selectOne(new QueryWrapper<>(where));
-            if(null != user ){
-                adminUser.setBindId(user.getId());
-            }
-        }
-
-        if(null != adminUser.getPassword()) {
-            adminUser.setPassword(PasswordUtil.INSTANCE.encode(adminUser.getPassword().getBytes()));
-        }
-
         if(null != adminUser.getId()){
             return adminUserDAO.updateById(adminUser);
         } else {

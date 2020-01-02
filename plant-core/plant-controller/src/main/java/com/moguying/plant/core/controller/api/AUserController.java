@@ -277,7 +277,7 @@ public class AUserController {
             return new ResponseData<>(MessageEnum.OLD_PASSWORD_ERROR.getMessage(), MessageEnum.OLD_PASSWORD_ERROR.getState());
         if (loginPassword.getPassword().equals(loginPassword.getOldPassword()))
             return new ResponseData<>(MessageEnum.NEW_PASSWORD_EQUAL_OLD.getMessage(), MessageEnum.NEW_PASSWORD_EQUAL_OLD.getState());
-        if (messageService.validateMessage(userInfo.getPhone(), loginPassword.getCode()) <= 0)
+        if (!messageService.validateMessage(userInfo.getPhone(), loginPassword.getCode()))
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
         User update = new User();
         update.setPassword(loginPassword.getPassword());

@@ -83,7 +83,7 @@ public class MoneyRechargeServiceImpl implements MoneyRechargeService {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.SUCCESS,0);
         MoneyRecharge recharge = moneyRechargeDAO.selectById(review.getId());
         recharge.setReviewUid(reviewUid);
-        if(phoneMessageService.validateMessage(reviewPhone,review.getCode()) < 0)
+        if(phoneMessageService.validateMessage(reviewPhone,review.getCode()))
             return resultData.setMessageEnum(MessageEnum.MESSAGE_CODE_ERROR);
 
         //审核不通过

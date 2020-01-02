@@ -68,9 +68,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
         AdminRole role = roleDAO.selectById(id);
         if (null == role)
             return resultData.setMessageEnum(MessageEnum.ADMIN_ROLE_NOT_EXIST);
-        List<String> strings = Arrays.asList(role.getActionCode().split(","));
-        List<AdminMenu> menus = adminMenuDAO.selectByMenuStringIds(strings);
-        role.setTree(adminMenuService.generateMenuTree(menus));
+        role.setTree(adminMenuService.generateMenuTree(Arrays.asList(role.getActionCode().split(","))));
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(role);
     }
 }

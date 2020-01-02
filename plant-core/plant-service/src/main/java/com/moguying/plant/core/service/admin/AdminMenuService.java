@@ -20,7 +20,7 @@ public interface AdminMenuService {
 
     ResultData<Integer> deleteMenu(Integer id);
 
-    List<AdminMenu> generateMenuTree(List<AdminMenu> menus);
+    List<AdminMenu> generateMenuTree(List<String> ids);
 
 
 }

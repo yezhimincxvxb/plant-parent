@@ -13,6 +13,8 @@ import com.moguying.plant.core.entity.admin.AdminMenu;
 import com.moguying.plant.core.entity.admin.AdminMenuMeta;
 import com.moguying.plant.core.service.admin.AdminMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
     @Override
     @DS("write")
+    @CacheEvict(cacheNames = "menuTree",allEntries = true)
     public ResultData<Integer> saveAdminMenu(AdminMenu menu) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (null != menu && null != menu.getId()) {
@@ -86,6 +89,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
      */
     @DS("write")
     @Override
+    @CacheEvict(cacheNames = "menuTree",allEntries = true)
     public ResultData<Integer> deleteMenu(Integer id) {
         ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR, null);
         AdminMenu menu = adminMenuDAO.selectById(id);
@@ -116,7 +120,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
     @DS("read")
     @Override
-    public List<AdminMenu> generateMenuTree(List<AdminMenu> menus) {
+    @Cacheable(cacheNames = "menuTree",key = "#ids.hashCode()")
+    public List<AdminMenu> generateMenuTree(List<String> ids) {
+        List<AdminMenu> menus = adminMenuDAO.selectByMenuStringIds(ids);
         List<AdminMenu> parents = menus.stream().filter((menu) -> menu.getParentId() == 0).collect(Collectors.toList());
         parents.forEach((menu) -> {
             menu.setChildren(menus.stream().filter((x) -> x.getParentId().equals(menu.getId())).collect(Collectors.toList()));

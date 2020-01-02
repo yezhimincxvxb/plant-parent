@@ -26,14 +26,16 @@ public class AdminUser implements Serializable {
      */
     @JSONField
     @TableField
-    private String userName;
+    private String realName;
+
 
     /**
-     * 登录密码
+     * 手机号
      */
-    @JSONField(serialize = false)
+    @JSONField
     @TableField
-    private String password;
+    private String phone;
+
 
     /**
      * 是否锁定
@@ -62,23 +64,31 @@ public class AdminUser implements Serializable {
 
 
     /**
+     * 部门id
+     */
+    @TableField
+    private Integer deptId;
+
+
+    @TableField
+    private Integer bindId;
+
+
+    /**
      * 图形验证码
      */
     @TableField(exist = false)
     private String code;
 
-    @TableField
-    private Integer bindId;
-
     /**
-     * 前台用户手机号
+     * 是否新信息
      */
-    @TableField(exist = false)
-    private String phone;
-
     @TableField(exist = false)
     private Boolean hasNewMessage;
 
+    /**
+     * 对应角色
+     */
     @TableField(exist = false)
     private AdminRole role;
 

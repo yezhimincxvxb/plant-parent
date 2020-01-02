@@ -156,7 +156,7 @@ public class ARegisterController {
         if (user == null)
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
         User update = new User();
-        if (messageService.validateMessage(forgetPassword.getPhone(), forgetPassword.getCode()) <= 0)
+        if (!messageService.validateMessage(forgetPassword.getPhone(), forgetPassword.getCode()))
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
         update.setPassword(forgetPassword.getPassword());
         ResultData<User> resultData = userService.saveUserInfo(user.getId(), update);
