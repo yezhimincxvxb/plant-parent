@@ -15,19 +15,7 @@ public class IdCardSerialize implements ObjectSerializer {
     @Override
     public void write(JSONSerializer jsonSerializer, Object value, Object filedName, Type type, int i) throws IOException {
         if (value instanceof String) {
-            String idOrPhone = (String) value;
-            StringBuilder sb = new StringBuilder();
-            int length = idOrPhone.length();
-            if (length >= 15) {
-                sb.append(idOrPhone, 0, 3)
-                        .append("***")
-                        .append(idOrPhone, length - 4, length);
-            } else if (length == 11) {
-                sb.append(idOrPhone, 0, 3)
-                        .append("****")
-                        .append(idOrPhone, length - 4, length);
-            }
-            jsonSerializer.write(sb.toString());
+            jsonSerializer.write(CommonUtil.INSTANCE.idOrPhoneMask((String) value));
         } else {
             jsonSerializer.write(value);
         }

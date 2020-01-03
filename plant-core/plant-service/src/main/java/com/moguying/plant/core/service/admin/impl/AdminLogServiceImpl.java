@@ -32,7 +32,7 @@ public class AdminLogServiceImpl implements AdminLogService {
     @Override
     @DS("read")
     public PageResult<AdminLog> adminLogs(PageSearch<AdminLog> search) {
-        IPage<AdminLog> result = adminLogDAO.adminLogs(new Page(search.getPage(), search.getSize()), search.getWhere());
+        IPage<AdminLog> result = adminLogDAO.selectSelective(new Page<>(search.getPage(), search.getSize()), search.getWhere());
         return new PageResult<>(result.getTotal(), result.getRecords());
     }
 }

@@ -25,6 +25,10 @@ public class AdminAction implements Serializable {
     private String actionMethod;
 
     @TableField
-    private String actionDesc;
+    private String methodDesc;
+
+
+    @TableField
+    private String controllerDesc;
 
 }

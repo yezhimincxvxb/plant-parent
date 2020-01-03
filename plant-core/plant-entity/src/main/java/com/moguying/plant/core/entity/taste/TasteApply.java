@@ -30,7 +30,6 @@ public class TasteApply {
 
 
     @Excel(name = "手机号",orderNum = "3")
-    @JSONField(serializeUsing = IdCardSerialize.class)
     private String phone;
 
     /**

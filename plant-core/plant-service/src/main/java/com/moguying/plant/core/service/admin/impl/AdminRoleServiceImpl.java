@@ -11,6 +11,7 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.admin.AdminMenu;
 import com.moguying.plant.core.entity.admin.AdminRole;
+import com.moguying.plant.core.entity.feedback.Result;
 import com.moguying.plant.core.service.admin.AdminMenuService;
 import com.moguying.plant.core.service.admin.AdminRoleService;
 import org.apache.commons.lang3.StringUtils;
@@ -23,13 +24,8 @@ import java.util.List;
 @Service
 public class AdminRoleServiceImpl implements AdminRoleService {
 
-
     @Autowired
     private AdminRoleDAO roleDAO;
-
-    @Autowired
-    private AdminMenuDAO adminMenuDAO;
-
 
     @Autowired
     private AdminMenuService adminMenuService;
@@ -43,15 +39,20 @@ public class AdminRoleServiceImpl implements AdminRoleService {
 
     @DS("write")
     @Override
-    public Integer saveRole(AdminRole role) {
-        if (null != role.getActionIds() && role.getActionIds().size() > 0) {
-            role.setActionCode(StringUtils.join(role.getActionIds(), ','));
+    public ResultData<Integer> saveRole(AdminRole role) {
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+
+        //将数组转为逗号拼接字符串
+        if (null != role.getViewIds() && role.getViewIds().size() > 0) {
+            role.setViewCode(StringUtils.join(role.getViewIds(), ','));
         }
-        if (null != role.getId()) {
-            return roleDAO.updateById(role);
-        } else {
-            return roleDAO.insert(role);
+
+        if (null != role.getId() && roleDAO.updateById(role) > 0) {
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+        } else if(null == role.getId() && roleDAO.insert(role) > 0) {
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
         }
+        return resultData;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
         AdminRole role = roleDAO.selectById(id);
         if (null == role)
             return resultData.setMessageEnum(MessageEnum.ADMIN_ROLE_NOT_EXIST);
-        role.setTree(adminMenuService.generateMenuTree(Arrays.asList(role.getActionCode().split(","))));
+        role.setTree(adminMenuService.generateMenuTree(Arrays.asList(role.getViewCode().split(","))));
         return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(role);
     }
 }

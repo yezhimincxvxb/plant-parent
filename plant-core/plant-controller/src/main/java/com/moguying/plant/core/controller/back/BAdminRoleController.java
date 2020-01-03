@@ -12,7 +12,7 @@ import com.moguying.plant.core.service.admin.AdminRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -51,10 +51,9 @@ public class BAdminRoleController {
     @PostMapping
     @ResponseBody
     @ApiOperation("修改/添加角色")
-    public ResponseData<Integer> saveAdminRole(@RequestBody AdminRole role) {
-        if (adminRoleService.saveRole(role) <= 0)
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState());
+    public ResponseData<Integer> saveAdminRole(@RequestBody @Validated AdminRole role) {
+        ResultData<Integer> resultData = adminRoleService.saveRole(role);
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(),resultData.getMessageEnum().getState());
     }
 
 

@@ -2,24 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moguying.plant.core.dao.admin.AdminLogDAO">
 
-    <select id="adminLogs" resultType="com.moguying.plant.core.entity.admin.AdminLog">
+    <select id="selectSelective" resultType="com.moguying.plant.core.entity.admin.AdminLog">
         select * from plant_admin_log
         <where>
-            <if test="where != null">
-                <if test="where.userId != null">
-                    and user_id = #{where.userId}
+            <if test="wq != null">
+                <if test="wq.userId != null">
+                    and user_id = #{wq.userId}
                 </if>
-                <if test="where.actionMethod != null and where.actionMethod != ''">
-                    and instr(action_method, #{where.actionMethod})
+                <if test="wq.actionMethod != null and wq.actionMethod != ''">
+                    and instr(action_method, #{wq.actionMethod})
                 </if>
-                <if test="where.actionDesc != null and where.actionDesc != ''">
-                    and instr(action_desc, #{where.actionDesc})
+                <if test="wq.actionDesc != null and wq.actionDesc != ''">
+                    and instr(action_desc, #{wq.actionDesc})
                 </if>
-                <if test="where.start != null">
-                    and unix_timestamp(add_time) &gt;= unix_timestamp(#{where.start})
+                <if test="wq.start != null">
+                    and unix_timestamp(add_time) &gt;= unix_timestamp(#{wq.start})
                 </if>
-                <if test="where.end != null">
-                    and unix_timestamp(add_time) &lt;= unix_timestamp(#{where.end})
+                <if test="wq.end != null">
+                    and unix_timestamp(add_time) &lt;= unix_timestamp(#{wq.end})
                 </if>
             </if>
         </where>

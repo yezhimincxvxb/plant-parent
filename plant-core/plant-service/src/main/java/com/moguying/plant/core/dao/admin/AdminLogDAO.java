@@ -7,11 +7,14 @@ import com.moguying.plant.core.entity.admin.AdminLog;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * AdminRoleDAO继承基类
  */
 @Repository
 public interface AdminLogDAO extends BaseDAO<AdminLog> {
 
-    IPage<AdminLog> adminLogs(Page page, @Param("where") AdminLog where);
+    IPage<AdminLog> selectSelective(Page<AdminLog> page,@Param("wq") AdminLog where);
+
 }

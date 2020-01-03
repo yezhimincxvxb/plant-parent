@@ -188,7 +188,8 @@ public enum  MessageEnum {
     LOTTERY_RULE_OUT_OF_RANGE("您的抽奖条件已经超出我们的预期了！",10184),
     LOTTERY_DAILY_COUNT_USED("抽奖次数已用完，种植再来抽奖！",10185),
     WITHDRAW_MONEY_LIMIT_MIN("单笔提现最小100.00元起提",10186),
-    WITHDRAW_MONEY_LIMIT_MAX("单笔提现最大200000.00元",10187);
+    WITHDRAW_MONEY_LIMIT_MAX("单笔提现最大200000.00元",10187),
+    ADMIN_DEPT_CANNOT_DEL("存在部门成员，部门不可删除",10188);
 
 
     private String message;

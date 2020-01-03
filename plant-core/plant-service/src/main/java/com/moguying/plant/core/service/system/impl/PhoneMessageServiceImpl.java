@@ -54,15 +54,12 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
      */
     @Override
     @DS("write")
-    public ResultData<Boolean> sendCodeMessage(SendMessage sendMessage) {
-        ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR,false);
-        //非注册发送验证码
-        if(!sendMessage.getIsReg()) {
-            User user = userService.userInfoByPhone(sendMessage.getPhone(), UserEnum.USER_ACTIVE);
-            if(null == user)
-                return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
-        }
-
+    public ResultData<SendMessage> sendCodeMessage(SendMessage sendMessage) {
+        SendMessage data = new SendMessage();
+        ResultData<SendMessage> resultData = new ResultData<>(MessageEnum.ERROR, data);
+        User user = userService.userInfoByPhone(sendMessage.getPhone(), UserEnum.USER_ACTIVE);
+        if (null == user) data.setIsReg(true);
+        else data.setIsReg(false);
         String code = CommonUtil.INSTANCE.messageCode();
         long inTime = (Long.parseLong(time) / 1000) / 60;
         PhoneMessageTpl codeContent = tplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"code"));
@@ -73,7 +70,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
         }
         ResultData<Boolean> sendResult = send(sendMessage.getPhone(), codeContent.getContent(), code, code, String.valueOf(inTime));
         if(sendResult.getMessageEnum().equals(MessageEnum.SUCCESS))
-            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(true);
+            return resultData.setMessageEnum(MessageEnum.SUCCESS).setData(data);
         return resultData;
     }
 

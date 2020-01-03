@@ -9,7 +9,7 @@ import com.moguying.plant.core.entity.system.vo.InnerMessage;
 public interface PhoneMessageService {
 
 
-    ResultData<Boolean> sendCodeMessage(SendMessage seedMessage);
+    ResultData<SendMessage> sendCodeMessage(SendMessage seedMessage);
 
     PhoneMessage messageByPhone(String phone);
 

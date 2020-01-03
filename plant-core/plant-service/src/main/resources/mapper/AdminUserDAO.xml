@@ -10,6 +10,7 @@
         <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
         <result column="role_id" jdbcType="INTEGER" property="roleId"/>
         <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
+        <result column="bind_id" jdbcType="INTEGER" property="bindId"/>
     </resultMap>
 
 
@@ -23,15 +24,15 @@
 
 
     <sql id="Base_Column_List">
-        id, real_name, `password`, is_locked, last_login_time, last_login_ip, role_id, dept_id
+        id, real_name, phone, is_locked, last_login_time, last_login_ip, role_id, dept_id,bind_id
     </sql>
 
     <select id="selectSelective" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/>
         from plant_admin_user
         <where>
-            <if test="wq.userName != null">
-                user_name = #{wq.userName}
+            <if test="wq.phone != null">
+                phone = #{wq.phone}
             </if>
         </where>
         order by id desc

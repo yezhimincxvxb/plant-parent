@@ -4,14 +4,17 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moguying.plant.constant.MessageEnum;
 import com.moguying.plant.core.dao.admin.AdminMenuDAO;
 import com.moguying.plant.core.dao.admin.AdminMessageDAO;
 import com.moguying.plant.core.dao.admin.AdminUserDAO;
 import com.moguying.plant.core.dao.user.UserDAO;
 import com.moguying.plant.core.entity.PageResult;
+import com.moguying.plant.core.entity.ResultData;
 import com.moguying.plant.core.entity.admin.AdminMenu;
 import com.moguying.plant.core.entity.admin.AdminMessage;
 import com.moguying.plant.core.entity.admin.AdminUser;
+import com.moguying.plant.core.entity.user.User;
 import com.moguying.plant.core.service.admin.AdminMenuService;
 import com.moguying.plant.core.service.admin.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,12 +90,22 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @DS("write")
     @Override
-    public Integer saveAdminUser(AdminUser adminUser) {
-        if(null != adminUser.getId()){
-            return adminUserDAO.updateById(adminUser);
-        } else {
-            return adminUserDAO.insert(adminUser);
+    public ResultData<Integer> saveAdminUser(AdminUser adminUser) {
+        ResultData<Integer> resultData = new ResultData<>(MessageEnum.ERROR,0);
+        if(null != adminUser.getBindId()) {
+            User user = userDAO.selectOne(new QueryWrapper<User>().lambda().eq(User::getPhone, adminUser.getBindPhone()));
+            if(null != user)
+                adminUser.setBindId(user.getId());
+            else
+                return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
         }
+
+        if(null != adminUser.getId() && adminUserDAO.updateById(adminUser) > 0){
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+        } else if(null == adminUser.getId() && adminUserDAO.insert(adminUser) > 0) {
+            return resultData.setMessageEnum(MessageEnum.SUCCESS);
+        }
+        return resultData;
     }
 
     @Override

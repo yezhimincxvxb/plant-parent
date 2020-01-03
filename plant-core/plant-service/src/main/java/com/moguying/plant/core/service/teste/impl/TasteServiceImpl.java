@@ -39,6 +39,7 @@ import com.moguying.plant.core.service.common.DownloadService;
 import com.moguying.plant.core.service.fertilizer.FertilizerService;
 import com.moguying.plant.core.service.order.PlantOrderService;
 import com.moguying.plant.core.service.teste.TasteService;
+import com.moguying.plant.utils.CommonUtil;
 import com.moguying.plant.utils.DateUtil;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -360,6 +361,7 @@ public class TasteServiceImpl implements TasteService {
         if (optional.map(TasteApply::getState).isPresent())
             query.addCriteria(Criteria.where("state").is(where.getState()));
         List<TasteApply> tasteApplies = mongoTemplate.find(query, TasteApply.class);
+        tasteApplies.forEach(x -> x.setPhone(CommonUtil.INSTANCE.idOrPhoneMask(x.getPhone())));
         long count = mongoTemplate.count(query, TasteApply.class);
         return new PageResult<>(count, tasteApplies);
     }

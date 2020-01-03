@@ -763,7 +763,7 @@ public class AUserController {
      */
     @PostMapping(value = "/order/unpay")
     @ApiOperation("菌包订单")
-    public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestBody PageSearch search, @LoginUserId Integer userId) {
+    public PageResult<SeedOrderDetail> seedOrderDetailList(@RequestBody PageSearch<SeedOrderDetail> search, @LoginUserId Integer userId) {
         return seedOrderDetailService.selectUserPayListByUserId(search.getPage(), search.getSize(), userId);
     }
 

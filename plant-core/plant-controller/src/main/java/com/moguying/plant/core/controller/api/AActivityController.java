@@ -13,6 +13,7 @@ import com.moguying.plant.core.entity.activity.vo.LotteryQua;
 import com.moguying.plant.core.entity.activity.vo.LotteryQuaQuery;
 import com.moguying.plant.core.entity.activity.vo.LotteryResult;
 import com.moguying.plant.core.service.content.ActivityService;
+import com.moguying.plant.utils.CommonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,11 @@ public class AActivityController {
     @ApiOperation("抽奖记录")
     @PostMapping("/lottery/log")
     public PageResult<LotteryLog> lotteryLogPageResult(@RequestBody PageSearch<LotteryLog> search) {
-        return activityService.lotteryLog(search.getPage(), search.getSize(), new LotteryLog());
+        PageResult<LotteryLog> lotteryLogPageResult = activityService.lotteryLog(search.getPage(), search.getSize(), new LotteryLog());
+        lotteryLogPageResult.getData().forEach((log)->{
+            log.setPhone(CommonUtil.INSTANCE.idOrPhoneMask(log.getPhone()));
+        });
+        return lotteryLogPageResult;
     }
 
 }

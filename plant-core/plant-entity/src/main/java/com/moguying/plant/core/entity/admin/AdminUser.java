@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moguying.plant.utils.annotation.IsMobile;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +28,7 @@ public class AdminUser implements Serializable {
      */
     @JSONField
     @TableField
+    @NotNull(message = "真实姓名不能为空")
     private String realName;
 
 
@@ -34,6 +37,7 @@ public class AdminUser implements Serializable {
      */
     @JSONField
     @TableField
+    @IsMobile
     private String phone;
 
 
@@ -41,6 +45,7 @@ public class AdminUser implements Serializable {
      * 是否锁定
      */
     @TableField
+    @NotNull(message = "用户状态不能为空")
     private Boolean isLocked;
 
     /**
@@ -60,6 +65,7 @@ public class AdminUser implements Serializable {
      * 用户角色id
      */
     @TableField
+    @NotNull(message = "用户角色不能为空")
     private Integer roleId;
 
 
@@ -67,12 +73,19 @@ public class AdminUser implements Serializable {
      * 部门id
      */
     @TableField
+    @NotNull(message = "用户部门不能为空")
     private Integer deptId;
 
 
     @TableField
     private Integer bindId;
 
+
+    /**
+     * 渠道商绑定的手机号
+     */
+    @TableField(exist = false)
+    private String bindPhone;
 
     /**
      * 图形验证码
