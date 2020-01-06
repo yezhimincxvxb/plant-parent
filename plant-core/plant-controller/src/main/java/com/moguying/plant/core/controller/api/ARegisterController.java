@@ -160,7 +160,9 @@ public class ARegisterController {
             return new ResponseData<>(MessageEnum.MESSAGE_CODE_ERROR.getMessage(), MessageEnum.MESSAGE_CODE_ERROR.getState());
         update.setPassword(forgetPassword.getPassword());
         ResultData<User> resultData = userService.saveUserInfo(user.getId(), update);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
     /**

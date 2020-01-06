@@ -58,8 +58,7 @@ public class PhoneMessageServiceImpl implements PhoneMessageService {
         SendMessage data = new SendMessage();
         ResultData<SendMessage> resultData = new ResultData<>(MessageEnum.ERROR, data);
         User user = userService.userInfoByPhone(sendMessage.getPhone(), UserEnum.USER_ACTIVE);
-        if (null == user) data.setIsReg(true);
-        else data.setIsReg(false);
+        data.setIsReg(user == null);
         String code = CommonUtil.INSTANCE.messageCode();
         long inTime = (Long.parseLong(time) / 1000) / 60;
         PhoneMessageTpl codeContent = tplDAO.selectOne(new QueryWrapper<PhoneMessageTpl>().lambda().eq(PhoneMessageTpl::getCode,"code"));

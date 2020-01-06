@@ -970,24 +970,19 @@ public class PaymentServiceImpl implements PaymentService {
         ResultData<Boolean> resultData = new ResultData<>(MessageEnum.ERROR, null);
         if (null == userInfo)
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
-
         // 未实名
-        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
-            return resultData.setMessageEnum(MessageEnum.USER_NEED_REAL_NAME);
-
+        /*if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
+            return resultData.setMessageEnum(MessageEnum.USER_NEED_REAL_NAME);*/
         // 未绑卡
-        if (!userInfo.getIsBindCard())
-            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);
-
+        /*if (!userInfo.getIsBindCard())
+            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);*/
         // 未注册第三方支付
         if (!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState()))
             return resultData.setMessageEnum(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT);
-
         if (null == userInfo.getPaymentAccount() || StringUtils.isEmpty(userInfo.getPaymentAccount()))
             return resultData.setMessageEnum(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT);
-
-        if (null == bank)
-            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);
+        /*if (null == bank)
+            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);*/
         return resultData.setMessageEnum(MessageEnum.SUCCESS);
     }
 

@@ -201,7 +201,9 @@ public class AUserController {
         User update = new User();
         update.setPayPassword(payPassword.getPayPassword());
         ResultData<User> resultData = userService.saveUserInfo(userId, update);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 
@@ -219,6 +221,8 @@ public class AUserController {
         User update = new User();
         update.setPayPassword(forgetPayPassword.getPayPassword());
         ResultData<User> resultData = userService.saveUserInfo(userId, update);
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
         return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
@@ -231,9 +235,9 @@ public class AUserController {
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> setWithdrawPassword(@LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
-        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
+        /*if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
             return new ResponseData<>(MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getMessage(),
-                    MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getState());
+                    MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getState());*/
         if (!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState())
                 || StringUtils.isEmpty(userInfo.getPaymentAccount())) {
             return new ResponseData<>(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT.getMessage(),
@@ -282,7 +286,9 @@ public class AUserController {
         User update = new User();
         update.setPassword(loginPassword.getPassword());
         ResultData<User> resultData = userService.saveUserInfo(user.getId(), update);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 
@@ -494,8 +500,8 @@ public class AUserController {
             return new ResponseData<>(MessageEnum.USER_NOT_EXISTS.getMessage(), MessageEnum.USER_NOT_EXISTS.getState());
         if (null == bindCard.getBankNumber() || StringUtils.isEmpty(bindCard.getBankNumber()))
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
-        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
-            return new ResponseData<>(MessageEnum.USER_NEED_REAL_NAME.getMessage(), MessageEnum.USER_NEED_REAL_NAME.getState());
+        /*if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
+            return new ResponseData<>(MessageEnum.USER_NEED_REAL_NAME.getMessage(), MessageEnum.USER_NEED_REAL_NAME.getState());*/
         if (!CommonUtil.INSTANCE.isPhone(bindCard.getPhone()))
             return new ResponseData<>(MessageEnum.PHONE_ERROR.getMessage(), MessageEnum.PHONE_ERROR.getState());
         SendBindCardSmsCodeRequest sbcsc = new SendBindCardSmsCodeRequest();

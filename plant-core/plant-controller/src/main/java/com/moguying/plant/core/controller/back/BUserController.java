@@ -30,19 +30,14 @@ public class BUserController {
     @Autowired
     private UserService userService;
 
-    /**
-     * 用户列表
-     */
     @PostMapping("/list")
     @ApiOperation("用户列表")
     public PageResult<User> userList(@RequestBody PageSearch<User> search) {
-        return userService.userList(search.getPage(), search.getSize(), search.getWhere() == null ? new User() : search.getWhere());
+        if (search.getWhere() == null) search.setWhere(new User());
+        return userService.userList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
-    /**
-     * 用户列表下载
-     */
     @PostMapping("/excel")
     @ApiOperation("用户列表下载")
     public ResponseData<Integer> excelList(@SessionAttribute(SessionAdminUser.sessionKey) AdminUser user,
@@ -53,9 +48,6 @@ public class BUserController {
     }
 
 
-    /**
-     * 添加用户
-     */
     @PostMapping(value = "/add")
     @ApiOperation("添加用户")
     public ResponseData<Integer> userAdd(@RequestBody User addUser) {
@@ -66,12 +58,6 @@ public class BUserController {
     }
 
 
-    /**
-     * 用户信息
-     *
-     * @param id
-     * @return
-     */
     @GetMapping(value = "/{id}")
     @ApiOperation("用户信息")
     public ResponseData<User> userInfo(@PathVariable Integer id) {
@@ -83,27 +69,16 @@ public class BUserController {
     }
 
 
-    /**
-     * 编辑用户信息
-     *
-     * @param user
-     * @param id
-     * @return
-     */
     @PutMapping(value = "/{id}")
-    @ApiOperation("编辑用户信息")
+    @ApiOperation("编辑用户")
     public ResponseData<Integer> updateInfo(@RequestBody User user, @PathVariable Integer id) {
         ResultData<User> resultData = userService.saveUserInfo(id, user);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData().getId());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 
-    /**
-     * 用户添加地址
-     *
-     * @param address
-     * @return
-     */
     @PostMapping(value = "/add/address")
     @ApiOperation("用户添加地址")
     public ResponseData<Integer> userAddAddress(@RequestBody UserAddress address) {
@@ -112,12 +87,6 @@ public class BUserController {
     }
 
 
-    /**
-     * 用户地址列表
-     *
-     * @param userId
-     * @return
-     */
     @GetMapping(value = "/address/{userId}")
     @ApiOperation("用户地址列表")
     public ResponseData<List<UserAddress>> userAddressList(@PathVariable Integer userId) {
@@ -125,26 +94,16 @@ public class BUserController {
     }
 
 
-    /**
-     * 用户银行卡列表
-     *
-     * @param userId
-     * @return
-     */
     @GetMapping("/bank/{userId}")
     @ApiOperation("用户银行卡列表")
     public ResponseData<List<UserBank>> userBankList(@PathVariable Integer userId) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), userService.bankCardList(userId));
     }
 
-    /**
-     * 种植金额列表
-     */
     @PostMapping("/plant/money/list")
     @ApiOperation("种植金额列表")
     public PageResult<UserPlantMoneyVo> userPlantMoneyList(@RequestBody PageSearch<UserPlantMoneyDto> search) {
         return userService.userPlantMoneyList(search.getPage(), search.getSize(), search.getWhere());
     }
-
 
 }
