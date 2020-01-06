@@ -273,7 +273,7 @@ public class ABargainController {
             return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
         // 商品不存在
         MallProduct product = mallProductDAO.selectById(submitOrder.getProductId());
-        if (product == null || !product.getIsShow())
+        if (product == null)
             return new ResponseData<>(MessageEnum.MALL_PRODUCT_NOT_EXISTS.getMessage(), MessageEnum.MALL_PRODUCT_NOT_EXISTS.getState());
         // 地址不存在
         UserAddress address = userAddressDAO.selectByIdAndUserId(submitOrder.getAddressId(), userId, false);
