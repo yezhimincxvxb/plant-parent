@@ -569,9 +569,9 @@ public class PaymentServiceImpl implements PaymentService {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
         UserBank bank = userService.bankCard(payRequestInfo.getUserId(), payRequestInfo.getBankId());
         ResultData resultData = new ResultData(MessageEnum.ERROR, null);
-        ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
+        /*ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
         if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
-            return new ResultData<>(validateResult.getMessageEnum(), null);
+            return new ResultData<>(validateResult.getMessageEnum(), null);*/
 
         if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
@@ -912,9 +912,9 @@ public class PaymentServiceImpl implements PaymentService {
         User userInfo = userService.userInfoById(payRequestInfo.getUserId());
         UserBank bank = userService.bankCard(payRequestInfo.getUserId(), payRequestInfo.getBankId());
         ResultData resultData = new ResultData(MessageEnum.ERROR, 0);
-        ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
+        /*ResultData<Boolean> validateResult = payBeforeValidate(userInfo, bank);
         if (!validateResult.getMessageEnum().equals(MessageEnum.SUCCESS))
-            return new ResultData<>(validateResult.getMessageEnum(), null);
+            return new ResultData<>(validateResult.getMessageEnum(), null);*/
 
         if (null == payRequestInfo.getMoney() || StringUtils.isEmpty(payRequestInfo.getMoney()))
             return resultData.setMessageEnum(MessageEnum.OPERATE_MONEY_ERROR);
@@ -971,18 +971,18 @@ public class PaymentServiceImpl implements PaymentService {
         if (null == userInfo)
             return resultData.setMessageEnum(MessageEnum.USER_NOT_EXISTS);
         // 未实名
-        /*if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
-            return resultData.setMessageEnum(MessageEnum.USER_NEED_REAL_NAME);*/
+        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
+            return resultData.setMessageEnum(MessageEnum.USER_NEED_REAL_NAME);
         // 未绑卡
-        /*if (!userInfo.getIsBindCard())
-            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);*/
+        if (!userInfo.getIsBindCard())
+            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);
         // 未注册第三方支付
         if (!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState()))
             return resultData.setMessageEnum(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT);
         if (null == userInfo.getPaymentAccount() || StringUtils.isEmpty(userInfo.getPaymentAccount()))
             return resultData.setMessageEnum(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT);
-        /*if (null == bank)
-            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);*/
+        if (null == bank)
+            return resultData.setMessageEnum(MessageEnum.USER_NOT_BIND_CARD);
         return resultData.setMessageEnum(MessageEnum.SUCCESS);
     }
 

@@ -39,10 +39,10 @@ public class ValidateUserState {
             return new ResponseData<>(MessageEnum.USER_NEED_REAL_NAME.getMessage(), MessageEnum.USER_NEED_REAL_NAME.getState());
         }*/
         // 支付密码
-        if (null == user.getPaymentAccount() || !user.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState())) {
+        /*if (null == user.getPaymentAccount() || !user.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState())) {
             return new ResponseData<>(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT.getMessage(),
                     MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT.getState());
-        }
+        }*/
         // 绑定银行卡
         /*if (!user.getIsBindCard()) {
             return new ResponseData<>(MessageEnum.USER_NOT_BIND_CARD.getMessage(),
