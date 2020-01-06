@@ -44,7 +44,9 @@ public class AShippingCarController {
         mallCar.setProductCount(itemToCar.getBuyCount());
         mallCar.setProductId(itemToCar.getProductId());
         ResultData<Integer> resultData = mallCarService.addItemToCar(mallCar);
-        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
+        if (resultData.getMessageEnum().equals(MessageEnum.SUCCESS))
+            return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState(), resultData.getData());
+        return new ResponseData<>(resultData.getMessageEnum().getMessage(), resultData.getMessageEnum().getState());
     }
 
 

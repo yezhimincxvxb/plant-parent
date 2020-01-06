@@ -114,7 +114,7 @@ public class ASeedController {
      * @param buyOrder
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping(value = "/buy")
     @ApiOperation("提交菌包订单")
     public ResponseData<BuyOrderResponse> buySeed(@LoginUserId Integer userId, @RequestBody BuyOrder buyOrder) {
@@ -138,7 +138,7 @@ public class ASeedController {
      *
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping("/pay")
     @ApiOperation("提交菌包支付订单")
     public ResponseData<SendPayOrderResponse> sendPayOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
@@ -162,7 +162,7 @@ public class ASeedController {
      * @param userId
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PutMapping("/pay")
     @ApiOperation("支付订单")
     public ResponseData<PayOrderResponse> payOrder(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
@@ -194,7 +194,7 @@ public class ASeedController {
      * @param payOrder
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping("/order/pay")
     @ApiOperation("订单付款")
     public ResponseData<BuyOrderResponse> orderPay(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
@@ -235,7 +235,7 @@ public class ASeedController {
      * @param payOrder
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping("/order/cancel")
     @ApiOperation("取消订单")
     public ResponseData<Integer> orderCancel(@LoginUserId Integer userId, @RequestBody SendPayOrder payOrder) {
@@ -251,7 +251,7 @@ public class ASeedController {
      *
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping(value = "/plant")
     @ApiOperation("用户种植菌包")
     public ResponseData<PlantOrderResponse> plantSeed(@LoginUserId Integer userId, @RequestBody PlantOrder plantOrder) {
@@ -330,7 +330,7 @@ public class ASeedController {
      * @param saleRequest
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping(value = "/sale")
     @ApiOperation("出售产品")
     public ResponseData<SaleResponse> saleSeed(@LoginUserId Integer userId, @RequestBody SaleRequest saleRequest) {
@@ -350,7 +350,7 @@ public class ASeedController {
      * @param orderId
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @GetMapping("/pay/data/{orderId}")
     @ApiOperation("PC端支付参数")
     public ResponseData<PaymentRequest<WebHtmlPayRequest>> payData(@LoginUserId Integer userId, @PathVariable Integer orderId) {

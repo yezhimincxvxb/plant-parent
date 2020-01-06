@@ -125,7 +125,7 @@ public class AMallController {
      * @param orderBuy
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping("/buy")
     @ApiOperation("立即购买")
     public ResponseData<OrderBuyResponse> orderBuy(@LoginUserId Integer userId, @RequestBody OrderBuy orderBuy) {
@@ -143,7 +143,7 @@ public class AMallController {
      * @param submitOrder
      * @return
      */
-    @ValidateUser
+    // @ValidateUser
     @PostMapping("/sum")
     @ApiOperation("计算订单总价")
     public ResponseData<OrderSum> sumOrder(@LoginUserId Integer userId, @RequestBody SubmitOrder submitOrder) {

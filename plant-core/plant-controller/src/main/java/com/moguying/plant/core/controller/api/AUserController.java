@@ -235,14 +235,14 @@ public class AUserController {
     @SuppressWarnings("all")
     public ResponseData<PaymentRequestForHtml> setWithdrawPassword(@LoginUserId Integer userId) {
         User userInfo = userService.userInfoById(userId);
-        /*if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
+        if (!userInfo.getIsRealName().equals(UserEnum.USER_PAYMENT_ACCOUNT_VERIFY_SUCCESS.getState()))
             return new ResponseData<>(MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getMessage(),
-                    MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getState());*/
-        /*if (!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState())
+                    MessageEnum.USER_PAYMENT_REGISTER_INFO_ERROR.getState());
+        if (!userInfo.getPaymentState().equals(UserEnum.USER_PAYMENT_ACCOUNT_REGISTER.getState())
                 || StringUtils.isEmpty(userInfo.getPaymentAccount())) {
             return new ResponseData<>(MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT.getMessage(),
                     MessageEnum.USER_NEED_REGISTER_PAYMENT_ACCOUNT.getState());
-        }*/
+        }
         ModifyPayPasswordRequest modifyPayPasswordRequest = new ModifyPayPasswordRequest();
         modifyPayPasswordRequest.setMerchantNo(userInfo.getPaymentAccount());
         modifyPayPasswordRequest.setType("H5");
