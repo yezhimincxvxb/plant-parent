@@ -3,12 +3,13 @@
 <mapper namespace="com.moguying.plant.core.dao.content.ArticleTypeDAO">
     <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.ArticleType">
         <id column="id" jdbcType="INTEGER" property="id"/>
+        <id column="state" jdbcType="INTEGER" property="state"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="url_name" jdbcType="VARCHAR" property="urlName"/>
         <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, `name`,url_name,order_number
+        id, state, `name`,url_name,order_number
     </sql>
 
 

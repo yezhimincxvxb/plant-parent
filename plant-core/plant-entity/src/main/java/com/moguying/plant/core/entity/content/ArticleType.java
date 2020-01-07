@@ -17,6 +17,9 @@ public class ArticleType implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    @TableField
+    private Integer state;
+
     /**
      * 分类名称
      */

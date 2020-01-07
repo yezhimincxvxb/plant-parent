@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moguying.plant.core.dao.content.ArticleHelpDAO">
+    <resultMap id="BaseResultMap" type="com.moguying.plant.core.entity.content.ArticleHelp">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="question" jdbcType="VARCHAR" property="question"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="is_show" jdbcType="BIT" property="isShow"/>
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="BaseSql">
+        id, type_id, title, question, answer, is_show, add_time, update_time
+    </sql>
+
+    <select id="selectSelective" resultMap="BaseResultMap">
+        select <include refid="BaseSql"/>
+        from plant_article_help
+        <where>
+            <if test="wq != null">
+                <if test="wq.typeId != null">
+                    type_id = #{wq.typeId}
+                </if>
+                <if test="wq.title != null and wq.title != ''">
+                    and instr(title, #{wq.title})
+                </if>
+                <if test="wq.question != null and wq.question != ''">
+                    and instr(question, #{wq.question})
+                </if>
+                <if test="wq.isShow != null">
+                    and is_show = #{wq.isShow}
+                </if>
+                <if test="wq.start != null">
+                    and unix_timestamp(add_time) &gt;= unix_timestamp(#{wq.start})
+                </if>
+                <if test="wq.end != null">
+                    and unix_timestamp(add_time) &lt;= unix_timestamp(#{wq.end})
+                </if>
+            </if>
+        </where>
+        order by add_time desc
+    </select>
+
+    <select id="articleHelpList" resultType="com.moguying.plant.core.entity.content.ArticleHelpList">
+        select title
+        from plant_article_help
+        where type_id = #{wq.typeId}
+        group by title
+        order by add_time desc
+    </select>
+
+</mapper>

@@ -30,8 +30,10 @@ public class ArticleTypeServiceImpl implements ArticleTypeService {
 
     @Override
     @DS("read")
-    public List<ArticleType> articleTypeList() {
-        return articleTypeDAO.selectList(new QueryWrapper<>());
+    public List<ArticleType> articleTypeList(Integer state) {
+        ArticleType articleType = new ArticleType();
+        articleType.setState(state == null ? 1 : state);
+        return articleTypeDAO.selectList(new QueryWrapper<>(articleType));
     }
 
     @Override

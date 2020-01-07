@@ -540,3 +540,20 @@ ADD COLUMN  `bargain_limit` int(11) NOT NULL DEFAULT '0' COMMENT '商品限制�
 
 ALTER TABLE `moguying`.`plant_bargain_rate`
 ADD COLUMN  `add_time` datetime DEFAULT NULL COMMENT '推送时间';
+
+/** 帮助中心表 **/
+CREATE TABLE `plant_article_help` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type_id` int(11) NOT NULL COMMENT '类型',
+  `title` varchar(255) NOT NULL COMMENT '标题',
+  `question` varchar(255) NOT NULL COMMENT '问题',
+  `answer` varchar(255) NOT NULL COMMENT '答复',
+  `is_show` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否显示[0否，1是]',
+  `add_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT '添加时间',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+/** 文章类型表添加状态区分 **/
+ALTER TABLE `moguying`.`plant_article_type`
+ADD COLUMN  `state` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态[1-公司资讯 2-帮助中心]' AFTER `id`;

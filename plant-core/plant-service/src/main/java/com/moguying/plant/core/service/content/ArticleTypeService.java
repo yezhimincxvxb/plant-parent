@@ -9,7 +9,7 @@ import java.util.List;
 public interface ArticleTypeService {
 
 
-    List<ArticleType> articleTypeList();
+    List<ArticleType> articleTypeList(Integer state);
 
 
     ResultData<Integer> addArticleType(ArticleType articleType);

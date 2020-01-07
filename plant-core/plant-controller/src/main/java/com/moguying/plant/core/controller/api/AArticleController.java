@@ -6,13 +6,15 @@ import com.moguying.plant.core.entity.PageResult;
 import com.moguying.plant.core.entity.PageSearch;
 import com.moguying.plant.core.entity.ResponseData;
 import com.moguying.plant.core.entity.content.Article;
+import com.moguying.plant.core.entity.content.ArticleHelp;
+import com.moguying.plant.core.entity.content.ArticleHelpList;
 import com.moguying.plant.core.entity.content.ArticleType;
+import com.moguying.plant.core.service.content.ArticleHelpService;
 import com.moguying.plant.core.service.content.ArticleService;
 import com.moguying.plant.core.service.content.ArticleTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,15 +26,16 @@ public class AArticleController {
 
     @Autowired
     private ArticleTypeService articleTypeService;
-
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private ArticleHelpService articleHelpService;
 
     @GetMapping("/types")
     @NoLogin
     @ApiOperation("文章分类")
-    public ResponseData<List<ArticleType>> articleTypes() {
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleTypeService.articleTypeList());
+    public ResponseData<List<ArticleType>> articleTypes(@RequestParam(value = "state", required = false) Integer state) {
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleTypeService.articleTypeList(state));
     }
 
 
@@ -67,6 +70,23 @@ public class AArticleController {
             return responseData.setMessage(MessageEnum.ARTICLE_NOT_EXISTS.getMessage())
                     .setState(MessageEnum.ARTICLE_NOT_EXISTS.getState());
         return responseData.setData(article);
+    }
+
+    @PostMapping("/help/{urlName}")
+    @NoLogin
+    @ApiOperation("不同分类的帮助信息列表")
+    public PageResult<ArticleHelpList> articleHelpList(@RequestBody PageSearch<ArticleHelp> search,
+                                                       @PathVariable("urlName") String urlName) {
+        PageResult<ArticleHelpList> responseData = new PageResult<>();
+        ArticleType type = articleTypeService.selectTypeByUrlName(urlName);
+        if (null == type)
+            return responseData.setMessage(MessageEnum.ARTICLE_TYPE_NOT_EXIST.getMessage())
+                    .setStatus(MessageEnum.ARTICLE_TYPE_NOT_EXIST.getState());
+        if (search.getWhere() == null) search.setWhere(new ArticleHelp());
+        ArticleHelp where = search.getWhere()
+                .setTypeId(type.getId())
+                .setIsShow(true);
+        return articleHelpService.articleHelpList(search.getPage(), search.getSize(), where);
     }
 
 
