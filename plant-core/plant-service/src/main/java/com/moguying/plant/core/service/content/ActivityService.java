@@ -29,7 +29,7 @@ public interface ActivityService extends IService<Activity> {
     Integer updateActivity(Activity update);
 
     
-    PageResult<Activity> activityListForHome(Integer page, Integer size, Date startTime, Date endTime);
+    PageResult<Activity> activityListForHome(Integer page, Integer size, Activity activity);
 
     
     List<Activity> newestActivity();

@@ -66,8 +66,18 @@ public class Activity implements Serializable {
     @TableField
     private String linkUrl;
 
-    //辅助状态字段
+
     @JSONField(ordinal = 9)
     @TableField(exist = false)
     private Integer state;
+
+    @JSONField(ordinal = 10)
+    @TableField
+    private Integer type;
+
+    // 辅助字段
+    @TableField(exist = false)
+    private Date start;
+    @TableField(exist = false)
+    private Date end;
 }

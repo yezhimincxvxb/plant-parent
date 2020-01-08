@@ -117,8 +117,8 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
 
     @Override
     @DS("read")
-    public PageResult<Activity> activityListForHome(Integer page, Integer size, Date startTime, Date endTime) {
-        IPage<Activity> pageResult = activityDAO.activityListForHome(new Page<>(page, size), startTime, endTime);
+    public PageResult<Activity> activityListForHome(Integer page, Integer size, Activity activity) {
+        IPage<Activity> pageResult = activityDAO.activityListForHome(new Page<>(page, size), activity);
         List<Activity> list = pageResult.getRecords();
         list.forEach((x) -> {
             int compare = DateUtils.truncatedCompareTo(x.getOpenTime(), new Date(), Calendar.DATE);
@@ -157,7 +157,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
         String countKey = ActivityEnum.LOTTERY_COUNT_KEY_PRE.getMessage().concat(userId.toString());
         String dailyCount = redisTemplate.opsForValue().get(countKey);
         Optional<String> optional = Optional.ofNullable(dailyCount);
-        if(!optional.isPresent()) {
+        if (!optional.isPresent()) {
             redisTemplate.opsForValue().setIfAbsent(countKey,
                     dailyLotteryCount, Duration.between(Instant.now(), DateUtil.INSTANCE.todayEnd().toInstant()));
             dailyCount = dailyLotteryCount;
@@ -172,12 +172,12 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
 
     @Override
     @DS("write")
-    public ResultData<LotteryResult> lotteryDo(Integer userId,boolean isCheck) {
-        ResultData<LotteryResult> resultResultData = new ResultData<>(MessageEnum.ERROR,new LotteryResult());
+    public ResultData<LotteryResult> lotteryDo(Integer userId, boolean isCheck) {
+        ResultData<LotteryResult> resultResultData = new ResultData<>(MessageEnum.ERROR, new LotteryResult());
         String key = ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString());
 
         Long lotteryCount = redisTemplate.opsForList().size(key);
-        if(null == lotteryCount || lotteryCount <= 0)
+        if (null == lotteryCount || lotteryCount <= 0)
             return resultResultData.setMessageEnum(MessageEnum.LOTTERY_DAILY_COUNT_USED);
 
         String reapId = redisTemplate.opsForList().rightPop(key);
@@ -193,17 +193,17 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
         Stream<LotteryRule> lotteryRuleStream = all.stream().filter(x ->
                 x.getMinPlantCount().compareTo(reap.getPlantCount()) <= 0 && x.getMaxPlantCount().compareTo(reap.getPlantCount()) >= 0);
         Optional<LotteryRule> firstRule = lotteryRuleStream.findFirst();
-        if(!firstRule.isPresent()) {
+        if (!firstRule.isPresent()) {
             //因抽奖条件不符合的不应取消他的抽奖资格
-            redisTemplate.opsForList().rightPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()),reapId);
+            redisTemplate.opsForList().rightPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()), reapId);
             return resultResultData.setMessageEnum(MessageEnum.LOTTERY_RULE_OUT_OF_RANGE);
         }
 
-        if(isCheck) {
+        if (isCheck) {
             LotteryResult lotteryResult = new LotteryResult();
             lotteryResult.setType(firstRule.get().getType());
             //仅是检查不取消资格
-            redisTemplate.opsForList().rightPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()),reapId);
+            redisTemplate.opsForList().rightPush(ActivityEnum.LOTTERY_KEY_PRE.getMessage().concat(userId.toString()), reapId);
             return resultResultData.setMessageEnum(MessageEnum.SUCCESS).setData(lotteryResult);
         }
 
@@ -216,13 +216,12 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
         log.setLotteryType(firstRule.get().getType());
         log.setUserId(userId);
         log.setAddTime(new Date());
-        if(lotteryLogDAO.insert(log) > 0) {
-            rabbitTemplate.convertAndSend("plant.topic","lottery.fertilizer",new FertilizerSender(userId,"lottery:".concat(lotteryResult.getAmount())));
+        if (lotteryLogDAO.insert(log) > 0) {
+            rabbitTemplate.convertAndSend("plant.topic", "lottery.fertilizer", new FertilizerSender(userId, "lottery:".concat(lotteryResult.getAmount())));
             return resultResultData.setMessageEnum(MessageEnum.SUCCESS).setData(lotteryResult);
         }
         return resultResultData;
     }
-
 
 
     /**
@@ -237,7 +236,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
         Set<String> totalSet = new HashSet<>();
         String[] split = probability.split("\\|");
         for (String rate : split) {
-            if(rate.isEmpty()) continue;
+            if (rate.isEmpty()) continue;
             String[] rateDes = rate.split("-");
             for (int i = 0; i < Integer.parseInt(rateDes[1]); i++) {
                 probabilityList.add(rateDes[0]);
@@ -283,6 +282,6 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityDAO, Activity> impl
     @DS("read")
     public PageResult<LotteryLog> lotteryLog(Integer page, Integer size, LotteryLog search) {
         IPage<LotteryLog> lotteryLogIPage = lotteryLogDAO.selectSelective(new Page<>(page, size), search);
-        return new PageResult<>(lotteryLogIPage.getTotal(),lotteryLogIPage.getRecords());
+        return new PageResult<>(lotteryLogIPage.getTotal(), lotteryLogIPage.getRecords());
     }
 }

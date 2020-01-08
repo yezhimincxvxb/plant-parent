@@ -109,26 +109,16 @@ public class AHomeController {
     }
 
 
-    /**
-     * 活动页列表
-     *
-     * @return
-     */
     @ApiOperation("活动页列表")
     @NoLogin
     @PostMapping("/activity")
     public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search) {
-        return activityService.activityListForHome(search.getPage(), search.getSize(), null, null);
+        if (search.getWhere() == null) search.setWhere(new Activity());
+        return activityService.activityListForHome(search.getPage(), search.getSize(), search.getWhere());
 
     }
 
 
-    /**
-     * 活动详情
-     *
-     * @param id
-     * @return
-     */
     @ApiOperation("活动详情")
     @NoLogin
     @GetMapping("/activity/{id}")

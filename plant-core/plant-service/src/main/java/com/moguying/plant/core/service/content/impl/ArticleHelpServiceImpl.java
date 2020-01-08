@@ -48,6 +48,8 @@ public class ArticleHelpServiceImpl implements ArticleHelpService {
             help.setAddTime(new Date());
             return articleHelpDAO.insert(help);
         }
+        if (articleHelpDAO.selectById(help.getId()) == null)
+            return 0;
         help.setUpdateTime(new Date());
         return articleHelpDAO.updateById(help);
     }

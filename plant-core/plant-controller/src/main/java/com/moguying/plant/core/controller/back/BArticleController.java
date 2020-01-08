@@ -110,7 +110,10 @@ public class BArticleController {
     @PostMapping("/help")
     @ApiOperation("添加帮助信息")
     public ResponseData<Integer> addArticleHelp(@RequestBody ArticleHelp help) {
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleHelpService.addOrModifyArticleHelp(help));
+        Integer result = articleHelpService.addOrModifyArticleHelp(help);
+        if (result < 0)
+            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
     }
 
 
@@ -118,8 +121,11 @@ public class BArticleController {
     @ApiOperation("修改帮助信息")
     public ResponseData<Integer> modifyArticleHelp(@RequestBody ArticleHelp help, @PathVariable("id") Integer id) {
         if (id < 0)
+            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+        Integer result = articleHelpService.addOrModifyArticleHelp(help.setId(id));
+        if (result < 0)
             return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleHelpService.addOrModifyArticleHelp(help.setId(id)));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
     }
 
 
@@ -127,8 +133,11 @@ public class BArticleController {
     @ApiOperation("删除帮助信息")
     public ResponseData<Integer> modifyArticleHelp(@PathVariable("id") Integer id) {
         if (id < 0)
+            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
+        Integer result = articleHelpService.deleteArticleHelp(id);
+        if (result < 0)
             return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
-        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleHelpService.deleteArticleHelp(id));
+        return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), result);
     }
 
     @PostMapping("/help/{urlName}")
@@ -151,7 +160,7 @@ public class BArticleController {
     @ApiOperation("帮助信息详情")
     public ResponseData<ArticleHelp> getArticleHelp(@PathVariable("id") Integer id) {
         if (id < 0)
-            return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
+            return new ResponseData<>(MessageEnum.PARAMETER_ERROR.getMessage(), MessageEnum.PARAMETER_ERROR.getState());
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), articleHelpService.getArticleHelp(id));
     }
 

@@ -557,3 +557,7 @@ CREATE TABLE `plant_article_help` (
 /** 文章类型表添加状态区分 **/
 ALTER TABLE `moguying`.`plant_article_type`
 ADD COLUMN  `state` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态[1-公司资讯 2-帮助中心]' AFTER `id`;
+
+/** 活动表新增类型字段区分PC端跟移动端 **/
+ALTER TABLE `moguying`.`plant_activity`
+ADD COLUMN  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型[1-移动端，2-PC端]' AFTER `link_url`;

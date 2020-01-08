@@ -9,12 +9,13 @@
         <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="link_url" jdbcType="VARCHAR" property="linkUrl"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.moguying.plant.core.entity.content.Activity">
         <result column="content" jdbcType="LONGVARCHAR" property="content"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, title, sub_title, open_time, close_time, pic_url,link_url
+        id, title, sub_title, open_time, close_time, pic_url,link_url, `type`
     </sql>
     <sql id="Blob_Column_List">
         content
@@ -22,28 +23,33 @@
 
 
     <select id="activityListForHome" resultMap="BaseResultMap">
-        select id,title,sub_title,open_time,close_time,pic_url,link_url from plant_activity
+        select
+        <include refid="Base_Column_List"/>
+        from plant_activity
         <where>
-            <if test="startTime != null">
-                <![CDATA[
-            unix_timestamp(#{startTime}) >= unix_timestamp(open_time)
-          ]]>
+            <if test="wq != null">
+                <if test="wq.type != null">
+                    `type` = #{wq.type}
+                </if>
+                <if test="wq.start != null">
+                    and unix_timestamp(#{wq.start}) &lt;= unix_timestamp(open_time)
+                </if>
+                <if test="wq.end != null">
+                    and unix_timestamp(#{wq.end}) &gt;= unix_timestamp(close_time)
+                </if>
             </if>
-            <if test="endTime != null">
-                <![CDATA[
-            AND unix_timestamp(#{endTime}) <= unix_timestamp(close_time)
-          ]]>
-            </if>
-
         </where>
         order by open_time desc
     </select>
 
     <select id="newestActivity" resultMap="BaseResultMap">
-        select id,title,sub_title,open_time,close_time,pic_url,link_url from plant_activity
+        select
+        <include refid="Base_Column_List"/>
+        from plant_activity
         where
         <![CDATA[
-            unix_timestamp(NOW()) >= unix_timestamp(open_time) AND unix_timestamp(NOW()) <= unix_timestamp(close_time)
+            unix_timestamp() >= unix_timestamp(open_time)
+            AND unix_timestamp() <= unix_timestamp(close_time)
           ]]>
         order by open_time desc
     </select>
@@ -63,7 +69,8 @@
     </select>
 
     <select id="activityList" resultMap="BaseResultMap">
-        select id,title,sub_title,open_time,close_time,pic_url,link_url
+        select
+        <include refid="Base_Column_List"/>
         from plant_activity
         order by id desc
     </select>

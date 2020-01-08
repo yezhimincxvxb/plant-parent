@@ -29,37 +29,20 @@ public class BActivityController {
     private ActivityService activityService;
 
 
-    /**
-     * 活动列表
-     *
-     * @return
-     */
     @PostMapping("/list")
-    @ApiOperation("查看活动列表")
+    @ApiOperation("活动列表")
     public PageResult<Activity> activityList(@RequestBody PageSearch<Activity> search) {
         return activityService.activityList(search.getPage(), search.getSize(), search.getWhere());
     }
 
 
-    /**
-     * 活动详情
-     *
-     * @param id
-     * @return
-     */
     @GetMapping("/{id}")
-    @ApiOperation("查看活动详情")
+    @ApiOperation("活动详情")
     public ResponseData<Activity> activityDetail(@PathVariable Integer id) {
         return new ResponseData<>(MessageEnum.SUCCESS.getMessage(), MessageEnum.SUCCESS.getState(), activityService.activityDetail(id));
     }
 
 
-    /**
-     * 添加活动
-     *
-     * @param addActivity
-     * @return
-     */
     @PostMapping
     @ApiOperation("添加活动")
     public ResponseData<Integer> addActivity(@RequestBody Activity addActivity) {
@@ -69,12 +52,7 @@ public class BActivityController {
         return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
-    /**
-     * 编辑活动
-     *
-     * @param updateActivity
-     * @return
-     */
+
     @PutMapping("/{id}")
     @ApiOperation("编辑活动")
     public ResponseData<Integer> updateActivity(@RequestBody Activity updateActivity, @PathVariable Integer id) {
@@ -85,13 +63,7 @@ public class BActivityController {
         return new ResponseData<>(MessageEnum.ERROR.getMessage(), MessageEnum.ERROR.getState());
     }
 
-
-    /**
-     * 删除活动
-     *
-     * @param id
-     * @return
-     */
+    
     @DeleteMapping("/{id}")
     @ApiOperation("删除活动")
     public ResponseData<Integer> deleteActivity(@PathVariable Integer id) {
